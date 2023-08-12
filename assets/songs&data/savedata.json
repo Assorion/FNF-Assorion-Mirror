@@ -1,0 +1,18 @@
+{
+
+    "start_fullscreen": false,
+    "start_volume": 100,
+    "skip_logo": false,
+
+    "downscroll": true,
+    "offset": 80,
+    "botplay": false,
+    "ghost_tapping": true,
+    "miss_health": 40,
+
+    "useful_info": true,
+    "antialiasing": true,
+    "show_hud": true,
+    "framerate": 120,
+    "light_bot_strums": true
+}
