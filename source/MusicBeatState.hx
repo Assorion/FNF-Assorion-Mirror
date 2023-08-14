@@ -20,11 +20,6 @@ class MusicBeatState extends FlxUIState
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
 
-	private var controls(get, never):Controls;
-
-	inline function get_controls():Controls
-		return PlayerSettings.player1.controls;
-
 	override function create()
 	{
 		Conductor.songPosition = -Settings.pr.offset;

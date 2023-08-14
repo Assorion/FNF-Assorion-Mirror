@@ -5,7 +5,6 @@ import flixel.FlxState;
 import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
-import Settings;
 
 class Main extends Sprite
 {
@@ -15,7 +14,7 @@ class Main extends Sprite
 	// inlined. Which means these variables cannot be changed later.
 	public static inline var gameWidth:Int  = 1280;
 	public static inline var gameHeight:Int = 720;
-	public static inline var initState:Class<FlxState> = TitleState;
+	public static inline var initState:Class<FlxState> = ui.TitleState;
 	public static inline var initFPS:Int = 60;
 
 	public static function changeUsefulInfo(yes:Bool){
