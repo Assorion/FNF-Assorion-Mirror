@@ -1,5 +1,7 @@
 # Friday Night Funkin' MKG Engine.
 
+![MKG](https://github.com/Legendary-Candice-Joe/Funkin-MKG/assets/105545224/5e5867ae-d7fa-41b3-8cc5-09f993349c48)
+
 ## What does it stand for?
 
 The answer: I have no idea.
