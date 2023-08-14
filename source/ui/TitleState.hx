@@ -42,8 +42,6 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		//PlayerSettings.init();
-
 		// # Set the random text
 		// yes this means you can have multiple random text too.
 

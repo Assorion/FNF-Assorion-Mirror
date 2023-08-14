@@ -15,6 +15,7 @@ class Alphabet extends FlxSpriteGroup
 	public var targetY:Float = 0;
 	public var targetX:Float = 0;
 	public var lerpPos:Bool  = false;
+	//public var fadeToAlpha:Float = 1;
 	public var alpMult:Float = 1;
 
 	public var text(default, set):String = "";
@@ -39,10 +40,7 @@ class Alphabet extends FlxSpriteGroup
 				continue;
 			}
 
-			if (!AlphaCharacter.completeList.contains(character)){
-				trace('NON VALID CHAR');
-				continue;
-			}
+			if (!AlphaCharacter.completeList.contains(character)) continue;
 
 			// # add text
 
@@ -56,7 +54,6 @@ class Alphabet extends FlxSpriteGroup
 			add(letter);
 
 			futurePos += letter.width;
-
 		}
 
 	private function set_text(value:String){
@@ -78,6 +75,8 @@ class Alphabet extends FlxSpriteGroup
 		var lerpVal = 1 - Math.pow(0.5, elapsed * 20);
 		x = FlxMath.lerp(x, targetX, lerpVal);
 		y = FlxMath.lerp(y, targetY, lerpVal);
+
+		alpha = FlxMath.lerp(alpha, alpMult, lerpVal);
 	}
 }
 

@@ -50,14 +50,13 @@ class PauseSubState extends MusicBeatSubstate
 		for (i in 0...optionList.length)
 		{
 			var option:Alphabet = new Alphabet(0, (60 * i) + 30, optionList[i], true);
-			option.alpha = option.alpMult = 1;
+			option.alpMult = 1;
+			option.alpha = 0;
 			option.lerpPos = true;
 			alphaTexts.add(option);
 
-			if(i != curSelected){
-				option.alpha = option.alpMult = 0;
-				FlxTween.tween(option, {alpha: 0.4, alpMult: 1}, 0.4);
-			}
+			if(i != curSelected)
+				option.alpMult = 0.4;
 		}
 
 		var o:Int = curSelected;
@@ -112,9 +111,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		for(i in 0...alphaTexts.length){
 			var item = alphaTexts.members[i];
-			item.alpha = 1 * item.alpMult;
+			item.alpMult = 1;
 
-			if(i != curSelected) item.alpha = 0.4 * item.alpMult;
+			if(i != curSelected) item.alpMult = 0.4;
 			item.targetY = (i - curSelected) * 90;
 			item.targetX = (i - curSelected) * 15;
 			item.targetY += 80;

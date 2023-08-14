@@ -188,7 +188,7 @@ class PlayState extends MusicBeatState
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollow.setPosition(FlxG.width / 2, FlxG.height / 2);
-		add(camFollow);
+		//add(camFollow);
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 		FlxG.camera.zoom = defaultCamZoom;
@@ -235,6 +235,7 @@ class PlayState extends MusicBeatState
 		postEvent(SONG.beginTime, () -> {
 			startCountdown();
 		});
+		updateHealth(0);
 
 		super.create();
 	}
@@ -480,7 +481,7 @@ class PlayState extends MusicBeatState
 		// this is your strumline stuff
 		if(noteWasHit || lingeringPresses[magicNumber] != 0) return;
 
-		playAnimAndCenter(strumLineNotes.members[magicNumber], 'pressed');
+		playAnimAndCenter(playerStrums.members[nkey], 'pressed');
 		if(!Settings.pr.ghost_tapping)
 			noteMiss(nkey);
 	}
@@ -492,7 +493,7 @@ class PlayState extends MusicBeatState
 		if (nkey == -1) return;
 
 		keysPressed[nkey] = false;
-		playAnimAndCenter(strumLineNotes.members[ nkey + (4 * playerPos) ], 'static');
+		playAnimAndCenter(playerStrums.members[nkey], 'static');
 	}
 
 	// # THE GRAND UPDATE FUNCTION!!!
@@ -558,25 +559,11 @@ class PlayState extends MusicBeatState
 				return;
 			}
 
-			daNote.x     = strumRef.x;
+			daNote.x     = strumRef.x + daNote.offsetX;
 			daNote.angle = strumRef.angle;
-			daNote.y += daNote.offsetY;
-			daNote.x += daNote.offsetY;
+			daNote.y    += daNote.offsetY;
 
 			if(daNote.player != playerPos) return;
-
-			// this tells the actual input system if note exist.
-			if (Math.abs(daNote.strumTime - songTime) < 1.8 && !daNote.isSustainNote && staleNotes[daNote.noteData]){
-				hittableNotes[daNote.noteData] = daNote;
-				staleNotes[daNote.noteData]    = false;
-				return;
-			}
-
-			// sustain note input.
-			if(daNote.isSustainNote && Math.abs(daNote.strumTime - songTime) < 0.5 && keysPressed[daNote.noteData]){
-				goodNoteHit(daNote);
-				return;
-			}
 
 			if(songTime - daNote.strumTime > 2){
 				noteMiss(daNote.noteData);
@@ -584,6 +571,24 @@ class PlayState extends MusicBeatState
 	
 				notes.remove(daNote, true);
 				daNote.destroy();
+				return;
+			}
+
+			// this tells the actual input system if note exist.
+			if (Math.abs(daNote.strumTime - songTime) < 1.8 && !daNote.isSustainNote && staleNotes[daNote.noteData]){
+				hittableNotes[daNote.noteData] = daNote;
+				staleNotes[daNote.noteData]    = false;
+				return;
+			}
+			if(daNote.strumTime - songTime < -1.8){
+				hittableNotes[daNote.noteData] = null;
+				staleNotes[daNote.noteData] = true;
+				return;
+			}
+
+			// sustain note input.
+			if(daNote.isSustainNote && Math.abs(daNote.strumTime - songTime) < 0.5 && keysPressed[daNote.noteData]){
+				goodNoteHit(daNote);
 				return;
 			}
 
@@ -614,7 +619,7 @@ class PlayState extends MusicBeatState
 	function goodNoteHit(note:Note):Void
 	{
 		hittableNotes[note.noteData] = null;
-		playAnimAndCenter(strumLineNotes.members[ note.noteData + (4 * note.player) ], 'confirm');
+		playAnimAndCenter(playerStrums.members[note.noteData], 'confirm');
 		playingCharacters[playerPos].playAnim('sing' + sDir[note.noteData], true);
 		playingCharacters[playerPos].idleNextBeat = false;
 		vocals.volume = 1;
@@ -681,7 +686,7 @@ class PlayState extends MusicBeatState
 
 		for(i in 0...3){
 			var char = '0';
-			if(3 - comsplit.length <= i) char = comsplit[i - (comsplit.length - 1)];
+			if(3 - comsplit.length <= i) char = comsplit[i + (comsplit.length - 3)];
 
 			var numbSpr:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('gameplay/num$char'));
 			numbSpr.updateHitbox();
@@ -698,7 +703,7 @@ class PlayState extends MusicBeatState
 		introSpriteTween(ratingSpr, 2, Conductor.stepCrochet * 0.5);
 	}
 
-	private static inline var iconSpacing:Int = 96;
+	private static inline var iconSpacing:Int = 200;
 	public function updateHealth(change:Int){
 		scoreTxt.text = 'SCORE: ' + songScore;
 
@@ -706,7 +711,7 @@ class PlayState extends MusicBeatState
 		healthBar.percent = health;
 
 		iconP1.x = healthBar.x + ((1 - (health * 0.01)) * healthBar.width);
-		iconP1.x -= iconSpacing / 2;
+		iconP1.x -= iconSpacing;
 		iconP2.x = iconP1.x - (iconSpacing / 2);
 		//iconP1.x += iconSpacing;
 

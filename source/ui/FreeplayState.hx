@@ -48,19 +48,17 @@ class FreeplayState extends MusicBeatState
 		for (i in 0...songs.length)
 		{
 			var songText:Alphabet = new Alphabet(0, (60 * i) + 30, songs[i], true);
-			songText.alpha = songText.alpMult = 1;
+			songText.alpMult = 1;
+			songText.alpha = 0;
 			songText.lerpPos = true;
 			grpSongs.add(songText);
 
-			if(i != curSelected){
-				songText.alpha = songText.alpMult = 0;
-				FlxTween.tween(songText, {alpha: 0.6, alpMult: 1}, 0.4);
-			}
+			if(i != curSelected)
+				songText.alpMult = 0.4;
 		}
 
 		var scoreBG:FlxSprite = new FlxSprite((FlxG.width * 0.7) - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
-
 
 		scoreText = new FlxText(scoreBG.x + 6, 5, 0, "", 32);
 		scoreText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, RIGHT);
@@ -108,8 +106,8 @@ class FreeplayState extends MusicBeatState
 		for(i in 0...grpSongs.members.length){
 			var item = grpSongs.members[i];
 
-			item.alpha = 1 * item.alpMult;
-			if(i != curSelected) item.alpha = 0.6 * item.alpMult;
+			item.alpMult = 1;
+			if(i != curSelected) item.alpMult = 0.4;
 
 			item.targetY = (i - curSelected) * 90;
 			item.targetY += 50;

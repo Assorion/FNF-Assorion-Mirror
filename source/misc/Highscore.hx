@@ -2,6 +2,8 @@ package misc;
 
 import flixel.FlxG;
 
+using StringTools;
+
 class Highscore
 {
 	#if (haxe >= "4.0.0")
@@ -13,12 +15,12 @@ class Highscore
 	// just to make this look cleaner.
 	public static inline function scoreExists(s:String):Int
 	{
-		var ret = songScores.exists(s.toLowerCase()) ? songScores.get(s) : 0;
-		return ret;
+		s = s.toLowerCase().trim();
+		return songScores.exists(s) ? songScores.get(s) : 0;
 	}
 
 	public static function saveScore(song:String, score:Int, diff:Int){
-		var songNaem:String = song.toLowerCase() + CoolUtil.diffString(diff, 0);
+		var songNaem:String = song.toLowerCase().trim() + CoolUtil.diffString(diff, 0);
 
 		trace('$songNaem');
 

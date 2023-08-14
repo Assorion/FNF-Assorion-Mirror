@@ -53,7 +53,8 @@ class OptionsState extends MusicBeatState
 	// # add group text.
 	private function quicklyAddText(str:String, p:Int){
 		var opT:Alphabet = new Alphabet(0, (60 * p) + 30, str, true);
-			opT.alpha = opT.alpMult = 1;
+			opT.alpMult = 0.4;
+			opT.alpha = 0;
 			opT.lerpPos = true;
 			activeTextGroup.add(opT);
 	}
@@ -78,11 +79,8 @@ class OptionsState extends MusicBeatState
 			quicklyAddText(str, i);
 		}
 		for(i in 0...activeTextGroup.length)
-			if(Math.floor(i / 2) != curSel){
-				var opT = activeTextGroup.members[i];
-					opT.alpha = opT.alpMult = 0;
-				FlxTween.tween(opT, {alpha: 0.6, alpMult: 1}, 0.2);
-			}
+			if(Math.floor(i / 2) != curSel)
+				activeTextGroup.members[i].alpMult = 1;
 		/////////////////////
 
 		changeSel();
@@ -210,8 +208,8 @@ class OptionsState extends MusicBeatState
 			var item = activeTextGroup.members[i * 2];
 			var it2m = activeTextGroup.members[(i * 2) + 1];
 
-			it2m.alpha = item.alpha = 1 * item.alpMult;
-			if(i != curSel) it2m.alpha = item.alpha = 0.6 * item.alpMult;
+			it2m.alpMult = item.alpMult = 1;
+			if(i != curSel) it2m.alpMult = item.alpMult = 0.4;
 
 			it2m.targetY = item.targetY = (i - curSel) * 90;
 			it2m.targetY = item.targetY = item.targetY + 160;
