@@ -68,9 +68,12 @@ class PlayState extends MusicBeatState
 	private var playerStrums:FlxTypedGroup<FlxSprite>;
 
 	// health now goes from 0 - 100, instead of 0 - 2
-	private var health:Int = 50;
-	private var combo:Int = 0;
+	private var health:Int    = 50;
+	private var combo:Int     = 0;
 	private var noteCount:Int = 0;
+	private var hitCount:Int  = 0;
+	private var missCount:Int = 0;
+	private var fcValue:Int   = 0;
 
 	private var healthBarBG:FlxSprite;
 	private var healthBar:HealthBar;
@@ -110,17 +113,12 @@ class PlayState extends MusicBeatState
 	private var playerPos:Int = 1;
 	private var playingCharacters:Array<Character> = [];
 
-	private var songTime:Float = -12;
-	private var songDiv :Float = 1;
+	private var songTime:Float;
+	private var songDiv :Float;
 
 	// last one should always be the player.
 	private function createChar(pos:Int):Character
 	{
-		if(characterNames[pos] == '') {
-			trace('name is empty bruh');
-			return null;
-		}
-
 		var charRef = new Character(characterPositions[pos * 2], characterPositions[(pos * 2) + 1], characterNames[pos], pos == characterNames.length - 1);
 		add(charRef);
 
@@ -161,7 +159,7 @@ class PlayState extends MusicBeatState
 		///////////////////////////////////
 
 		curSong = SONG.song.toLowerCase();
-		Conductor.songPosition = -5 * Conductor.crochet;
+		//Conductor.songPosition = -5 * Conductor.crochet;
 
 		strumLine = new FlxObject(0, Settings.pr.downscroll ? FlxG.height - 150 : 50, 1, 1);
 
@@ -184,14 +182,42 @@ class PlayState extends MusicBeatState
 		generateStaticArrows(0, false);
 		generateStaticArrows(1,  true);
 
-		// add(strumLine);
-
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollow.setPosition(FlxG.width / 2, FlxG.height / 2);
-		//add(camFollow);
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 		FlxG.camera.zoom = defaultCamZoom;
+
+		// popup score stuff
+		// I agree this is a mess.
+		ratingSpr = new FlxSprite(0,0).loadGraphic(Paths.lImage('gameplay/sick'));
+		ratingSpr.graphic.persist = true;
+		ratingSpr.updateHitbox();
+		ratingSpr.centerOrigin();
+		ratingSpr.screenCenter();
+		ratingSpr.scale.set(0.7, 0.7);
+		ratingSpr.alpha = 0;
+		ratingSpr.antialiasing = Settings.pr.antialiasing;
+		add(ratingSpr);
+
+		for(i in 0...3){
+			comboSprs[i] = new FlxSprite(0,0);
+			var sRef = comboSprs[i];
+			sRef.frames = Paths.lSparrow('gameplay/comboNumbers');
+			for(i in 0...10) 
+				sRef.animation.addByPrefix('$i', '${i}num', 1, false);
+			sRef.animation.play('0');
+			sRef.updateHitbox();
+			sRef.centerOrigin();
+			sRef.screenCenter();
+			sRef.y += 120;
+			sRef.x += (i - 1) * 60;
+			sRef.scale.set(0.6, 0.6);
+			sRef.antialiasing = Settings.pr.antialiasing;
+			sRef.alpha = 0;
+			add(sRef);
+		}
+		///////////////////////////////////////////////
 
 		var baseY:Int = Settings.pr.downscroll ? 80 : 650;
 
@@ -200,41 +226,44 @@ class PlayState extends MusicBeatState
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		healthBarBG.antialiasing = Settings.pr.antialiasing;
-		add(healthBarBG);
 
 		healthBar = new HealthBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8));
 		healthBar.scrollFactor.set();
 		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
-		add(healthBar);
 
 		// score
-		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, baseY + 30, 0, "", 20);
-		scoreTxt.setFormat("assets/fonts/vcr.ttf", 16, FlxColor.WHITE, RIGHT);
+		scoreTxt = new FlxText(0, baseY + 40, 0, "", 20);
+		scoreTxt.setFormat("assets/fonts/vcr.ttf", 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
-		add(scoreTxt);
+		scoreTxt.screenCenter(X);
 
 		iconP1 = new HealthIcon(SONG.player1, true);
 		iconP2 = new HealthIcon(SONG.player2, false);
 		iconP1.y = baseY - (iconP1.height / 2);
 		iconP2.y = baseY - (iconP2.height / 2);
-		add(iconP1);
-		add(iconP2);
 
-		// cameras.
+		// hud stuff
 		strumLineNotes.cameras = [camHUD];
 		notes.cameras          = [camHUD];
-		healthBar.cameras      = [camHUD];
-		healthBarBG.cameras    = [camHUD];
-		iconP1.cameras         = [camHUD];
-		iconP2.cameras         = [camHUD];
-		scoreTxt.cameras       = [camHUD];
+		if(Settings.pr.show_hud){
+			add(healthBarBG);
+			add(healthBar);
+			add(scoreTxt);
+			add(iconP1);
+			add(iconP2);
 
-		songTime = -12;
+			healthBar.cameras      = [camHUD];
+			healthBarBG.cameras    = [camHUD];
+			iconP1.cameras         = [camHUD];
+			iconP2.cameras         = [camHUD];
+			scoreTxt.cameras       = [camHUD];
+		}
+
+		songTime = -16;
 		songTime -= Settings.pr.offset * songDiv;
 
-		postEvent(SONG.beginTime, () -> {
-			startCountdown();
-		});
+		// Just so you can add a delay to the song start if needed.
+		postEvent(SONG.beginTime, () -> { startCountdown(); });
 		updateHealth(0);
 
 		super.create();
@@ -274,21 +303,68 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	// remove repetitive code.
-	private inline function introSpriteTween(spr:FlxSprite, steps:Int, delay:Float = 0){
-		spr.alpha = 1;
-		FlxTween.tween(spr, {y: spr.y + 10, alpha: 0}, (steps * Conductor.stepCrochet) / 1000, {
-			ease: FlxEase.cubeInOut,
-			startDelay: delay * 0.001,
-			onComplete: function(twn:FlxTween)
-			{
-				spr.destroy();
-			}
-		});
+	// # note spawning
+	private inline function generateSong():Void
+	{
+		for(section in SONG.notes)
+		for(fNote in section.sectionNotes){
+			var time:Float = fNote[0];
+			var noteData :Int = Std.int(fNote[1]);
+			var susLength:Int = Std.int(fNote[2]);
+			var player   :Int = Std.int(fNote[3]);
+
+			var newNote = new Note(time, noteData, false, false);
+			newNote.scrollFactor.set();
+			newNote.player = player;
+			unspawnNotes.push(newNote);
+
+			if(susLength > 1)
+				for(i in 0...susLength+1){
+					var susNote = new Note(time + i + 0.5, noteData, true, i == susLength);
+					susNote.scrollFactor.set();
+					susNote.player = player;
+					unspawnNotes.push(susNote);
+				}
+		}
+
+		unspawnNotes.sort((A,B) -> Std.int(A.strumTime - B.strumTime));
 	}
+
+	private function generateStaticArrows(player:Int, playable:Bool):Void
+		for (i in 0...4)
+		{
+			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
+			babyArrow.frames = Paths.lSparrow('gameplay/NOTE_assets');
+			babyArrow.setGraphicSize(Math.round(babyArrow.width * 0.7));
+			babyArrow.updateHitbox();
+			babyArrow.antialiasing = Settings.pr.antialiasing;
+			babyArrow.alpha = 0;
+
+			babyArrow.x += Note.swagWidth * i;
+			babyArrow.animation.addByPrefix('static', 'arrow' + sDir[i]);
+			babyArrow.animation.addByPrefix('pressed', Note.colArr[i] + ' press'  , 24, false);
+			babyArrow.animation.addByPrefix('confirm', Note.colArr[i] + ' confirm', 24, false);
+
+			// hopefully caches the animation.
+			babyArrow.animation.play('confirm');
+			babyArrow.animation.play('pressed');
+			playAnimAndCenter(babyArrow, 'static');
+
+			// 98 so it is screen centered.
+			babyArrow.x += 98;
+			babyArrow.x += (FlxG.width / 2) * player;
+
+			strumLineNotes.add(babyArrow);
+
+			if(playable)
+				playerStrums.add(babyArrow);
+		}
 
 	// # start countdown
 
+	var countTickFunc:Void->Void;
+	var countingDown:Bool = false;
+	var swagCounter:Int = -1;
 	function startCountdown():Void
 	{
 		countingDown = true;
@@ -313,27 +389,23 @@ class PlayState extends MusicBeatState
 			introSprites[i+1] = spr;
 		}
 
-		var swagCounter:Int = 0;
-		var startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
-		{
+		// remove FlxTimer.
+		countTickFunc = function(){
 			if(swagCounter >= 4){
 				startSong();
 				return;
 			}
 
-			dad.dance();
-			 gf.dance();
-			boyfriend.dance();
+			dad.dance(true);
+			 gf.dance(true);
+			boyfriend.dance(true);
 
 			FlxG.sound.play(Paths.lSound('gameplay/' + introAssets[swagCounter + 4]), 0.6);
 			if(introSprites[swagCounter] != null)
-				introSpriteTween(introSprites[swagCounter], 3, Conductor.stepCrochet);
-
-			swagCounter += 1;
-		}, 5);
+				introSpriteTween(introSprites[swagCounter], 3, Conductor.stepCrochet, true);
+		}
 	}
 
-	// bruuh
 	// if a function is called once.
 	// you should probably inline it.
 	inline function startSong():Void
@@ -348,62 +420,7 @@ class PlayState extends MusicBeatState
 		songTime = (-Settings.pr.offset) * songDiv;
 	}
 
-	// # note spawning
-	private inline function generateSong():Void
-	{
-		for(section in SONG.notes)
-		for(fNote in section.sectionNotes){
-			var time:Float = fNote[0];
-			var noteData :Int = Std.int(fNote[1]);
-			var susLength:Int = Std.int(fNote[2]);
-			var player   :Int = Std.int(fNote[3]);
-
-			var newNote = new Note(time, noteData, false, false);
-			newNote.scrollFactor.set();
-			newNote.player = player;
-			unspawnNotes.push(newNote);
-
-			if(susLength > 1)
-				for(i in 0...susLength+1){
-					var susNote = new Note(time + i + 1, noteData, true, i == susLength);
-					susNote.scrollFactor.set();
-					susNote.player = player;
-					unspawnNotes.push(susNote);
-				}
-		}
-
-		unspawnNotes.sort((A,B) -> Std.int(A.strumTime - B.strumTime));
-	}
-
-	private function generateStaticArrows(player:Int, playable:Bool):Void
-		for (i in 0...4)
-		{
-			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
-			babyArrow.frames = Paths.lSparrow('gameplay/NOTE_assets');
-			babyArrow.setGraphicSize(Math.round(babyArrow.width * 0.7));
-			babyArrow.updateHitbox();
-			babyArrow.alpha = 0;
-			babyArrow.antialiasing = Settings.pr.antialiasing;
-
-			babyArrow.x += Note.swagWidth * i;
-			babyArrow.animation.addByPrefix('static', 'arrow' + sDir[i]);
-			babyArrow.animation.addByPrefix('pressed', Note.colArr[i] + ' press'  , 24, false);
-			babyArrow.animation.addByPrefix('confirm', Note.colArr[i] + ' confirm', 24, false);
-
-			// hopefully caches the animation.
-			babyArrow.animation.play('confirm');
-			babyArrow.animation.play('pressed');
-			playAnimAndCenter(babyArrow, 'static');
-
-			babyArrow.x += 98;
-			babyArrow.x += (FlxG.width / 2) * player;
-
-			strumLineNotes.add(babyArrow);
-
-			if(playable)
-				playerStrums.add(babyArrow);
-		}
-
+	// this is just for pausing
 	override function closeSubState()
 	{
 		if(paused){
@@ -417,85 +434,6 @@ class PlayState extends MusicBeatState
 		super.closeSubState();
 	}
 
-	function syncEverything(){
-		var roundedTime:Float = FlxG.sound.music.time + (Conductor.songPosition + Settings.pr.offset) + vocals.time;
-		roundedTime /= 3;
-
-		FlxG.sound.music.time  = roundedTime;
-		vocals.time            = roundedTime;
-		Conductor.songPosition = roundedTime - Settings.pr.offset;
-		songTime = Conductor.songPosition * songDiv;
-	}
-
-	// basically just used for strumline notes.
-	private inline function playAnimAndCenter(spr:FlxSprite, anim:String){
-		spr.animation.play(anim, true);
-		spr.centerOffsets();
-		spr.centerOrigin ();
-	}
-
-	var countingDown:Bool = false;
-	// input stuff
-	public var staleNotes:Array<Bool>    = [false,false,false,false];
-	public var hittableNotes:Array<Note> = [null, null, null, null];
-	public var keysPressed:Array<Bool>   = [false, false, false, false];
-	public var lingeringPresses:Array<Float> = [0,0,0,0 ,0,0,0,0];
-
-	// # input code.
-	// please add any keys or stuff you want to add here.
-	override function keyHit(ev:KeyboardEvent){
-		super.keyHit(ev);
-
-		if(paused) return;
-
-		if(key == FlxKey.SEVEN){
-			FlxG.switchState(new ChartingState());
-			return;
-		}
-		if(key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK]) != -1 && FlxG.sound.music.playing){
-			// ADD PAUSING LATER!!!
-			paused = true;
-			FlxG.sound.music.pause();
-			vocals.pause();
-
-			openSubState(new PauseSubState(camHUD));
-			return;
-		}
-
-		// this is the entire input system. Yep, it's that small.
-		var nkey = key.deepCheck([NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT]);
-		if(nkey == -1 || keysPressed[nkey]) return;
-
-		var magicNumber = nkey + (4 * playerPos);
-		var noteWasHit:Bool = false;
-		if(hittableNotes[nkey] != null){
-			goodNoteHit(hittableNotes[nkey]);
-			noteWasHit = true;
-
-			// this is like an anti-anti mash? It will stop you from spamming far to fast.
-			// it's also used for the bot.
-			lingeringPresses[magicNumber] = Conductor.stepCrochet * 0.001;
-		}
-
-		keysPressed[nkey] = true;
-		// this is your strumline stuff
-		if(noteWasHit || lingeringPresses[magicNumber] != 0) return;
-
-		playAnimAndCenter(playerStrums.members[nkey], 'pressed');
-		if(!Settings.pr.ghost_tapping)
-			noteMiss(nkey);
-	}
-	// just for the key release on input
-	override public function keyRel(ev:KeyboardEvent){
-		super.keyRel(ev);
-
-		var nkey = key.deepCheck([NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT]);
-		if (nkey == -1) return;
-
-		keysPressed[nkey] = false;
-		playAnimAndCenter(playerStrums.members[nkey], 'static');
-	}
-
 	// # THE GRAND UPDATE FUNCTION!!!
 
 	override public function update(elapsed:Float)
@@ -503,14 +441,25 @@ class PlayState extends MusicBeatState
 		// keep it consistent accross framerates.
 		FlxG.camera.followLerp = (1 - Math.pow(0.5, elapsed * 6)) * (60 / Settings.pr.framerate);
 
-		super.update(elapsed);
+		var scaleVal = CoolUtil.boundTo(iconP1.scale.x - (elapsed * 2), 1, 1.2);
+		iconP1.scale.set(scaleVal, scaleVal);
+		iconP2.scale.set(scaleVal, scaleVal);
 
 		if(FlxG.sound.music.playing)
 			songTime = Conductor.songPosition * songDiv;
-		else if(countingDown)
+		else if(countingDown){
 			songTime += (elapsed * 1000) * songDiv;
 
-		// all note / input stuff.
+			var introBeat = CoolUtil.boundTo(Math.floor((songTime + (Settings.pr.offset * songDiv)) * 0.25) + 4, -1, 4, true);
+			if(introBeat != swagCounter){
+				songTime = (introBeat - 4) * 4;
+				songTime -= Settings.pr.offset * songDiv;
+				swagCounter = introBeat;
+				countTickFunc();
+			}
+		}
+
+		// this is used for bot, and player strums.
 		for(i in 0...8){
 			staleNotes[i % 4] = true;
 			/////////////////////////////
@@ -521,242 +470,15 @@ class PlayState extends MusicBeatState
 			if(lingeringPresses[i] == 0) continue;
 
 			lingeringPresses[i] = 0;
-			if(Math.floor(i / 4) != playerPos)
+			if(Math.floor(i / 4) != playerPos || Settings.pr.botplay)
 				playAnimAndCenter(strumLineNotes.members[i], 'static');
 		}
+		handleNotes();
 
-		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - songTime < 64)
-		{
-			notes.add(unspawnNotes[noteCount]);
-			noteCount++;
-		}
-		//hittableNotes = [null, null, null, null];
-		notes.forEachAlive(function(daNote:Note){
-			var dir = Settings.pr.downscroll ? 45 : -45;
-			daNote.y = dir * (songTime - daNote.strumTime) * SONG.speed;
-			daNote.y += strumLine.y;
-
-			// 1.5 because we need room for the player to miss.
-			daNote.visible = daNote.active = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
-			// skip checks if the note doesn't exist.
-			if(!daNote.active) return;
-
-			var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
-
-			if((daNote.player != playerPos || Settings.pr.botplay) && songTime >= daNote.strumTime){
-				playingCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData], true);
-				playingCharacters[daNote.player].idleNextBeat = false;
-				
-				vocals.volume = 1;
-
-				if(Settings.pr.light_bot_strums){
-					playAnimAndCenter(strumRef, 'confirm');
-					lingeringPresses[daNote.noteData + (4 * daNote.player)] = Conductor.stepCrochet * 0.001;
-				}
-
-				notes.remove(daNote, true);
-				daNote.destroy();
-				return;
-			}
-
-			daNote.x     = strumRef.x + daNote.offsetX;
-			daNote.angle = strumRef.angle;
-			daNote.y    += daNote.offsetY;
-
-			if(daNote.player != playerPos) return;
-
-			if(songTime - daNote.strumTime > 2){
-				noteMiss(daNote.noteData);
-				vocals.volume = 0.5;
-	
-				notes.remove(daNote, true);
-				daNote.destroy();
-				return;
-			}
-
-			// this tells the actual input system if note exist.
-			if (Math.abs(daNote.strumTime - songTime) < 1.8 && !daNote.isSustainNote && staleNotes[daNote.noteData]){
-				hittableNotes[daNote.noteData] = daNote;
-				staleNotes[daNote.noteData]    = false;
-				return;
-			}
-			if(daNote.strumTime - songTime < -1.8){
-				hittableNotes[daNote.noteData] = null;
-				staleNotes[daNote.noteData] = true;
-				return;
-			}
-
-			// sustain note input.
-			if(daNote.isSustainNote && Math.abs(daNote.strumTime - songTime) < 0.5 && keysPressed[daNote.noteData]){
-				goodNoteHit(daNote);
-				return;
-			}
-
-		});
+		super.update(elapsed);
 	}
 
-	// # On note miss
-
-	function noteMiss(direction:Int = 1):Void
-	{
-		if (combo > 20)
-			gf.playAnim('sad');
-
-		combo = 0;
-		songScore -= 25;
-
-		var missRandom:Int = Math.round(Math.random() * 2) + 1;
-		FlxG.sound.play(Paths.lSound('gameplay/missnote' + missRandom), 0.2);
-
-		playingCharacters[playerPos].playAnim('sing' + sDir[direction] + 'miss', true);
-		playingCharacters[playerPos].idleNextBeat = false;
-
-		updateHealth(Math.round(-Settings.pr.miss_health * 0.5));
-	}
-
-	// # On note hit.
-
-	function goodNoteHit(note:Note):Void
-	{
-		hittableNotes[note.noteData] = null;
-		playAnimAndCenter(playerStrums.members[note.noteData], 'confirm');
-		playingCharacters[playerPos].playAnim('sing' + sDir[note.noteData], true);
-		playingCharacters[playerPos].idleNextBeat = false;
-		vocals.volume = 1;
-
-		notes.remove(note, true);
-		note.destroy();
-
-		updateHealth(10);
-
-		if(note.isSustainNote) return;
-
-		popUpScore(note.strumTime);
-	}
-
-	// you can add your own scores.
-	public var possibleScores:Array<RatingThing> = [
-		{
-			score: 350,
-			threshold: 0,
-			name: 'sick'
-		},
-		{
-			score: 200,
-			threshold: 0.4,
-			name: 'good'
-		},
-		{
-			score: 100,
-			threshold: 0.7,
-			name: 'bad'
-		},
-		{
-			score: 25,
-			threshold: 1.5,
-			name: 'superbad'
-		}
-	];
-
-	private inline function popUpScore(strumtime:Float):Void
-	{
-		var noteDiff:Float = Math.abs(strumtime - songTime);
-		combo++;
-
-		var pscore:RatingThing = null;
-		for(i in 0...possibleScores.length)
-			if(noteDiff >= possibleScores[i].threshold){
-				pscore   = possibleScores[i];
-			} else break;
-
-		songScore += pscore.score;
-
-		if(pscore.score < 50 || combo > 999)
-			combo = 0;
-
-		var ratingSpr:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('gameplay/' + pscore.name));
-		ratingSpr.updateHitbox();
-		ratingSpr.centerOrigin();
-		ratingSpr.screenCenter();
-		ratingSpr.scale.set(0.7, 0.7);
-		ratingSpr.antialiasing = Settings.pr.antialiasing;
-		add(ratingSpr);
-
-		var comsplit:Array<String> = Std.string(combo).split('');
-
-		for(i in 0...3){
-			var char = '0';
-			if(3 - comsplit.length <= i) char = comsplit[i + (comsplit.length - 3)];
-
-			var numbSpr:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('gameplay/num$char'));
-			numbSpr.updateHitbox();
-			numbSpr.centerOrigin();
-			numbSpr.screenCenter();
-			numbSpr.y += 120;
-			numbSpr.x += (i - 1) * 60;
-			numbSpr.scale.set(0.6, 0.6);
-			numbSpr.antialiasing = Settings.pr.antialiasing;
-			add(numbSpr);
-
-			introSpriteTween(numbSpr, 2, Conductor.stepCrochet * 0.5);
-		}
-		introSpriteTween(ratingSpr, 2, Conductor.stepCrochet * 0.5);
-	}
-
-	private static inline var iconSpacing:Int = 200;
-	public function updateHealth(change:Int){
-		scoreTxt.text = 'SCORE: ' + songScore;
-
-		health = CoolUtil.boundTo(health + change, 0, 100, true);
-		healthBar.percent = health;
-
-		iconP1.x = healthBar.x + ((1 - (health * 0.01)) * healthBar.width);
-		iconP1.x -= iconSpacing;
-		iconP2.x = iconP1.x - (iconSpacing / 2);
-		//iconP1.x += iconSpacing;
-
-		// p1 icon
-		var animStr = health < 20 ? 'losing' : 'neutral';
-		iconP1.animation.play(animStr);
-		// p2.
-		animStr = health > 80 ? 'losing' : 'neutral';
-		iconP2.animation.play(animStr);
-
-		if(health > 0) return; 
-
-		// ....
-
-		// ADD DEATH CODE!!
-	}
-
-	// unfnished
-	function endSong():Void
-	{
-		//canPause = false;
-		FlxG.sound.music.volume = 0;
-		vocals.volume = 0;
-
-		Highscore.saveScore(SONG.song, songScore, storyDifficulty);
-
-		if (!isStoryMode){
-
-			campaignScore += songScore;
-			storyPlaylist.splice(0,1);
-
-			if (storyPlaylist.length <= 0){
-				// sotry menu code.
-				PauseSubState.exitToProperMenu();
-				return;
-			}
-
-			SONG = Song.loadFromJson(storyPlaylist[0], storyDifficulty);
-			FlxG.sound.music.stop();
-			FlxG.resetState();
-
-			return;
-		}
-		PauseSubState.exitToProperMenu();
-	}
+	// # on beat hit
 
 	override function beatHit()
 	{
@@ -783,6 +505,9 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		iconP1.scale.set(1.2,1.2);
+		iconP2.scale.set(1.2,1.2);
+
 		gf.dance();
 
 		for(pc in playingCharacters)
@@ -792,14 +517,357 @@ class PlayState extends MusicBeatState
 				pc.idleNextBeat = true;
 	}
 
+	// # Update stats
+	// THIS IS WHAT UPDATES YOUR SCORE AND HEALTH AND STUFF!
+
+	//private static inline var iconSpacing:Int = 100;
+	public function updateHealth(change:Int){
+		var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC'][fcValue];
+		if(missCount > 0) fcText = 'SDCB';
+		if(missCount > 9) fcText = 'Clear';
+
+		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Status: $fcText | Score: $songScore';
+		scoreTxt.screenCenter(X);
+
+		health = CoolUtil.boundTo(health + change, 0, 100, true);
+		healthBar.percent = health;
+
+		iconP1.x = healthBar.x + ((1 - (health * 0.01)) * healthBar.width);
+		iconP1.x -= 24;
+		iconP2.x = iconP1.x - 100;
+
+		// icon anims
+		var animStr = health < 20 ? 'losing' : 'neutral';
+		iconP1.animation.play(animStr);
+			animStr = health > 80 ? 'losing' : 'neutral';
+		iconP2.animation.play(animStr);
+
+		if(health > 0) return; 
+
+		// ....
+		// ADD DEATH CODE!!
+	}
+
+	// # On note hit.
+
+	function goodNoteHit(note:Note):Void
+	{
+		hittableNotes[note.noteData] = null;
+		vocals.volume = 1;
+
+		playAnimAndCenter(playerStrums.members[note.noteData], 'confirm');
+		playingCharacters[playerPos].playAnim('sing' + sDir[note.noteData], true);
+		playingCharacters[playerPos].idleNextBeat = false;
+
+		notes.remove(note, true);
+		note.destroy();
+
+		if(!note.isSustainNote){
+			hitCount++;
+			popUpScore(note.strumTime);
+		}
+
+		updateHealth(5);
+	}
+
+	// # On note miss
+
+	function noteMiss(direction:Int = 1):Void
+	{
+		if (combo > 20)
+			gf.playAnim('sad');
+
+		combo = 0;
+		songScore -= 50;
+		missCount++;
+
+		var missRandom:Int = Math.round(Math.random() * 2) + 1;
+		FlxG.sound.play(Paths.lSound('gameplay/missnote' + missRandom), 0.2);
+
+		playingCharacters[playerPos].playAnim('sing' + sDir[direction] + 'miss', true);
+		playingCharacters[playerPos].idleNextBeat = false;
+
+		updateHealth(Math.round(-Settings.pr.miss_health * 0.5));
+	}
+
+	// input stuff
+	public var staleNotes:Array<Bool>    = [false,false,false,false];
+	public var hittableNotes:Array<Note> = [null, null, null, null];
+	public var keysPressed:Array<Bool>   = [false, false, false, false];
+	public var lingeringPresses:Array<Float> = [0,0,0,0 ,0,0,0,0];
+
+	// # input code.
+	// please add any keys or stuff you want to add here.
+	override function keyHit(ev:KeyboardEvent){
+		super.keyHit(ev);
+
+		if(paused) return;
+
+		// theres are just regular key checks.
+		if(key == FlxKey.SEVEN){
+			FlxG.switchState(new ChartingState());
+			return;
+		}
+		if(key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK]) != -1 && FlxG.sound.music.playing){
+			paused = true;
+			FlxG.sound.music.pause();
+			vocals.pause();
+
+			openSubState(new PauseSubState(camHUD));
+			return;
+		}
+
+		// this is the entire input system.
+		var nkey = key.deepCheck([NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT]);
+		if(nkey == -1 || keysPressed[nkey] || Settings.pr.botplay) return;
+
+		var magicNumber = nkey + (4 * playerPos);
+		var noteWasHit:Bool = false;
+		if(hittableNotes[nkey] != null){
+			goodNoteHit(hittableNotes[nkey]);
+			noteWasHit = true;
+
+			lingeringPresses[magicNumber] = Conductor.stepCrochet * 0.001;
+		}
+
+		keysPressed[nkey] = true;
+
+		if(noteWasHit || lingeringPresses[magicNumber] != 0) return;
+
+		playAnimAndCenter(playerStrums.members[nkey], 'pressed');
+		if(!Settings.pr.ghost_tapping)
+			noteMiss(nkey);
+	}
+
+	override public function keyRel(ev:KeyboardEvent){
+		super.keyRel(ev);
+
+		var nkey = key.deepCheck([NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT]);
+		if (nkey == -1) return;
+
+		keysPressed[nkey] = false;
+		playAnimAndCenter(playerStrums.members[nkey], 'static');
+	}
+
+	// you can add your own scores.
+	public var possibleScores:Array<RatingThing> = [
+		{
+			score: 350,
+			threshold: 0,
+			name: 'sick',
+			value: 1
+		},
+		{
+			score: 200,
+			threshold: 0.4,
+			name: 'good',
+			value: 2
+		},
+		{
+			score: 100,
+			threshold: 0.7,
+			name: 'bad',
+			value: 3
+		},
+		{
+			score: 25,
+			threshold: 1.5,
+			name: 'superbad',
+			value: 4
+		}
+	];
+
+	private var ratingSpr:FlxSprite;
+	private var prevString:String = 'sick';
+	private var comboSprs:Array<FlxSprite> = [];
+	private var scoreTweens:Array<FlxTween> = [];
+	private inline function popUpScore(strumtime:Float):Void
+	{
+		var noteDiff:Float = Math.abs(strumtime - songTime);
+		combo++;
+
+		var pscore:RatingThing = null;
+		for(i in 0...possibleScores.length)
+			if(noteDiff >= possibleScores[i].threshold){
+				pscore   = possibleScores[i];
+				//if(i+1 > fcValue) fcValue = i+1;
+			} else break;
+
+		songScore += pscore.score;
+
+		if(pscore.value > fcValue) fcValue = pscore.value;
+		if(pscore.score < 50 || combo > 999)
+			combo = 0;
+
+		if(scoreTweens[0] != null)
+			for(i in 0...4) scoreTweens[i].cancel();
+
+		if(prevString != pscore.name){
+			ratingSpr.loadGraphic(Paths.lImage('gameplay/' + pscore.name));
+			ratingSpr.graphic.persist = true;
+			prevString = pscore.name;
+		}
+		ratingSpr.centerOrigin();
+		ratingSpr.screenCenter();
+
+		var comsplit:Array<String> = Std.string(combo).split('');
+
+		for(i in 0...3){
+			var char = '0';
+			if(3 - comsplit.length <= i) char = comsplit[i + (comsplit.length - 3)];
+
+			var sRef = comboSprs[i];
+			sRef.animation.play(char);
+			sRef.screenCenter(Y);
+			sRef.y += 120;
+			scoreTweens[i+1] = introSpriteTween(sRef, 2, Conductor.stepCrochet * 0.5, false);
+		}
+		scoreTweens[0] = introSpriteTween(ratingSpr, 2, Conductor.stepCrochet * 0.5, false);
+	}
+
+	function endSong():Void
+	{
+		FlxG.sound.music.volume = 0;
+		vocals.volume = 0;
+
+		Highscore.saveScore(SONG.song, songScore, storyDifficulty);
+
+		if (!isStoryMode){
+
+			campaignScore += songScore;
+			storyPlaylist.splice(0,1);
+
+			if (storyPlaylist.length <= 0){
+				// sotry menu code.
+				PauseSubState.exitToProperMenu();
+				return;
+			}
+
+			SONG = Song.loadFromJson(storyPlaylist[0], storyDifficulty);
+			FlxG.sound.music.stop();
+			FlxG.resetState();
+
+			return;
+		}
+		PauseSubState.exitToProperMenu();
+	}
+
+	// # handle notes. Note scrolling etc
+
+	private inline function handleNotes(){
+		// all note / input stuff.
+		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - songTime < 64)
+		{
+			notes.add(unspawnNotes[noteCount]);
+			noteCount++;
+		}
+		//hittableNotes = [null, null, null, null];
+		notes.forEachAlive(function(daNote:Note){
+			var dir = Settings.pr.downscroll ? 45 : -45;
+			daNote.y = dir * (songTime - daNote.strumTime) * SONG.speed;
+			daNote.y += strumLine.y;
+
+			// 1.5 because we need room for the player to miss.
+			daNote.visible = daNote.active = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
+			// skip checks if the note doesn't exist.
+			if(!daNote.active) return;
+
+			var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
+
+			if((daNote.player != playerPos || Settings.pr.botplay) && songTime >= daNote.strumTime){
+				playingCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData], true);
+				playingCharacters[daNote.player].idleNextBeat = false;
+				
+				vocals.volume = 1;
+
+				notes.remove(daNote, true);
+				daNote.destroy();
+				
+				if(Settings.pr.light_bot_strums){
+					playAnimAndCenter(strumRef, 'confirm');
+					lingeringPresses[daNote.noteData + (4 * daNote.player)] = Conductor.stepCrochet * 0.001;
+				}
+				return;
+			}
+
+			daNote.x     = strumRef.x + daNote.offsetX;
+			daNote.angle = strumRef.angle;
+			daNote.y    += daNote.offsetY;
+
+			if(daNote.player != playerPos) return;
+
+			if(songTime - daNote.strumTime > 2){
+				noteMiss(daNote.noteData);
+				vocals.volume = 0.5;
+	
+				notes.remove(daNote, true);
+				daNote.destroy();
+				return;
+			}
+
+			// this tells the actual input system if note exist.
+			if (Math.abs(daNote.strumTime - songTime) < 1.8 && !daNote.isSustainNote && staleNotes[daNote.noteData]){
+				hittableNotes[daNote.noteData] = daNote;
+				staleNotes[daNote.noteData]    = false;
+				return;
+			}
+			// if note is out of range.
+			if(daNote.strumTime - songTime < -1.8){
+				hittableNotes[daNote.noteData] = null;
+				staleNotes[daNote.noteData] = true;
+				return;
+			}
+
+			// sustain note input.
+			if(daNote.isSustainNote && Math.abs(daNote.strumTime - songTime) < 0.5 && keysPressed[daNote.noteData]){
+				goodNoteHit(daNote);
+				return;
+			}
+
+		});
+	}
+
 	/*
 		Step hit is not needed in playstate.
 		If YOU need the function, just add it back
 		In yourself.
 	*/
+
+	function syncEverything(){
+		var roundedTime:Float = FlxG.sound.music.time + (Conductor.songPosition + Settings.pr.offset) + vocals.time;
+		roundedTime /= 3;
+
+		FlxG.sound.music.time  = roundedTime;
+		vocals.time            = roundedTime;
+		Conductor.songPosition = roundedTime - Settings.pr.offset;
+		songTime = Conductor.songPosition * songDiv;
+	}
+
+	// basically just used for strumline notes.
+	private inline function playAnimAndCenter(spr:FlxSprite, anim:String){
+		spr.animation.play(anim, true);
+		spr.centerOffsets();
+		spr.centerOrigin ();
+	}
+
+	// remove repetitive code.
+	private inline function introSpriteTween(spr:FlxSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
+	{
+		spr.alpha = 1;
+		return FlxTween.tween(spr, {y: spr.y + 10, alpha: 0}, (steps * Conductor.stepCrochet) / 1000, {
+			ease: FlxEase.cubeInOut,
+			startDelay: delay * 0.001,
+			onComplete: function(twn:FlxTween)
+			{
+				if(destroy)
+					spr.destroy();
+			}
+		});
+	}
 }
 typedef RatingThing = {
 	var score:Int;
 	var threshold:Float;
 	var name:String;
+	var value:Int;
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="comboNumbers.png">
+	<!-- Created by hand (lol) -->
+
+    <SubTexture name="0num0000" x="811" y="0" width="91" height="111"/>
+    <SubTexture name="1num0000" x="0"   y="0" width="90" height="111"/>
+    <SubTexture name="2num0000" x="90"  y="0" width="90" height="111"/>
+    <SubTexture name="3num0000" x="180" y="0" width="90" height="111"/>
+    <SubTexture name="4num0000" x="270" y="0" width="90" height="111"/>
+    <SubTexture name="5num0000" x="360" y="0" width="91" height="111"/>
+    <SubTexture name="6num0000" x="451" y="0" width="90" height="111"/>
+    <SubTexture name="7num0000" x="541" y="0" width="91" height="111"/>
+    <SubTexture name="8num0000" x="632" y="0" width="89" height="111"/>
+    <SubTexture name="9num0000" x="721" y="0" width="90" height="111"/>
+    
+</TextureAtlas>

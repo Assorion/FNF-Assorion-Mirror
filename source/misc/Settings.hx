@@ -24,6 +24,19 @@ typedef Options = {
     var show_hud:Bool;
     var framerate:Int;
     var light_bot_strums:Bool;
+
+    // controls
+    var note_left :Array<Int>;
+    var note_right:Array<Int>;
+    var note_up   :Array<Int>;
+    var note_down :Array<Int>;
+    
+    var ui_l:Array<Int>;
+    var ui_r:Array<Int>;
+    var ui_u:Array<Int>;
+    var ui_d:Array<Int>;
+    var ui_accept:Array<Int>;
+    var ui_back  :Array<Int>;
 }
 
 class Settings {
@@ -47,10 +60,21 @@ class Settings {
         FlxG.updateFramerate = Settings.pr.framerate;
 		FlxG.drawFramerate   = Settings.pr.framerate;
 
-        Main.changeUsefulInfo(Settings.pr.useful_info);
+        Main.changeUsefulInfo(Settings.pr.useful_info);        
 
         if(FlxG.save.data.songScores != null)
             Highscore.songScores = FlxG.save.data.songScores;
+
+        NewControls.NOTE_LEFT = pr.note_left;
+        NewControls.NOTE_DOWN = pr.note_down;
+        NewControls.NOTE_UP   = pr.note_up;
+        NewControls.NOTE_RIGHT= pr.note_right;
+        NewControls.UI_L = pr.ui_l;
+        NewControls.UI_D = pr.ui_d;
+        NewControls.UI_U = pr.ui_u;
+        NewControls.UI_R = pr.ui_r;
+        NewControls.UI_ACCEPT = pr.ui_accept;
+        NewControls.UI_BACK   = pr.ui_back;
     }
 
     public static function flush(){
@@ -190,8 +214,10 @@ class InputString {
                     if(literal) return '(';
                     return 'OPEN BRACKET';
                 }
-                return '9';     
+                return '9';   
                 
+            case 13:
+                return 'ENTER';
             case 33:
                 return 'PAGE UP';
             case 34:
@@ -223,7 +249,7 @@ class InputString {
                     return '=';
                 return 'EQUALS'; 
             case 8:
-                return 'BACKSPACE';
+                return 'BACK';
             case 219:
                 if(shifted){
                     if(literal) return '{';

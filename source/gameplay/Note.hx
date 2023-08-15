@@ -65,24 +65,25 @@ class Note extends FlxSprite
 		alpha = 0.6;
 		flipY = Settings.pr.downscroll;
 		offsetX += width / 2;
+		var defaultOffset = (Settings.pr.downscroll ? -7 : 7) * PlayState.SONG.speed;
 
 		animation.play('holdend');
 
-		var calc:Float = Conductor.stepCrochet / 100 * (1.2 * (44 / 140)) * PlayState.SONG.speed;
+		var calc:Float = Conductor.stepCrochet / 100 * ((Conductor.bpm / 100) * (44 / 140)) * PlayState.SONG.speed;
 		var holdScale = scale.y = (scale.y * calc);
 
 		if(Settings.pr.downscroll)
-			offsetY += height * (calc * 1.2);
+			offsetY += height * (calc * 0.5);
 
 		updateHitbox();
 		offsetX -= width / 2;
-		offsetY += (Settings.pr.downscroll ? -7 : 7) * PlayState.SONG.speed;
+		offsetY += defaultOffset;
 
 		if (isEnd) return;
 
 		animation.play('hold');
 		scale.y = holdScale * (140 / 44);
-		if(!Settings.pr.downscroll)
-			updateHitbox();
+		offsetY = defaultOffset;
+		updateHitbox();
 	}
 }

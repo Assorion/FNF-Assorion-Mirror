@@ -25,7 +25,7 @@ import misc.Alphabet;
 class OptionsState extends MusicBeatState
 {
 	var optionSub:Array<Array<String>> = [
-		['basic', 'gameplay', 'visuals'],
+		['basic', 'gameplay', 'visuals', 'controls'],
 		['start_fullscreen', 'start_volume', 'skip_logo'],
 		['downscroll', 'offset', 'botplay', 'ghost_tapping', 'miss_health'],
 		['useful_info', 'antialiasing', 'show_hud', 'framerate', 'light_bot_strums']
@@ -110,6 +110,9 @@ class OptionsState extends MusicBeatState
 				case 'visuals':
 					curSel = 0;
 					curSub = 3;
+				case 'controls':
+					FlxG.switchState(new ControlsState());
+					return;
 
 				// basic
 				case 'start_fullscreen':

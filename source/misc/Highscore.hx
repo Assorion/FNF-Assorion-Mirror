@@ -22,11 +22,7 @@ class Highscore
 	public static function saveScore(song:String, score:Int, diff:Int){
 		var songNaem:String = song.toLowerCase().trim() + CoolUtil.diffString(diff, 0);
 
-		trace('$songNaem');
-
 		if(scoreExists(songNaem) >= score) return;
-
-		trace('savd');
 		
 		songScores.set(songNaem, score);
 		FlxG.save.data.songScores = songScores;
@@ -35,7 +31,6 @@ class Highscore
 
 	public static function getScore(song:String, diff:Int):Int
 	{
-		trace('${scoreExists(song + CoolUtil.diffString(diff, 0))}');
 		return scoreExists(song + CoolUtil.diffString(diff, 0));
 	}
 }

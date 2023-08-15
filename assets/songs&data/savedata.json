@@ -8,11 +8,23 @@
     "offset": 80,
     "botplay": false,
     "ghost_tapping": true,
-    "miss_health": 40,
+    "miss_health": 20,
 
     "useful_info": true,
     "antialiasing": true,
     "show_hud": true,
     "framerate": 120,
-    "light_bot_strums": true
+    "light_bot_strums": true,
+
+    "note_left":  [65, 37],
+    "note_right": [68, 39],
+    "note_up":    [87, 38],
+    "note_down":  [83, 40],
+
+    "ui_l": [65, 37],
+    "ui_r": [68, 39],
+    "ui_u": [87, 38],
+    "ui_d": [83, 40],
+    "ui_accept": [13, 71],
+    "ui_back":   [8 , 27]
 }
