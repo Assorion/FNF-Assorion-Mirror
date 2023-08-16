@@ -1,4 +1,4 @@
-package;
+package ui;
 
 import flixel.FlxG;
 import openfl.events.Event;

@@ -121,16 +121,16 @@ class MainMenuState extends MusicBeatState
 		// # fade menus
 		for(i in 0...optionList.length)
 			if(i != curSelected) 
-				FlxTween.tween(menuItems.members[i], {alpha:0}, 1);
+				FlxTween.tween(menuItems.members[i], {alpha:0}, 0.8);
 		// # handle text flicker.
 		for(i in 0...8)
-			postEvent(i / 4, ()->{
+			postEvent(i / 8, ()->{
 				menuItems.members[curSelected].alpha = (i % 2 == 0 ? 0 : 1);
 			});
 
 		// # switches states
 
-		postEvent(2, () -> {
+		postEvent(1, () -> {
 			switch (curSelected){
 				case 0:
 					trace('story');

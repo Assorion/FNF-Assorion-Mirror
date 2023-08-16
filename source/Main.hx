@@ -8,8 +8,8 @@ import openfl.display.Sprite;
 
 class Main extends Sprite
 {
-	public static var fpsC:FPS;
-	public static var memC:MemCounter;
+	public static var fpsC:ui.FPSCounter;
+	public static var memC:ui.MemCounter;
 
 	// inlined. Which means these variables cannot be changed later.
 	public static inline var gameWidth:Int  = 1280;
@@ -36,8 +36,8 @@ class Main extends Sprite
 			#if (flixel < "5.0.0") zoom, #end 
 			initFPS, initFPS, Settings.pr.skip_logo, false));
 		
-		fpsC = new FPS(10, 3, 0xFFFFFF);
-		memC = new MemCounter(10, 18, 0xFFFFFF);
+		fpsC = new ui.FPSCounter(10, 3, 0xFFFFFF);
+		memC = new ui.MemCounter(10, 18, 0xFFFFFF);
 		addChild(fpsC);
 		addChild(memC);
 

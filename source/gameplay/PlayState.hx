@@ -267,6 +267,9 @@ class PlayState extends MusicBeatState
 		updateHealth(0);
 
 		super.create();
+
+		// needed cause pausing will break if this is true.
+		persistentUpdate = false;
 	}
 
 	// # stage code.
@@ -621,18 +624,17 @@ class PlayState extends MusicBeatState
 		var nkey = key.deepCheck([NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT]);
 		if(nkey == -1 || keysPressed[nkey] || Settings.pr.botplay) return;
 
-		var magicNumber = nkey + (4 * playerPos);
-		var noteWasHit:Bool = false;
-		if(hittableNotes[nkey] != null){
-			goodNoteHit(hittableNotes[nkey]);
-			noteWasHit = true;
-
-			lingeringPresses[magicNumber] = Conductor.stepCrochet * 0.001;
-		}
-
 		keysPressed[nkey] = true;
 
-		if(noteWasHit || lingeringPresses[magicNumber] != 0) return;
+		var magicNumber = nkey + (4 * playerPos);
+		if(hittableNotes[nkey] != null){
+			goodNoteHit(hittableNotes[nkey]);
+			lingeringPresses[magicNumber] = Conductor.stepCrochet * 0.001;
+			
+			return;
+		}
+
+		if(lingeringPresses[magicNumber] != 0) return;
 
 		playAnimAndCenter(playerStrums.members[nkey], 'pressed');
 		if(!Settings.pr.ghost_tapping)

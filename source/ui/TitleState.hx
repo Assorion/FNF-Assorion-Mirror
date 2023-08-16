@@ -84,12 +84,12 @@ class TitleState extends MusicBeatState
 
 			FlxG.sound.playMusic(Paths.lMusic('freakyMenu'), 0);
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
-		}
 
-		if(Settings.pr.start_fullscreen)
-			FlxG.fullscreen = true;
-		
-		FlxG.sound.volume = Settings.pr.start_volume / 100;
+			if(Settings.pr.start_fullscreen)
+				FlxG.fullscreen = true;
+			
+			FlxG.sound.volume = Settings.pr.start_volume / 100;
+		}
 
 		//////////////////////////
 
