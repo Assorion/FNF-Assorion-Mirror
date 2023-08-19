@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSubState;
+import MusicBeatState.DelayedEvent;
 
 class MusicBeatSubstate extends FlxSubState
 {
@@ -12,15 +13,22 @@ class MusicBeatSubstate extends FlxSubState
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
+	private var events:Array<DelayedEvent> = [];
 
 	override function create()
 	{
-		Conductor.songPosition = -Settings.pr.offset;
-
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHit);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP  , keyRel);
 
 		super.create();
+	}
+
+	private inline function postEvent(forward:Float, func:Void->Void){
+		events.push({
+			curTime: 0,
+			endTime: forward,
+			exeFunc: func
+		});
 	}
 
 	// # new input thing.
@@ -53,10 +61,25 @@ class MusicBeatSubstate extends FlxSubState
 			stepHit();
 
 		super.update(elapsed);
+
+		if(events.length == 0) return;
+
+		var i = 0;
+		while(i < events.length){
+			var e = events[i];
+			e.curTime += elapsed;
+			if(e.curTime >= e.endTime){
+				e.exeFunc();
+				events.splice(i, 1);
+				i--;
+			}
+
+			i++;
+		}
 	}
 
 	private inline function updateCurStep():Void
-		curStep = Math.floor(Conductor.songPosition / Conductor.stepCrochet);
+		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
 
 	public function stepHit():Void
 	{

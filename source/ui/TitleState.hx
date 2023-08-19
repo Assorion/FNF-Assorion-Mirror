@@ -84,9 +84,6 @@ class TitleState extends MusicBeatState
 
 			FlxG.sound.playMusic(Paths.lMusic('freakyMenu'), 0);
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
-
-			if(Settings.pr.start_fullscreen)
-				FlxG.fullscreen = true;
 			
 			FlxG.sound.volume = Settings.pr.start_volume / 100;
 		}
@@ -189,8 +186,7 @@ class TitleState extends MusicBeatState
 		// reset crap
 		if(beatLeft == 0) {
 			textStep++;
-
-			// would like to make this look better.
+			
 			if(textStep == textSequence.length){
 				skipIntro();
 				return;

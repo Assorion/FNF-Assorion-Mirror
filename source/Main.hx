@@ -34,7 +34,7 @@ class Main extends Sprite
 
 		addChild(new FlxGame(gameWidth, gameHeight, initState, 
 			#if (flixel < "5.0.0") zoom, #end 
-			initFPS, initFPS, Settings.pr.skip_logo, false));
+			initFPS, initFPS, Settings.pr.skip_logo, Settings.pr.start_fullscreen));
 		
 		fpsC = new ui.FPSCounter(10, 3, 0xFFFFFF);
 		memC = new ui.MemCounter(10, 18, 0xFFFFFF);

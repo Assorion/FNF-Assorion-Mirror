@@ -8,10 +8,7 @@ import openfl.Lib;
 import openfl.system.System;
 
 class MemCounter extends TextField {
-    // public var text:String = '';
-
 	public function new(x:Float = 10, y:Float = 10, color:Int = 0xFFFFFF){
-		//super(x,y,color,'',false);
         super();
 
         this.x = x;

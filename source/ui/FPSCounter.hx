@@ -13,7 +13,7 @@ class FPSCounter extends TextField {
     public var currentTime:Float = 0;
     public var framerate:Int = 0;
 
-	public function new(x:Float = 10, y:Float = 10, color:Int = 0xFFFFFF){
+    public function new(x:Float = 10, y:Float = 10, color:Int = 0xFFFFFF){
         super();
 
         this.x = x;
@@ -24,18 +24,18 @@ class FPSCounter extends TextField {
         selectable   = false;
         mouseEnabled = false;
         defaultTextFormat = new TextFormat("_sans", 13, color, null, null, null, text);
-	}
+    }
 
-	private override function __enterFrame(deltaTime:Float):Void
-	{
+    private override function __enterFrame(deltaTime:Float):Void
+    {
         currentTime += deltaTime;
         framerate++;
 
         if(currentTime < 500) return;
-        
+
         text = 'FPS: ${framerate * 2}';
 
         framerate = 0;
         currentTime = 0;
-	}
+    }
 }

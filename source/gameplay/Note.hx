@@ -17,15 +17,7 @@ class Note extends FlxSprite
 	public var noteData:Int = 0;
 
 	public var chartRef:Array<Dynamic> = [];
-
-	//public var canBeHit:Bool = false;
-	//public var tooLate:Bool = false;
-	//public var wasGoodHit:Bool = false
-
-	//public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
-
-	//public var noteScore:Float = 1;
 
 	// this is inlined, you can't change this variable later.
 	public static inline var swagWidth:Float = 160 * 0.7;
@@ -34,7 +26,6 @@ class Note extends FlxSprite
 	{
 		super();
 
-		//x += 50;
 		y = -2000;
 
 		isSustainNote  = sustainNote;
@@ -52,8 +43,6 @@ class Note extends FlxSprite
 
 		setGraphicSize(Std.int(width * 0.7));
 		antialiasing = Settings.pr.antialiasing;
-
-		//x += swagWidth * noteData;
 
 		animation.play('scroll');
 		updateHitbox();

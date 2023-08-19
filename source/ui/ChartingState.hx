@@ -16,6 +16,7 @@ import gameplay.PlayState;
 import gameplay.Song;
 import ui.CustomChartUI;
 import sys.io.File;
+import gameplay.HealthIcon;
 
 using StringTools;
 
@@ -583,6 +584,8 @@ class ChartingState extends MusicBeatState {
                 player3:     osong.player3,
                 stage:       osong.stage,
                 beginTime:   osong.beginTime,
+                playingChars:osong.playingChars,
+                activePlayer:osong.activePlayer
             };
             for(i in 0...PlayState.SONG.notes.length){
                 var osec = PlayState.SONG.notes[i];

@@ -13,7 +13,6 @@ class Character extends FlxSprite
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = 'bf';
 
-	//public var holdTimer:Float = 0;
 	public var idleNextBeat :Bool = true;
 	public var leftRightIdle:Bool = false;
 

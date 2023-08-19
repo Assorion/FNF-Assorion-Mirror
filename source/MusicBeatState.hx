@@ -50,7 +50,7 @@ class MusicBeatState extends FlxUIState
 		super.destroy();
 	}
 
-	// # handle a forward event system.
+	// # handle a delayed event system.
 
 	private inline function postEvent(forward:Float, func:Void->Void){
 		events.push({
@@ -59,14 +59,14 @@ class MusicBeatState extends FlxUIState
 			exeFunc: func
 		});
 	}
-	private function handleEvents(elapsed:Float){
+	private inline function handleEvents(elapsed:Float){
 		if(events.length == 0) return;
 
 		var i = 0;
 		while(i < events.length){
 			var e = events[i];
 			e.curTime += elapsed;
-			if(e.curTime > e.endTime){
+			if(e.curTime >= e.endTime){
 				e.exeFunc();
 				events.splice(i, 1);
 				i--;
@@ -93,7 +93,7 @@ class MusicBeatState extends FlxUIState
 	}
 
 	private inline function updateCurStep():Void
-		curStep = Math.floor(Conductor.songPosition / Conductor.stepCrochet);
+		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
 
 	public function stepHit():Void
 	{

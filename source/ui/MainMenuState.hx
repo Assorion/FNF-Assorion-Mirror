@@ -51,8 +51,6 @@ class MainMenuState extends MusicBeatState
 		add(camFollow);
 		add(menuItems);
 
-		//var tex = Paths.lSparrow('ui/${}');
-
 		for (i in 0...optionList.length)
 		{
 			var menuItem:FlxSprite = new FlxSprite(0, 0);
@@ -71,8 +69,6 @@ class MainMenuState extends MusicBeatState
 		}
 
 		FlxG.camera.follow(camFollow, null, 0.06);
-
-		// # thingy
 
 		var versionNumber:FlxText = new FlxText(5, FlxG.height - 18, 0, "MKG Engine v" + Application.current.meta.get('version'), 12);
 			versionNumber.scrollFactor.set();
@@ -118,11 +114,9 @@ class MainMenuState extends MusicBeatState
 		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
 		selectedSomethin = true;
 
-		// # fade menus
 		for(i in 0...optionList.length)
 			if(i != curSelected) 
 				FlxTween.tween(menuItems.members[i], {alpha:0}, 0.8);
-		// # handle text flicker.
 		for(i in 0...8)
 			postEvent(i / 8, ()->{
 				menuItems.members[curSelected].alpha = (i % 2 == 0 ? 0 : 1);
@@ -133,7 +127,7 @@ class MainMenuState extends MusicBeatState
 		postEvent(1, () -> {
 			switch (curSelected){
 				case 0:
-					trace('story');
+					FlxG.switchState(new StoryMenuState());
 				case 1:
 					FlxG.switchState(new FreeplayState());
 				case 2:

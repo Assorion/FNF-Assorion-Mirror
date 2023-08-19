@@ -11,7 +11,7 @@ It could stand for:
 
 1. Mario Kart Gamers,
 2. MaKe me Genius (what it was meant to stand for (LOL)),
-3. Mahistian vs Klahristadian Game (Fnf mod),
+3. ~~Mahistian vs Klahristadian Game (Fnf mod)~~ canned lol I stopped working on it,
 4. Etc
 
 ## What is it for?
@@ -60,6 +60,10 @@ you can add it in yourself.
 on making a port with most of it's features, that will be later though.
 7. This is based off of the 0.2.6 version. Yup. Before week 6 was even a thing lol.
 8. Songs and Data folder have been merged into the songs&data folder. 
+
+## Screenshots ?
+
+Take a look at art/screenshots.md please.
 
 # Compiling.
 

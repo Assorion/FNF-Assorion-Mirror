@@ -166,14 +166,14 @@ class FreeplayState extends MusicBeatState
 		}
 
 		// enter
-		if(key.hardCheck(NewControls.UI_ACCEPT)){
-			PlayState.SONG = Song.loadFromJson(songs[curSelected], curDifficulty);
-			PlayState.isStoryMode     = false;
-			PlayState.storyDifficulty = curDifficulty;
+		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
 
-			FlxG.switchState(new PlayState());
-			if( FlxG.sound.music.playing)
-				FlxG.sound.music.stop();
-		}
+		PlayState.SONG = Song.loadFromJson(songs[curSelected], curDifficulty);
+		PlayState.isStoryMode     = false;
+		PlayState.storyDifficulty = curDifficulty;
+
+		FlxG.switchState(new PlayState());
+		if( FlxG.sound.music.playing)
+			FlxG.sound.music.stop();
 	}
 }

@@ -23,7 +23,7 @@ class PauseSubState extends MusicBeatSubstate
 	public static function exitToProperMenu(){
 		FlxG.sound.playMusic(Paths.lMusic('freakyMenu'));
 		if(PlayState.isStoryMode){
-			//FlxG.switchState(new StoryMenuState());
+			FlxG.switchState(new ui.StoryMenuState());
 		} else
 			FlxG.switchState(new ui.FreeplayState());
 	}

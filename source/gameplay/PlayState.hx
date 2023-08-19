@@ -32,7 +32,7 @@ import lime.utils.Assets;
 import openfl.display.BlendMode;
 import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
-import ui.HealthIcon;
+import gameplay.HealthIcon;
 import misc.Highscore;
 import ui.FreeplayState;
 import ui.ChartingState;
@@ -114,7 +114,6 @@ class PlayState extends MusicBeatState
 	private var playingCharacters:Array<Character> = [];
 
 	private var songTime:Float;
-	private var songDiv :Float;
 
 	// last one should always be the player.
 	private function createChar(pos:Int):Character
@@ -137,8 +136,6 @@ class PlayState extends MusicBeatState
 		FlxCamera.defaultCameras = [camGame];
 
 		Conductor.changeBPM(SONG.bpm);
-		// get a multiplier, since division is expensive.
-		songDiv = 1 / Conductor.stepCrochet;
 
 		handleStage();
 
@@ -154,8 +151,14 @@ class PlayState extends MusicBeatState
 		dad		  = createChar(1);
 		boyfriend = createChar(2);
 
+		playerPos = SONG.activePlayer;
 		playingCharacters = [dad, boyfriend];
 
+		if(SONG.playingChars.length >= 2){
+			var charsArr:Array<Character> = [dad, boyfriend, gf];
+			for(i in 0...SONG.playingChars.length)
+				playingCharacters.push(charsArr[SONG.playingChars[i]]);
+		}
 		///////////////////////////////////
 
 		curSong = SONG.song.toLowerCase();
@@ -179,8 +182,8 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.pause();
 
 		generateSong();
-		generateStaticArrows(0, false);
-		generateStaticArrows(1,  true);
+		for(i in 0...playingCharacters.length)
+			generateStaticArrows(i, i == playerPos);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollow.setPosition(FlxG.width / 2, FlxG.height / 2);
@@ -221,15 +224,15 @@ class PlayState extends MusicBeatState
 
 		var baseY:Int = Settings.pr.downscroll ? 80 : 650;
 
-		// health bar
 		healthBarBG = new FlxSprite(0, baseY).loadGraphic(Paths.lImage('gameplay/healthBar'));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		healthBarBG.antialiasing = Settings.pr.antialiasing;
 
+		var healthColours:Array<Int> = [0xFFFF0000, 0xFF66FF33];
 		healthBar = new HealthBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8));
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		healthBar.createFilledBar(healthColours[0], healthColours[1]);
 
 		// score
 		scoreTxt = new FlxText(0, baseY + 40, 0, "", 20);
@@ -260,7 +263,7 @@ class PlayState extends MusicBeatState
 		}
 
 		songTime = -16;
-		songTime -= Settings.pr.offset * songDiv;
+		songTime -= Settings.pr.offset * Conductor.songDiv;
 
 		// Just so you can add a delay to the song start if needed.
 		postEvent(SONG.beginTime, () -> { startCountdown(); });
@@ -363,8 +366,6 @@ class PlayState extends MusicBeatState
 				playerStrums.add(babyArrow);
 		}
 
-	// # start countdown
-
 	var countTickFunc:Void->Void;
 	var countingDown:Bool = false;
 	var swagCounter:Int = -1;
@@ -414,16 +415,14 @@ class PlayState extends MusicBeatState
 	inline function startSong():Void
 	{
 		countingDown = false;
-
 		FlxG.sound.music.play();
 		vocals.play();
-		// set everything to 0
+
 		FlxG.sound.music.time = vocals.time = 0;
 		Conductor.songPosition = -Settings.pr.offset;
-		songTime = (-Settings.pr.offset) * songDiv;
+		songTime = (-Settings.pr.offset) * Conductor.songDiv;
 	}
 
-	// this is just for pausing
 	override function closeSubState()
 	{
 		if(paused){
@@ -449,14 +448,14 @@ class PlayState extends MusicBeatState
 		iconP2.scale.set(scaleVal, scaleVal);
 
 		if(FlxG.sound.music.playing)
-			songTime = Conductor.songPosition * songDiv;
+			songTime = Conductor.songPosition * Conductor.songDiv;
 		else if(countingDown){
-			songTime += (elapsed * 1000) * songDiv;
+			songTime += (elapsed * 1000) * Conductor.songDiv;
 
-			var introBeat = CoolUtil.boundTo(Math.floor((songTime + (Settings.pr.offset * songDiv)) * 0.25) + 4, -1, 4, true);
+			var introBeat = CoolUtil.boundTo(Math.floor((songTime + (Settings.pr.offset * Conductor.songDiv)) * 0.25) + 4, -1, 4, true);
 			if(introBeat != swagCounter){
 				songTime = (introBeat - 4) * 4;
-				songTime -= Settings.pr.offset * songDiv;
+				songTime -= Settings.pr.offset * Conductor.songDiv;
 				swagCounter = introBeat;
 				countTickFunc();
 			}
@@ -487,15 +486,7 @@ class PlayState extends MusicBeatState
 	{
 		super.beatHit();
 
-		/*
-			Sorry but this is just flat out retarded.
-			The fact that Null shouldn't be possible on static platforms,
-			EXCEPT IT IS???? IT HAPPENS???
-
-			So we basically have to turn it into a string and check it that way.
-			I have no idea how this even is possible but it is, and it sucks.
-		*/
-		if(FlxG.sound.music.playing && curBeat % 4 == 0){
+		if(curBeat % 4 == 0 && FlxG.sound.music.playing){
 			mustHitSection = false;
 			if (Std.string(SONG.notes[Math.floor(curBeat / 4)].mustHitSection) != 'null')
 				mustHitSection = SONG.notes[Math.floor(curBeat / 4)].mustHitSection;
@@ -523,13 +514,14 @@ class PlayState extends MusicBeatState
 	// # Update stats
 	// THIS IS WHAT UPDATES YOUR SCORE AND HEALTH AND STUFF!
 
-	//private static inline var iconSpacing:Int = 100;
 	public function updateHealth(change:Int){
 		var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC'][fcValue];
 		if(missCount > 0) fcText = 'SDCB';
 		if(missCount > 9) fcText = 'Clear';
 
-		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Status: $fcText | Score: $songScore';
+		var accuracyCount:Float = fcValue != 0 ? Math.floor(songScore / ((hitCount + missCount) * 3.5)) : 0;
+
+		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Accuracy: $accuracyCount% - $fcText | Score: $songScore';
 		scoreTxt.screenCenter(X);
 
 		health = CoolUtil.boundTo(health + change, 0, 100, true);
@@ -539,7 +531,6 @@ class PlayState extends MusicBeatState
 		iconP1.x -= 24;
 		iconP2.x = iconP1.x - 100;
 
-		// icon anims
 		var animStr = health < 20 ? 'losing' : 'neutral';
 		iconP1.animation.play(animStr);
 			animStr = health > 80 ? 'losing' : 'neutral';
@@ -547,8 +538,12 @@ class PlayState extends MusicBeatState
 
 		if(health > 0) return; 
 
-		// ....
-		// ADD DEATH CODE!!
+		remove(playingCharacters[playerPos]);
+		paused = true;
+		FlxG.sound.music.pause();
+		vocals.pause();
+
+		openSubState(new GameOverSubstate(0,0, playingCharacters[playerPos], camHUD));
 	}
 
 	// # On note hit.
@@ -692,7 +687,6 @@ class PlayState extends MusicBeatState
 		for(i in 0...possibleScores.length)
 			if(noteDiff >= possibleScores[i].threshold){
 				pscore   = possibleScores[i];
-				//if(i+1 > fcValue) fcValue = i+1;
 			} else break;
 
 		songScore += pscore.score;
@@ -734,14 +728,16 @@ class PlayState extends MusicBeatState
 
 		Highscore.saveScore(SONG.song, songScore, storyDifficulty);
 
-		if (!isStoryMode){
+		if (isStoryMode){
 
 			campaignScore += songScore;
 			storyPlaylist.splice(0,1);
 
 			if (storyPlaylist.length <= 0){
 				// sotry menu code.
+				Highscore.saveScore('week-$storyWeek', campaignScore, storyDifficulty);
 				PauseSubState.exitToProperMenu();
+
 				return;
 			}
 
@@ -757,13 +753,11 @@ class PlayState extends MusicBeatState
 	// # handle notes. Note scrolling etc
 
 	private inline function handleNotes(){
-		// all note / input stuff.
 		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - songTime < 64)
 		{
 			notes.add(unspawnNotes[noteCount]);
 			noteCount++;
 		}
-		//hittableNotes = [null, null, null, null];
 		notes.forEachAlive(function(daNote:Note){
 			var dir = Settings.pr.downscroll ? 45 : -45;
 			daNote.y = dir * (songTime - daNote.strumTime) * SONG.speed;
@@ -771,7 +765,6 @@ class PlayState extends MusicBeatState
 
 			// 1.5 because we need room for the player to miss.
 			daNote.visible = daNote.active = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
-			// skip checks if the note doesn't exist.
 			if(!daNote.active) return;
 
 			var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
@@ -789,6 +782,9 @@ class PlayState extends MusicBeatState
 					playAnimAndCenter(strumRef, 'confirm');
 					lingeringPresses[daNote.noteData + (4 * daNote.player)] = Conductor.stepCrochet * 0.001;
 				}
+				if(Settings.pr.botplay)
+					hittableNotes[daNote.noteData] = null;
+
 				return;
 			}
 
@@ -796,7 +792,7 @@ class PlayState extends MusicBeatState
 			daNote.angle = strumRef.angle;
 			daNote.y    += daNote.offsetY;
 
-			if(daNote.player != playerPos) return;
+			if(daNote.player != playerPos || Settings.pr.botplay) return;
 
 			if(songTime - daNote.strumTime > 2){
 				noteMiss(daNote.noteData);
@@ -842,17 +838,14 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.time  = roundedTime;
 		vocals.time            = roundedTime;
 		Conductor.songPosition = roundedTime - Settings.pr.offset;
-		songTime = Conductor.songPosition * songDiv;
+		songTime = Conductor.songPosition * Conductor.songDiv;
 	}
 
-	// basically just used for strumline notes.
 	private inline function playAnimAndCenter(spr:FlxSprite, anim:String){
 		spr.animation.play(anim, true);
 		spr.centerOffsets();
 		spr.centerOrigin ();
 	}
-
-	// remove repetitive code.
 	private inline function introSpriteTween(spr:FlxSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
 	{
 		spr.alpha = 1;

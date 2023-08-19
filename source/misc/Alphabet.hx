@@ -15,13 +15,11 @@ class Alphabet extends FlxSpriteGroup
 	public var targetY:Float = 0;
 	public var targetX:Float = 0;
 	public var lerpPos:Bool  = false;
-	//public var fadeToAlpha:Float = 1;
 	public var alpMult:Float = 1;
 
 	public var text(default, set):String = "";
 
 	var futurePos:Float = 0;
-	var splitWords:Array<String> = [];
 	public var isBold:Bool = false;
 
 	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false)
@@ -82,7 +80,6 @@ class Alphabet extends FlxSpriteGroup
 
 class AlphaCharacter extends FlxSprite
 {
-	//public static var alphabet:String = "abcdefghijklmnopqrstuvwxyz";
 	public static var numbers:String = "1234567890";
 	public static var symbols:String = "|~#$%()*+-:;<=>@[]^_.,'!?";
 	public static var completeList:String = "abcdefghijklmnopqrstuvwxyz1234567890|~#$%()*+-:;<=>@[]^.,'!?";

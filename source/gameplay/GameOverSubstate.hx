@@ -6,96 +6,76 @@ import flixel.FlxSubState;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.FlxSprite;
+import flixel.FlxCamera;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
-	var bf:Boyfriend;
 	var camFollow:FlxObject;
+	var charRef:Character;
+	var blackFadeIn:FlxSprite;
+	var fadeCam:FlxCamera;
 
-	// var
-
-	public function new(x:Float, y:Float)
+	public function new(x:Float, y:Float, deadChar:Character, fadeOutCam:FlxCamera)
 	{
 		super();
 
+		blackFadeIn = new FlxSprite(0,0).makeGraphic(1280 * 2, 720 * 2, FlxColor.BLACK);
+		blackFadeIn.screenCenter();
+		blackFadeIn.alpha = 0;
+		add(blackFadeIn);
+
 		Conductor.songPosition = 0;
-
-		bf = new Boyfriend(x, y);
-		add(bf);
-
-		camFollow = new FlxObject(bf.getGraphicMidpoint().x, bf.getGraphicMidpoint().y, 1, 1);
-		add(camFollow);
-
-		FlxG.sound.play('assets/sounds/fnf_loss_sfx' + TitleState.soundExt);
 		Conductor.changeBPM(100);
 
-		// FlxG.camera.followLerp = 1;
-		// FlxG.camera.focusOn(FlxPoint.get(FlxG.width / 2, FlxG.height / 2));
-		FlxG.camera.scroll.set();
-		FlxG.camera.target = null;
+		deadChar.playAnim('firstDeath');
+		charRef = deadChar;
+		camFollow = new FlxObject(deadChar.getGraphicMidpoint().x, deadChar.getGraphicMidpoint().y, 1, 1);
+		fadeCam = fadeOutCam;
+		add(deadChar);
 
-		bf.playAnim('firstDeath');
+		FlxG.sound.music.time = 0;
+		FlxG.sound.play(Paths.lSound('gameplay/fnf_loss_sfx'));
+		FlxG.camera.follow(camFollow, LOCKON, 0.04);
+
+		postEvent(2.5, () -> {
+			if(!leaving)
+				FlxG.sound.playMusic(Paths.lMusic('gameOver'));
+		});
 	}
 
+	// in case you're using a character which doesn't have the animation set.
+	private var notLoop:Bool = true;
 	override function update(elapsed:Float)
 	{
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, elapsed * 2)) * (60 / Settings.pr.framerate);
+
+		if(notLoop && charRef.animation.curAnim.finished){
+			charRef.animation.play('deathLoop');
+			notLoop = false;
+		}
+		if(blackFadeIn.alpha < 1){
+			blackFadeIn.alpha += elapsed * 0.5;
+			fadeCam.alpha     -= elapsed * 0.5;
+		}
+
 		super.update(elapsed);
-
-		if (controls.ACCEPT)
-		{
-			endBullshit();
-		}
-
-		if (controls.BACK)
-		{
-			FlxG.sound.music.stop();
-
-			if (PlayState.isStoryMode)
-				FlxG.switchState(new StoryMenuState());
-			else
-				FlxG.switchState(new FreeplayState());
-		}
-
-		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.curFrame == 12)
-		{
-			FlxG.camera.follow(camFollow, LOCKON, 0.01);
-		}
-
-		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
-		{
-			FlxG.sound.playMusic('assets/music/gameOver' + TitleState.soundExt);
-		}
-
-		if (FlxG.sound.music.playing)
-		{
-			Conductor.songPosition = FlxG.sound.music.time;
-		}
 	}
 
-	override function beatHit()
-	{
-		super.beatHit();
+	private var leaving:Bool = false;
+	override function keyHit(ev:KeyboardEvent){
+		super.keyHit(ev);
 
-		FlxG.log.add('beat');
-	}
+		if(leaving || !key.hardCheck(NewControls.UI_ACCEPT)) return;
 
-	var isEnding:Bool = false;
-
-	function endBullshit():Void
-	{
-		if (!isEnding)
-		{
-			isEnding = true;
-			bf.playAnim('deathConfirm', true);
-			FlxG.sound.music.stop();
-			FlxG.sound.play('assets/music/gameOverEnd' + TitleState.soundExt);
-			new FlxTimer().start(0.7, function(tmr:FlxTimer)
-			{
-				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
-				{
-					FlxG.switchState(new PlayState());
-				});
-			});
-		}
+		leaving = true;
+		charRef.playAnim('deathConfirm', true);
+		FlxG.sound.music.stop();
+		FlxG.sound.play(Paths.lSound('gameplay/gameOverEnd'));
+		
+		postEvent(0.7, ()->{ FlxG.camera.fade(FlxColor.BLACK, 2, false); });
+		postEvent(2.7, ()->{
+			FlxG.resetState();
+		});
 	}
 }

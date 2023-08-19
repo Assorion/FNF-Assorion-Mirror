@@ -21,6 +21,9 @@ dad:singUP   :Dad Sing Note UP   :24:t :-6 : 50
 dad:singRIGHT:Dad Sing Note RIGHT:24:t : 0 : 27 :f:f :150:-100
 #
 bf:idle:BF idle dance:24:f:-5:0
+bf:firstDeath  :BF dies        :24:f:37:11
+bf:deathLoop   :BF Dead Loop   :24:t:37:5
+bf:deathConfirm:BF Dead confirm:24:f:37:69
 bf:singLEFT :BF NOTE LEFT0 :24:f : 12:-6
 bf:singDOWN :BF NOTE DOWN0 :24:f :-10:-50
 bf:singUP   :BF NOTE UP0   :24:f :-29: 27

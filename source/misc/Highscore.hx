@@ -16,6 +16,7 @@ class Highscore
 	public static inline function scoreExists(s:String):Int
 	{
 		s = s.toLowerCase().trim();
+		trace(s);
 		return songScores.exists(s) ? songScores.get(s) : 0;
 	}
 
@@ -23,6 +24,8 @@ class Highscore
 		var songNaem:String = song.toLowerCase().trim() + CoolUtil.diffString(diff, 0);
 
 		if(scoreExists(songNaem) >= score) return;
+
+		trace('SAvd');
 		
 		songScores.set(songNaem, score);
 		FlxG.save.data.songScores = songScores;
