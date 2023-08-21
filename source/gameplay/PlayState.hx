@@ -79,7 +79,6 @@ class PlayState extends MusicBeatState
 	private var camHUD:FlxCamera;
 	private var camGame:FlxCamera;
 
-	//var talking:Bool = true;
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
 
@@ -133,7 +132,6 @@ class PlayState extends MusicBeatState
 		///////////////////////////////////
 
 		curSong = SONG.song.toLowerCase();
-		//Conductor.songPosition = -5 * Conductor.crochet;
 
 		strumLine = new FlxObject(0, Settings.pr.downscroll ? FlxG.height - 150 : 50, 1, 1);
 
@@ -334,7 +332,6 @@ class PlayState extends MusicBeatState
 	function startCountdown():Void
 	{
 		countingDown = true;
-		// make arrows appear.
 		for(i in 0...strumLineNotes.length)
 			FlxTween.tween(strumLineNotes.members[i], {alpha: 1}, 0.5, {startDelay: (i + 1) * 0.2});
 
@@ -502,8 +499,6 @@ class PlayState extends MusicBeatState
 			hitCount++;
 			popUpScore(note.strumTime);
 		}
-
-		hittableNotes[note.noteData] = null;
 		updateHealth(5);
 	}
 
@@ -556,15 +551,15 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		// this is the entire input system.
 		var nkey = key.deepCheck([NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT]);
 		if(nkey == -1 || keysPressed[nkey] || Settings.pr.botplay) return;
 
 		keysPressed[nkey] = true;
 
 		var sRef = playerStrums.members[nkey];
-		if(hittableNotes[nkey] != null){
-			goodNoteHit(hittableNotes[nkey]);
+		var nRef = hittableNotes[nkey];
+		if(nRef != null && Math.abs(nRef.strumTime - songTime) < 1.8){
+			goodNoteHit(nRef);
 			sRef.pressTime = Conductor.stepCrochet * 0.001;
 			
 			return;
@@ -693,8 +688,7 @@ class PlayState extends MusicBeatState
 	// # handle notes. Note scrolling etc
 
 	private inline function handleNotes(){
-		for(i in 0...4)
-			staleNotes[i] = true;
+		staleNotes = [true, true, true, true];
 		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - songTime < 64)
 		{
 			notes.add(unspawnNotes[noteCount]);
@@ -702,7 +696,8 @@ class PlayState extends MusicBeatState
 		}
 		notes.forEachAlive(function(daNote:Note){
 			var dir = Settings.pr.downscroll ? 45 : -45;
-			daNote.y = dir * (songTime - daNote.strumTime) * SONG.speed;
+			var nDiff:Float = songTime - daNote.strumTime;
+			daNote.y = dir * nDiff * SONG.speed;
 			daNote.y += strumLine.y;
 
 			// 1.5 because we need room for the player to miss.
@@ -724,8 +719,6 @@ class PlayState extends MusicBeatState
 					strumRef.playAnim('confirm');
 					strumRef.pressTime = Conductor.stepCrochet * 0.001;
 				}
-				if(Settings.pr.botplay)
-					hittableNotes[daNote.noteData] = null;
 
 				return;
 			}
@@ -736,26 +729,22 @@ class PlayState extends MusicBeatState
 
 			if(daNote.player != playerPos || Settings.pr.botplay) return;
 
-			if(songTime - daNote.strumTime > 1.8){
+			if(nDiff > 1.8){
 				noteMiss(daNote.noteData);
 				vocals.volume = 0.5;
 	
 				notes.remove(daNote, true);
 				daNote.destroy();
-				hittableNotes[daNote.noteData] = null;
-				staleNotes   [daNote.noteData] = false;
 				return;
 			}
-
-			// this tells the actual input system if note exist.
-			if (Math.abs(daNote.strumTime - songTime) < 1.8 && !daNote.isSustainNote && staleNotes[daNote.noteData]){
+			if (Math.abs(nDiff) < 1.8 && !daNote.isSustainNote && staleNotes[daNote.noteData]){
 				hittableNotes[daNote.noteData] = daNote;
 				staleNotes[daNote.noteData]    = false;
 				return;
 			}
 
 			// sustain note input.
-			if(daNote.isSustainNote && Math.abs(daNote.strumTime - songTime) < 0.8 && keysPressed[daNote.noteData]){
+			if(daNote.isSustainNote && Math.abs(nDiff) < 0.8 && keysPressed[daNote.noteData]){
 				goodNoteHit(daNote);
 				return;
 			}
@@ -772,7 +761,6 @@ class PlayState extends MusicBeatState
 
 	function syncEverything(){
 		var roundedTime:Float = Conductor.songPosition + Settings.pr.offset;
-		//roundedTime /= 2;
 
 		FlxG.sound.music.time  = roundedTime;
 		vocals.time            = roundedTime;
