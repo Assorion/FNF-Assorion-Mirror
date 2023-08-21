@@ -17,7 +17,7 @@ It could stand for:
 ## What is it for?
 
 This is virtually the Arch Linux of FNF Engines,
-or it least... I hope for it to be.
+or at least... I hope for it to be.
 
 It is a minimalist engine where I cut out all the fat of
 the original game and try my hardest to re-write everything.
