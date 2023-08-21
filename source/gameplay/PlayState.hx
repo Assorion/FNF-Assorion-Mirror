@@ -407,11 +407,8 @@ class PlayState extends MusicBeatState
 		iconP1.scale.set(scaleVal, scaleVal);
 		iconP2.scale.set(scaleVal, scaleVal);
 
-		if(FlxG.sound.music.playing)
-			songTime = Conductor.songPosition * Conductor.songDiv;
-		else if(countingDown){
-			songTime += (elapsed * 1000) * Conductor.songDiv;
-
+		songTime += (elapsed * 1000) * Conductor.songDiv;
+		if(countingDown){
 			var introBeat = CoolUtil.boundTo(Math.floor((songTime + (Settings.pr.offset * Conductor.songDiv)) * 0.25) + 4, -1, 4, true);
 			if(introBeat != swagCounter){
 				songTime = (introBeat - 4) * 4;
@@ -492,7 +489,6 @@ class PlayState extends MusicBeatState
 
 	function goodNoteHit(note:Note):Void
 	{
-		hittableNotes[note.noteData] = null;
 		vocals.volume = 1;
 
 		playerStrums.members[note.noteData].playAnim('confirm');
@@ -507,6 +503,7 @@ class PlayState extends MusicBeatState
 			popUpScore(note.strumTime);
 		}
 
+		hittableNotes[note.noteData] = null;
 		updateHealth(5);
 	}
 
@@ -739,12 +736,14 @@ class PlayState extends MusicBeatState
 
 			if(daNote.player != playerPos || Settings.pr.botplay) return;
 
-			if(songTime - daNote.strumTime > 2){
+			if(songTime - daNote.strumTime > 1.8){
 				noteMiss(daNote.noteData);
 				vocals.volume = 0.5;
 	
 				notes.remove(daNote, true);
 				daNote.destroy();
+				hittableNotes[daNote.noteData] = null;
+				staleNotes   [daNote.noteData] = false;
 				return;
 			}
 
@@ -754,15 +753,9 @@ class PlayState extends MusicBeatState
 				staleNotes[daNote.noteData]    = false;
 				return;
 			}
-			// if note is out of range.
-			if(daNote.strumTime - songTime < -1.8){
-				hittableNotes[daNote.noteData] = null;
-				staleNotes[daNote.noteData] = true;
-				return;
-			}
 
 			// sustain note input.
-			if(daNote.isSustainNote && Math.abs(daNote.strumTime - songTime) < 0.5 && keysPressed[daNote.noteData]){
+			if(daNote.isSustainNote && Math.abs(daNote.strumTime - songTime) < 0.8 && keysPressed[daNote.noteData]){
 				goodNoteHit(daNote);
 				return;
 			}
@@ -770,11 +763,12 @@ class PlayState extends MusicBeatState
 		});
 	}
 
-	/*
-		Step hit is not needed in playstate.
-		If YOU need the function, just add it back
-		In yourself.
-	*/
+	override function stepHit(){
+		super.stepHit();
+		if(countingDown) return;
+
+		songTime = Conductor.songPosition * Conductor.songDiv;
+	}
 
 	function syncEverything(){
 		var roundedTime:Float = Conductor.songPosition + Settings.pr.offset;

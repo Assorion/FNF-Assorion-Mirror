@@ -93,7 +93,7 @@ class MusicBeatState extends FlxUIState
 	}
 
 	private inline function updateCurStep():Void
-		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
+		curStep = Math.floor((FlxG.sound.music.time - Settings.pr.offset) * Conductor.songDiv);
 
 	public function stepHit():Void
 	{

@@ -31,14 +31,8 @@ class StoryMenuState extends MusicBeatState
 		{
 			graphic: 'storymenu/storyportrait',
 			week: '1',
-			songs: ['tutorial', 'fresh'],
+			songs: ['tutorial', 'fresh', 'test'],
 			topText: 'DADDY DEAREST'
-		},
-		{
-			graphic: 'storymenu/test',
-			week: '1',
-			songs: ['dadbattle', 'tutorial', 'fresh'],
-			topText: 'Massive Test Crash Gam'
 		}
 	];
 

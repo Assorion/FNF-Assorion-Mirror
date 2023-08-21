@@ -342,9 +342,9 @@ class ChartingState extends MusicBeatState {
 
     // # Add note code.
     public function addNote(){
-        if(delNote()) return;
         // 1280 / 3
         if(FlxG.mouse.x > 426) return;
+        if(delNote()) return;
 
         var newnote:Array<Dynamic> = [
             (Math.floor(gridSel.y / gridSize) / zooms[curZoom]) + (curSec * 16),
