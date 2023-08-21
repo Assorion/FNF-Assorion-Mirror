@@ -6,6 +6,8 @@ import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxTween;
 import misc.Alphabet;
+import gameplay.HealthIcon;
+import flixel.text.FlxText;
 
 /**
 	Looks messy so lemme give you a quick write-up on how this works.
@@ -31,9 +33,39 @@ class OptionsState extends MusicBeatState
 		['useful_info', 'antialiasing', 'show_hud', 'framerate', 'light_bot_strums']
 	];
 
+	var descriptions:Array<Array<String>> = [
+		[
+			'Basic options for the game Window', 
+			'Options for the gameplay itself', 
+			'Options for visuals and effects', 
+			'Change the key bindings'
+		],
+		[
+			'Start the game in fullscreen mode',
+			'Change the games starting volume',
+			'Skip the haxeflixel intro logo'
+		],
+		[
+			'Change the scroll direction',
+			'Change your audio offset (leave this as-is if you don\'t know yours)',
+			'Let the game handle your notes for you (does not count scores or health)',
+			'Allows pressing notes if there is no notes to hit',
+			'Changes the amount of health you lose from missing'
+		],
+		[
+			'Shows FPS and memory counter',
+			'If you don\'t know what this does, Google it.',
+			'Shows your health, stats, and other stuff in gameplay',
+			'Changes how fast the game runs',
+			'Enemy notes glow like the players'
+		]
+	];
+
 	var activeTextGroup:FlxTypedGroup<Alphabet>;
+	var activeIcons:FlxTypedGroup<HealthIcon>;
 	public static var curSel:Int = 0;
 	public var curSub:Int = 0;
+	public var descText:FlxText;
 
 	override function create()
 	{
@@ -43,7 +75,17 @@ class OptionsState extends MusicBeatState
 		add(menuBG);
 
 		activeTextGroup = new FlxTypedGroup<Alphabet>();
+		activeIcons     = new FlxTypedGroup<HealthIcon>();
 		add(activeTextGroup);
+		add(activeIcons);
+
+		var bottomBlack:FlxSprite = new FlxSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
+		bottomBlack.alpha = 0.6;
+
+		descText = new FlxText(5, FlxG.height - 25, 0, "", 20);
+		descText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
+		add(bottomBlack);
+		add(descText);
 
 		createNewList();
 
@@ -51,23 +93,23 @@ class OptionsState extends MusicBeatState
 	}
 
 	// # add group text.
-	private function quicklyAddText(str:String, p:Int){
+	private function quicklyAddText(str:String, p:Int):Alphabet
+	{
 		var opT:Alphabet = new Alphabet(0, (60 * p) + 30, str, true);
 			opT.alpMult = 0.4;
 			opT.alpha = 0;
 			opT.lerpPos = true;
 			activeTextGroup.add(opT);
+		return opT;
 	}
 	
 	public function createNewList(?appendOption:Bool = false){
 		activeTextGroup.clear();
-
-		// shamelessly stolen from freeplay.
+		activeIcons.clear();
 		for(i in 0...optionSub[curSub].length){
-			quicklyAddText(optionSub[curSub][i], i);
+			var alp = quicklyAddText(optionSub[curSub][i], i);
 
 			var str:String = '';
-
 			if(appendOption){
 				// reflection. it's slow and not good. But I need it to get a variable from a string name.
 				var val:Dynamic = Reflect.field(Settings.pr, optionSub[curSub][i]);
@@ -75,13 +117,17 @@ class OptionsState extends MusicBeatState
 				if(Std.is(val, Bool))
 					str = val ? 'yes' : 'no';
 			}
-
 			quicklyAddText(str, i);
+
+			// sorry for the hard code.
+			if(curSub != 0) continue;
+
+			var ican = new HealthIcon(i < 2 ? 'settings1' : 'settings2', false, alp);
+			ican.scale.set(0.85,0.85);
+			activeIcons.add(ican);
+
+			if(i % 2 == 1) ican.animation.play('losing');
 		}
-		for(i in 0...activeTextGroup.length)
-			if(Math.floor(i / 2) != curSel)
-				activeTextGroup.members[i].alpMult = 1;
-		/////////////////////
 
 		changeSel();
 	}
@@ -206,6 +252,8 @@ class OptionsState extends MusicBeatState
 		curSel += to;
 		curSel %= optionSub[curSub].length;
 		if(curSel < 0) curSel = optionSub[curSub].length - 1;
+
+		descText.text = descriptions[curSub][curSel];
 
 		for(i in 0...Math.floor(activeTextGroup.length / 2)){
 			var item = activeTextGroup.members[i * 2];

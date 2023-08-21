@@ -17,6 +17,7 @@ import gameplay.Song;
 import ui.CustomChartUI;
 import sys.io.File;
 import gameplay.HealthIcon;
+import flixel.tweens.FlxTween;
 
 using StringTools;
 
@@ -472,6 +473,7 @@ class ChartingState extends MusicBeatState {
 
     private var inSecUi:Bool = false;
     private var copyLastInt:Int = 2;
+    public static inline var textOffset:Int = -5;
     public function createSecUI():Void
     {
         uiElements.clear();
@@ -510,7 +512,9 @@ class ChartingState extends MusicBeatState {
 
             loadNotes();
         }, 'Select');
+        var mhText:FlxText = new FlxText(mustHitSection.x+mustHitSection.width + 5, mustHitSection.y + textOffset, 0, 'Move Camera to BF', 16);
 
+        uiElements.add(mhText);
         uiElements.add(mustHitSection);
         uiElements.add(clearButton);
         uiElements.add(copyLast);
@@ -532,7 +536,7 @@ class ChartingState extends MusicBeatState {
             PlayState.SONG.bpm = Std.parseInt(str);
             Conductor.changeBPM(PlayState.SONG.bpm);
         });
-        var voicesCheck:ChartUI_CheckBox = new ChartUI_CheckBox(bpmBox.x+bpmBox.width + 10, uiBG.y + 10, PlayState.SONG.needsVoices, (c:Bool) -> {
+        var voicesCheck:ChartUI_CheckBox = new ChartUI_CheckBox(uiBG.x + 10, (uiBG.y+uiBG.height) - 40, PlayState.SONG.needsVoices, (c:Bool) -> {
             PlayState.SONG.needsVoices = c;
             vocals.destroy();
 
@@ -543,25 +547,28 @@ class ChartingState extends MusicBeatState {
 
             FlxG.sound.list.add(vocals);
         });
-        var speedBox:ChartUI_InputBox = new ChartUI_InputBox(uiBG.x + 10, uiBG.y + 50, 70, Std.string(PlayState.SONG.speed), (str:String) -> {
-            PlayState.SONG.speed = Std.parseFloat(str);
+        var playerBox:ChartUI_InputBox = new ChartUI_InputBox(voicesCheck.x, voicesCheck.y - 40, 30, Std.string(PlayState.SONG.activePlayer), (str:String) -> {
+            PlayState.SONG.activePlayer = Std.parseInt(str);
         });
-        var delayBox:ChartUI_InputBox = new ChartUI_InputBox(speedBox.x+speedBox.width + 10, uiBG.y + 50, 70, Std.string(PlayState.SONG.beginTime), (str:String) -> {
+        var delayBox:ChartUI_InputBox = new ChartUI_InputBox(uiBG.x + 10, uiBG.y + 50, 70, Std.string(PlayState.SONG.beginTime), (str:String) -> {
             PlayState.SONG.beginTime = Std.parseFloat(str);
+        });
+        var speedBox:ChartUI_InputBox = new ChartUI_InputBox(delayBox.x+delayBox.width + 10, uiBG.y + 50, 70, Std.string(PlayState.SONG.speed), (str:String) -> {
+            PlayState.SONG.speed = Std.parseFloat(str);
         });
 
         var lines = CoolUtil.textFileLines('characterList');
-        var p1Drop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 90, 150, lines, PlayState.SONG.player1, (str:String) -> {
-            PlayState.SONG.player1 = str;
+        var p1Drop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 90, 150, lines, PlayState.SONG.characters[1], (str:String) -> {
+            PlayState.SONG.characters[1] = str;
         });
-        var p2Drop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 130, 150, lines, PlayState.SONG.player2, (str:String) -> {
-            PlayState.SONG.player2 = str;
+        var p2Drop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 130, 150, lines, PlayState.SONG.characters[0], (str:String) -> {
+            PlayState.SONG.characters[0] = str;
         });
-        var p3Drop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 170, 150, lines, PlayState.SONG.player3, (str:String) -> {
-            PlayState.SONG.player3 = str;
+        var p3Drop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 170, 150, lines, PlayState.SONG.characters[2], (str:String) -> {
+            PlayState.SONG.characters[2] = str;
         });
 
-        var stageDrop:ChartUI_DropDown = new ChartUI_DropDown(delayBox.x+delayBox.width + 10, uiBG.y + 50, 150, CoolUtil.textFileLines('stageList'), PlayState.SONG.stage, (str:String) -> {
+        var stageDrop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 210, 150, CoolUtil.textFileLines('stageList'), PlayState.SONG.stage, (str:String) -> {
             PlayState.SONG.stage = str;
         });
 
@@ -579,12 +586,9 @@ class ChartingState extends MusicBeatState {
                 bpm:         osong.bpm,
                 needsVoices: osong.needsVoices,
                 speed:       osong.speed,
-                player1:     osong.player1,
-                player2:     osong.player2,
-                player3:     osong.player3,
+                characters:  osong.characters,
                 stage:       osong.stage,
                 beginTime:   osong.beginTime,
-                playingChars:osong.playingChars,
                 activePlayer:osong.activePlayer
             };
             for(i in 0...PlayState.SONG.notes.length){
@@ -596,26 +600,51 @@ class ChartingState extends MusicBeatState {
             }
 
             loadNotes();
-        }, 'Clear Song', 120);
+        }, 'Clear Song', 120); 
         var saveSong:ChartUI_Button = new ChartUI_Button(reloadAudio.x, clearAllNotes.y + 40, true, ()->{
-            var bruh = {"song": PlayState.SONG};
-            var stringedSong:String = haxe.Json.stringify(bruh);
-            File.saveContent('assets/songs&data/${PlayState.curSong}/fresh-edited.json',stringedSong);
+            var path = 'assets/songs&data/${PlayState.curSong}/${PlayState.curSong}-edited.json';
+            var stringedSong:String = haxe.Json.stringify({"song": PlayState.SONG}, '\t');
+            File.saveContent(path,stringedSong);
+            var newText:FlxText = new FlxText(uiBG.x - 10, (uiBG.y + uiBG.height + 30) + textOffset, 0, 'Saved song to "$path"', 16);
+            add(newText);
+
+            FlxTween.tween(newText, {alpha: 0}, 1);
+            postEvent(1.1, ()->{
+                if(newText != null){
+                    remove(newText);
+                    newText.destroy();
+                    newText = null;
+                }
+            });
         }, 'Save Song', 120);
+        var voicesText:FlxText = new FlxText(voicesCheck.x + voicesCheck.width+5,voicesCheck.y + 10 + textOffset,0,'Enable Vocals',16);
+        var sSpeedText:FlxText = new FlxText(speedBox.x+speedBox.width+5        ,   speedBox.y + 10 + textOffset,0,'Scroll Speed', 16);
+        var playerText:FlxText = new FlxText(voicesText.x+5, voicesText.y - 40,0,'Player', 16);
 
+        var bfText:FlxText = new FlxText(p1Drop.x+p1Drop.width+5, p1Drop.y + 10 + textOffset, 0, 'BF',  16);
+        var dadTxt:FlxText = new FlxText(p2Drop.x+p2Drop.width+5, p2Drop.y + 10 + textOffset, 0, 'DAD', 16);
+        var gfText:FlxText = new FlxText(p3Drop.x+p3Drop.width+5, p3Drop.y + 10 + textOffset, 0, 'GF',  16);
 
+        uiElements.add(bfText);
+        uiElements.add(gfText);
+        uiElements.add(dadTxt);
+        uiElements.add(voicesText);
+        uiElements.add(sSpeedText);
+        uiElements.add(playerText);
+        
         uiElements.add(nameBox);
         uiElements.add(bpmBox);
         uiElements.add(voicesCheck);
         uiElements.add(speedBox);
         uiElements.add(delayBox);
+        uiElements.add(stageDrop);
         uiElements.add(p3Drop);
         uiElements.add(p2Drop);
         uiElements.add(p1Drop);
-        uiElements.add(stageDrop);
         uiElements.add(reloadAudio);
         uiElements.add(clearAllNotes);
         uiElements.add(saveSong);
+        uiElements.add(playerBox);
     }
 
     // basically stolen from FlxGridOverlay

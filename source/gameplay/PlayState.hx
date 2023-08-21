@@ -54,18 +54,14 @@ class PlayState extends MusicBeatState
 
 	private var vocals:FlxSound;
 
-	private var dad:Character;
-	private var gf:Character;
-	private var boyfriend:Character;
-
 	private var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
 
 	private var strumLine:FlxObject;
 
 	private var camFollow:FlxObject;
-	private var strumLineNotes:FlxTypedGroup<FlxSprite>;
-	private var playerStrums:FlxTypedGroup<FlxSprite>;
+	private var strumLineNotes:FlxTypedGroup<StrumNote>;
+	private var playerStrums:FlxTypedGroup<StrumNote>;
 
 	// health now goes from 0 - 100, instead of 0 - 2
 	private var health:Int    = 50;
@@ -95,34 +91,20 @@ class PlayState extends MusicBeatState
 		#if (haxe < "4.0.0") <String, Dynamic> #end ();
 
 	private var characterPositions:Array<Int> = [
-		// gf
-		400,
-		130,
 		// dad
 		100, 100,
 		//bf
 		770,
-		450
-	];
-	private var characterNames:Array<String> = [
-		SONG.player3,
-		SONG.player2,
-		SONG.player1
+		450,
+		// gf
+		400,
+		130
 	];
 	// this should be the notes the the player is meant to hit.
 	private var playerPos:Int = 1;
-	private var playingCharacters:Array<Character> = [];
+	private var allCharacters:Array<Character> = [];
 
 	private var songTime:Float;
-
-	// last one should always be the player.
-	private function createChar(pos:Int):Character
-	{
-		var charRef = new Character(characterPositions[pos * 2], characterPositions[(pos * 2) + 1], characterNames[pos], pos == characterNames.length - 1);
-		add(charRef);
-
-		return charRef;
-	}
 
 	// # Create (obvious) where game starts.
 	override public function create()
@@ -139,26 +121,15 @@ class PlayState extends MusicBeatState
 
 		handleStage();
 
-		/*
-			Would've loved to have put these characters in a for loop.
-			Except haxe's infinite amount of BS means it would be worse,
-			Than just manually setting the characters.
-			
-			Should still be easy to create more custom characters if needed though.
-		*/
-
-		gf 		  = createChar(0);
-		dad		  = createChar(1);
-		boyfriend = createChar(2);
+		for(i in 0...SONG.characters.length)
+			allCharacters.push(new Character(characterPositions[i * 2], characterPositions[(i * 2) + 1], SONG.characters[i], i == 1));
 
 		playerPos = SONG.activePlayer;
-		playingCharacters = [dad, boyfriend];
 
-		if(SONG.playingChars.length >= 2){
-			var charsArr:Array<Character> = [dad, boyfriend, gf];
-			for(i in 0...SONG.playingChars.length)
-				playingCharacters.push(charsArr[SONG.playingChars[i]]);
-		}
+		// this adds the characters in reverse.
+		for(i in 0...SONG.characters.length)
+			add(allCharacters[(SONG.characters.length - 1) - i]);
+
 		///////////////////////////////////
 
 		curSong = SONG.song.toLowerCase();
@@ -166,8 +137,8 @@ class PlayState extends MusicBeatState
 
 		strumLine = new FlxObject(0, Settings.pr.downscroll ? FlxG.height - 150 : 50, 1, 1);
 
-		strumLineNotes = new FlxTypedGroup<FlxSprite>();
-		playerStrums   = new FlxTypedGroup<FlxSprite>();
+		strumLineNotes = new FlxTypedGroup<StrumNote>();
+		playerStrums   = new FlxTypedGroup<StrumNote>();
 		notes          = new FlxTypedGroup<Note>();
 		add(strumLineNotes);
 		add(notes);
@@ -182,7 +153,7 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.pause();
 
 		generateSong();
-		for(i in 0...playingCharacters.length)
+		for(i in 0...2)
 			generateStaticArrows(i, i == playerPos);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
@@ -240,8 +211,8 @@ class PlayState extends MusicBeatState
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
 
-		iconP1 = new HealthIcon(SONG.player1, true);
-		iconP2 = new HealthIcon(SONG.player2, false);
+		iconP1 = new HealthIcon(SONG.characters[1], true);
+		iconP2 = new HealthIcon(SONG.characters[0], false);
 		iconP1.y = baseY - (iconP1.height / 2);
 		iconP2.y = baseY - (iconP2.height / 2);
 
@@ -283,15 +254,25 @@ class PlayState extends MusicBeatState
 
 		switch(curStage){
 			case 'stage', '':
+				if(SONG.song == 'tutorial')
+					characterPositions = [
+						70,
+						130,
+						780,
+						450
+					];
+
 				defaultCamZoom = 0.9;
 				var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.lImage('stages/stageback'));
 					bg.antialiasing = Settings.pr.antialiasing;
+					bg.setGraphicSize(Std.int(bg.width * 2));
+					bg.updateHitbox();
 					bg.scrollFactor.set(0.9, 0.9);
 					bg.active = false;
 				add(bg);
 
 				var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.lImage('stages/stagefront'));
-					stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+					stageFront.setGraphicSize(Std.int(stageFront.width * 2.2));
 					stageFront.updateHitbox();
 					stageFront.antialiasing = Settings.pr.antialiasing;
 					stageFront.scrollFactor.set(0.9, 0.9);
@@ -299,7 +280,7 @@ class PlayState extends MusicBeatState
 				add(stageFront);
 
 				var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.lImage('stages/stagecurtains'));
-					stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
+					stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 1.8));
 					stageCurtains.updateHitbox();
 					stageCurtains.antialiasing = Settings.pr.antialiasing;
 					stageCurtains.scrollFactor.set(1.3, 1.3);
@@ -339,29 +320,10 @@ class PlayState extends MusicBeatState
 	private function generateStaticArrows(player:Int, playable:Bool):Void
 		for (i in 0...4)
 		{
-			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
-			babyArrow.frames = Paths.lSparrow('gameplay/NOTE_assets');
-			babyArrow.setGraphicSize(Math.round(babyArrow.width * 0.7));
-			babyArrow.updateHitbox();
-			babyArrow.antialiasing = Settings.pr.antialiasing;
+			var babyArrow:StrumNote = new StrumNote(0, strumLine.y, i, player);
 			babyArrow.alpha = 0;
 
-			babyArrow.x += Note.swagWidth * i;
-			babyArrow.animation.addByPrefix('static', 'arrow' + sDir[i]);
-			babyArrow.animation.addByPrefix('pressed', Note.colArr[i] + ' press'  , 24, false);
-			babyArrow.animation.addByPrefix('confirm', Note.colArr[i] + ' confirm', 24, false);
-
-			// hopefully caches the animation.
-			babyArrow.animation.play('confirm');
-			babyArrow.animation.play('pressed');
-			playAnimAndCenter(babyArrow, 'static');
-
-			// 98 so it is screen centered.
-			babyArrow.x += 98;
-			babyArrow.x += (FlxG.width / 2) * player;
-
 			strumLineNotes.add(babyArrow);
-
 			if(playable)
 				playerStrums.add(babyArrow);
 		}
@@ -399,10 +361,8 @@ class PlayState extends MusicBeatState
 				startSong();
 				return;
 			}
-
-			dad.dance(true);
-			 gf.dance(true);
-			boyfriend.dance(true);
+			for(pc in allCharacters)
+				pc.dance(true);
 
 			FlxG.sound.play(Paths.lSound('gameplay/' + introAssets[swagCounter + 4]), 0.6);
 			if(introSprites[swagCounter] != null)
@@ -461,20 +421,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		// this is used for bot, and player strums.
-		for(i in 0...8){
-			staleNotes[i % 4] = true;
-			/////////////////////////////
-			if(lingeringPresses[i] > 0){
-				lingeringPresses[i] -= elapsed;
-				continue;
-			}
-			if(lingeringPresses[i] == 0) continue;
-
-			lingeringPresses[i] = 0;
-			if(Math.floor(i / 4) != playerPos || Settings.pr.botplay)
-				playAnimAndCenter(strumLineNotes.members[i], 'static');
-		}
 		handleNotes();
 
 		super.update(elapsed);
@@ -491,24 +437,20 @@ class PlayState extends MusicBeatState
 			if (Std.string(SONG.notes[Math.floor(curBeat / 4)].mustHitSection) != 'null')
 				mustHitSection = SONG.notes[Math.floor(curBeat / 4)].mustHitSection;
 
-			camFollow.x = dad.getMidpoint().x + dad.camOffset[0];
-			camFollow.y = dad.getMidpoint().y + dad.camOffset[1];
-			if(mustHitSection){
-				camFollow.x = boyfriend.getMidpoint().x + boyfriend.camOffset[0];
-				camFollow.y = boyfriend.getMidpoint().y + boyfriend.camOffset[1];
-			}
+			var char = allCharacters[mustHitSection ? 1 : 0];
+			camFollow.x = char.getMidpoint().x + char.camOffset[0];
+			camFollow.y = char.getMidpoint().y + char.camOffset[1];
 		}
 
 		iconP1.scale.set(1.2,1.2);
 		iconP2.scale.set(1.2,1.2);
 
-		gf.dance();
-
-		for(pc in playingCharacters)
+		for(pc in allCharacters){
 			if(pc.idleNextBeat)
 				pc.dance(true);
 			else
 				pc.idleNextBeat = true;
+		}
 	}
 
 	// # Update stats
@@ -538,12 +480,12 @@ class PlayState extends MusicBeatState
 
 		if(health > 0) return; 
 
-		remove(playingCharacters[playerPos]);
+		remove(allCharacters[playerPos]);
 		paused = true;
 		FlxG.sound.music.pause();
 		vocals.pause();
 
-		openSubState(new GameOverSubstate(0,0, playingCharacters[playerPos], camHUD));
+		openSubState(new GameOverSubstate(0,0, allCharacters[playerPos], camHUD));
 	}
 
 	// # On note hit.
@@ -553,9 +495,9 @@ class PlayState extends MusicBeatState
 		hittableNotes[note.noteData] = null;
 		vocals.volume = 1;
 
-		playAnimAndCenter(playerStrums.members[note.noteData], 'confirm');
-		playingCharacters[playerPos].playAnim('sing' + sDir[note.noteData], true);
-		playingCharacters[playerPos].idleNextBeat = false;
+		playerStrums.members[note.noteData].playAnim('confirm');
+		allCharacters[playerPos].playAnim('sing' + sDir[note.noteData], true);
+		allCharacters[playerPos].idleNextBeat = false;
 
 		notes.remove(note, true);
 		note.destroy();
@@ -573,7 +515,8 @@ class PlayState extends MusicBeatState
 	function noteMiss(direction:Int = 1):Void
 	{
 		if (combo > 20)
-			gf.playAnim('sad');
+			for(i in 0...allCharacters.length)
+				allCharacters[i].playAnim('sad');
 
 		combo = 0;
 		songScore -= 50;
@@ -582,8 +525,8 @@ class PlayState extends MusicBeatState
 		var missRandom:Int = Math.round(Math.random() * 2) + 1;
 		FlxG.sound.play(Paths.lSound('gameplay/missnote' + missRandom), 0.2);
 
-		playingCharacters[playerPos].playAnim('sing' + sDir[direction] + 'miss', true);
-		playingCharacters[playerPos].idleNextBeat = false;
+		allCharacters[playerPos].playAnim('sing' + sDir[direction] + 'miss', true);
+		allCharacters[playerPos].idleNextBeat = false;
 
 		updateHealth(Math.round(-Settings.pr.miss_health * 0.5));
 	}
@@ -592,7 +535,6 @@ class PlayState extends MusicBeatState
 	public var staleNotes:Array<Bool>    = [false,false,false,false];
 	public var hittableNotes:Array<Note> = [null, null, null, null];
 	public var keysPressed:Array<Bool>   = [false, false, false, false];
-	public var lingeringPresses:Array<Float> = [0,0,0,0 ,0,0,0,0];
 
 	// # input code.
 	// please add any keys or stuff you want to add here.
@@ -602,10 +544,12 @@ class PlayState extends MusicBeatState
 		if(paused) return;
 
 		// theres are just regular key checks.
+		#if (!EXCLUDE_CHART_EDITOR)
 		if(key == FlxKey.SEVEN){
 			FlxG.switchState(new ChartingState());
 			return;
 		}
+		#end
 		if(key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK]) != -1 && FlxG.sound.music.playing){
 			paused = true;
 			FlxG.sound.music.pause();
@@ -621,17 +565,16 @@ class PlayState extends MusicBeatState
 
 		keysPressed[nkey] = true;
 
-		var magicNumber = nkey + (4 * playerPos);
+		var sRef = playerStrums.members[nkey];
 		if(hittableNotes[nkey] != null){
 			goodNoteHit(hittableNotes[nkey]);
-			lingeringPresses[magicNumber] = Conductor.stepCrochet * 0.001;
+			sRef.pressTime = Conductor.stepCrochet * 0.001;
 			
 			return;
 		}
+		if(sRef.pressTime != 0) return;
 
-		if(lingeringPresses[magicNumber] != 0) return;
-
-		playAnimAndCenter(playerStrums.members[nkey], 'pressed');
+		sRef.playAnim('pressed');
 		if(!Settings.pr.ghost_tapping)
 			noteMiss(nkey);
 	}
@@ -643,7 +586,7 @@ class PlayState extends MusicBeatState
 		if (nkey == -1) return;
 
 		keysPressed[nkey] = false;
-		playAnimAndCenter(playerStrums.members[nkey], 'static');
+		playerStrums.members[nkey].playAnim();
 	}
 
 	// you can add your own scores.
@@ -753,6 +696,8 @@ class PlayState extends MusicBeatState
 	// # handle notes. Note scrolling etc
 
 	private inline function handleNotes(){
+		for(i in 0...4)
+			staleNotes[i] = true;
 		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - songTime < 64)
 		{
 			notes.add(unspawnNotes[noteCount]);
@@ -770,8 +715,8 @@ class PlayState extends MusicBeatState
 			var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
 
 			if((daNote.player != playerPos || Settings.pr.botplay) && songTime >= daNote.strumTime){
-				playingCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData], true);
-				playingCharacters[daNote.player].idleNextBeat = false;
+				allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData], true);
+				allCharacters[daNote.player].idleNextBeat = false;
 				
 				vocals.volume = 1;
 
@@ -779,8 +724,8 @@ class PlayState extends MusicBeatState
 				daNote.destroy();
 				
 				if(Settings.pr.light_bot_strums){
-					playAnimAndCenter(strumRef, 'confirm');
-					lingeringPresses[daNote.noteData + (4 * daNote.player)] = Conductor.stepCrochet * 0.001;
+					strumRef.playAnim('confirm');
+					strumRef.pressTime = Conductor.stepCrochet * 0.001;
 				}
 				if(Settings.pr.botplay)
 					hittableNotes[daNote.noteData] = null;
@@ -832,19 +777,13 @@ class PlayState extends MusicBeatState
 	*/
 
 	function syncEverything(){
-		var roundedTime:Float = FlxG.sound.music.time + (Conductor.songPosition + Settings.pr.offset) + vocals.time;
-		roundedTime /= 3;
+		var roundedTime:Float = Conductor.songPosition + Settings.pr.offset;
+		//roundedTime /= 2;
 
 		FlxG.sound.music.time  = roundedTime;
 		vocals.time            = roundedTime;
 		Conductor.songPosition = roundedTime - Settings.pr.offset;
 		songTime = Conductor.songPosition * Conductor.songDiv;
-	}
-
-	private inline function playAnimAndCenter(spr:FlxSprite, anim:String){
-		spr.animation.play(anim, true);
-		spr.centerOffsets();
-		spr.centerOrigin ();
 	}
 	private inline function introSpriteTween(spr:FlxSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
 	{

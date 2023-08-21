@@ -19,7 +19,7 @@ class Alphabet extends FlxSpriteGroup
 
 	public var text(default, set):String = "";
 
-	var futurePos:Float = 0;
+	public var futurePos:Float = 0;
 	public var isBold:Bool = false;
 
 	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false)

@@ -20,10 +20,7 @@ typedef SwagSong =
 	var needsVoices:Bool;
 	var speed:Float;
 
-	var player1:String;
-	var player2:String;
-	var player3:String;
-	var playingChars:Array<Int>;
+	var characters:Array<String>;
 	var activePlayer:Int;
 	var stage:String;
 	var beginTime:Float;

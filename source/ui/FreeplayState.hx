@@ -32,11 +32,12 @@ class FreeplayState extends MusicBeatState
 	var intendedScore:Int = 0;
 
 	private var grpSongs:FlxTypedGroup<Alphabet>;
+	//private var icons:Array<FlxSprite> = [];
 	private var vocals  :FlxSound;
 
 	override function create()
 	{
-		songs = CoolUtil.textFileLines('freeplaySonglist');
+		var lines:Array<String> = CoolUtil.textFileLines('freeplaySonglist');
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.lImage('ui/menuDesat'));
 		bg.color = FlxColor.fromRGB(145, 113, 255);
@@ -44,6 +45,9 @@ class FreeplayState extends MusicBeatState
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(bg);
 		add(grpSongs);
+
+		for(i in 0...lines.length)
+			songs.push(lines[i].split(':')[0]);
 
 		for (i in 0...songs.length)
 		{
@@ -55,6 +59,10 @@ class FreeplayState extends MusicBeatState
 
 			if(i != curSelected)
 				songText.alpMult = 0.4;
+
+			var ican = new gameplay.HealthIcon(lines[i].split(':')[1], false, songText);
+			ican.scale.set(0.85,0.85);
+			add(ican);
 		}
 
 		var scoreBG:FlxSprite = new FlxSprite((FlxG.width * 0.7) - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
@@ -69,6 +77,13 @@ class FreeplayState extends MusicBeatState
 		add(scoreBG);
 		add(diffText);
 		add(scoreText);
+
+		var bottomBlack:FlxSprite = new FlxSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
+		var descText = new FlxText(5, FlxG.height - 25, 0, "Press Space to preview song / stop song. Left or Right to change the difficulty.", 20);
+		bottomBlack.alpha = 0.6;
+		descText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
+		add(bottomBlack);
+		add(descText);
 
 		changeSelection();
 		changeDiff();
@@ -87,7 +102,7 @@ class FreeplayState extends MusicBeatState
 		trace(curDifficulty);
 
 		intendedScore = Highscore.getScore(songs[curSelected], curDifficulty);
-		scoreText.text = "PERSONAL BEST:" + intendedScore;
+		scoreText.text = 'PERSONAL BEST:$intendedScore';
 		diffText .text = '< ' + CoolUtil.diffString(curDifficulty, 1).toUpperCase() + ' >';
 
 	}
@@ -101,7 +116,7 @@ class FreeplayState extends MusicBeatState
 		if(curSelected < 0) curSelected = songs.length - 1;
 
 		intendedScore = Highscore.getScore(songs[curSelected], curDifficulty);
-		scoreText.text = "PERSONAL BEST:" + intendedScore;
+		scoreText.text = 'PERSONAL BEST:$intendedScore';
 
 		for(i in 0...grpSongs.members.length){
 			var item = grpSongs.members[i];

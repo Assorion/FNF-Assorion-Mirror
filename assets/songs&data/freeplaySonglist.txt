@@ -1,4 +1,4 @@
-Tutorial
-Bopeebo
-Fresh
-Dadbattle
+Tutorial:gf
+Bopeebo:dad
+Fresh:dad
+Dadbattle:bf

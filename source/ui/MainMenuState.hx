@@ -24,7 +24,7 @@ class MainMenuState extends MusicBeatState
 
 	// too lazy to separate out these assets.
 	// so instead you can define your own asset path.
-	var optionList:Array<String> = ['story mode', 'freeplay', 'donate',   'options'];
+	var optionList:Array<String> = ['story mode', 'freeplay', 'github',   'options'];
 	var optionPath:Array<String> = ['FNF_main'  , 'FNF_main', 'FNF_main', 'FNF_main'];
 	var selectedSomethin:Bool = false;
 
@@ -131,7 +131,8 @@ class MainMenuState extends MusicBeatState
 				case 1:
 					FlxG.switchState(new FreeplayState());
 				case 2:
-					FlxG.switchState(new TitleState());
+					CoolUtil.browserLoad('https://github.com/Legendary-Candice-Joe/Funkin-MKG/');
+					FlxG.resetState();
 				case 3:
 					FlxG.switchState(new OptionsState());
 			}

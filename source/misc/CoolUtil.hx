@@ -1,6 +1,7 @@
 package misc;
 
 import lime.utils.Assets;
+import flixel.FlxG;
 
 using StringTools;
 
@@ -39,5 +40,13 @@ class CoolUtil
 		if(retInt) return Math.round(val);
 
 		return val;
+	}
+
+	public inline static function browserLoad(site:String) {
+		#if linux
+		Sys.command('/usr/bin/xdg-open', [site]);
+		#else
+		FlxG.openURL(site);
+		#end
 	}
 }

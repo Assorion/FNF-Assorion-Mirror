@@ -78,7 +78,7 @@ class Settings {
     }
 
     public static function flush(){
-        var data:String = Json.stringify(pr);
+        var data:String = Json.stringify(pr, '\t');
 
         // # TODO actually make this run in a web browser.
         File.saveContent('assets/songs&data/savedata.json', data);
