@@ -132,6 +132,7 @@ class FreeplayState extends MusicBeatState
 	}
 	
 	private var prevTime:Float = 0;
+	private var playing:Bool = true;
 
 	// # input code.
 
@@ -153,13 +154,17 @@ class FreeplayState extends MusicBeatState
 
 		// space code.
 		if(key == FlxKey.SPACE){
-			if(vocals != null && vocals.playing){
+			playing = !playing;
+
+			if(playing){
+				FlxG.sound.playMusic(Paths.lMusic('freakyMenu'));
+				FlxG.sound.music.time = prevTime;
+
+				if(vocals == null) return;
+				
 				vocals.stop();
 				vocals.destroy();
 				vocals = new FlxSound();
-				
-				FlxG.sound.playMusic(Paths.lMusic('freakyMenu'));
-				FlxG.sound.music.time = prevTime;
 
 				return;
 			}

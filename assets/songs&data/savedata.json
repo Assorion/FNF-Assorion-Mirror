@@ -15,6 +15,7 @@
     "show_hud": true,
     "framerate": 120,
     "light_bot_strums": true,
+    "strum_effects": false,
 
     "note_left":  [65, 37],
     "note_right": [68, 39],

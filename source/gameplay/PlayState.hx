@@ -41,6 +41,8 @@ using StringTools;
 
 class PlayState extends MusicBeatState
 {
+	public static inline var inputRange:Float = 1.25; // 1 = step. 1.25 = 1 + 1/4 step range.
+
 	public static var curStage:String = '';
 	public static var curSong :String = '';
 	public static var SONG:SwagSong;
@@ -488,7 +490,7 @@ class PlayState extends MusicBeatState
 	{
 		vocals.volume = 1;
 
-		playerStrums.members[note.noteData].playAnim('confirm');
+		playerStrums.members[note.noteData].playAnim(2);
 		allCharacters[playerPos].playAnim('sing' + sDir[note.noteData], true);
 		allCharacters[playerPos].idleNextBeat = false;
 
@@ -558,7 +560,7 @@ class PlayState extends MusicBeatState
 
 		var sRef = playerStrums.members[nkey];
 		var nRef = hittableNotes[nkey];
-		if(nRef != null && Math.abs(nRef.strumTime - songTime) < 1.8){
+		if(nRef != null && Math.abs(nRef.strumTime - songTime) < inputRange){
 			goodNoteHit(nRef);
 			sRef.pressTime = Conductor.stepCrochet * 0.001;
 			
@@ -566,7 +568,7 @@ class PlayState extends MusicBeatState
 		}
 		if(sRef.pressTime != 0) return;
 
-		sRef.playAnim('pressed');
+		sRef.playAnim(1);
 		if(!Settings.pr.ghost_tapping)
 			noteMiss(nkey);
 	}
@@ -597,13 +599,13 @@ class PlayState extends MusicBeatState
 		},
 		{
 			score: 100,
-			threshold: 0.7,
+			threshold: 0.65,
 			name: 'bad',
 			value: 3
 		},
 		{
 			score: 25,
-			threshold: 1.5,
+			threshold: 1,
 			name: 'superbad',
 			value: 4
 		}
@@ -716,7 +718,7 @@ class PlayState extends MusicBeatState
 				daNote.destroy();
 				
 				if(Settings.pr.light_bot_strums){
-					strumRef.playAnim('confirm');
+					strumRef.playAnim(2);
 					strumRef.pressTime = Conductor.stepCrochet * 0.001;
 				}
 
@@ -729,7 +731,7 @@ class PlayState extends MusicBeatState
 
 			if(daNote.player != playerPos || Settings.pr.botplay) return;
 
-			if(nDiff > 1.8){
+			if(nDiff > inputRange){
 				noteMiss(daNote.noteData);
 				vocals.volume = 0.5;
 	
@@ -737,7 +739,7 @@ class PlayState extends MusicBeatState
 				daNote.destroy();
 				return;
 			}
-			if (Math.abs(nDiff) < 1.8 && !daNote.isSustainNote && staleNotes[daNote.noteData]){
+			if (Math.abs(nDiff) < inputRange && !daNote.isSustainNote && staleNotes[daNote.noteData]){
 				hittableNotes[daNote.noteData] = daNote;
 				staleNotes[daNote.noteData]    = false;
 				return;

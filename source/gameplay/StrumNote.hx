@@ -6,6 +6,7 @@ import flixel.FlxG;
 class StrumNote extends FlxSprite {
     var isPlayer:Bool = false;
     public var pressTime:Float = 0;
+    public var curState:Int = 0;
 
     public function new(xb:Float, yb:Float, data:Int, player:Int){
         super(xb,yb);
@@ -20,9 +21,9 @@ class StrumNote extends FlxSprite {
         animation.addByPrefix('confirm', Note.colArr[data] + ' confirm', 24, false);
 
         // hopefully caches the animation.
-        animation.play('confirm');
-        animation.play('pressed');
-        playAnim('static');
+        playAnim(1);
+        playAnim(2);
+        playAnim(0);
 
         // 98 so it is screen centered.
         x += Note.swagWidth * data;
@@ -46,9 +47,12 @@ class StrumNote extends FlxSprite {
             playAnim();
     }
 
-    public function playAnim(animName:String = 'static'){
-        animation.play(animName, true);
+    public function playAnim(state:Int = 0){
+        var str = ['static', 'pressed', 'confirm'][state];
+
+        animation.play(str, true);
 		centerOffsets();
 		centerOrigin ();
+        curState = state;
     }  
 }

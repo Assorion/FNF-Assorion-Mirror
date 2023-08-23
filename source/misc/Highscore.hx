@@ -23,8 +23,6 @@ class Highscore
 		var songNaem:String = song.toLowerCase().trim() + CoolUtil.diffString(diff, 0);
 
 		if(scoreExists(songNaem) >= score) return;
-
-		trace('S: $score SE: ${scoreExists(songNaem)}');
 		
 		songScores.set(songNaem, score);
 		FlxG.save.data.songScores = songScores;
