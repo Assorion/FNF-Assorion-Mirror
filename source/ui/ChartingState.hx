@@ -39,6 +39,7 @@ class ChartingState extends MusicBeatState {
     public static var selectNoteColour:Array<Int> = [170, 170, 170];
 
     public static inline var gridSize:Int = 40;
+    public static inline var noteRange:Int = 0;
 
     public var selectedNotes:Array<Array<Dynamic>> = [];
 
@@ -64,6 +65,7 @@ class ChartingState extends MusicBeatState {
     public static var blockInput:Bool = false;
     // this is used to stop conflicts with other UI elements
     public static var activeUIElement:Dynamic;
+    public static var curNoteType:Int = 0;
 
     var uiBG:FlxSprite;
     var uiFront:FlxSprite;
@@ -157,9 +159,11 @@ class ChartingState extends MusicBeatState {
         add(uiElements);
 
         var songButton:ChartUI_Button = new ChartUI_Button(uiBG.x + uiBG.width - 4, uiBG.y + 20, false, createSongUI, 'SONG');
+        var infoButton:ChartUI_Button = new ChartUI_Button(uiBG.x + uiBG.width - 4, uiBG.y +500, false, createInfoUI, 'ABOUT');
         var secButton :ChartUI_Button = new ChartUI_Button(uiBG.x + uiBG.width - 4, uiBG.y + 60, false, createSecUI , 'SECTION');
         add(secButton );
         add(songButton);
+        add(infoButton);
 
         createSongUI();
         loadNotes();
@@ -231,6 +235,19 @@ class ChartingState extends MusicBeatState {
             if(inSecUi) createSecUI();
 
             pauseSong();
+            loadNotes();
+            return;
+        }
+
+        // note types
+        T = key.deepCheck([[FlxKey.B], [FlxKey.N]]);
+        if(T != -1){
+            curNoteType += (T * 2) - 1;
+            curNoteType = CoolUtil.boundTo(curNoteType, 0, noteRange);
+
+            for(nt in selectedNotes)
+                nt[4] = curNoteType;
+
             loadNotes();
             return;
         }
@@ -313,7 +330,7 @@ class ChartingState extends MusicBeatState {
     public function loadNotes(){
         notes.clear();
         for(newnote in PlayState.SONG.notes[curSec].sectionNotes){
-            var daNote = new Note(newnote[0], newnote[1]);
+            var daNote = new Note(newnote[0], newnote[1], newnote[4]);
             daNote.setGraphicSize(gridSize, gridSize);
             daNote.x = gridSize * daNote.noteData;
             daNote.x += gridSize * 4 * newnote[3];
@@ -326,7 +343,7 @@ class ChartingState extends MusicBeatState {
             notes.add(daNote);
 
             for(i in 1...Math.floor((newnote[2] * zooms[curZoom]) + 1)){
-                var susNote = new Note(newnote[0] + (i / zooms[curZoom]), newnote[1], true, i == Math.floor(newnote[2]*zooms[curZoom]));
+                var susNote = new Note(newnote[0] + (i / zooms[curZoom]), newnote[1], newnote[4], true, i == Math.floor(newnote[2]*zooms[curZoom]));
                 if(Settings.pr.downscroll) susNote.flipY = false;
                 susNote.setGraphicSize(Std.int(gridSize / 2.5), gridSize);
                 susNote.x = daNote.x;
@@ -350,7 +367,8 @@ class ChartingState extends MusicBeatState {
             (Math.floor(gridSel.y / gridSize) / zooms[curZoom]) + (curSec * 16),
              Math.floor(gridSel.x / gridSize) % 4,
             0,
-            Math.floor(gridSel.x / (gridSize * 4))
+            Math.floor(gridSel.x / (gridSize * 4)),
+            curNoteType
         ];
 
         PlayState.SONG.notes[curSec].sectionNotes.push(newnote);
@@ -470,6 +488,33 @@ class ChartingState extends MusicBeatState {
                 mustHitSection: false
             });
         }
+
+    public function createInfoUI():Void
+    {
+        uiElements.clear();
+        inSecUi = false;
+
+        var text:String = '
+        About / Info / How to use:\n
+        Left Click - Add note
+        Left Click on note - Delete note
+        Right Click - Delete selected notes
+        Ctrl + Left Click - Select multiple notes
+        Q / E - Decrease or add length of selected notes
+        Z / X - Zoom in or zoom out grid
+        B / N - Change note types (including selected notes)
+        SPACE - Pause / Play song\n
+        Ctrl \"Power Moves\" (on selected notes):\n
+        Ctrl + J / L - Moves all notes left or right on the grid
+        Ctrl + I / K - Moves all notes up or down on the grid
+        Ctrl + C - Makes of copy of selected notes
+        Ctrl + V mirrors selected notes
+        ';
+        var aboutText:FlxText = new FlxText(uiBG.x - 37, (uiBG.y - 10) + textOffset, 0, text, 12);
+        aboutText.scale.set(0.95, 0.95);
+
+        uiElements.add(aboutText);
+    }
 
     private var inSecUi:Bool = false;
     private var copyLastInt:Int = 2;

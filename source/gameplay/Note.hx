@@ -7,6 +7,13 @@ import flixel.util.FlxColor;
 class Note extends FlxSprite
 {
 	public static var colArr:Array<String> = ['purple', 'blue', 'green', 'red'];
+	public static var possibleTypes:Array<NoteType> = [
+		{
+			assets: 'NOTE_assets',
+			missIfHit: false,
+			onHit: null, onMiss: null
+		}
+	];
 
 	public var strumTime:Float = 0;
 	public var curColor:String = 'purple';
@@ -18,11 +25,13 @@ class Note extends FlxSprite
 
 	public var chartRef:Array<Dynamic> = [];
 	public var isSustainNote:Bool = false;
+	public var noteType:NoteType;
+	public var mustHit:Bool = true;
 
 	// this is inlined, you can't change this variable later.
 	public static inline var swagWidth:Float = 160 * 0.7;
 
-	public function new(strumTime:Float, data:Int, ?sustainNote:Bool = false, ?isEnd:Bool = false)
+	public function new(strumTime:Float, data:Int, type:Int, ?sustainNote:Bool = false, ?isEnd:Bool = false)
 	{
 		super();
 
@@ -31,10 +40,12 @@ class Note extends FlxSprite
 		isSustainNote  = sustainNote;
 		this.strumTime = strumTime;
 		this.noteData  = data % 4;
+		this.noteType  = possibleTypes[type];
+		mustHit = !noteType.missIfHit;
 
 		curColor = colArr[noteData];
 
-		frames = Paths.lSparrow('gameplay/NOTE_assets');
+		frames = Paths.lSparrow('gameplay/${noteType.assets}');
 		if(isSustainNote){
 			animation.addByPrefix('holdend', '$curColor hold end');
 			animation.addByPrefix('hold'   , '$curColor hold piece');
@@ -75,4 +86,16 @@ class Note extends FlxSprite
 		offsetY = defaultOffset;
 		updateHitbox();
 	}
+
+	// helper function
+	public function handleTypeFunctions(action:Int){
+		var curAct:Void->Void = [noteType.onHit, noteType.onMiss][action];
+		if(curAct != null) curAct();
+	}
+}
+typedef NoteType = {
+	var assets:String;
+	var missIfHit:Bool;
+	var onHit:Void->Void;
+	var onMiss:Void->Void;
 }

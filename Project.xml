@@ -17,48 +17,28 @@
 	<window width="1280" height="720" fps="" background="#000000" hardware="true" vsync="false" />
 	<window if="html5" resizable="true" />
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
-	<!--window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" /-->
-	<!--window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" /-->
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
-	<!--set name="BUILD_DIR" value="export/32bit" if="32bit" /-->
 
 	<classpath name="source" />
 
 	<assets path="assets" exclude="*.mp3" unless="web"/>
 	<assets path="assets" exclude="*.ogg" if="web"/>
-	<!--assets path="assets/data" />
-	<assets path='assets/mods' />
-	
-	< <library name="noPreload" preload='false'/>>
-	< <library name="noPreload"/> >
-	<assets path="assets/music" include="*.mp3" if="web"/>
-	<assets path="assets/music" include="*.ogg" unless="web"/>
-	<assets path="assets/sounds" include="*.mp3" if="web" />
-	<assets path="assets/sounds" include="*.ogg" unless="web" /-->
+	<assets path="embedded" rename="assets" embed="true"/>
 
 	<assets path="CHANGELOG.md"/>
-
-
-	<assets path="assets/fonts/vcr.ttf" embed="true" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
 	<haxedev set='webgl' />
 
-	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons" />
 	<haxelib name="hscript" />
-
-	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
-	<!--haxelib name="newgrounds"/>
-	<haxelib name="faxe" if='switch'/>
-	<haxelib name="polymod"/-->
 
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
@@ -66,11 +46,12 @@
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
+	<!-- These are helpful for debugging but please disable these on release builds
+		Also if you get a compiler error from enabling / disabling -
+		delete the export/release/(your os)/obj folder -->
+
 	<!--haxedef name="HXCPP_CHECK_POINTER"/-->
 	<!--haxedef name="HXCPP_STACK_LINE"/-->
 
-	<!-- _________________________________ Custom _______________________________ -->
-
-	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<icon path="art/icon.png" />
 </project>

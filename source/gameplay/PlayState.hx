@@ -299,15 +299,16 @@ class PlayState extends MusicBeatState
 			var noteData :Int = Std.int(fNote[1]);
 			var susLength:Int = Std.int(fNote[2]);
 			var player   :Int = Std.int(fNote[3]);
+			var ntype    :Int = Std.int(fNote[4]);
 
-			var newNote = new Note(time, noteData, false, false);
+			var newNote = new Note(time, noteData, ntype, false, false);
 			newNote.scrollFactor.set();
 			newNote.player = player;
 			unspawnNotes.push(newNote);
 
 			if(susLength > 1)
 				for(i in 0...susLength+1){
-					var susNote = new Note(time + i + 0.5, noteData, true, i == susLength);
+					var susNote = new Note(time + i + 0.5, noteData, ntype, true, i == susLength);
 					susNote.scrollFactor.set();
 					susNote.player = player;
 					unspawnNotes.push(susNote);
@@ -466,7 +467,7 @@ class PlayState extends MusicBeatState
 		healthBar.percent = health;
 
 		iconP1.x = healthBar.x + ((1 - (health * 0.01)) * healthBar.width);
-		iconP1.x -= 24;
+		iconP1.x -= 23.5;
 		iconP2.x = iconP1.x - 100;
 
 		var animStr = health < 20 ? 'losing' : 'neutral';
@@ -488,14 +489,19 @@ class PlayState extends MusicBeatState
 
 	function goodNoteHit(note:Note):Void
 	{
-		vocals.volume = 1;
+		note.handleTypeFunctions(0);
+		notes.remove(note, true);
+		note.destroy();
+
+		if(!note.mustHit){
+			noteMiss(note.noteData);
+			return;
+		}
 
 		playerStrums.members[note.noteData].playAnim(2);
 		allCharacters[playerPos].playAnim('sing' + sDir[note.noteData], true);
 		allCharacters[playerPos].idleNextBeat = false;
-
-		notes.remove(note, true);
-		note.destroy();
+		vocals.volume = 1;
 
 		if(!note.isSustainNote){
 			hitCount++;
@@ -515,7 +521,8 @@ class PlayState extends MusicBeatState
 		combo = 0;
 		songScore -= 50;
 		missCount++;
-
+		
+		vocals.volume = 0.5;
 		var missRandom:Int = Math.round(Math.random() * 2) + 1;
 		FlxG.sound.play(Paths.lSound('gameplay/missnote' + missRandom), 0.2);
 
@@ -538,12 +545,10 @@ class PlayState extends MusicBeatState
 		if(paused) return;
 
 		// theres are just regular key checks.
-		#if (!EXCLUDE_CHART_EDITOR)
 		if(key == FlxKey.SEVEN){
 			FlxG.switchState(new ChartingState());
 			return;
 		}
-		#end
 		if(key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK]) != -1 && FlxG.sound.music.playing){
 			paused = true;
 			FlxG.sound.music.pause();
@@ -560,10 +565,10 @@ class PlayState extends MusicBeatState
 
 		var sRef = playerStrums.members[nkey];
 		var nRef = hittableNotes[nkey];
-		if(nRef != null && Math.abs(nRef.strumTime - songTime) < inputRange){
+		if(nRef != null && Math.abs(nRef.strumTime - songTime) < inputRange * (nRef.mustHit ? 1 : 0.5)){
 			goodNoteHit(nRef);
+
 			sRef.pressTime = Conductor.stepCrochet * 0.001;
-			
 			return;
 		}
 		if(sRef.pressTime != 0) return;
@@ -705,10 +710,9 @@ class PlayState extends MusicBeatState
 			// 1.5 because we need room for the player to miss.
 			daNote.visible = daNote.active = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
 			if(!daNote.active) return;
-
+			
 			var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
-
-			if((daNote.player != playerPos || Settings.pr.botplay) && songTime >= daNote.strumTime){
+			if((daNote.player != playerPos || Settings.pr.botplay) && daNote.mustHit && songTime >= daNote.strumTime){
 				allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData], true);
 				allCharacters[daNote.player].idleNextBeat = false;
 				
@@ -732,8 +736,9 @@ class PlayState extends MusicBeatState
 			if(daNote.player != playerPos || Settings.pr.botplay) return;
 
 			if(nDiff > inputRange){
-				noteMiss(daNote.noteData);
-				vocals.volume = 0.5;
+				if(daNote.mustHit)
+					noteMiss(daNote.noteData);
+				daNote.handleTypeFunctions(1);
 	
 				notes.remove(daNote, true);
 				daNote.destroy();

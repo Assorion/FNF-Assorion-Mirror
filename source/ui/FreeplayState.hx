@@ -32,7 +32,6 @@ class FreeplayState extends MusicBeatState
 	var intendedScore:Int = 0;
 
 	private var grpSongs:FlxTypedGroup<Alphabet>;
-	//private var icons:Array<FlxSprite> = [];
 	private var vocals  :FlxSound;
 
 	override function create()
@@ -98,8 +97,6 @@ class FreeplayState extends MusicBeatState
 		curDifficulty += change;
 		curDifficulty %= CoolUtil.diffNumb;
 		if(curDifficulty < 0) curDifficulty = CoolUtil.diffNumb - 1;
-
-		trace(curDifficulty);
 
 		intendedScore = Highscore.getScore(songs[curSelected], curDifficulty);
 		scoreText.text = 'PERSONAL BEST:$intendedScore';
