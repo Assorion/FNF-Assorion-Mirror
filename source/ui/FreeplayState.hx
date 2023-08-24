@@ -15,8 +15,8 @@ import openfl.events.KeyboardEvent;
 import flixel.system.FlxSound;
 import misc.Alphabet;
 import misc.Highscore;
+import misc.Song;
 import gameplay.PlayState;
-import gameplay.Song;
 
 using StringTools;
 

@@ -3,8 +3,10 @@ package misc;
 import haxe.Json;
 import lime.utils.Assets;
 import sys.io.File;
+import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import misc.Highscore;
+import flixel.graphics.frames.FlxAtlasFrames;
 
 using StringTools;
 
@@ -12,6 +14,8 @@ typedef Options = {
     var start_fullscreen:Bool;
     var start_volume:Int;
     var skip_logo:Bool;
+    var default_persist:Bool;
+    var launch_sprites:Bool;
 
     var downscroll:Bool;
     var offset:Int;
@@ -57,8 +61,9 @@ class Settings {
     public static function apply(){
         FlxG.save.bind('funkin', 'candicejoe');
 
-        FlxG.updateFramerate = Settings.pr.framerate;
-		FlxG.drawFramerate   = Settings.pr.framerate;
+        FlxGraphic.defaultPersist = Settings.pr.default_persist;
+        FlxG.updateFramerate      = Settings.pr.framerate;
+		FlxG.drawFramerate        = Settings.pr.framerate;
 
         Main.changeUsefulInfo(Settings.pr.useful_info);        
 

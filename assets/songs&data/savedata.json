@@ -3,6 +3,8 @@
     "start_fullscreen": false,
     "start_volume": 100,
     "skip_logo": false,
+    "default_persist": false,
+    "launch_sprites": false,
 
     "downscroll": true,
     "offset": 80,

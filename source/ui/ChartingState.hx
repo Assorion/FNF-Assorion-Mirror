@@ -13,7 +13,7 @@ import flixel.FlxCamera;
 import flixel.text.FlxText;
 import gameplay.Note;
 import gameplay.PlayState;
-import gameplay.Song;
+import misc.Song;
 import ui.CustomChartUI;
 import sys.io.File;
 import gameplay.HealthIcon;

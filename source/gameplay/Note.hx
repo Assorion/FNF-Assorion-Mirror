@@ -27,6 +27,7 @@ class Note extends FlxSprite
 	public var isSustainNote:Bool = false;
 	public var noteType:NoteType;
 	public var mustHit:Bool = true;
+	public var ignore:Bool = false;
 
 	// this is inlined, you can't change this variable later.
 	public static inline var swagWidth:Float = 160 * 0.7;

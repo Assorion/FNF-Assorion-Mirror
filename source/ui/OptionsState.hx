@@ -28,7 +28,7 @@ class OptionsState extends MusicBeatState
 {
 	var optionSub:Array<Array<String>> = [
 		['basic', 'gameplay', 'visuals', 'controls'],
-		['start_fullscreen', 'start_volume', 'skip_logo'],
+		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist','launch_sprites'],
 		['downscroll', 'offset', 'botplay', 'ghost_tapping', 'miss_health'],
 		['useful_info', 'antialiasing', 'show_hud', 'framerate', 'light_bot_strums']
 	];
@@ -38,12 +38,14 @@ class OptionsState extends MusicBeatState
 			'Basic options for the game Window', 
 			'Options for the gameplay itself', 
 			'Options for visuals and effects', 
-			'Change the key bindings'
+			'Change the key bindings',
 		],
 		[
 			'Start the game in fullscreen mode',
 			'Change the games starting volume',
-			'Skip the haxeflixel intro logo'
+			'Skip the haxeflixel intro logo',
+			'Makes all loaded sprites stay in RAM. Uses tons more memory but will decrease load times.',
+			'Load songs and sprites at startup. Uses even more RAM and increases startup time.'
 		],
 		[
 			'Change the scroll direction',
@@ -165,6 +167,10 @@ class OptionsState extends MusicBeatState
 					Settings.pr.start_fullscreen = !Settings.pr.start_fullscreen;
 				case 'skip_logo':
 					Settings.pr.skip_logo = !Settings.pr.skip_logo;
+				case 'default_persist':
+					Settings.pr.default_persist = !Settings.pr.default_persist;
+				case 'launch_sprites':
+					Settings.pr.launch_sprites = !Settings.pr.launch_sprites;
 
 				// gameplay
 				case 'downscroll':
@@ -212,7 +218,7 @@ class OptionsState extends MusicBeatState
 
 				// visuals
 				case 'framerate':
-					Settings.pr.framerate = CoolUtil.boundTo(Settings.pr.framerate + (ch * 10), 0, 500, true);
+					Settings.pr.framerate = CoolUtil.boundTo(Settings.pr.framerate + (ch * 10), 10, 500, true);
 					atg.text = Std.string(Settings.pr.framerate);
 					Settings.apply();
 			}

@@ -88,6 +88,11 @@ class TitleState extends MusicBeatState
 			FlxG.sound.volume = Settings.pr.start_volume / 100;
 		}
 
+		// # load all sprites
+
+		if(Settings.pr.launch_sprites)
+			misc.AssetCacher.loadAssets(this);
+
 		//////////////////////////
 
 		Conductor.changeBPM(102);

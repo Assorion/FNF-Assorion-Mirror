@@ -1,4 +1,4 @@
-package gameplay;
+package misc;
 
 import haxe.Json;
 import haxe.format.JsonParser;

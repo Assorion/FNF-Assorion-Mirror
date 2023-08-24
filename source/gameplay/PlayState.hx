@@ -1,7 +1,7 @@
 package gameplay;
 
-import gameplay.Song.SwagSong;
-import gameplay.Song.SwagSection;
+import misc.Song.SwagSong;
+import misc.Song.SwagSection;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -397,7 +397,7 @@ class PlayState extends MusicBeatState
 	}
 
 	// # THE GRAND UPDATE FUNCTION!!!
-
+	private var changeArray:Array<Bool> = [true,true,true,true];
 	override public function update(elapsed:Float)
 	{
 		// keep it consistent accross framerates.
@@ -417,8 +417,14 @@ class PlayState extends MusicBeatState
 				countTickFunc();
 			}
 		}
-
-		handleNotes();
+		// note crap
+		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - songTime < 64)
+		{
+			notes.add(unspawnNotes[noteCount]);
+			noteCount++;
+		}
+		changeArray = [true,true,true,true];
+		notes.forEachAlive(handleNotes);
 
 		super.update(elapsed);
 	}
@@ -489,6 +495,7 @@ class PlayState extends MusicBeatState
 
 	function goodNoteHit(note:Note):Void
 	{
+		note.ignore = true;
 		note.handleTypeFunctions(0);
 		notes.remove(note, true);
 		note.destroy();
@@ -532,8 +539,6 @@ class PlayState extends MusicBeatState
 		updateHealth(Math.round(-Settings.pr.miss_health * 0.5));
 	}
 
-	// input stuff
-	public var staleNotes:Array<Bool>    = [false,false,false,false];
 	public var hittableNotes:Array<Note> = [null, null, null, null];
 	public var keysPressed:Array<Bool>   = [false, false, false, false];
 
@@ -565,10 +570,10 @@ class PlayState extends MusicBeatState
 
 		var sRef = playerStrums.members[nkey];
 		var nRef = hittableNotes[nkey];
-		if(nRef != null && Math.abs(nRef.strumTime - songTime) < inputRange * (nRef.mustHit ? 1 : 0.5)){
+		if(nRef!= null && !nRef.ignore){
 			goodNoteHit(nRef);
-
 			sRef.pressTime = Conductor.stepCrochet * 0.001;
+			
 			return;
 		}
 		if(sRef.pressTime != 0) return;
@@ -683,7 +688,7 @@ class PlayState extends MusicBeatState
 				return;
 			}
 
-			SONG = Song.loadFromJson(storyPlaylist[0], storyDifficulty);
+			SONG = misc.Song.loadFromJson(storyPlaylist[0], storyDifficulty);
 			FlxG.sound.music.stop();
 			FlxG.resetState();
 
@@ -694,69 +699,63 @@ class PlayState extends MusicBeatState
 
 	// # handle notes. Note scrolling etc
 
-	private inline function handleNotes(){
-		staleNotes = [true, true, true, true];
-		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - songTime < 64)
-		{
-			notes.add(unspawnNotes[noteCount]);
-			noteCount++;
-		}
-		notes.forEachAlive(function(daNote:Note){
-			var dir = Settings.pr.downscroll ? 45 : -45;
-			var nDiff:Float = songTime - daNote.strumTime;
-			daNote.y = dir * nDiff * SONG.speed;
-			daNote.y += strumLine.y;
+	private inline function handleNotes(daNote:Note){
+		var dir = Settings.pr.downscroll ? 45 : -45;
+		var nDiff:Float = songTime - daNote.strumTime;
+		daNote.y = dir * nDiff * SONG.speed;
+		daNote.y += strumLine.y;
 
-			// 1.5 because we need room for the player to miss.
-			daNote.visible = daNote.active = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
-			if(!daNote.active) return;
+		// 1.5 because we need room for the player to miss.
+		daNote.visible = daNote.active = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
+		if(!daNote.active) return;
+		
+		var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
+		if((daNote.player != playerPos || Settings.pr.botplay) && daNote.mustHit && songTime >= daNote.strumTime){
+			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData], true);
+			allCharacters[daNote.player].idleNextBeat = false;
 			
-			var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
-			if((daNote.player != playerPos || Settings.pr.botplay) && daNote.mustHit && songTime >= daNote.strumTime){
-				allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData], true);
-				allCharacters[daNote.player].idleNextBeat = false;
-				
-				vocals.volume = 1;
+			vocals.volume = 1;
 
-				notes.remove(daNote, true);
-				daNote.destroy();
-				
-				if(Settings.pr.light_bot_strums){
-					strumRef.playAnim(2);
-					strumRef.pressTime = Conductor.stepCrochet * 0.001;
-				}
-
-				return;
+			notes.remove(daNote, true);
+			daNote.destroy();
+			
+			if(Settings.pr.light_bot_strums){
+				strumRef.playAnim(2);
+				strumRef.pressTime = Conductor.stepCrochet * 0.001;
 			}
 
-			daNote.x     = strumRef.x + daNote.offsetX;
-			daNote.angle = strumRef.angle;
-			daNote.y    += daNote.offsetY;
+			return;
+		}
 
-			if(daNote.player != playerPos || Settings.pr.botplay) return;
+		daNote.x     = strumRef.x + daNote.offsetX;
+		daNote.angle = strumRef.angle;
+		daNote.y    += daNote.offsetY;
 
-			if(nDiff > inputRange){
-				if(daNote.mustHit)
-					noteMiss(daNote.noteData);
-				daNote.handleTypeFunctions(1);
-	
-				notes.remove(daNote, true);
-				daNote.destroy();
-				return;
-			}
-			if (Math.abs(nDiff) < inputRange && !daNote.isSustainNote && staleNotes[daNote.noteData]){
-				hittableNotes[daNote.noteData] = daNote;
-				staleNotes[daNote.noteData]    = false;
-				return;
-			}
+		if(daNote.player != playerPos || Settings.pr.botplay) return;
 
-			// sustain note input.
-			if(daNote.isSustainNote && Math.abs(nDiff) < 0.8 && keysPressed[daNote.noteData]){
-				goodNoteHit(daNote);
-				return;
-			}
+		if(nDiff > inputRange){
+			if(daNote.mustHit)
+				noteMiss(daNote.noteData);
+			
+			daNote.ignore = true;
+			daNote.handleTypeFunctions(1);
+			notes.remove(daNote, true);
+			daNote.destroy();
+			return;
+		}
+		if(daNote.ignore) return;
 
-		});
+		if (Math.abs(nDiff) < inputRange * (daNote.mustHit ? 1 : 0.5) && !daNote.isSustainNote && changeArray[daNote.noteData]){
+			hittableNotes[daNote.noteData] = daNote;
+			changeArray[daNote.noteData] = false;
+			return;
+		}
+
+		// sustain note input.
+		if(daNote.isSustainNote && Math.abs(nDiff) < 0.8 && keysPressed[daNote.noteData]){
+			goodNoteHit(daNote);
+			return;
+		}
 	}
 
 	override function stepHit(){
