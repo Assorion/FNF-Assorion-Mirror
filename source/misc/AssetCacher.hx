@@ -21,6 +21,7 @@ class AssetCacher {
         var curPaths:Array<String> = FileSystem.readDirectory(curDepth);
         var ignoreDirectories:Array<String> = [];
         var i:Int = 0;
+        // loop through every singe file / direcotry
         while(i < curPaths.length){
             if(!ignoreDirectories.contains(curDepth + curPaths[i] + '/'))
                 if(FileSystem.isDirectory(curDepth + curPaths[i])){
@@ -43,6 +44,7 @@ class AssetCacher {
             }
             i++;
         }
+        // for each file cache them.
         for(i in 0...paths.length){
             var tidalWave:Bool = false;
             if (paths[i].endsWith('png')){
