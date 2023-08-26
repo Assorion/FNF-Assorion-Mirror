@@ -6,19 +6,19 @@ Making the MK (MakeMeGenius) engine a reality.
 
 ## V - 1.1.0
 
-Asset improvements.
-Fixed input bugs.
-**Hopefully** Made code simpler.
-Labeled chart editor buttons and drop downs.
-Added "About" section in the chart editor.
-Added options for caching to make the game really fast.
-Added embedded assets and settings icons.
-Made sure and improved all settings and works.
-Set up a test song and week to demo the engine.
-Added dialogue code.
-Fixed a lot of tiny bugs (post events timer being corrected, freeplay song not unpausing on vocals, highscore problems, etc).
-Donate button replaced with Github button.
-Made note types easier to implement!
+1. Asset improvements.
+2. Fixed input bugs.
+3. **Hopefully** Made code simpler.
+4. Labeled chart editor buttons and drop downs.
+5. Added "About" section in the chart editor.
+6. Added options for caching to make the game really fast.
+7. Added embedded assets and settings icons.
+8. Made sure and improved all settings and works.
+9. Set up a test song and week to demo the engine.
+10. Added dialogue code.
+11. Fixed a lot of tiny bugs (post events timer being corrected, freeplay song not unpausing on vocals, highscore problems, etc).
+12. Donate button replaced with Github button.
+13. Made note types easier to implement!
 
 # Roadmap / Changes to make in the future.
 
