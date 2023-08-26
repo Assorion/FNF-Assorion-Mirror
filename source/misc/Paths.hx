@@ -26,7 +26,7 @@ class Paths {
     public static inline function playableSong(path:String, retVoices:Bool = false):String
     {
         var endingStr:String = retVoices ? 'Voices.$sndExt' : 'Inst.$sndExt';
-        return 'assets/songs&data/${path.toLowerCase()}/$endingStr';
+        return 'assets/songs-data/${path.toLowerCase()}/$endingStr';
     }
 
 }

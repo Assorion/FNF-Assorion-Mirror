@@ -647,7 +647,7 @@ class ChartingState extends MusicBeatState {
             loadNotes();
         }, 'Clear Song', 120); 
         var saveSong:ChartUI_Button = new ChartUI_Button(reloadAudio.x, clearAllNotes.y + 40, true, ()->{
-            var path = 'assets/songs&data/${PlayState.curSong}/${PlayState.curSong}-edited.json';
+            var path = 'assets/songs-data/${PlayState.curSong}/${PlayState.curSong}-edited.json';
             var stringedSong:String = haxe.Json.stringify({"song": PlayState.SONG}, '\t');
             File.saveContent(path,stringedSong);
             var newText:FlxText = new FlxText(uiBG.x - 10, (uiBG.y + uiBG.height + 30) + textOffset, 0, 'Saved song to "$path"', 16);

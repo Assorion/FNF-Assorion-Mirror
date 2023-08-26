@@ -16,11 +16,12 @@ class GameOverSubstate extends MusicBeatSubstate
 	var blackFadeIn:FlxSprite;
 	var fadeCam:FlxCamera;
 
-	public function new(x:Float, y:Float, deadChar:Character, fadeOutCam:FlxCamera)
+	public function new(deadChar:Character, fadeOutCam:FlxCamera)
 	{
 		super();
 
-		blackFadeIn = new FlxSprite(0,0).makeGraphic(1280 * 2, 720 * 2, FlxColor.BLACK);
+		blackFadeIn = new FlxSprite(0,0).makeGraphic(Std.int(FlxG.width * 1.5), Std.int(FlxG.height * 1.5), FlxColor.BLACK);
+		blackFadeIn.scrollFactor.set();
 		blackFadeIn.screenCenter();
 		blackFadeIn.alpha = 0;
 		add(blackFadeIn);

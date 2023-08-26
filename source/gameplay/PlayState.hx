@@ -53,9 +53,8 @@ class PlayState extends MusicBeatState
 	public static var campaignScore:Int = 0;
 
 	public static var mustHitSection:Bool = false;
-
+	public static var seenCutscene:Bool   = false;
 	private var vocals:FlxSound;
-
 	private var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
 
@@ -75,7 +74,7 @@ class PlayState extends MusicBeatState
 
 	private var healthBarBG:FlxSprite;
 	private var healthBar:HealthBar;
-
+	public  var paused:Bool = false;
 	private var iconP1:HealthIcon;
 	private var iconP2:HealthIcon;
 	private var camHUD:FlxCamera;
@@ -83,9 +82,7 @@ class PlayState extends MusicBeatState
 
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
-
 	var defaultCamZoom:Float = 1.05;
-	private var paused:Bool = false;
 
 	public static var sDir:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 	public var stageVars:Map <String, Dynamic> = new Map 
@@ -235,15 +232,17 @@ class PlayState extends MusicBeatState
 
 		songTime = -16;
 		songTime -= Settings.pr.offset * Conductor.songDiv;
-
-		// Just so you can add a delay to the song start if needed.
-		postEvent(SONG.beginTime, () -> { startCountdown(); });
 		updateHealth(0);
 
 		super.create();
 
-		// needed cause pausing will break if this is true.
-		persistentUpdate = false;
+		if(isStoryMode && !seenCutscene && Assets.exists('assets/songs-data/$curSong/dialogue.txt')){
+			paused = true;
+			openSubState(new DialogueSubstate(camHUD, startCountdown, this));
+			return;
+		}
+		seenCutscene = true;
+		postEvent(SONG.beginTime, () -> {startCountdown(); });
 	}
 
 	// # stage code.
@@ -314,7 +313,6 @@ class PlayState extends MusicBeatState
 					unspawnNotes.push(susNote);
 				}
 		}
-
 		unspawnNotes.sort((A,B) -> Std.int(A.strumTime - B.strumTime));
 	}
 
@@ -382,24 +380,25 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = -Settings.pr.offset;
 		songTime = (-Settings.pr.offset) * Conductor.songDiv;
 	}
-
 	override function closeSubState()
 	{
-		if(paused){
-			paused = false;
-
-			FlxG.sound.music.play();
-			vocals.play();
-			syncEverything();
-		}
-
+		if(!seenCutscene) return;
 		super.closeSubState();
+
+		if(!paused) return;
+
+		paused = false;
+
+		FlxG.sound.music.play();
+		vocals.play();
+		syncEverything();
 	}
 
 	// # THE GRAND UPDATE FUNCTION!!!
 	private var changeArray:Array<Bool> = [true,true,true,true];
 	override public function update(elapsed:Float)
 	{
+		if(paused) return;
 		// keep it consistent accross framerates.
 		FlxG.camera.followLerp = (1 - Math.pow(0.5, elapsed * 6)) * (60 / Settings.pr.framerate);
 
@@ -488,7 +487,7 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.pause();
 		vocals.pause();
 
-		openSubState(new GameOverSubstate(0,0, allCharacters[playerPos], camHUD));
+		openSubState(new GameOverSubstate(allCharacters[playerPos], camHUD));
 	}
 
 	// # On note hit.
@@ -672,7 +671,7 @@ class PlayState extends MusicBeatState
 	{
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
-
+		seenCutscene = false;
 		Highscore.saveScore(SONG.song, songScore, storyDifficulty);
 
 		if (isStoryMode){

@@ -28,7 +28,7 @@ class CoolUtil
 
 	public static function textFileLines(path:String, ?ext:String = 'txt'):Array<String>
 	{
-		var fullText:String = Assets.getText('assets/songs&data/$path.$ext');
+		var fullText:String = Assets.getText('assets/songs-data/$path.$ext');
 
 		return fullText.split('\n');
 	}

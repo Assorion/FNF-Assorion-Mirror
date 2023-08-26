@@ -36,12 +36,11 @@ class AssetCacher {
                 curDepth = '';
                 for(i in 0...depthCrap.length-2)
                     curDepth += depthCrap[i] + '/';
-    
+                if(curDepth == '')
+                    break;
                 curPaths = FileSystem.readDirectory(curDepth);
                 i = -1;
             }
-            if(!curDepth.startsWith('assets/'))
-                break;
             i++;
         }
         for(i in 0...paths.length){

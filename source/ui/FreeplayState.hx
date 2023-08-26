@@ -121,7 +121,7 @@ class FreeplayState extends MusicBeatState
 			item.alpMult = 1;
 			if(i != curSelected) item.alpMult = 0.4;
 
-			item.targetY = (i - curSelected) * 90;
+			item.targetY = (i - curSelected) * 100;
 			item.targetY += 50;
 			item.targetX = (i - curSelected) * 15;
 			item.targetX += 30;

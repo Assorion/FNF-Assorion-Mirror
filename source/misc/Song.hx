@@ -31,7 +31,7 @@ class Song
 	public static function loadFromJson(song:String, diff:Int):SwagSong
 	{
 		song = song.toLowerCase();
-		var rawJson = Assets.getText('assets/songs&data/$song/$song${CoolUtil.diffString(diff, 0)}.json').trim();
+		var rawJson = Assets.getText('assets/songs-data/$song/$song${CoolUtil.diffString(diff, 0)}.json').trim();
 
 		return parseJSON(rawJson);
 	}

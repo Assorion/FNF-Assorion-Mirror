@@ -44,7 +44,7 @@ But this ***should*** still be far more readable than the original code.
 
 # Important Notes.
 
-1. The settings are stored in a JSON file. (Assets/songs&data/savedata.json)
+1. The settings are stored in a JSON file. (Assets/songs-data/savedata.json)
 This means that you can easily modify the settings but also means (atleast for now)
 it doesn't work with a web browser. Highscores will still be saved though.
 2. Chartingstate is entirely redone. So there is probably new bugs and it will not
@@ -59,7 +59,7 @@ you can add it in yourself.
 6. Windows XP? Well no. This engine can't exactly be compiled for XP. But I do plan
 on making a port with most of it's features, that will be later though.
 7. This is based off of the 0.2.6 version. Yup. Before week 6 was even a thing lol.
-8. Songs and Data folder have been merged into the songs&data folder. 
+8. Songs and Data folder have been merged into the songs-data folder. 
 
 ## Screenshots ?
 

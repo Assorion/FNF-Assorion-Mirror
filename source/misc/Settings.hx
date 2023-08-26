@@ -55,7 +55,7 @@ class Settings {
 
     public static var pr:Options;
     public static function openSettings(){
-        var text = Assets.getText('assets/songs&data/savedata.json').trim();
+        var text = Assets.getText('assets/songs-data/savedata.json').trim();
         pr = cast Json.parse(text);
     }
     public static function apply(){
@@ -86,7 +86,7 @@ class Settings {
         var data:String = Json.stringify(pr, '\t');
 
         // # TODO actually make this run in a web browser.
-        File.saveContent('assets/songs&data/savedata.json', data);
+        File.saveContent('assets/songs-data/savedata.json', data);
     }
 }
 
