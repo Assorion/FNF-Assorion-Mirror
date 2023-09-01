@@ -19,13 +19,3 @@ Making the MK (MakeMeGenius) engine a reality.
 11. Fixed a lot of tiny bugs (post events timer being corrected, freeplay song not unpausing on vocals, highscore problems, etc).
 12. Donate button replaced with Github button.
 13. Made note types easier to implement!
-
-# Roadmap / Changes to make in the future.
-
-1. Even more chart editor improvements.
-2. Even more bug fixes.
-3. Faster / Smaller code and clean up.
-4. Event system.
-5. More options.
-6. Navigation improvements.
-7. (Potentially) Accessibilty options.
