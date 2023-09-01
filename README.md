@@ -1,6 +1,6 @@
 # FNF Assorion Engine!
 
-![assorion engine](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/6e765e3c-5cc9-4cfe-ac16-3c080aa037f3)
+![LOGO](art/assorione.png)
 
 -------------------------------------------------------------
  <div align="left">
