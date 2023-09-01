@@ -2,19 +2,19 @@
 
 ![assorion engine](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/6e765e3c-5cc9-4cfe-ac16-3c080aa037f3)
  <div align="left">
- <img src="https://img.shields.io/github/repo-size/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/>
- <img src="https://img.shields.io/github/commit-activity/m/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/> 
- <img src="https://img.shields.io/github/v/release/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/>
+ <a href="#"><img src="https://img.shields.io/github/repo-size/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/></a>
+ <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/</a> 
+ <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/github/v/release/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/></a>
  </div>
  <div align="left">
- <img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=for-the-badge&color=e1b100"/> 
- <img src="https://img.shields.io/badge/Linux_Build-Pending-blue?style=for-the-badge&color=e1b100"/>
- <img src="https://img.shields.io/badge/Web_Build-Pending-blue?style=for-the-badge&color=e1b100"/>
+ <a href="#"><img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
+ <a href="#"><img src="https://img.shields.io/badge/Linux_Build-Pending-blue?style=for-the-badge&color=e1b100"/></a>
+ <a href="#"><img src="https://img.shields.io/badge/Web_Build-Pending-blue?style=for-the-badge&color=e1b100"/></a>
  </div>
 
 ## What is Assorion Engine?
 
-Assorion Engine is effectively the Linux of Friday Night Funkin' Engines. 
+Assorion Engine is effectively the Linux of <a href="https://ninja-muffin24.itch.io/funkin">Friday Night Funkin'</a> Engines. 
 All original base Friday Night Funkin' code has been replaced with more efficient, optimized code. 
 
 Assorion Engine doesn't have mods folder capabilities planned and it won't be implemented. 
@@ -49,11 +49,11 @@ although Assorion Engine may have several branches with more features soon.
 
 ## Screenshots
 
-look at `art/screenshots.md`.
+look at <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/blob/main/art/screenshots.md">`art/screenshots.md`</a>. 
 
 # Compiling
 
-Follow the base game instructions for compiling. (Flixel version `5.0.0` or `4.11.0` for compiling)
+Follow the base game instructions for compiling. (Flixel version <a href="https://lib.haxe.org/p/flixel/5.0.0/">`5.0.0`</a> or <a href="https://lib.haxe.org/p/flixel/4.11.0/">`4.11.0`</a> for compiling)
 
 ## Minimum Requirements
 
