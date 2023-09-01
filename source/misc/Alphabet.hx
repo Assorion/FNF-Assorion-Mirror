@@ -45,11 +45,6 @@ class Alphabet extends FlxSpriteGroup
 			var letter:AlphaCharacter = new AlphaCharacter(futurePos, 0, character);
 
 			isBold ? letter.createBold() : letter.createLetter();
-			/*if (isBold)
-				letter.createBold(character);
-			else
-				letter.createLetter(character);*/
-
 			add(letter);
 
 			futurePos += letter.width;
@@ -109,7 +104,7 @@ class AlphaCharacter extends FlxSprite
 
 		if(numbers.contains(letter)) suffix = '';
 		if(symbols.contains(letter)) {
-			replaceWithSymbol(letter);
+			replaceWithSymbol();
 			return;
 		}
 
