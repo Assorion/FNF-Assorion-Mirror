@@ -1,6 +1,8 @@
 # FNF Assorion Engine!
 
 ![assorion engine](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/6e765e3c-5cc9-4cfe-ac16-3c080aa037f3)
+
+-------------------------------------------------------------
  <div align="left">
  <a href="#"><img src="https://img.shields.io/github/repo-size/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/></a>
  <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/</a> 
@@ -12,7 +14,9 @@
  <a href="#"><img src="https://img.shields.io/badge/Web_Build-Pending-blue?style=for-the-badge&color=e1b100"/></a>
  </div>
 
-## What is Assorion Engine?
+-------------------------------------------------------------
+
+# ✨ | What is Assorion Engine?
 
 Assorion Engine is effectively the Linux of <a href="https://ninja-muffin24.itch.io/funkin">Friday Night Funkin'</a> Engines. 
 All original base Friday Night Funkin' code has been replaced with more efficient, optimized code. 
@@ -21,14 +25,14 @@ Assorion Engine doesn't have mods folder capabilities planned and it won't be im
 In addition to cutscenes, events, discordRPC, etc, most other features will have to be added yourself, 
 although Assorion Engine may have several branches with more features soon.
 
-## Why choose Assorion Engine?
+## ⚡ | Why choose Assorion Engine?
 
 1. Assorion Engine is increadibly speedy and stable
 2. Assorion's Code is much better streamlined
 3. Assorion takes up less than ~70mb
 4. Assorion frequently has many bug fixes and consistently gets improvements compared to the original game and many other engines
 
-# Important Notes/RoadMap
+# 📝 | Important Notes/RoadMap
 
   **Notes**   
 -	Settings are stored in a `.json` file. (Assets/songs-data/savedata.json) meaning you can externally modify the game settings
@@ -47,15 +51,15 @@ although Assorion Engine may have several branches with more features soon.
 * [ ]	Navigation Improvements
 
 
-## Screenshots
+## 🖼️ | Screenshots
 
 look at <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/blob/main/art/screenshots.md">`art/screenshots.md`</a>. 
 
-# Compiling
+# 🛠 | Compiling
 
 Follow the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> for compiling. (Flixel version <a href="https://lib.haxe.org/p/flixel/5.0.0/">`5.0.0`</a> or <a href="https://lib.haxe.org/p/flixel/4.11.0/">`4.11.0`</a> for compiling)
 
-## Minimum Requirements
+## 💻 | Minimum Requirements
 
 1. 512mb - 1gb of RAM
 2. Core 2 Duo CPU or higher
