@@ -53,7 +53,7 @@ look at <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/bl
 
 # Compiling
 
-Follow the base game instructions for compiling. (Flixel version <a href="https://lib.haxe.org/p/flixel/5.0.0/">`5.0.0`</a> or <a href="https://lib.haxe.org/p/flixel/4.11.0/">`4.11.0`</a> for compiling)
+Follow the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> for compiling. (Flixel version <a href="https://lib.haxe.org/p/flixel/5.0.0/">`5.0.0`</a> or <a href="https://lib.haxe.org/p/flixel/4.11.0/">`4.11.0`</a> for compiling)
 
 ## Minimum Requirements
 
