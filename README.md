@@ -2,14 +2,14 @@
 
 ![assorion engine](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/6e765e3c-5cc9-4cfe-ac16-3c080aa037f3)
  <div align="left">
- <img src="https://img.shields.io/github/repo-size/Legendary-Candice-Joe/FNF-Assorion-Engine?style=flat-square&color=06b59c"/>
- <img src="https://img.shields.io/github/commit-activity/m/Legendary-Candice-Joe/FNF-Assorion-Engine?style=flat-square&color=06b59c"/> 
- <img src="https://img.shields.io/github/v/release/Legendary-Candice-Joe/FNF-Assorion-Engine?style=flat-square&color=06b59c"/>
+ <img src="https://img.shields.io/github/repo-size/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/>
+ <img src="https://img.shields.io/github/commit-activity/m/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/> 
+ <img src="https://img.shields.io/github/v/release/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/>
  </div>
  <div align="left">
- <img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=flat-square&color=e1b100"/> 
- <img src="https://img.shields.io/badge/Linux_Build-Pending-blue?style=flat-square&color=e1b100"/>
- <img src="https://img.shields.io/badge/Web_Build-Pending-blue?style=flat-square&color=e1b100"/>
+ <img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=for-the-badge&color=e1b100"/> 
+ <img src="https://img.shields.io/badge/Linux_Build-Pending-blue?style=for-the-badge&color=e1b100"/>
+ <img src="https://img.shields.io/badge/Web_Build-Pending-blue?style=for-the-badge&color=e1b100"/>
  </div>
 
 ## What is Assorion Engine?
