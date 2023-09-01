@@ -4,8 +4,8 @@
 
 ## What is Assorion Engine?
 
-Assorion Engine is effectively the Arch Linux of Friday Night Funkin Engines. 
-All original base Friday Night Funkin code has been replaced with more efficient, optimized code. 
+Assorion Engine is effectively the Arch Linux of Friday Night Funkin' Engines. 
+All original base Friday Night Funkin' code has been replaced with more efficient, optimized code. 
 
 Assorion Engine doesn't have mods folder capabilities planned and it won't be implemented. 
 In addition to cutscenes, events, discordRPC, etc., most other features will have to be added yourself, 
@@ -27,6 +27,7 @@ although Assorion Engine may have several branches will more features soon.
 -	Charts are handled differently to the base game. Absolute positions are used instead of millisecond values. In addition, notes have player values in the chart.
 -	Assorion Engine based off `0.2.6` version of the base game. 
 -	Songs and Data folder have been merged into the songs-data folder.
+  
  **RoadMap**
 -	Improvements to the chart editor.
 -	Bug Fixes and Optimizations.
