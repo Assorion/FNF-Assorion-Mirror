@@ -223,8 +223,7 @@ class PlayState extends MusicBeatState
 
 		var dPath:String = 'assets/songs-data/${PlayState.curSong}/dialogue.txt';
 		if(isStoryMode && !seenCutscene && Assets.exists(dPath)){
-			paused = true;
-			openSubState(new DialogueSubstate(camHUD, startCountdown, dPath, this));
+			pauseGame(new DialogueSubstate(camHUD, startCountdown, dPath, this));
 			return;
 		}
 		seenCutscene = true;
@@ -471,11 +470,7 @@ class PlayState extends MusicBeatState
 		if(health > 0) return; 
 
 		remove(allCharacters[playerPos]);
-		paused = true;
-		FlxG.sound.music.pause();
-		vocals.pause();
-
-		openSubState(new GameOverSubstate(allCharacters[playerPos], camHUD));
+		pauseGame(new GameOverSubstate(allCharacters[playerPos], camHUD));
 	}
 
 	// # On note hit.
@@ -542,11 +537,7 @@ class PlayState extends MusicBeatState
 			return;
 		}
 		if(key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK]) != -1 && FlxG.sound.music.playing){
-			paused = true;
-			FlxG.sound.music.pause();
-			vocals.pause();
-
-			openSubState(new PauseSubState(camHUD));
+			pauseGame(new PauseSubState(camHUD));
 			return;
 		}
 
@@ -749,7 +740,7 @@ class PlayState extends MusicBeatState
 
 		songTime = Conductor.songPosition * Conductor.songDiv;
 	}
-
+	// Smaller helper functions
 	function syncEverything(){
 		var roundedTime:Float = Conductor.songPosition + Settings.pr.offset;
 
@@ -758,18 +749,29 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = roundedTime - Settings.pr.offset;
 		songTime = Conductor.songPosition * Conductor.songDiv;
 	}
+	function pauseGame(state:MusicBeatSubstate){
+		paused = true;
+		FlxG.sound.music.pause();
+		vocals.pause();
+
+		openSubState(state);
+	}
 	private inline function introSpriteTween(spr:FlxSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
 	{
 		spr.alpha = 1;
-		return FlxTween.tween(spr, {y: spr.y + 10, alpha: 0}, (steps * Conductor.stepCrochet) / 1000, {
-			ease: FlxEase.cubeInOut,
-			startDelay: delay * 0.001,
+		return FlxTween.tween(spr, {y: spr.y + 10, alpha: 0}, (steps * Conductor.stepCrochet) / 1000, { ease: FlxEase.cubeInOut, startDelay: delay * 0.001,
 			onComplete: function(twn:FlxTween)
 			{
 				if(destroy)
 					spr.destroy();
 			}
 		});
+	}
+	override function onFocusLost(){
+		super.onFocusLost();
+		if(paused) return;
+		
+		pauseGame(new PauseSubState(camHUD));
 	}
 }
 typedef RatingThing = {

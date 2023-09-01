@@ -40,10 +40,10 @@ class DialogueSubstate extends MusicBeatSubstate {
 		graySpr.screenCenter();
 		graySpr.alpha = 0;
 
-        char1 = new FlxSprite(0,0);
+        char1 = new FlxSprite(-50,-50);
         char1.centerOffsets();
         char1.centerOrigin ();
-        char2 = new FlxSprite(0,0);
+        char2 = new FlxSprite(-50,-50);
         char2.centerOffsets();
         char2.centerOrigin ();
 
@@ -129,7 +129,7 @@ class DialogueSubstate extends MusicBeatSubstate {
         postEvent(0.2, ()->{trace('huh');});
 
         for(i in 0...chars.length){
-            postEvent(i * 0.025, ()->{
+            postEvent(i * 0.04, ()->{
                 voicesText.text += chars[i];
                 FlxG.sound.play(Paths.lSound('menu/pixelText'));
             });

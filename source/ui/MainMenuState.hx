@@ -91,6 +91,7 @@ class MainMenuState extends MusicBeatState
 
 	// # Input code
 
+	var twns:Array<FlxTween> = [];
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
@@ -101,6 +102,17 @@ class MainMenuState extends MusicBeatState
 		}
 
 		if(key.hardCheck(NewControls.UI_BACK)){
+			if(selectedSomethin){
+				for(i in 0...optionList.length){
+					if(twns[i] != null) twns[i].cancel();
+					menuItems.members[i].alpha = 1;
+				}
+				events = [];
+				selectedSomethin = false;
+				twns = [];
+
+				return;
+			}
 			FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
 			FlxG.switchState(new TitleState());
 
@@ -114,8 +126,8 @@ class MainMenuState extends MusicBeatState
 		selectedSomethin = true;
 
 		for(i in 0...optionList.length)
-			if(i != curSelected) 
-				FlxTween.tween(menuItems.members[i], {alpha:0}, 0.8);
+			if(i != curSelected)
+				twns.push(FlxTween.tween(menuItems.members[i], {alpha:0}, 0.8));
 		for(i in 0...8)
 			postEvent(i / 8, ()->{
 				menuItems.members[curSelected].alpha = (i % 2 == 0 ? 0 : 1);
