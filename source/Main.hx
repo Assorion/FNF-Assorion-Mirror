@@ -6,6 +6,13 @@ import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 
+// tells haxe not to generate debugging info in the release build
+// ofc if you compile it with debugging enabled it will still work
+// but since this isn't very useful for release builds, we're gonna add this flag.
+
+#if !debug
+@:noDebug
+#end
 class Main extends Sprite
 {
 	public static var fpsC:ui.FPSCounter;

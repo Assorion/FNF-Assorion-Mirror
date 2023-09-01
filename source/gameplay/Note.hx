@@ -1,9 +1,9 @@
 package gameplay;
 
 import flixel.FlxSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxColor;
 
+#if !debug @:noDebug #end
 class Note extends FlxSprite
 {
 	public static var colArr:Array<String> = ['purple', 'blue', 'green', 'red'];

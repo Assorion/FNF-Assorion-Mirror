@@ -1,5 +1,6 @@
 package misc;
 
+#if !debug @:noDebug #end
 class Conductor
 {
 	public static var bpm:Int = 100;

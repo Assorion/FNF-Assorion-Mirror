@@ -11,6 +11,7 @@ import flixel.tweens.FlxTween;
 import flixel.FlxCamera;
 import misc.Alphabet;
 
+#if !debug @:noDebug #end
 class PauseSubState extends MusicBeatSubstate
 {
 	public static var curSelected:Int = 0;

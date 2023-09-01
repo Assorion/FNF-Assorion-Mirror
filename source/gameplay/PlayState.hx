@@ -2,35 +2,20 @@ package gameplay;
 
 import misc.Song.SwagSong;
 import misc.Song.SwagSection;
-import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.FlxState;
-import flixel.FlxSubState;
-import flixel.addons.display.FlxGridOverlay;
-import flixel.graphics.atlas.FlxAtlas;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.ui.FlxBar;
-import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
-import flixel.util.FlxSort;
-import flixel.util.FlxStringUtil;
-import flixel.util.FlxTimer;
-import haxe.Json;
 import lime.utils.Assets;
-import openfl.display.BlendMode;
-import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
 import gameplay.HealthIcon;
 import misc.Highscore;
@@ -39,6 +24,7 @@ import ui.ChartingState;
 
 using StringTools;
 
+#if !debug @:noDebug #end
 class PlayState extends MusicBeatState
 {
 	public static inline var inputRange:Float = 1.25; // 1 = step. 1.25 = 1 + 1/4 step range.
@@ -54,31 +40,30 @@ class PlayState extends MusicBeatState
 
 	public static var mustHitSection:Bool = false;
 	public static var seenCutscene:Bool   = false;
-	private var vocals:FlxSound;
-	private var notes:FlxTypedGroup<Note>;
-	private var unspawnNotes:Array<Note> = [];
+	public var vocals:FlxSound;
+	public var notes:FlxTypedGroup<Note>;
+	public var unspawnNotes:Array<Note> = [];
 
-	private var strumLine:FlxObject;
-
-	private var camFollow:FlxObject;
-	private var strumLineNotes:FlxTypedGroup<StrumNote>;
-	private var playerStrums:FlxTypedGroup<StrumNote>;
+	public var strumLine:FlxObject;
+	public var camFollow:FlxObject;
+	public var strumLineNotes:FlxTypedGroup<StrumNote>;
+	public var playerStrums:FlxTypedGroup<StrumNote>;
 
 	// health now goes from 0 - 100, instead of 0 - 2
-	private var health:Int    = 50;
-	private var combo:Int     = 0;
-	private var noteCount:Int = 0;
-	private var hitCount:Int  = 0;
-	private var missCount:Int = 0;
-	private var fcValue:Int   = 0;
+	public var health:Int    = 50;
+	public var combo:Int     = 0;
+	public var noteCount:Int = 0;
+	public var hitCount:Int  = 0;
+	public var missCount:Int = 0;
+	public var fcValue:Int   = 0;
 
-	private var healthBarBG:FlxSprite;
-	private var healthBar:HealthBar;
-	public  var paused:Bool = false;
-	private var iconP1:HealthIcon;
-	private var iconP2:HealthIcon;
-	private var camHUD:FlxCamera;
-	private var camGame:FlxCamera;
+	public var healthBarBG:FlxSprite;
+	public var healthBar:HealthBar;
+	public var paused:Bool = false;
+	public var iconP1:HealthIcon;
+	public var iconP2:HealthIcon;
+	public var camHUD:FlxCamera;
+	public var camGame:FlxCamera;
 
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
@@ -236,9 +221,10 @@ class PlayState extends MusicBeatState
 
 		super.create();
 
-		if(isStoryMode && !seenCutscene && Assets.exists('assets/songs-data/$curSong/dialogue.txt')){
+		var dPath:String = 'assets/songs-data/${PlayState.curSong}/dialogue.txt';
+		if(isStoryMode && !seenCutscene && Assets.exists(dPath)){
 			paused = true;
-			openSubState(new DialogueSubstate(camHUD, startCountdown, this));
+			openSubState(new DialogueSubstate(camHUD, startCountdown, dPath, this));
 			return;
 		}
 		seenCutscene = true;
@@ -417,11 +403,13 @@ class PlayState extends MusicBeatState
 			}
 		}
 		// note crap
-		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - songTime < 64)
+		var uNote = unspawnNotes[noteCount];
+		if (uNote != null && uNote.strumTime - songTime < 64)
 		{
-			notes.add(unspawnNotes[noteCount]);
+			notes.add(uNote);
 			noteCount++;
 		}
+
 		changeArray = [true,true,true,true];
 		notes.forEachAlive(handleNotes);
 
@@ -669,9 +657,8 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
-		FlxG.sound.music.volume = 0;
-		vocals.volume = 0;
-		seenCutscene = false;
+		if(FlxG.sound.music.playing) FlxG.sound.music.volume = 0;
+		if(vocals.playing) vocals.volume = 0;
 		Highscore.saveScore(SONG.song, songScore, storyDifficulty);
 
 		if (isStoryMode){
@@ -730,7 +717,7 @@ class PlayState extends MusicBeatState
 		daNote.angle = strumRef.angle;
 		daNote.y    += daNote.offsetY;
 
-		if(daNote.player != playerPos || Settings.pr.botplay) return;
+		if(daNote.player != playerPos || Settings.pr.botplay || daNote.ignore) return;
 
 		if(nDiff > inputRange){
 			if(daNote.mustHit)
@@ -742,7 +729,6 @@ class PlayState extends MusicBeatState
 			daNote.destroy();
 			return;
 		}
-		if(daNote.ignore) return;
 
 		if (Math.abs(nDiff) < inputRange * (daNote.mustHit ? 1 : 0.5) && !daNote.isSustainNote && changeArray[daNote.noteData]){
 			hittableNotes[daNote.noteData] = daNote;

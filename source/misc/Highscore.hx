@@ -4,6 +4,7 @@ import flixel.FlxG;
 
 using StringTools;
 
+#if !debug @:noDebug #end
 class Highscore
 {
 	#if (haxe >= "4.0.0")
@@ -23,7 +24,7 @@ class Highscore
 		var songNaem:String = song.toLowerCase().trim() + CoolUtil.diffString(diff, 0);
 
 		if(scoreExists(songNaem) >= score) return;
-		
+
 		songScores.set(songNaem, score);
 		FlxG.save.data.songScores = songScores;
 		FlxG.save.flush();

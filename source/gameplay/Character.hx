@@ -1,22 +1,20 @@
 package gameplay;
 
 import flixel.FlxSprite;
-import flixel.animation.FlxBaseAnimation;
-import flixel.graphics.frames.FlxAtlasFrames;
 
 using StringTools;
 
+#if !debug @:noDebug #end
 class Character extends FlxSprite
 {
 	public var animOffsets:Map<String, Array<Int>>;
+	public var camOffset:Array<Int> = [0,0];
 
 	public var isPlayer:Bool = false;
-	public var curCharacter:String = 'bf';
-
 	public var idleNextBeat :Bool = true;
-	public var leftRightIdle:Bool = false;
 
-	public var camOffset:Array<Int> = [0,0];
+	public var curCharacter:String = 'bf';
+	public var leftRightIdle:Bool = false;
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -72,7 +70,6 @@ class Character extends FlxSprite
 	}
 
 	private var danced:Bool = false;
-
 	public function dance(f:Bool = false)
 	{
 		if(leftRightIdle){

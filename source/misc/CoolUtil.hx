@@ -5,6 +5,7 @@ import flixel.FlxG;
 
 using StringTools;
 
+#if !debug @:noDebug #end
 class CoolUtil
 {
 	// should be the diffArray divided by 2.
@@ -23,7 +24,7 @@ class CoolUtil
 
 	public static function diffString(diff:Int, mode:Int):String
 	{
-		return diffArr[diff + (3 * mode)];
+		return diffArr[diff + (diffNumb * mode)];
 	}
 
 	public static function textFileLines(path:String, ?ext:String = 'txt'):Array<String>

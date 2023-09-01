@@ -4,6 +4,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 
 // HECK YEA WE RE-DOIN THIS
 
+#if !debug @:noDebug #end
 class Paths {
     public static inline var sndExt:String = #if desktop 'ogg' #else 'mp3' #end;
 

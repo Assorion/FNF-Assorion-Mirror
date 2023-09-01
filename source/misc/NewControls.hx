@@ -2,6 +2,7 @@ package misc;
 
 import flixel.input.keyboard.FlxKey;
 
+#if !debug @:noDebug #end
 class NewControls {
     // to be clear this is just for storing binds.
     // the checks HAVE to be implemented in the state itself.

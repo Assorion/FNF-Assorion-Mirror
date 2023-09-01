@@ -21,6 +21,7 @@ import flixel.tweens.FlxTween;
 
 using StringTools;
 
+#if !debug @:noDebug #end
 class ChartingState extends MusicBeatState {
     public static function colorFromRGBArray(array:Array<Int>):Int
         return FlxColor.fromRGB(array[0], array[1], array[2]);

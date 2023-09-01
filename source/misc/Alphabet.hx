@@ -2,13 +2,13 @@ package misc;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 
 using StringTools;
 
+#if !debug @:noDebug #end
 class Alphabet extends FlxSpriteGroup
 {
 	// for menus.
@@ -42,12 +42,13 @@ class Alphabet extends FlxSpriteGroup
 
 			// # add text
 
-			var letter:AlphaCharacter = new AlphaCharacter(futurePos, 0);
+			var letter:AlphaCharacter = new AlphaCharacter(futurePos, 0, character);
 
-			if (isBold)
+			isBold ? letter.createBold() : letter.createLetter();
+			/*if (isBold)
 				letter.createBold(character);
 			else
-				letter.createLetter(character);
+				letter.createLetter(character);*/
 
 			add(letter);
 
@@ -83,24 +84,26 @@ class AlphaCharacter extends FlxSprite
 	public static var numbers:String = "1234567890";
 	public static var symbols:String = "|~#$%()*+-:;<=>@[]^_.,'!?";
 	public static var completeList:String = "abcdefghijklmnopqrstuvwxyz1234567890|~#$%()*+-:;<=>@[]^.,'!?";
+	public var letter:String;
 
-	public function new(x:Float, y:Float)
+	public function new(x:Float, y:Float, char:String)
 	{
 		super(x, y);
 		var tex = Paths.lSparrow('ui/alphabet');
 		frames = tex;
+		letter = char;
 
 		antialiasing = Settings.pr.antialiasing;
 	}
 
-	public function createBold(letter:String)
+	public function createBold()
 	{
 		animation.addByPrefix(letter, letter.toUpperCase() + " bold", 24);
 		animation.play(letter);
 		updateHitbox();
 	}
 
-	public function createLetter(letter:String):Void
+	public function createLetter():Void
 	{
 		var suffix = ' capital';
 
@@ -125,7 +128,7 @@ class AlphaCharacter extends FlxSprite
 
 	// # handle symbols.
 
-	public function replaceWithSymbol(letter:String)
+	public function replaceWithSymbol()
 	{
 		var magicNumb:Int = Math.floor(replacementArray.length / 3);
 		for(i in 0...magicNumb)

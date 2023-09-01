@@ -22,6 +22,7 @@ typedef StoryData = {
 	var topText:String;
 }
 
+#if !debug @:noDebug #end
 class StoryMenuState extends MusicBeatState
 {
 	public static var curSel:Int = 0;

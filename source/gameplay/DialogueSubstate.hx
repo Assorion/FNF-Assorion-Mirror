@@ -17,6 +17,7 @@ typedef SlideShowPoint = {
     var text:String;
 }
 
+#if !debug @:noDebug #end
 class DialogueSubstate extends MusicBeatSubstate {
     public var chars:Array<String> = [];
     public var curChar:Int = 0;
@@ -32,23 +33,19 @@ class DialogueSubstate extends MusicBeatSubstate {
     var pState:PlayState;
     var voicesText:FlxText;
 
-    public function new(camera:FlxCamera, closeFunc:Void->Void, playState:PlayState){
+    public function new(camera:FlxCamera, closeFunc:Void->Void, dPath:String, playState:PlayState){
         super();
 
         graySpr = new FlxSprite(0,0).makeGraphic(FlxG.width,FlxG.height, FlxColor.GRAY);
 		graySpr.screenCenter();
 		graySpr.alpha = 0;
-		add(graySpr);
 
         char1 = new FlxSprite(0,0);
         char1.centerOffsets();
         char1.centerOrigin ();
-        add(char1);
-
         char2 = new FlxSprite(0,0);
         char2.centerOffsets();
         char2.centerOrigin ();
-        add(char2);
 
         boxSpr = new FlxSprite(0,0).loadGraphic(Paths.lImage('gameplay/dialoguebox'));
         boxSpr.setGraphicSize(Std.int(boxSpr.width * 4), Std.int(boxSpr.height * 1.75));
@@ -56,12 +53,15 @@ class DialogueSubstate extends MusicBeatSubstate {
         boxSpr.screenCenter();
         boxSpr.y += 230;
         boxSpr.alpha = 0;
-        add(boxSpr);
 
         voicesText = new FlxText(boxSpr.x + 30, boxSpr.y + 10, 0, '', 30);
         voicesText.color = FlxColor.BLACK;
-        add(voicesText);
 
+        add(graySpr);
+        add(char1);
+        add(char2);
+        add(boxSpr);
+        add(voicesText);
         graySpr.cameras = [camera];
         char1.cameras   = [camera];
         char2.cameras   = [camera];
@@ -71,8 +71,8 @@ class DialogueSubstate extends MusicBeatSubstate {
         clsFnc = closeFunc;
         pState = playState;
 
-        // parse text data.
-        var lines:Array<String> = Assets.getText('assets/songs-data/${PlayState.curSong}/dialogue.txt').split(',');
+        // parse text data. Yeah sorry this is not too good.
+        var lines:Array<String> = Assets.getText(dPath).split(',');
         for(i in 0...lines.length){
             var splitL:Array<String> = lines[i].split(':');
 

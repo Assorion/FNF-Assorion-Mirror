@@ -9,6 +9,7 @@ import openfl.system.System;
 
 // this is a modified FPS class for SPEED!
 
+#if !debug @:noDebug #end
 class FPSCounter extends TextField {
     public var currentTime:Float = 0;
     public var framerate:Int = 0;

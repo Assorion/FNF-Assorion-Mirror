@@ -14,6 +14,7 @@ using StringTools;
     This kinda sucks.
 **/
 
+#if !debug @:noDebug #end
 class AssetCacher {
     public static function loadAssets(parent:FlxUIState){
         var paths:Array<String> = [];

@@ -3,6 +3,7 @@ package gameplay;
 import flixel.FlxSprite;
 import flixel.FlxG;
 
+#if !debug @:noDebug #end
 class StrumNote extends FlxSprite {
     var isPlayer:Bool = false;
     public var pressTime:Float = 0;

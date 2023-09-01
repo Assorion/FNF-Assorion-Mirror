@@ -4,6 +4,7 @@ import flixel.FlxSprite;
 import lime.utils.Assets;
 import misc.Alphabet;
 
+#if !debug @:noDebug #end
 class HealthIcon extends FlxSprite
 {
 	public var hook:Alphabet;

@@ -1,11 +1,8 @@
 package ui;
 
-import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
@@ -20,6 +17,7 @@ import gameplay.PlayState;
 
 using StringTools;
 
+#if !debug @:noDebug #end
 class FreeplayState extends MusicBeatState
 {
 	var songs:Array<String> = [];

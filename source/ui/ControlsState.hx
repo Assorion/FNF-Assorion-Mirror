@@ -12,6 +12,7 @@ import misc.Alphabet;
     Optionstate for controls
 */
 
+#if !debug @:noDebug #end
 class ControlsState extends MusicBeatState {
 	var controlList:Array<String> = [
         'note_left',

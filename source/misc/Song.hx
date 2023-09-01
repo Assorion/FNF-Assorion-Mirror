@@ -1,7 +1,6 @@
 package misc;
 
 import haxe.Json;
-import haxe.format.JsonParser;
 import lime.utils.Assets;
 
 using StringTools;
@@ -26,6 +25,7 @@ typedef SwagSong =
 	var beginTime:Float;
 }
 
+#if !debug @:noDebug #end
 class Song
 {
 	public static function loadFromJson(song:String, diff:Int):SwagSong

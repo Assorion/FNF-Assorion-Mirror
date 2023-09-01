@@ -9,11 +9,9 @@ import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup;
-import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.system.FlxSound;
-import flixel.system.ui.FlxSoundTray;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -26,6 +24,7 @@ import misc.Alphabet;
 
 using StringTools;
 
+#if !debug @:noDebug #end
 class TitleState extends MusicBeatState
 {
 	public static var initialized:Bool = false;
@@ -34,7 +33,7 @@ class TitleState extends MusicBeatState
 	var textSequence:Array<Array<String>> = [
 		['hi'],
 		['Original game by','ninjamuffin'],
-		['MKG engine by', 'me'],
+		['assorion engine by', 'me'],
 		['This took ages', 'bruh', 'cmon'],
 		['RANDOM'],
 		['Well any way', 'have fun']

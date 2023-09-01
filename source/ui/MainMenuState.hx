@@ -1,10 +1,8 @@
 package ui;
 
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.effects.FlxFlicker;
-import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -15,6 +13,7 @@ import openfl.events.KeyboardEvent;
 
 using StringTools;
 
+#if !debug @:noDebug #end
 class MainMenuState extends MusicBeatState
 {
 	public static var curSelected:Int = 0;
@@ -70,7 +69,7 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionNumber:FlxText = new FlxText(5, FlxG.height - 18, 0, "MKG Engine v" + Application.current.meta.get('version'), 12);
+		var versionNumber:FlxText = new FlxText(5, FlxG.height - 18, 0, "Assorion Engine v" + Application.current.meta.get('version'), 12);
 			versionNumber.scrollFactor.set();
 			versionNumber.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionNumber);

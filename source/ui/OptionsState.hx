@@ -24,6 +24,7 @@ import flixel.text.FlxText;
 	If it's togglable, then just add it to the other switch statement.
 **/
 
+#if !debug @:noDebug #end
 class OptionsState extends MusicBeatState
 {
 	var optionSub:Array<Array<String>> = [
