@@ -170,6 +170,11 @@ class TitleState extends MusicBeatState
 		textGroup.add(txt);
 	}
 
+	override function update(elapsed:Float){
+		FlxG.camera.zoom = CoolUtil.boundTo(FlxG.camera.zoom - elapsed, 1, 2);
+		super.update(elapsed);
+	}
+
 	var beatLeft:Int = 1;
 	var textStep:Int = -1;
 	var tsubStep:Int = 0;
@@ -185,6 +190,7 @@ class TitleState extends MusicBeatState
 
 		if(curBeat <= 0 || skippedIntro) return;
 
+		FlxG.camera.zoom = 1.1;
 		beatLeft--;
 
 		// reset crap
