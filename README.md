@@ -43,4 +43,4 @@ look at `art/screenshots.md`.
 
 # Compiling.
 
-Follow the base game instructions for compiling. (Flixel version `5.0.0` for compiling)
+Follow the base game instructions for compiling. (Flixel version `5.0.0` or `4.11.0` for compiling)
