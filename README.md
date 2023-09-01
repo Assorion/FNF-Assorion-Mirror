@@ -29,9 +29,9 @@ although Assorion Engine may have several branches will more features soon.
 -	Songs and Data folder have been merged into the songs-data folder.
   
  **RoadMap**
+* [X]	Bug Fixes and Optimizations.
+* [X]	Code Cleanup 
 * [ ]	Improvements to the chart editor.
-* [ ]	Bug Fixes and Optimizations.
-* [ ]	Code Cleanup 
 * [ ]	Events System
 * [ ]	More Options
 * [ ]	Navigation Improvements
