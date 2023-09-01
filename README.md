@@ -47,3 +47,10 @@ look at `art/screenshots.md`.
 # Compiling.
 
 Follow the base game instructions for compiling. (Flixel version `5.0.0` or `4.11.0` for compiling)
+
+## Minimum Requirements.
+
+1. 512mb - 1gb of RAM
+2. Core 2 Duo CPU or higher
+3. 256mb of VRAM or more
+4. Windows 7 64-bit or higher
