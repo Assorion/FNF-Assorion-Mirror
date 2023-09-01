@@ -1,7 +1,10 @@
 # FNF Assorion Engine!
 
 ![assorion engine](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/6e765e3c-5cc9-4cfe-ac16-3c080aa037f3)
-
+ <img src="https://img.shields.io/github/repo-size/Legendary-Candice-Joe/FNF-Assorion-Engine?style=flat-square&color=06b59c"/>
+ <img src="https://img.shields.io/github/commit-activity/m/Legendary-Candice-Joe/FNF-Assorion-Engine?style=flat-square&color=06b59c"/> 
+ <img src="https://img.shields.io/github/v/release/Legendary-Candice-Joe/FNF-Assorion-Engine?style=flat-square&color=06b59c"/> 
+ <img scr="https://img.shields.io/github/release-date/Legendary-Candice-Joe/FNF-Assorion-Engine?style=flat-square&color=06b59c"/>
 ## What is Assorion Engine?
 
 Assorion Engine is effectively the Arch Linux of Friday Night Funkin' Engines. 
