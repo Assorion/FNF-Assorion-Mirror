@@ -1,22 +1,22 @@
 # Options
 
-![aOptions1](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/18450e5d-a39c-403b-97cd-924bd11ef30f)
-![aOption2](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/527b8128-df91-4d86-ad89-a6f34f5702c6)
-![aOptions3](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/a6522154-4821-455f-8928-0af3defad6c7)
+![aOptions1](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/ff7422ca-85e8-4240-95a4-a8864b2ead76)
+![aOption2](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/f7a30a9a-3090-4a93-bce7-b91289e19a86)
+![aOptions3](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/2d0b305b-fc63-420c-9eb8-3a6a30522486)
 
 # Main Menu
 
-![Capture](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/1b85006b-52f8-48b6-b2c7-4626cc64f372)
+![Capture](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/1c0f8dbd-f490-4e3a-a424-e57233f3835c)
 
 # Gameplay
 
-![aGameplay1](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/047070f3-a9d5-4526-9c10-ecd6f08b80b8)
-![aGameplay2](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/c128ffdc-4cec-4fb9-b389-0611d7b6de80)
+![aGameplay1](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/31f05c57-166e-4a3a-92a7-df12c327a78c)
+![aGameplay2](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/e3666830-3f2e-473b-ac03-b7d8ff6bc7bd)
 
 # Story Menu
 
-![aStoryMenu](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/bce794d9-12b3-426b-964f-4c9d7422ad80)
+![aStoryMenu](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/71b229ac-c30a-49a2-8fc1-8df465d539f3)
 
 # Freeplay
 
-![aFreeplay1](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/caca21b0-2150-43ac-9ce9-73cdf360624a)
+![aFreeplay1](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/a926411d-102c-4df4-bda9-f575299ead89)
