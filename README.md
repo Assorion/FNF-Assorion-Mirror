@@ -1,4 +1,4 @@
-# FNF Assorion Engine!
+# Friday Night Funkin' Assorion Engine!
 
 ![LOGO](art/assorione.png)
 
@@ -23,7 +23,7 @@ All original base Friday Night Funkin' code has been replaced with more efficien
 
 Assorion Engine doesn't have mods folder capabilities planned and it won't be implemented. 
 In addition to cutscenes, events, discordRPC, etc, most other features will have to be added yourself, 
-although Assorion Engine may have several branches with more features soon.
+although Assorion Engine may have several <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine#branches">branches</a> with more features soon.
 
 ## ⚡ | Why choose Assorion Engine?
 
@@ -39,7 +39,7 @@ although Assorion Engine may have several branches with more features soon.
 -	There has been a complete overhaul of Chartingstate. Therefore, it will probably have new bugs and will be partially confusing at first glance
 -	It should be simpler to integrate more characters into a single song. Notes have special player values that make this possible
 -	Charts are handled differently to the base game. Absolute positions are used instead of millisecond values. In addition, notes have player values in the chart
--	Assorion Engine based off <a href="https://github.com/FunkinCrew/Funkin/releases/tag/v0.2.6">`0.2.6`</a> rsion of the base game
+-	Assorion Engine based off <a href="https://github.com/FunkinCrew/Funkin/releases/tag/v0.2.6">`0.2.6`</a> version of the base game
 -	Songs and Data folder have been merged into the songs-data folder
   
  **RoadMap**
@@ -50,14 +50,14 @@ although Assorion Engine may have several branches with more features soon.
 * [ ]	More Options
 * [ ]	Navigation Improvements
 
-**Branches**
-| Assorion Branch's                                | Windows | Linux | HTML5 (WEB)     |
+#### **Branches**
+| `Assorion Branch's`                                | `Windows` | `Linux` | `HTML5 (WEB)`     |
 |--------------------------------------------------|---------|-------|-----------------|
-| Assorion-Main                                    | ✓       | ✓     | ✗              |
-| Assorion-Plus                                    | ✗       | ✗     | ✗              |
-| Assorion-Minimun                                 | ✗       | ✗     | ✗              |
-| Assorion-Base                                    | ✗       | ✗     | ✗              |
-| Assorion-3D                                      | ✗       | ✗     | ✗              |
+| <a href="#">Assorion-Main</a>                                    | ✓       | ⍻     | ☓              |
+| <a href="#">Assorion-Plus</a>                                    | ☓       | ☓     | ☓              |
+| <a href="#">Assorion-Minimun</a>                                 | ☓       | ☓     | ☓              |
+| <a href="#">Assorion-Base</a>                                    | ☓       | ☓     | ☓              |
+| <a href="#">Assorion-3D</a>                                      | ☓       | ☓     | ☓              |
 
 ## 🖼️ | Screenshots
 
