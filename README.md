@@ -12,7 +12,7 @@
  <a href="#"><img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
  <a href="#"><img src="https://img.shields.io/badge/Linux_Build-Pending-blue?style=for-the-badge&color=e1b100"/></a>
  <a href="#"><img src="https://img.shields.io/badge/Web_Build-Pending-blue?style=for-the-badge&color=e1b100"/></a>  
- <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine"><img src="https://img.shields.io/badge/Legendary_Candice_Joe-8A2BE2?style=for-the-badge&color=555555" align="right" /></a>
+ <a href="https://github.com/Legendary-Candice-Joe"><img src="https://img.shields.io/badge/Legendary_Candice_Joe-8A2BE2?style=for-the-badge&color=555555" align="right" /></a>
  </div>
 
 -------------------------------------------------------------
