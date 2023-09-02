@@ -89,6 +89,7 @@ class PauseSubState extends MusicBeatSubstate
 				FlxG.resetState();
 			case 2:
 				Settings.pr.botplay = !Settings.pr.botplay;
+				alphaTexts.members[curSelected].alpha = 0;
 			case 3:
 				exitToProperMenu();
 		}

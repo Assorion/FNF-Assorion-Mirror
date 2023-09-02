@@ -142,7 +142,7 @@ class MainMenuState extends MusicBeatState
 				case 1:
 					FlxG.switchState(new FreeplayState());
 				case 2:
-					CoolUtil.browserLoad('https://github.com/Legendary-Candice-Joe/Funkin-MKG/');
+					CoolUtil.browserLoad('https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/');
 					FlxG.resetState();
 				case 3:
 					FlxG.switchState(new OptionsState());

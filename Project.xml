@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin' Assorion Engine" file="AssorionEngine" packageName="com.candicejoe.funkin" main="Main" version="1.1.0" company="candicejoe" />
+	<app title="Friday Night Funkin' Assorion Engine" file="AssorionEngine" packageName="com.candicejoe.funkin" main="Main" version="1.1.1" company="candicejoe" />
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
@@ -25,8 +25,8 @@
 
 	<classpath name="source" />
 
-	<assets path="assets" exclude="*.mp3" unless="web"/>
-	<assets path="assets" exclude="*.ogg" if="web"/>
+	<assets path="assets" exclude="*.mp3|*.mdp" unless="web"/>
+	<assets path="assets" exclude="*.ogg|*.mdp" if="web"/>
 	<assets path="embedded" rename="assets" embed="true"/>
 
 	<assets path="CHANGELOG.md"/>

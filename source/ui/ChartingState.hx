@@ -524,6 +524,7 @@ class ChartingState extends MusicBeatState {
     {
         uiElements.clear();
         inSecUi = true;
+        blockInput = false;
 
         var mustHitSection:ChartUI_CheckBox = new ChartUI_CheckBox(uiBG.x + 10, uiBG.y + 10, PlayState.SONG.notes[curSec].mustHitSection, (c:Bool)->{
             PlayState.SONG.notes[curSec].mustHitSection = c;
