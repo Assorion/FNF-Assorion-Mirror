@@ -50,6 +50,14 @@ although Assorion Engine may have several branches with more features soon.
 * [ ]	More Options
 * [ ]	Navigation Improvements
 
+**Branches**
+| Assorion Branch's                                | Windows | Linux | HTML5 (WEB)     |
+|--------------------------------------------------|---------|-------|-----------------|
+| Assorion-Main                                    | ✓       | ✓     | ✗              |
+| Assorion-Plus                                    | ✗       | ✗     | ✗              |
+| Assorion-Minimun                                 | ✗       | ✗     | ✗              |
+| Assorion-Base                                    | ✗       | ✗     | ✗              |
+| Assorion-3D                                      | ✗       | ✗     | ✗              |
 
 ## 🖼️ | Screenshots
 
