@@ -39,7 +39,7 @@ although Assorion Engine may have several branches with more features soon.
 -	There has been a complete overhaul of Chartingstate. Therefore, it will probably have new bugs and will be partially confusing at first glance
 -	It should be simpler to integrate more characters into a single song. Notes have special player values that make this possible
 -	Charts are handled differently to the base game. Absolute positions are used instead of millisecond values. In addition, notes have player values in the chart
--	Assorion Engine based off `0.2.6` version of the base game
+-	Assorion Engine based off <a href="https://github.com/FunkinCrew/Funkin/releases/tag/v0.2.6">`0.2.6`</a> rsion of the base game
 -	Songs and Data folder have been merged into the songs-data folder
   
  **RoadMap**
