@@ -28,6 +28,7 @@
 	<assets path="assets" exclude="*.mp3|*.mdp" unless="web"/>
 	<assets path="assets" exclude="*.ogg|*.mdp" if="web"/>
 	<assets path="embedded" rename="assets" embed="true"/>
+	<assets path="art/Assorion.txt" rename="cool text file.txt"/>
 
 	<assets path="CHANGELOG.md"/>
 
