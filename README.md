@@ -11,7 +11,7 @@
  </div>
  <div align="center">
  <a href="#"><img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
- <a href="#"><img src="https://img.shields.io/badge/Linux_Build-Pending-blue?style=for-the-badge&color=e1b100"/></a>
+ <a href="#"><img src="https://img.shields.io/badge/Linux_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
  <a href="#"><img src="https://img.shields.io/badge/Web_Build-Pending-blue?style=for-the-badge&color=e1b100"/></a>  
  </div>
 
@@ -54,7 +54,7 @@ although Assorion Engine may have several <a href="https://github.com/Legendary-
 #### **Branches**
 | `Assorion Branch's`                                | `Windows` | `Linux` | `HTML5 (WEB)`     |
 |--------------------------------------------------|---------|-------|-----------------|
-| <a href="#">Assorion-Main</a>                                    | ✓       | ⍻     | ☓              |
+| <a href="#">Assorion-Main</a>                                    | ✓       | ✓     | ☓              |
 | <a href="#">Assorion-Plus</a>                                    | ☓       | ☓     | ☓              |
 | <a href="#">Assorion-Minimun</a>                                 | ☓       | ☓     | ☓              |
 | <a href="#">Assorion-Base</a>                                    | ☓       | ☓     | ☓              |
