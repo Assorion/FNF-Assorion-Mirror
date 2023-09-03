@@ -10,6 +10,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
 import openfl.events.KeyboardEvent;
+import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -96,31 +97,38 @@ class MainMenuState extends MusicBeatState
 		super.keyHit(ev);
 
 		var t = key.deepCheck([NewControls.UI_U, NewControls.UI_D]);
+		var backed:Bool = key.hardCheck(NewControls.UI_BACK);
 		if(t != -1){
 			changeItem((t * 2) - 1);
 			return;
 		}
 
-		if(key.hardCheck(NewControls.UI_BACK)){
-			if(selectedSomethin){
-				for(i in 0...optionList.length){
-					if(twns[i] != null) twns[i].cancel();
-					menuItems.members[i].alpha = 1;
-				}
-				events = [];
-				selectedSomethin = false;
-				twns = [];
-
-				return;
+		if(backed && selectedSomethin){
+			for(i in 0...optionList.length){
+				if(twns[i] != null) twns[i].cancel();
+				menuItems.members[i].alpha = 1;
 			}
+			events = [];
+			selectedSomethin = false;
+			twns = [];
+
+			return;
+		}
+		if(key.hardCheck(NewControls.UI_ACCEPT) && selectedSomethin){
+			skipTrans();
+			return;
+		}
+
+		if(selectedSomethin) return;
+
+		if(backed){
 			FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
 			FlxG.switchState(new TitleState());
-
 			return;
 		}
 
 		// handle the enter.
-		if(!key.hardCheck(NewControls.UI_ACCEPT) || selectedSomethin) return;
+		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
 
 		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
 		selectedSomethin = true;

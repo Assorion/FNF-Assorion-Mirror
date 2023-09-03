@@ -380,7 +380,7 @@ class ChartingState extends MusicBeatState {
     public function delNote():Bool
     {
         for(nt in notes.members)
-            if(nt.x == gridSel.x && nt.y == gridSel.y){
+            if(nt.x == gridSel.x && Math.round(nt.y) == Math.round(gridSel.y)){
                 PlayState.SONG.notes[curSec].sectionNotes.remove(nt.chartRef);
                 selectedNotes = [];
                 loadNotes();
@@ -525,6 +525,7 @@ class ChartingState extends MusicBeatState {
         uiElements.clear();
         inSecUi = true;
         blockInput = false;
+        activeUIElement = null;
 
         var mustHitSection:ChartUI_CheckBox = new ChartUI_CheckBox(uiBG.x + 10, uiBG.y + 10, PlayState.SONG.notes[curSec].mustHitSection, (c:Bool)->{
             PlayState.SONG.notes[curSec].mustHitSection = c;

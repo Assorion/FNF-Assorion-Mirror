@@ -46,10 +46,10 @@ although Assorion Engine may have several <a href="https://github.com/Legendary-
  **RoadMap**
 * [X]	Bug Fixes and Optimizations
 * [X]	Code Cleanup
+* [X]	Navigation Improvements
 * [ ]	Improvements to the chart editor
 * [ ]	Events System
 * [ ]	More Options
-* [ ]	Navigation Improvements
 
 #### **Branches**
 | `Assorion Branch's`                                | `Windows` | `Linux` | `HTML5 (WEB)`     |

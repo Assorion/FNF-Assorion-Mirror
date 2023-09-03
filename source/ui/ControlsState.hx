@@ -103,6 +103,7 @@ class ControlsState extends MusicBeatState {
         trace(k);
     }
 
+	private var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
@@ -138,6 +139,8 @@ class ControlsState extends MusicBeatState {
 		// escapes
 
 		if(key.hardCheck(NewControls.UI_BACK)){
+
+			leaving = true;
 			Settings.apply();
 			Settings.flush();
 			FlxG.sound.play(Paths.lSound('menu/cancelMenu'));

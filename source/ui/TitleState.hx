@@ -148,7 +148,12 @@ class TitleState extends MusicBeatState
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		if(!key.hardCheck(NewControls.UI_ACCEPT) || leaving) return;
+		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
+
+		if(leaving) {
+			skipTrans();
+			return;
+		}
 
 		if(skippedIntro){
 			titleText.animation.play('press');

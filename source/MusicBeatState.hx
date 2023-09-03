@@ -102,5 +102,12 @@ class MusicBeatState extends FlxUIState
 		}
 	}
 
+	private inline function skipTrans(){
+		FlxTransitionableState.skipNextTransIn  = true;
+		FlxTransitionableState.skipNextTransOut = true;
+		for(i in 0...events.length)
+			events[i].exeFunc();
+	}
+
 	public function beatHit():Void {}
 }

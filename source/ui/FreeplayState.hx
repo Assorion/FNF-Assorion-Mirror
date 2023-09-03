@@ -131,6 +131,7 @@ class FreeplayState extends MusicBeatState
 
 	// # input code.
 
+	private var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
@@ -175,6 +176,11 @@ class FreeplayState extends MusicBeatState
 
 		// escape code.
 		if(key.hardCheck(NewControls.UI_BACK)){
+			if(leaving){
+				skipTrans();
+				return;
+			}
+			leaving = true;
 			FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
 			FlxG.switchState(new MainMenuState());
 			return;

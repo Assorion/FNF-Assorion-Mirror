@@ -28,3 +28,10 @@ Minor update with a few fixes.
 2. Fixed NOTE_assets again.
 3. Fixed bug with the chart editor that locked your input forever (Thus losing your work).
 4. Exclude Firealpaca's art files (.mdp) in the build folder.
+
+## V - 1.1.2
+
+Chart editor fix (again).
+
+1. Actually **Actually** fixed the chart editor this time (hopefully).
+2. Fixed bug where you can't delete notes in 1/3 zoom level.
