@@ -35,3 +35,4 @@ Chart editor fix (again).
 
 1. Actually **Actually** fixed the chart editor this time (hopefully).
 2. Fixed bug where you can't delete notes in 1/3 zoom level.
+3. Added navigation stuff.
