@@ -103,48 +103,40 @@ class ControlsState extends MusicBeatState {
         trace(k);
     }
 
-	private var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
         if(rebinding) return;
 
-		var t = key.deepCheck([NewControls.UI_U,NewControls.UI_D]);
-		if(t != -1){
-			changeSel((t * 2) - 1);
-			return;
-		}
-        t = key.deepCheck([NewControls.UI_L,NewControls.UI_R]);
-        if(t != -1){
-			//changeAlt((t * 2) - 1);
-            curAlt += (t * 2) - 1;
-            curAlt = CoolUtil.boundTo(curAlt, 0, 1, true);
-            changeSel(0);
-			return;
-		}
+		var k = key.deepCheck([NewControls.UI_U,NewControls.UI_D, NewControls.UI_L,NewControls.UI_R , 
+			NewControls.UI_ACCEPT, NewControls.UI_BACK]);
+		switch(k){
+			case 0,1:
+				changeSel((k * 2) - 1);
+				return;
+			case 2,3:
+				curAlt += ((k - 2) * 2) - 1;
+				curAlt = CoolUtil.boundTo(curAlt, 0, 1, true);
+				changeSel(0);
+				return;
+			case 4: // Enter
+				if(controlList[curSel] == '')
+					return;
+	
+				for(i in 0...activeTextGroup.length)
+					if(Math.floor(i / 3) != curSel)
+						activeTextGroup.members[i].alpMult = 0;
+	
+				dontCancel = true;
+				rebinding = true;
+				return;
+			case 5: // Escape
+				Settings.apply();
+				Settings.flush();
 
-        if(key.hardCheck(NewControls.UI_ACCEPT)){
-            if(controlList[curSel] == '')
-                return;
-
-			for(i in 0...activeTextGroup.length)
-				if(Math.floor(i / 3) != curSel)
-					activeTextGroup.members[i].alpMult = 0;
-
-            dontCancel = true;
-            rebinding = true;
-            return;
-        }
-
-		// escapes
-
-		if(key.hardCheck(NewControls.UI_BACK)){
-
-			leaving = true;
-			Settings.apply();
-			Settings.flush();
-			FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
-			FlxG.switchState(new OptionsState());
+				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
+				FlxG.switchState(new OptionsState());
+				return;
 		}
 	}
 

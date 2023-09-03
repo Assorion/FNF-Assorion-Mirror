@@ -96,40 +96,40 @@ class MainMenuState extends MusicBeatState
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		var t = key.deepCheck([NewControls.UI_U, NewControls.UI_D]);
-		var backed:Bool = key.hardCheck(NewControls.UI_BACK);
-		if(t != -1){
-			changeItem((t * 2) - 1);
-			return;
-		}
+		var k = key.deepCheck([NewControls.UI_U, NewControls.UI_D, NewControls.UI_ACCEPT, NewControls.UI_BACK]);
+		switch(k){
+			case 0, 1:
+				changeItem((k * 2) - 1);
+				return;
+			case 2:
+				changeState();
+				return;
+			case 3:
+				if(selectedSomethin){
+					for(i in 0...optionList.length){
+						if(twns[i] != null) twns[i].cancel();
+						menuItems.members[i].alpha = 1;
+					}
+					events = [];
+					selectedSomethin = false;
+					twns = [];
 
-		if(backed && selectedSomethin){
-			for(i in 0...optionList.length){
-				if(twns[i] != null) twns[i].cancel();
-				menuItems.members[i].alpha = 1;
-			}
-			events = [];
-			selectedSomethin = false;
-			twns = [];
-
-			return;
+					return;
+				}
+				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
+				FlxG.switchState(new TitleState());
+	
+				return;
 		}
-		if(key.hardCheck(NewControls.UI_ACCEPT) && selectedSomethin){
+	}
+
+	// # switches states
+
+	private inline function changeState(){
+		if(selectedSomethin){
 			skipTrans();
 			return;
 		}
-
-		if(selectedSomethin) return;
-
-		if(backed){
-			FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
-			FlxG.switchState(new TitleState());
-			return;
-		}
-
-		// handle the enter.
-		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
-
 		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
 		selectedSomethin = true;
 
@@ -140,8 +140,6 @@ class MainMenuState extends MusicBeatState
 			postEvent(i / 8, ()->{
 				menuItems.members[curSelected].alpha = (i % 2 == 0 ? 0 : 1);
 			});
-
-		// # switches states
 
 		postEvent(1, () -> {
 			switch (curSelected){

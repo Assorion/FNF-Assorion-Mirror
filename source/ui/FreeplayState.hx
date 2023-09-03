@@ -135,66 +135,56 @@ class FreeplayState extends MusicBeatState
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		// ui movements.
-		var t:Int = key.deepCheck([NewControls.UI_U, NewControls.UI_D]);
-		if (t != -1){
-			changeSelection((t * 2) - 1);
-			return;
-		}
+		var k = key.deepCheck([NewControls.UI_U, NewControls.UI_D, NewControls.UI_L, NewControls.UI_R, 
+			NewControls.UI_ACCEPT, [FlxKey.SPACE], NewControls.UI_BACK]);
+		switch(k){
+			case 0, 1:
+				changeSelection((k * 2) - 1);
+				return;
+			case 2, 3:
+				changeDiff(((k - 2) * 2) - 1);
+				return;
+			case 4: // Enter
+				PlayState.SONG = Song.loadFromJson(songs[curSelected], curDifficulty);
+				PlayState.isStoryMode     = false;
+				PlayState.storyDifficulty = curDifficulty;
 
-		t = key.deepCheck([NewControls.UI_L, NewControls.UI_R]);
-		if(t != -1){
-			changeDiff((t * 2) - 1);
-			return;
-		}
+				FlxG.switchState(new PlayState());
+				if( FlxG.sound.music.playing)
+					FlxG.sound.music.stop();
+				return;
+			case 5: // SpaceUK
+				playing = !playing;
 
-		// space code.
-		if(key == FlxKey.SPACE){
-			playing = !playing;
+				if(playing){
+					FlxG.sound.playMusic(Paths.lMusic('freakyMenu'));
+					FlxG.sound.music.time = prevTime;
 
-			if(playing){
-				FlxG.sound.playMusic(Paths.lMusic('freakyMenu'));
-				FlxG.sound.music.time = prevTime;
+					if(vocals == null) return;
+					
+					vocals.stop();
+					vocals.destroy();
+					vocals = new FlxSound();
 
-				if(vocals == null) return;
-				
-				vocals.stop();
-				vocals.destroy();
-				vocals = new FlxSound();
+					return;
+				}
+
+				prevTime = FlxG.sound.music.time;
+				vocals.loadEmbedded (Paths.playableSong(songs[curSelected], true));
+				FlxG.sound.playMusic(Paths.playableSong(songs[curSelected]));
+				vocals.play();
+				FlxG.sound.list.add(vocals);
+				return;
+			case 6: // Escape
+				if(leaving){
+					skipTrans();
+					return;
+				}
+				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
+				FlxG.switchState(new MainMenuState());
+				leaving = true;
 
 				return;
-			}
-
-			prevTime = FlxG.sound.music.time;
-			vocals.loadEmbedded (Paths.playableSong(songs[curSelected], true));
-			FlxG.sound.playMusic(Paths.playableSong(songs[curSelected]));
-			vocals.play();
-			FlxG.sound.list.add(vocals);
-
-			return;
 		}
-
-		// escape code.
-		if(key.hardCheck(NewControls.UI_BACK)){
-			if(leaving){
-				skipTrans();
-				return;
-			}
-			leaving = true;
-			FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
-			FlxG.switchState(new MainMenuState());
-			return;
-		}
-
-		// enter
-		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
-
-		PlayState.SONG = Song.loadFromJson(songs[curSelected], curDifficulty);
-		PlayState.isStoryMode     = false;
-		PlayState.storyDifficulty = curDifficulty;
-
-		FlxG.switchState(new PlayState());
-		if( FlxG.sound.music.playing)
-			FlxG.sound.music.stop();
 	}
 }

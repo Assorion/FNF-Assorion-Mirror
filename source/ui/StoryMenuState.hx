@@ -129,46 +129,46 @@ class StoryMenuState extends MusicBeatState
 	override function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		if(leaving) return;
+		var k = key.deepCheck([NewControls.UI_U,NewControls.UI_D, NewControls.UI_L,NewControls.UI_R,
+			NewControls.UI_ACCEPT, NewControls.UI_BACK]);
+		switch(k){
+			case 0,1:
+				changeSelection((k * 2) - 1);
+				return;
+			case 2,3:
+				changeDiff(((k - 2) * 2) - 1, true);
+				return;
+			case 4:
+				FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
+				leaving = true;
 
-		var t = key.deepCheck([NewControls.UI_U, NewControls.UI_D]);
-		if(t != -1){
-			changeSelection((t * 2) - 1);
-			return;
+				PlayState.storyPlaylist = weekData[curSel].songs;
+				PlayState.storyWeek = curSel;
+				PlayState.SONG = Song.loadFromJson(weekData[curSel].songs[0], curDif);
+				PlayState.isStoryMode = true;
+				PlayState.storyDifficulty = curDif;
+				PlayState.campaignScore = 0;
+
+				for(i in 0...8)
+					postEvent(i / 8, ()->{
+						wSprites.members[curSel].color = (i % 2 == 0 ? whiteColour : selectColour);
+					});
+				postEvent(1, ()->{
+					FlxG.switchState(new PlayState());
+					if( FlxG.sound.music.playing)
+						FlxG.sound.music.stop();
+				});
+				return;
+			case 5:
+				if(leaving){
+					skipTrans();
+					return;
+				}
+				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
+				FlxG.switchState(new MainMenuState());
+				leaving = true;
+				return;
 		}
-		t = key.deepCheck([NewControls.UI_L, NewControls.UI_R]);
-		if(t != -1){
-			changeDiff((t * 2) - 1, true);
-			return;
-		}
-
-		if(key.hardCheck(NewControls.UI_BACK)){
-			FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
-			FlxG.switchState(new MainMenuState());
-			return;
-		}
-
-		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
-
-		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
-		leaving = true;
-
-		PlayState.storyPlaylist = weekData[curSel].songs;
-		PlayState.storyWeek = curSel;
-		PlayState.SONG = Song.loadFromJson(weekData[curSel].songs[0], curDif);
-		PlayState.isStoryMode = true;
-		PlayState.storyDifficulty = curDif;
-		PlayState.campaignScore = 0;
-
-		for(i in 0...8)
-			postEvent(i / 8, ()->{
-				wSprites.members[curSel].color = (i % 2 == 0 ? whiteColour : selectColour);
-			});
-		postEvent(1, ()->{
-			FlxG.switchState(new PlayState());
-			if( FlxG.sound.music.playing)
-				FlxG.sound.music.stop();
-		});
 	}
 
 	private function changeDiff(to:Int, showArr:Bool){

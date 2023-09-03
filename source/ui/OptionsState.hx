@@ -135,8 +135,33 @@ class OptionsState extends MusicBeatState
 		changeSel();
 	}
 
+	private var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
+
+		// escapes
+
+		if(key.hardCheck(NewControls.UI_BACK)){
+			if(curSub != 0){
+				curSel = 0;
+				curSub = 0;
+				createNewList();
+
+				return;
+			}
+			if(leaving){
+				skipTrans();
+				return;
+			}
+
+			leaving = true;
+			Settings.apply();
+			Settings.flush();
+			FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
+			FlxG.switchState(new MainMenuState());
+			return;
+		}
+		if(leaving) return;
 
 		var t = key.deepCheck([NewControls.UI_U,NewControls.UI_D]);
 		if(t != -1){
@@ -226,23 +251,6 @@ class OptionsState extends MusicBeatState
 			recenterOption(atg);
 
 			return;
-		}
-
-		// escapes
-
-		if(key.hardCheck(NewControls.UI_BACK)){
-			if(curSub != 0){
-				curSel = 0;
-				curSub = 0;
-				createNewList();
-
-				return;
-			}
-
-			Settings.apply();
-			Settings.flush();
-			FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
-			FlxG.switchState(new MainMenuState());
 		}
 	}
 
