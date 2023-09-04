@@ -361,9 +361,7 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.play();
 		vocals.play();
 
-		FlxG.sound.music.time = vocals.time = 0;
-		Conductor.songPosition = -Settings.pr.offset;
-		songTime = (-Settings.pr.offset) * Conductor.songDiv;
+		syncEverything(0);
 	}
 	override function closeSubState()
 	{
@@ -376,7 +374,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.sound.music.play();
 		vocals.play();
-		syncEverything();
+		syncEverything(-1);
 	}
 
 	// # THE GRAND UPDATE FUNCTION!!!
@@ -384,8 +382,6 @@ class PlayState extends MusicBeatState
 	override public function update(elapsed:Float)
 	{
 		if(paused) return;
-		// keep it consistent accross framerates.
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, elapsed * 6)) * (60 / Settings.pr.framerate);
 
 		var scaleVal = CoolUtil.boundTo(iconP1.scale.x - (elapsed * 2), 1, 1.2);
 		iconP1.scale.set(scaleVal, scaleVal);
@@ -531,16 +527,18 @@ class PlayState extends MusicBeatState
 
 		if(paused) return;
 
-		// theres are just regular key checks.
-		if(key == FlxKey.SEVEN){
-			FlxG.switchState(new ChartingState());
-			return;
-		}
-		if(key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK]) != -1 && FlxG.sound.music.playing){
-			pauseGame(new PauseSubState(camHUD));
-			return;
+		var k = key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.SEVEN]]);
+		switch(k){
+			case 0, 1:
+				if(FlxG.sound.music.playing)
+					pauseGame(new PauseSubState(camHUD));
+				return;
+			case 2:
+				FlxG.switchState(new ChartingState());
+				return;
 		}
 
+		// actual input system
 		var nkey = key.deepCheck([NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT]);
 		if(nkey == -1 || keysPressed[nkey] || Settings.pr.botplay) return;
 
@@ -572,7 +570,7 @@ class PlayState extends MusicBeatState
 	}
 
 	// you can add your own scores.
-	public var possibleScores:Array<RatingThing> = [
+	public static var possibleScores:Array<RatingThing> = [
 		{
 			score: 350,
 			threshold: 0,
@@ -736,13 +734,15 @@ class PlayState extends MusicBeatState
 
 	override function stepHit(){
 		super.stepHit();
-		if(countingDown) return;
+		// moving to stepHit cause this probably doesn't need to be done every single frame.
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
 
+		if(countingDown) return;
 		songTime = Conductor.songPosition * Conductor.songDiv;
 	}
 	// Smaller helper functions
-	function syncEverything(){
-		var roundedTime:Float = Conductor.songPosition + Settings.pr.offset;
+	function syncEverything(forceTime:Float){
+		var roundedTime:Float = (forceTime == -1 ? Conductor.songPosition + Settings.pr.offset : forceTime);
 
 		FlxG.sound.music.time  = roundedTime;
 		vocals.time            = roundedTime;

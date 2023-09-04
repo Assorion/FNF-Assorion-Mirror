@@ -51,8 +51,8 @@ class ChartingState extends MusicBeatState {
     private var vocals:FlxSound;
     public var musicLine:FlxSprite;
 
-    public var zooms:Array<Float> = [0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8];
-    public var zoomDivs:Array<Int>= [2,   3,    4,   3, 4, 3, 4, 3, 4];
+    public static var zooms:Array<Float> = [0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8];
+    public static var zoomDivs:Array<Int>= [2,   3,    4,   3, 4, 3, 4, 3, 4];
     public var curZoom:Int = 2;
 
     public var notes:FlxTypedGroup<Note>;

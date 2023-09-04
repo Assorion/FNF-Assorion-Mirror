@@ -28,7 +28,7 @@ class StoryMenuState extends MusicBeatState
 	public static var curSel:Int = 0;
 	public static var curDif:Int = 2;
 
-	var weekData:Array<StoryData> = [
+	static var weekData:Array<StoryData> = [
 		{
 			graphic: 'storymenu/storyportrait',
 			week: '1',

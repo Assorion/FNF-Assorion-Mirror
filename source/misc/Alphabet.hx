@@ -76,9 +76,9 @@ class Alphabet extends FlxSpriteGroup
 
 class AlphaCharacter extends FlxSprite
 {
-	public static var numbers:String = "1234567890";
-	public static var symbols:String = "|~#$%()*+-:;<=>@[]^_.,'!?";
-	public static var completeList:String = "abcdefghijklmnopqrstuvwxyz1234567890|~#$%()*+-:;<=>@[]^.,'!?";
+	public static inline var numbers:String = "1234567890";
+	public static inline var symbols:String = "|~#$%()*+-:;<=>@[]^_.,'!?";
+	public static inline var completeList:String = "abcdefghijklmnopqrstuvwxyz1234567890|~#$%()*+-:;<=>@[]^.,'!?";
 	public var letter:String;
 
 	public function new(x:Float, y:Float, char:String)

@@ -27,14 +27,14 @@ import flixel.text.FlxText;
 #if !debug @:noDebug #end
 class OptionsState extends MusicBeatState
 {
-	var optionSub:Array<Array<String>> = [
+	static var optionSub:Array<Array<String>> = [
 		['basic', 'gameplay', 'visuals', 'controls'],
 		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist','launch_sprites'],
 		['downscroll', 'offset', 'botplay', 'ghost_tapping', 'miss_health'],
 		['useful_info', 'antialiasing', 'show_hud', 'framerate', 'light_bot_strums']
 	];
 
-	var descriptions:Array<Array<String>> = [
+	static var descriptions:Array<Array<String>> = [
 		[
 			'Basic options for the game Window', 
 			'Options for the gameplay itself', 

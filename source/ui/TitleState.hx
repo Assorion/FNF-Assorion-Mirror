@@ -30,7 +30,7 @@ class TitleState extends MusicBeatState
 	public static var initialized:Bool = false;
 
 	// the game engine will handle this for you.
-	var textSequence:Array<Array<String>> = [
+	static var textSequence:Array<Array<String>> = [
 		['hi'],
 		['Original game by','ninjamuffin'],
 		['assorion engine by', 'me'],

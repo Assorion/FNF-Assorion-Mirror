@@ -24,8 +24,8 @@ class MainMenuState extends MusicBeatState
 
 	// too lazy to separate out these assets.
 	// so instead you can define your own asset path.
-	var optionList:Array<String> = ['story mode', 'freeplay', 'github',   'options'];
-	var optionPath:Array<String> = ['FNF_main'  , 'FNF_main', 'FNF_main', 'FNF_main'];
+	static var optionList:Array<String> = ['story mode', 'freeplay', 'github',   'options'];
+	static var optionPath:Array<String> = ['FNF_main'  , 'FNF_main', 'FNF_main', 'FNF_main'];
 	var selectedSomethin:Bool = false;
 
 	override function create()

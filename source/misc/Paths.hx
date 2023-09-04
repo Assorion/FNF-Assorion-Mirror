@@ -8,6 +8,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 class Paths {
     public static inline var sndExt:String = #if desktop 'ogg' #else 'mp3' #end;
 
+    // btw the 'l' in every single function was meant to stand for "load".
     public static inline function lSparrow(path:String):FlxAtlasFrames
     {
         return FlxAtlasFrames.fromSparrow('assets/images/$path.png', 'assets/images/$path.xml');

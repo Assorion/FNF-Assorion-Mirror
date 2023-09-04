@@ -27,6 +27,7 @@ class NewControls {
 
         return false;
     }
+    // # checks multiple binds, and returns the bind index.
     public static function deepCheck(key:Int, array:Array<Array<Int>>):Int
     {
         for(i in 0...array.length){
