@@ -5,6 +5,7 @@
     "skip_logo": false,
     "default_persist": false,
     "launch_sprites": false,
+    "cache_text": true,
 
     "downscroll": true,
     "offset": 80,

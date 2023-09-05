@@ -8,6 +8,8 @@ using StringTools;
 #if !debug @:noDebug #end
 class CoolUtil
 {
+	public static var cachedLines:Map<String, Array<String>> = new Map<String, Array<String>>();
+	
 	// should be the diffArray divided by 2.
 	// don't change this unless you're adding a custom difficulty. (or removing.)
 	public static inline var diffNumb:Int = 3;
@@ -29,9 +31,12 @@ class CoolUtil
 
 	public static function textFileLines(path:String, ?ext:String = 'txt'):Array<String>
 	{
-		var fullText:String = Assets.getText('assets/songs-data/$path.$ext');
+		if(Settings.pr.cache_text && cachedLines.exists(path))
+			return cachedLines.get(path);
 
-		return fullText.split('\n');
+		var fullText = Assets.getText('assets/songs-data/$path.$ext').split('\n');
+		cachedLines.set(path, fullText);
+		return fullText;
 	}
 
 	public static function boundTo(val:Float, min:Float, max:Float, retInt:Bool = false):Dynamic

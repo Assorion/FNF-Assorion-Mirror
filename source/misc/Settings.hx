@@ -16,6 +16,7 @@ typedef Options = {
     var skip_logo:Bool;
     var default_persist:Bool;
     var launch_sprites:Bool;
+    var cache_text:Bool;
 
     var downscroll:Bool;
     var offset:Int;
