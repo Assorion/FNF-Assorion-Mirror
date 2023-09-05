@@ -46,7 +46,7 @@ class OptionsState extends MusicBeatState
 			'Change the games starting volume',
 			'Skip the haxeflixel intro logo',
 			'Makes all loaded sprites stay in RAM. Uses tons more memory but will decrease load times.',
-			'Load songs and sprites at startup. Uses even more RAM and increases startup time.',
+			'Load assets at startup. Uses even more RAM and increases startup time.',
 			'Cache text files when they are loaded. Disable if you are trying to mod.'
 		],
 		[

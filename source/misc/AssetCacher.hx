@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import sys.FileSystem;
 import flixel.addons.ui.FlxUIState;
 import flixel.graphics.frames.FlxAtlasFrames;
+import openfl.utils.Assets;
 
 using StringTools;
 
@@ -70,6 +71,22 @@ class AssetCacher {
                 var sound:FlxSound = new FlxSound().loadEmbedded(paths[i]);
                 sound.play();
                 sound.stop();
+                tidalWave = true;
+            }
+            if(paths[i].endsWith('txt')){
+                var fullText = Assets.getText(paths[i]).split('\n');
+                var storePath:String = '';
+                var splitPath:Array<String> = paths[i].split('/');
+                for(i in 0...splitPath.length)
+                    if(i > 1) storePath += splitPath[i] + '/';
+
+                storePath = storePath.split('.')[0];
+                misc.CoolUtil.cachedLines.set(storePath, fullText);
+                tidalWave = true;
+            }
+            if(paths[i].endsWith('json')){
+                var rawJson = Assets.getText(paths[i]);
+                misc.CoolUtil.cachedLines.set(paths[i].split('/')[2].toLowerCase(), [rawJson]);
                 tidalWave = true;
             }
             if(tidalWave)

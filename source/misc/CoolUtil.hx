@@ -37,7 +37,7 @@ class CoolUtil
 		var fullText = Assets.getText('assets/songs-data/$path.$ext').split('\n');
 		if(Settings.pr.cache_text)
 			cachedLines.set(path, fullText);
-		
+
 		return fullText;
 	}
 
