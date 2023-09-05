@@ -9,7 +9,7 @@ using StringTools;
 class CoolUtil
 {
 	public static var cachedLines:Map<String, Array<String>> = new Map<String, Array<String>>();
-	
+
 	// should be the diffArray divided by 2.
 	// don't change this unless you're adding a custom difficulty. (or removing.)
 	public static inline var diffNumb:Int = 3;
@@ -35,7 +35,9 @@ class CoolUtil
 			return cachedLines.get(path);
 
 		var fullText = Assets.getText('assets/songs-data/$path.$ext').split('\n');
-		cachedLines.set(path, fullText);
+		if(Settings.pr.cache_text)
+			cachedLines.set(path, fullText);
+		
 		return fullText;
 	}
 
