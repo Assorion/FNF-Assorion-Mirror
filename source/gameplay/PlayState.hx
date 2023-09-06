@@ -50,12 +50,12 @@ class PlayState extends MusicBeatState
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 
 	// health now goes from 0 - 100, instead of 0 - 2
-	public var health:Int    = 50;
-	public var combo:Int     = 0;
+	public var health   :Int = 50;
+	public var combo    :Int = 0;
 	public var noteCount:Int = 0;
-	public var hitCount:Int  = 0;
+	public var hitCount :Int = 0;
 	public var missCount:Int = 0;
-	public var fcValue:Int   = 0;
+	public var fcValue  :Int = 0;
 
 	public var healthBarBG:FlxSprite;
 	public var healthBar:HealthBar;
@@ -437,11 +437,9 @@ class PlayState extends MusicBeatState
 	// # Update stats
 	// THIS IS WHAT UPDATES YOUR SCORE AND HEALTH AND STUFF!
 
+	private static inline var iconSpacing:Int = 52;
 	public function updateHealth(change:Int){
-		var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC'][fcValue];
-		if(missCount > 0) fcText = 'SDCB';
-		if(missCount > 9) fcText = 'Clear';
-
+		var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC', 'SDCB', 'Clear'][fcValue];
 		var accuracyCount:Float = fcValue != 0 ? Math.floor(songScore / ((hitCount + missCount) * 3.5)) : 0;
 
 		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Accuracy: $accuracyCount% - $fcText | Score: $songScore';
@@ -450,9 +448,11 @@ class PlayState extends MusicBeatState
 		health = CoolUtil.boundTo(health + change, 0, 100, true);
 		healthBar.percent = health;
 
-		iconP1.x = healthBar.x + ((1 - (health * 0.01)) * healthBar.width);
-		iconP1.x -= 23.5;
-		iconP2.x = iconP1.x - 100;
+		var calc = (0 - ((health - 50) * 0.01)) * healthBar.width;
+		iconP1.screenCenter(X); iconP1.x += calc;
+		iconP2.screenCenter(X); iconP2.x += calc;
+		iconP1.x += iconSpacing;
+		iconP2.x -= iconSpacing;
 
 		var animStr = health < 20 ? 'losing' : 'neutral';
 		iconP1.animation.play(animStr);
@@ -503,10 +503,10 @@ class PlayState extends MusicBeatState
 		missCount++;
 		
 		vocals.volume = 0.5;
-		var missRandom:Int = Math.round(Math.random() * 2) + 1;
-		FlxG.sound.play(Paths.lSound('gameplay/missnote' + missRandom), 0.2);
+		FlxG.sound.play(Paths.lSound('gameplay/missnote' + (Math.round(Math.random() * 2) + 1)), 0.2);
 
 		allCharacters[playerPos].playAnim('sing' + sDir[direction] + 'miss');
+		fcValue = missCount >= 10 ? 6 : 5;
 
 		updateHealth(Math.round(-Settings.pr.miss_health * 0.5));
 	}

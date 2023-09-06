@@ -21,7 +21,7 @@
 	<SubTexture name="green hold end0000" x="1120" y="442" width="50" height="64"/>
 	<SubTexture name="green hold piece0000" x="1320" y="447" width="50" height="44"/>
 	<SubTexture name="purple confirm0000" x="948" y="0" width="228" height="231"/>
-	<SubTexture name="purple confirm0001" x="1402" y="228" width="218" height="221" frameX="-5" frameY="-5" frameWidth="228" frameHeight="231"/>
+	<SubTexture name="purple confirm0001" x="1402" y="228" width="218" height="220" frameX="-5" frameY="-5" frameWidth="228" frameHeight="231"/>
 	<SubTexture name="purple confirm0002" x="1402" y="0" width="225" height="221" frameX="-2" frameY="-1" frameWidth="228" frameHeight="231"/>
 	<SubTexture name="purple confirm0003" x="1402" y="0" width="225" height="221" frameX="-2" frameY="-1" frameWidth="228" frameHeight="231"/>
 	<SubTexture name="purple press0000" x="291" y="392" width="140" height="142" frameX="-3" frameY="-3" frameWidth="146" frameHeight="149"/>
