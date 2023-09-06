@@ -71,7 +71,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		if(leaving || !key.hardCheck(NewControls.UI_ACCEPT)) return;
 
 		leaving = true;
-		charRef.playAnim('deathConfirm', true);
+		charRef.playAnim('deathConfirm');
 		FlxG.sound.music.stop();
 		FlxG.sound.play(Paths.lSound('gameplay/gameOverEnd'));
 		

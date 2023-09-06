@@ -23,6 +23,8 @@ class Highscore
 	public static function saveScore(song:String, score:Int, diff:Int){
 		var songNaem:String = song.toLowerCase().trim() + CoolUtil.diffString(diff, 0);
 
+		trace(songNaem);
+
 		if(scoreExists(songNaem) >= score) return;
 
 		songScores.set(songNaem, score);

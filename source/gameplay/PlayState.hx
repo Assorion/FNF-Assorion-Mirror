@@ -345,7 +345,7 @@ class PlayState extends MusicBeatState
 				return;
 			}
 			for(pc in allCharacters)
-				pc.dance(true);
+				pc.dance();
 
 			FlxG.sound.play(Paths.lSound('gameplay/' + introAssets[swagCounter + 4]), 0.6);
 			if(introSprites[swagCounter] != null)
@@ -430,12 +430,8 @@ class PlayState extends MusicBeatState
 		iconP1.scale.set(1.2,1.2);
 		iconP2.scale.set(1.2,1.2);
 
-		for(pc in allCharacters){
-			if(pc.idleNextBeat)
-				pc.dance(true);
-			else
-				pc.idleNextBeat = true;
-		}
+		for(pc in allCharacters)
+			pc.dance();
 	}
 
 	// # Update stats
@@ -484,8 +480,7 @@ class PlayState extends MusicBeatState
 		}
 
 		playerStrums.members[note.noteData].playAnim(2);
-		allCharacters[playerPos].playAnim('sing' + sDir[note.noteData], true);
-		allCharacters[playerPos].idleNextBeat = false;
+		allCharacters[playerPos].playAnim('sing' + sDir[note.noteData]);
 		vocals.volume = 1;
 
 		if(!note.isSustainNote){
@@ -511,8 +506,7 @@ class PlayState extends MusicBeatState
 		var missRandom:Int = Math.round(Math.random() * 2) + 1;
 		FlxG.sound.play(Paths.lSound('gameplay/missnote' + missRandom), 0.2);
 
-		allCharacters[playerPos].playAnim('sing' + sDir[direction] + 'miss', true);
-		allCharacters[playerPos].idleNextBeat = false;
+		allCharacters[playerPos].playAnim('sing' + sDir[direction] + 'miss');
 
 		updateHealth(Math.round(-Settings.pr.miss_health * 0.5));
 	}
@@ -650,26 +644,26 @@ class PlayState extends MusicBeatState
 		if(vocals.playing) vocals.volume = 0;
 		Highscore.saveScore(SONG.song, songScore, storyDifficulty);
 
-		if (isStoryMode){
+		postEvent(0.001, ()->{
+			PauseSubState.exitToProperMenu();
+		});
 
-			campaignScore += songScore;
-			storyPlaylist.splice(0,1);
+		if (!isStoryMode) return;
 
-			if (storyPlaylist.length <= 0){
-				// sotry menu code.
-				Highscore.saveScore('week-$storyWeek', campaignScore, storyDifficulty);
-				PauseSubState.exitToProperMenu();
+		campaignScore += songScore;
+		storyPlaylist.splice(0,1);
 
-				return;
-			}
-
-			SONG = misc.Song.loadFromJson(storyPlaylist[0], storyDifficulty);
-			FlxG.sound.music.stop();
-			FlxG.resetState();
-
+		if (storyPlaylist.length <= 0){
+			// sotry menu code.
+			Highscore.saveScore('week-$storyWeek', campaignScore, storyDifficulty);
 			return;
 		}
-		PauseSubState.exitToProperMenu();
+
+		SONG = misc.Song.loadFromJson(storyPlaylist[0], storyDifficulty);
+		FlxG.sound.music.stop();
+		FlxG.resetState();
+
+		return;
 	}
 
 	// # handle notes. Note scrolling etc
@@ -686,8 +680,7 @@ class PlayState extends MusicBeatState
 		
 		var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
 		if((daNote.player != playerPos || Settings.pr.botplay) && daNote.mustHit && songTime >= daNote.strumTime){
-			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData], true);
-			allCharacters[daNote.player].idleNextBeat = false;
+			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData]);
 			
 			vocals.volume = 1;
 

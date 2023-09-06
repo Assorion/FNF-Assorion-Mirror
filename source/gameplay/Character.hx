@@ -70,26 +70,31 @@ class Character extends FlxSprite
 	}
 
 	private var danced:Bool = false;
-	public function dance(f:Bool = false)
+	public function dance()
 	{
+		if(!idleNextBeat) {
+			idleNextBeat = true;
+			return;
+		}
 		if(leftRightIdle){
 			danced = !danced;
 
-			playAnim('dance' + (danced ? 'Right' : 'Left'));
+			playAnim('dance' + (danced ? 'Right' : 'Left'), true);
 			return;
 		}
 
-		playAnim('idle', f);
+		playAnim('idle', true);
 	}
 
-	public function playAnim(AnimName:String, Force:Bool = false):Void
+	public function playAnim(AnimName:String, INB:Bool = false):Void
 	{
+		idleNextBeat = INB;
 		// this is so the game hopefully doesn't crash if an animation
 		// isn't added. By checking if the offset exists.
 		var curOffset:Array<Int> = animOffsets.get(AnimName);
 		if (curOffset == null || curOffset.length != 2) return;
 
-		animation.play(AnimName, Force);
+		animation.play(AnimName, true);
 		offset.set(curOffset[0], curOffset[1]);
 	}
 
