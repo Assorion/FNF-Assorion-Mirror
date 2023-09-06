@@ -574,7 +574,7 @@ class PlayState extends MusicBeatState
 		},
 		{
 			score: 200,
-			threshold: 0.4,
+			threshold: 0.45,
 			name: 'good',
 			value: 2
 		},
