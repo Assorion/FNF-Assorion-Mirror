@@ -419,8 +419,9 @@ class PlayState extends MusicBeatState
 
 		if(curBeat % 4 == 0 && FlxG.sound.music.playing){
 			mustHitSection = false;
-			if (Std.string(SONG.notes[Math.floor(curBeat / 4)].mustHitSection) != 'null')
-				mustHitSection = SONG.notes[Math.floor(curBeat / 4)].mustHitSection;
+			var sec:SwagSection = SONG.notes[Math.floor(curBeat / 4)];
+			if (Std.string(sec != null ? sec.mustHitSection : null) != 'null')
+				mustHitSection = sec.mustHitSection;
 
 			var char = allCharacters[mustHitSection ? 1 : 0];
 			camFollow.x = char.getMidpoint().x + char.camOffset[0];

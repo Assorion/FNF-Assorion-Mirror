@@ -188,6 +188,7 @@ class ChartingState extends MusicBeatState {
         remove(notes);
         remove(musicLine);
         remove(gridSel);
+        remove(selectSpr);
 
         var fColArr:Array<Array<FlxColor>> = [];
         for(i in gridColours)
@@ -204,6 +205,7 @@ class ChartingState extends MusicBeatState {
         add(gridSel);
         add(notes);
         add(musicLine);
+        add(selectSpr);
     }
 
     // # Semi Input code. Mouse still gets handled by Update.

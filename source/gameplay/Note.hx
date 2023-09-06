@@ -47,11 +47,12 @@ class Note extends FlxSprite
 		curColor = colArr[noteData];
 
 		frames = Paths.lSparrow('gameplay/${noteType.assets}');
+
+		animation.addByPrefix('scroll' , curColor + '0');
 		if(isSustainNote){
 			animation.addByPrefix('holdend', '$curColor hold end');
 			animation.addByPrefix('hold'   , '$curColor hold piece');
-		} else 
-			animation.addByPrefix('scroll' , curColor + '0');
+		} 
 
 		setGraphicSize(Std.int(width * 0.7));
 		antialiasing = Settings.pr.antialiasing;
@@ -69,6 +70,7 @@ class Note extends FlxSprite
 		var defaultOffset = (Settings.pr.downscroll ? -7 : 7) * PlayState.SONG.speed;
 
 		animation.play('holdend');
+		animation.remove('scroll');
 
 		var calc:Float = Conductor.stepCrochet / 100 * ((Conductor.bpm / 100) * (44 / 140)) * PlayState.SONG.speed;
 		var holdScale = scale.y = (scale.y * calc);
@@ -83,6 +85,7 @@ class Note extends FlxSprite
 		if (isEnd) return;
 
 		animation.play('hold');
+		animation.remove('holdend');
 		scale.y = holdScale * (140 / 44);
 		offsetY = defaultOffset;
 		updateHitbox();
