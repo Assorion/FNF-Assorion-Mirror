@@ -417,6 +417,9 @@ class PlayState extends MusicBeatState
 	{
 		super.beatHit();
 
+		// moving to beatHit cause this probably doesn't need to be done every single frame.
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
+
 		if(curBeat % 4 == 0 && FlxG.sound.music.playing){
 			mustHitSection = false;
 			var sec:SwagSection = SONG.notes[Math.floor(curBeat / 4)];
@@ -728,11 +731,8 @@ class PlayState extends MusicBeatState
 
 	override function stepHit(){
 		super.stepHit();
-		// moving to stepHit cause this probably doesn't need to be done every single frame.
-		if(curStep % 2 == 0)
-			FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
-
 		if(countingDown) return;
+
 		songTime = Conductor.songPosition * Conductor.songDiv;
 	}
 	// Smaller helper functions
