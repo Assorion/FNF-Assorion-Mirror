@@ -641,30 +641,30 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
-		if(FlxG.sound.music.playing) FlxG.sound.music.volume = 0;
-		if(vocals.playing) vocals.volume = 0;
+		FlxG.sound.music.volume = 0;
+		vocals.volume = 0;
+		paused = true;
+
 		Highscore.saveScore(SONG.song, songScore, storyDifficulty);
 
-		postEvent(0.001, ()->{
-			PauseSubState.exitToProperMenu();
-		});
+		if (isStoryMode){
+			campaignScore += songScore;
+			storyPlaylist.splice(0,1);
 
-		if (!isStoryMode) return;
+			if (storyPlaylist.length <= 0){
+				// sotry menu code.
+				Highscore.saveScore('week-$storyWeek', campaignScore, storyDifficulty);
+				PauseSubState.exitToProperMenu();
+				return;
+			}
 
-		campaignScore += songScore;
-		storyPlaylist.splice(0,1);
+			SONG = misc.Song.loadFromJson(storyPlaylist[0], storyDifficulty);
+			FlxG.sound.music.stop();
+			FlxG.resetState();
 
-		if (storyPlaylist.length <= 0){
-			// sotry menu code.
-			Highscore.saveScore('week-$storyWeek', campaignScore, storyDifficulty);
 			return;
 		}
-
-		SONG = misc.Song.loadFromJson(storyPlaylist[0], storyDifficulty);
-		FlxG.sound.music.stop();
-		FlxG.resetState();
-
-		return;
+		PauseSubState.exitToProperMenu();
 	}
 
 	// # handle notes. Note scrolling etc
@@ -729,7 +729,8 @@ class PlayState extends MusicBeatState
 	override function stepHit(){
 		super.stepHit();
 		// moving to stepHit cause this probably doesn't need to be done every single frame.
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
+		if(curStep % 2 == 0)
+			FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
 
 		if(countingDown) return;
 		songTime = Conductor.songPosition * Conductor.songDiv;
