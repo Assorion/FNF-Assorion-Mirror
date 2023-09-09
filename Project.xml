@@ -35,11 +35,10 @@
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
-	<haxedev set='webgl' />
-
 	<haxelib name="flixel-addons" />
-	<haxelib name="hscript" />
 	<haxelib name="flixel-ui" />
+
+	<haxedev set='webgl' />
 
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />

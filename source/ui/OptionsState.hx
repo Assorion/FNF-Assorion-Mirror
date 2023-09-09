@@ -196,6 +196,7 @@ class OptionsState extends MusicBeatState
 					Settings.pr.skip_logo = !Settings.pr.skip_logo;
 				case 'default_persist':
 					Settings.pr.default_persist = !Settings.pr.default_persist;
+					if(Settings.pr.default_persist) gameplay.PauseSubState.newCanvas(true);
 				case 'launch_sprites':
 					Settings.pr.launch_sprites = !Settings.pr.launch_sprites;
 				case 'cache_text':
@@ -242,7 +243,7 @@ class OptionsState extends MusicBeatState
 					Settings.pr.offset = CoolUtil.boundTo(Settings.pr.offset + ch, -100, 300, true);
 					atg.text = Std.string(Settings.pr.offset);
 				case 'miss_health':
-					Settings.pr.miss_health = CoolUtil.boundTo(Settings.pr.miss_health + ch, 0, 50, true);
+					Settings.pr.miss_health = CoolUtil.boundTo(Settings.pr.miss_health + ch, 10, 50, true);
 					atg.text = Std.string(Settings.pr.miss_health);
 
 				// visuals

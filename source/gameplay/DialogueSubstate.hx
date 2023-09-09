@@ -36,6 +36,19 @@ class DialogueSubstate extends MusicBeatSubstate {
     public function new(camera:FlxCamera, closeFunc:Void->Void, dPath:String, playState:PlayState){
         super();
 
+        // take a look at pausesubstate pls
+        PauseSubState.newCanvas();
+        CoolUtil.copyCameraToData(PauseSubState.bdat, FlxG.camera);
+
+        playState.persistentDraw = false;
+
+        var gspr:FlxSprite = new FlxSprite(0,0).loadGraphic(PauseSubState.bdat);
+        gspr.antialiasing = Settings.pr.antialiasing;
+        gspr.screenCenter();
+        gspr.scrollFactor.set();
+        gspr.scale.set(1 / FlxG.camera.zoom, 1 / FlxG.camera.zoom);
+        add(gspr);
+
         graySpr = new FlxSprite(0,0).makeGraphic(FlxG.width,FlxG.height, FlxColor.GRAY);
 		graySpr.screenCenter();
 		graySpr.alpha = 0;
@@ -46,6 +59,7 @@ class DialogueSubstate extends MusicBeatSubstate {
         char2 = new FlxSprite(-50,-50);
         char2.centerOffsets();
         char2.centerOrigin ();
+        char1.antialiasing = char2.antialiasing = Settings.pr.antialiasing;
 
         boxSpr = new FlxSprite(0,0).loadGraphic(Paths.lImage('gameplay/dialoguebox'));
         boxSpr.setGraphicSize(Std.int(boxSpr.width * 4), Std.int(boxSpr.height * 1.75));
@@ -101,6 +115,7 @@ class DialogueSubstate extends MusicBeatSubstate {
         postEvent(1, ()->{
             PlayState.seenCutscene = true;
             pState.paused = false;
+            pState.persistentDraw = true;
             close();
             clsFnc();
         });

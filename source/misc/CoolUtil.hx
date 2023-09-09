@@ -2,6 +2,10 @@ package misc;
 
 import lime.utils.Assets;
 import flixel.FlxG;
+import flixel.FlxCamera;
+import openfl.display.BitmapData;
+import openfl.geom.Rectangle;
+import openfl.geom.Matrix;
 
 using StringTools;
 
@@ -48,6 +52,18 @@ class CoolUtil
 		if(retInt) return Math.round(val);
 
 		return val;
+	}
+
+	// TODO: Make this support web browsers. Web build handles rendering differently.
+	// # Copy camera to bitmap data keeping rotation and zoom.
+	public static function copyCameraToData(bitmapDat:BitmapData, camera:FlxCamera){
+		var matr:Matrix = new Matrix(camera.zoom, 0, 0, camera.zoom, 0, 0);
+			matr.translate(-(camera.width * 0.5), -(camera.height * 0.5));
+			matr.rotate   (( camera.angle * Math.PI) / 180);
+			matr.translate(  camera.width * 0.5, camera.height * 0.5);
+			matr.translate(((camera.width * camera.zoom) - camera.width) * -0.5, ((camera.height * camera.zoom) - camera.height) * -0.5);
+
+		bitmapDat.draw(camera.canvas, matr, null, null, null, true);
 	}
 
 	public inline static function browserLoad(site:String) {

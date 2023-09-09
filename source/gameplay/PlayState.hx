@@ -221,11 +221,15 @@ class PlayState extends MusicBeatState
 
 		super.create();
 
+		// cutscene stuff :vomit:
 		var dPath:String = 'assets/songs-data/${PlayState.curSong}/dialogue.txt';
 		if(isStoryMode && !seenCutscene && Assets.exists(dPath)){
-			pauseGame(new DialogueSubstate(camHUD, startCountdown, dPath, this));
+			postEvent(0.8, ()->{
+				pauseGame(new DialogueSubstate(camHUD, startCountdown, dPath, this));
+			});
 			return;
 		}
+
 		seenCutscene = true;
 		postEvent(SONG.beginTime, () -> {startCountdown(); });
 	}
@@ -367,7 +371,6 @@ class PlayState extends MusicBeatState
 	{
 		if(!seenCutscene) return;
 		super.closeSubState();
-
 		if(!paused) return;
 
 		paused = false;
@@ -387,7 +390,8 @@ class PlayState extends MusicBeatState
 		iconP1.scale.set(scaleVal, scaleVal);
 		iconP2.scale.set(scaleVal, scaleVal);
 
-		songTime += (elapsed * 1000) * Conductor.songDiv;
+		if(seenCutscene)
+			songTime += (elapsed * 1000) * Conductor.songDiv;
 		if(countingDown){
 			var introBeat = CoolUtil.boundTo(Math.floor((songTime + (Settings.pr.offset * Conductor.songDiv)) * 0.25) + 4, -1, 4, true);
 			if(introBeat != swagCounter){
@@ -397,7 +401,7 @@ class PlayState extends MusicBeatState
 				countTickFunc();
 			}
 		}
-		// note crap
+		// note spawning
 		var uNote = unspawnNotes[noteCount];
 		if (uNote != null && uNote.strumTime - songTime < 64)
 		{
@@ -466,7 +470,7 @@ class PlayState extends MusicBeatState
 		if(health > 0) return; 
 
 		remove(allCharacters[playerPos]);
-		pauseGame(new GameOverSubstate(allCharacters[playerPos], camHUD));
+		pauseGame(new GameOverSubstate(allCharacters[playerPos], camHUD, this));
 	}
 
 	// # On note hit.
@@ -529,7 +533,7 @@ class PlayState extends MusicBeatState
 		switch(k){
 			case 0, 1:
 				if(FlxG.sound.music.playing)
-					pauseGame(new PauseSubState(camHUD));
+					pauseGame(new PauseSubState(camHUD, this));
 				return;
 			case 2:
 				FlxG.switchState(new ChartingState());
@@ -544,7 +548,7 @@ class PlayState extends MusicBeatState
 
 		var sRef = playerStrums.members[nkey];
 		var nRef = hittableNotes[nkey];
-		if(nRef!= null && !nRef.ignore){
+		if(nRef != null && !nRef.ignore){
 			goodNoteHit(nRef);
 			sRef.pressTime = Conductor.stepCrochet * 0.001;
 			
@@ -567,7 +571,7 @@ class PlayState extends MusicBeatState
 		playerStrums.members[nkey].playAnim();
 	}
 
-	// you can add your own scores.
+	// you can add your own scores too.
 	public static var possibleScores:Array<RatingThing> = [
 		{
 			score: 350,
@@ -613,6 +617,7 @@ class PlayState extends MusicBeatState
 		songScore += pscore.score;
 
 		if(pscore.value > fcValue) fcValue = pscore.value;
+		
 		if(pscore.score < 50 || combo > 999)
 			combo = 0;
 
@@ -766,7 +771,7 @@ class PlayState extends MusicBeatState
 		super.onFocusLost();
 		if(paused) return;
 		
-		pauseGame(new PauseSubState(camHUD));
+		pauseGame(new PauseSubState(camHUD, this));
 	}
 }
 typedef RatingThing = {
