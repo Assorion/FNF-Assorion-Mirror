@@ -666,6 +666,7 @@ class PlayState extends MusicBeatState
 				return;
 			}
 
+			seenCutscene = false;
 			SONG = misc.Song.loadFromJson(storyPlaylist[0], storyDifficulty);
 			FlxG.sound.music.stop();
 			FlxG.resetState();
