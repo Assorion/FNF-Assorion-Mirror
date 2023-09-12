@@ -6,26 +6,6 @@ import misc.CoolUtil;
 
 using StringTools;
 
-typedef SwagSection =
-{
-	var sectionNotes:Array<Dynamic>;
-	var mustHitSection:Bool;
-}
-
-typedef SwagSong =
-{
-	var song:String;
-	var notes:Array<SwagSection>;
-	var bpm:Int;
-	var needsVoices:Bool;
-	var speed:Float;
-
-	var characters:Array<String>;
-	var activePlayer:Int;
-	var stage:String;
-	var beginTime:Float;
-}
-
 #if !debug @:noDebug #end
 class Song
 {

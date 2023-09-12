@@ -8,6 +8,9 @@ import flixel.graphics.frames.FlxAtlasFrames;
 class Paths {
     public static inline var sndExt:String = #if desktop 'ogg' #else 'mp3' #end;
 
+    public static inline var menuMusic:String = 'freakyMenu';
+	public static inline var menuTempo:Int = 102;
+
     // btw the 'l' in every single function was meant to stand for "load".
     public static inline function lSparrow(path:String):FlxAtlasFrames
     {

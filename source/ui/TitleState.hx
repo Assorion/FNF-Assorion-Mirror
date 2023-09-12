@@ -81,20 +81,18 @@ class TitleState extends MusicBeatState
 			transIn = FlxTransitionableState.defaultTransIn;
 			transOut = FlxTransitionableState.defaultTransOut;
 
-			FlxG.sound.playMusic(Paths.lMusic('freakyMenu'), 0);
-			FlxG.sound.music.fadeIn(4, 0, 0.7);
-			
+			FlxG.sound.music.pause();
+			if(Settings.pr.launch_sprites)
+				misc.AssetCacher.loadAssets(this);
+
+			FlxG.sound.music.play();
+			FlxG.sound.music.fadeIn(4, 0, 0.7);			
 			FlxG.sound.volume = Settings.pr.start_volume / 100;
 		}
 
 		// # load all sprites
 
-		if(Settings.pr.launch_sprites)
-			misc.AssetCacher.loadAssets(this);
-
 		//////////////////////////
-
-		Conductor.changeBPM(102);
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
@@ -233,6 +231,8 @@ class TitleState extends MusicBeatState
 		FlxG.camera.flash(FlxColor.WHITE, 4);
 
 		remove(textGroup);
+		textGroup.clear();
+		textGroup = null;
 
 		add(logoBl);
 		add(gfDance);

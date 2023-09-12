@@ -2,7 +2,6 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSubState;
-import MusicBeatState.DelayedEvent;
 
 #if !debug @:noDebug #end
 class MusicBeatSubstate extends FlxSubState

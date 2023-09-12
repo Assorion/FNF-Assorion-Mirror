@@ -5,12 +5,6 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;
 import openfl.events.KeyboardEvent;
 
-typedef DelayedEvent = {
-	var curTime:Float;
-	var endTime:Float;
-	var exeFunc:Void->Void;
-}
-
 #if !debug @:noDebug #end
 class MusicBeatState extends FlxUIState
 {
@@ -18,6 +12,7 @@ class MusicBeatState extends FlxUIState
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
+	private var correctMusic:Bool = true;
 
 	override function create()
 	{
@@ -30,6 +25,11 @@ class MusicBeatState extends FlxUIState
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP  , keyRel);
 
 		super.create();
+
+		if((FlxG.sound.music != null && FlxG.sound.music.playing) || !correctMusic) return;
+
+		Conductor.changeBPM(Paths.menuTempo);
+		FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
 	}
 
 	// # new input thing.
@@ -84,7 +84,7 @@ class MusicBeatState extends FlxUIState
 		var oldStep:Int = curStep;
 		updateCurStep();
 		
-		if(oldStep != curStep && curStep > 0)
+		if(oldStep != curStep && curStep >= 0)
 			stepHit();
 
 		handleEvents(elapsed);
@@ -92,7 +92,7 @@ class MusicBeatState extends FlxUIState
 	}
 
 	private inline function updateCurStep():Void
-		curStep = Math.floor((FlxG.sound.music.time - Settings.pr.offset) * Conductor.songDiv);
+		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
 
 	public function stepHit():Void
 	{

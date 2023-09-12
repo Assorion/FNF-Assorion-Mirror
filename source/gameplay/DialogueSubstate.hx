@@ -10,13 +10,6 @@ import lime.utils.Assets;
 
 using StringTools;
 
-typedef SlideShowPoint = {
-    var portrait:String;
-    var side:Int;
-    var flipX:Bool;
-    var text:String;
-}
-
 #if !debug @:noDebug #end
 class DialogueSubstate extends MusicBeatSubstate {
     public var chars:Array<String> = [];

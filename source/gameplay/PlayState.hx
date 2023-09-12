@@ -1,7 +1,5 @@
 package gameplay;
 
-import misc.Song.SwagSong;
-import misc.Song.SwagSection;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxGame;
@@ -35,8 +33,8 @@ class PlayState extends MusicBeatState
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
-	public static var storyDifficulty:Int = 1;
-	public static var campaignScore:Int = 0;
+	public static var curDifficulty:Int = 1;
+	public static var totalScore:Int = 0;
 
 	public static var mustHitSection:Bool = false;
 	public static var seenCutscene:Bool   = false;
@@ -89,6 +87,20 @@ class PlayState extends MusicBeatState
 
 	private var songTime:Float;
 
+	public function new(?songs:Array<String>, difficulty:Int = 1, storyMode:Bool = false, week:Int = 0){
+		super();
+
+		if(songs != null){
+			storyPlaylist = songs;
+			curDifficulty = difficulty;
+			isStoryMode = storyMode;
+			storyWeek = week;
+			totalScore = 0;
+
+			SONG = misc.Song.loadFromJson(storyPlaylist[0], curDifficulty);
+		}
+	}
+
 	// # Create (obvious) where game starts.
 	override public function create()
 	{
@@ -132,7 +144,8 @@ class PlayState extends MusicBeatState
 		FlxG.sound.list.add(vocals);
 		FlxG.sound.playMusic(Paths.playableSong(curSong), 1, false);
 		FlxG.sound.music.onComplete = endSong;
-		FlxG.sound.music.pause();
+		FlxG.sound.music.stop();
+		correctMusic = false;
 
 		generateSong();
 		for(i in 0...2)
@@ -363,6 +376,7 @@ class PlayState extends MusicBeatState
 	{
 		countingDown = false;
 		FlxG.sound.music.play();
+		FlxG.sound.music.volume = 1;
 		vocals.play();
 
 		syncEverything(0);
@@ -653,21 +667,21 @@ class PlayState extends MusicBeatState
 		vocals.volume = 0;
 		paused = true;
 
-		Highscore.saveScore(SONG.song, songScore, storyDifficulty);
+		Highscore.saveScore(SONG.song, songScore, curDifficulty);
 
 		if (isStoryMode){
-			campaignScore += songScore;
+			totalScore += songScore;
 			storyPlaylist.splice(0,1);
 
 			if (storyPlaylist.length <= 0){
 				// sotry menu code.
-				Highscore.saveScore('week-$storyWeek', campaignScore, storyDifficulty);
+				Highscore.saveScore('week-$storyWeek', totalScore, curDifficulty);
 				PauseSubState.exitToProperMenu();
 				return;
 			}
 
 			seenCutscene = false;
-			SONG = misc.Song.loadFromJson(storyPlaylist[0], storyDifficulty);
+			SONG = misc.Song.loadFromJson(storyPlaylist[0], curDifficulty);
 			FlxG.sound.music.stop();
 			FlxG.resetState();
 
@@ -774,10 +788,4 @@ class PlayState extends MusicBeatState
 		
 		pauseGame(new PauseSubState(camHUD, this));
 	}
-}
-typedef RatingThing = {
-	var score:Int;
-	var threshold:Float;
-	var name:String;
-	var value:Int;
 }

@@ -30,9 +30,6 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		if(!FlxG.sound.music.playing)
-			FlxG.sound.playMusic(Paths.lMusic('freakyMenu'));
-
 		// # bg stuff.
 
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic('assets/images/ui/menuDesat.png');
@@ -82,12 +79,9 @@ class MainMenuState extends MusicBeatState
 		super.create();
 	}
 
-	override function update(elapsed:Float){
-		// you do NOT understand how long this took me to figure out.
-		// I HATE LERPS!!!! This took a whole day to get right.
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, elapsed * 6)) * (60 / Settings.pr.framerate);
-
-		super.update(elapsed);
+	override function beatHit(){
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
+		super.beatHit();
 	}
 
 	// # Input code

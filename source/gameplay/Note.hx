@@ -97,9 +97,3 @@ class Note extends FlxSprite
 		if(curAct != null) curAct();
 	}
 }
-typedef NoteType = {
-	var assets:String;
-	var missIfHit:Bool;
-	var onHit:Void->Void;
-	var onMiss:Void->Void;
-}

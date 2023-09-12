@@ -15,18 +15,11 @@ import gameplay.PlayState;
 
 using StringTools;
 
-typedef StoryData = {
-	var graphic:String;
-	var week:String;
-	var songs:Array<String>;
-	var topText:String;
-}
-
 #if !debug @:noDebug #end
 class StoryMenuState extends MusicBeatState
 {
 	public static var curSel:Int = 0;
-	public static var curDif:Int = 2;
+	public static var curDif:Int = 1;
 
 	static var weekData:Array<StoryData> = [
 		{
@@ -146,8 +139,8 @@ class StoryMenuState extends MusicBeatState
 				PlayState.storyWeek = curSel;
 				PlayState.SONG = Song.loadFromJson(weekData[curSel].songs[0], curDif);
 				PlayState.isStoryMode = true;
-				PlayState.storyDifficulty = curDif;
-				PlayState.campaignScore = 0;
+				//PlayState.storyDifficulty = curDif;
+				PlayState.totalScore = 0;
 
 				for(i in 0...8)
 					postEvent(i / 8, ()->{

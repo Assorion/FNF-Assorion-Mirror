@@ -175,6 +175,8 @@ class ChartingState extends MusicBeatState {
         selectSpr.cameras = [camGR];
 		add(selectSpr);
 
+        correctMusic = false;
+
         super.create();
     }
 
