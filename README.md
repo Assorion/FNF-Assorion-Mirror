@@ -42,6 +42,11 @@ although Assorion Engine may have several <a href="https://github.com/Legendary-
 -	Charts are handled differently to the base game. Absolute positions are used instead of millisecond values. In addition, notes have player values in the chart
 -	Assorion Engine based off <a href="https://github.com/FunkinCrew/Funkin/releases/tag/v0.2.6">`0.2.6`</a> version of the base game
 -	Songs and Data folder have been merged into the songs-data folder
+
+**Big Note for Devs**
+
+Please use the <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases">latest release</a> source code, not the cloned or downloaded source code at top. I usually work on a lot of stuff which can take up multiple commits.
+So if you end up using the latest **source** and not the latest **release** code then chances are something will be broken somehow.
   
  **RoadMap**
 * [X]	Bug Fixes and Optimizations
