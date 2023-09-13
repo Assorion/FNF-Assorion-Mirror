@@ -80,9 +80,9 @@ class MainMenuState extends MusicBeatState
 		super.create();
 	}
 
-	override function beatHit(){
+	override function stepHit(){
 		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
-		super.beatHit();
+		super.stepHit();
 	}
 
 	// # Input code

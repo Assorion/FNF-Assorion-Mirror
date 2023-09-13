@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;
 import openfl.events.KeyboardEvent;
-import misc.Conductor;
 
 #if !debug @:noDebug #end
 class MusicBeatState extends FlxUIState

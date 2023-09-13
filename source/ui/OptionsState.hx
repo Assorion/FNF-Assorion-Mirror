@@ -126,6 +126,8 @@ class OptionsState extends MenuTemplate
 
 			return;
 		}
+
+		Settings.flush();
 		super.exitFunc();
 	}
 

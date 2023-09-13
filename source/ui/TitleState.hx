@@ -63,6 +63,8 @@ class TitleState extends MusicBeatState
 	var titleText:FlxSprite;
 	var textGroup:FlxGroup;
 
+	var sndTween:FlxTween;
+
 	inline function startIntro()
 	{
 		// # create fade transition
@@ -87,8 +89,9 @@ class TitleState extends MusicBeatState
 				misc.AssetCacher.loadAssets(this);
 
 			FlxG.sound.music.play();
-			FlxG.sound.music.fadeIn(4, 0, 0.7);			
+			//FlxG.sound.music.fadeIn(4, 0, 0.7);			
 			FlxG.sound.volume = Settings.pr.start_volume / 100;
+			sndTween = FlxTween.tween(FlxG.sound.music, {volume: 1}, 3);
 		}
 
 		// # load all sprites
@@ -151,6 +154,11 @@ class TitleState extends MusicBeatState
 
 		if(leaving) {
 			skipTrans();
+			if(sndTween == null) return;
+
+			sndTween.cancel();
+			FlxG.sound.music.volume = 1;
+
 			return;
 		}
 
