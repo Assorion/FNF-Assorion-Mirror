@@ -18,48 +18,32 @@ import gameplay.PlayState;
 using StringTools;
 
 #if !debug @:noDebug #end
-class FreeplayState extends MusicBeatState
+class FreeplayState extends MenuTemplate
 {
 	var songs:Array<String> = [];
 
-	public static var curSelected:Int = 0;
 	public static var curDifficulty:Int = 1;
 
 	var scoreText:FlxText;
 	var diffText:FlxText;
 	var intendedScore:Int = 0;
 
-	private var grpSongs:FlxTypedGroup<Alphabet>;
-	private var vocals  :FlxSound;
+	private var vocals:FlxSound;
 
 	override function create()
 	{
 		var lines:Array<String> = CoolUtil.textFileLines('freeplaySonglist');
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.lImage('ui/menuDesat'));
-		bg.color = FlxColor.fromRGB(145, 113, 255);
-		bg.antialiasing = Settings.pr.antialiasing;
-		grpSongs = new FlxTypedGroup<Alphabet>();
-		add(bg);
-		add(grpSongs);
+		super.create();
+		background.color = ChartingState.colorFromRGBArray([145, 113, 255]);
 
 		for(i in 0...lines.length)
 			songs.push(lines[i].split(':')[0]);
 
 		for (i in 0...songs.length)
 		{
-			var songText:Alphabet = new Alphabet(0, (60 * i) + 30, songs[i], true);
-			songText.alpMult = 1;
-			songText.alpha = 0;
-			songText.lerpPos = true;
-			grpSongs.add(songText);
-
-			if(i != curSelected)
-				songText.alpMult = 0.4;
-
-			var ican = new gameplay.HealthIcon(lines[i].split(':')[1], false, songText);
-			ican.scale.set(0.85,0.85);
-			add(ican);
+			pushObject(new Alphabet(0, (60 * i) + 30, songs[i], true));
+			pushIcon(new gameplay.HealthIcon(lines[i].split(':')[1], false));
 		}
 
 		var scoreBG:FlxSprite = new FlxSprite((FlxG.width * 0.7) - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
@@ -83,47 +67,24 @@ class FreeplayState extends MusicBeatState
 		add(descText);
 
 		changeSelection();
-		changeDiff();
+		altChange();
 
 		vocals = new FlxSound();
-
-		super.create();
 	}
 
-	function changeDiff(change:Int = 0)
-	{
-		curDifficulty += change;
+	override function altChange(change:Int = 0){
+		curDifficulty += change + CoolUtil.diffNumb;
 		curDifficulty %= CoolUtil.diffNumb;
-		if(curDifficulty < 0) curDifficulty = CoolUtil.diffNumb - 1;
 
-		intendedScore = Highscore.getScore(songs[curSelected], curDifficulty);
+		diffText.text = '< ' + CoolUtil.diffString(curDifficulty, 1).toUpperCase() + ' >';
+		intendedScore = Highscore.getScore(songs[curSel], curDifficulty);
 		scoreText.text = 'PERSONAL BEST:$intendedScore';
-		diffText .text = '< ' + CoolUtil.diffString(curDifficulty, 1).toUpperCase() + ' >';
-
 	}
-	
-	function changeSelection(change:Int = 0)
-	{
-		FlxG.sound.play(Paths.lSound('menu/scrollMenu'), 0.4);
+	override function changeSelection(chng:Int = 0){
+		super.changeSelection(chng);
 
-		curSelected += change;
-		curSelected %= songs.length;
-		if(curSelected < 0) curSelected = songs.length - 1;
-
-		intendedScore = Highscore.getScore(songs[curSelected], curDifficulty);
+		intendedScore = Highscore.getScore(songs[curSel], curDifficulty);
 		scoreText.text = 'PERSONAL BEST:$intendedScore';
-
-		for(i in 0...grpSongs.members.length){
-			var item = grpSongs.members[i];
-
-			item.alpMult = 1;
-			if(i != curSelected) item.alpMult = 0.4;
-
-			item.targetY = (i - curSelected) * 100;
-			item.targetY += 50;
-			item.targetX = (i - curSelected) * 15;
-			item.targetX += 30;
-		}
 	}
 	
 	private var prevTime:Float = 0;
@@ -131,30 +92,17 @@ class FreeplayState extends MusicBeatState
 
 	// # input code.
 
-	private var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		var k = key.deepCheck([NewControls.UI_U, NewControls.UI_D, NewControls.UI_L, NewControls.UI_R, 
-			NewControls.UI_ACCEPT, [FlxKey.SPACE], NewControls.UI_BACK]);
+		var k = key.deepCheck([NewControls.UI_ACCEPT, [FlxKey.SPACE]]);
 		switch(k){
-			case 0, 1:
-				changeSelection((k * 2) - 1);
-				return;
-			case 2, 3:
-				changeDiff(((k - 2) * 2) - 1);
-				return;
-			case 4: // Enter
-				FlxG.switchState(new PlayState([ songs[curSelected] ], curDifficulty, false, 0));
-				//PlayState.SONG = Song.loadFromJson(songs[curSelected], curDifficulty);
-				//PlayState.isStoryMode     = false;
-				//PlayState.curDifficulty = curDifficulty;
-
-				//FlxG.switchState(new PlayState());
+			case 0: // Enter
+				FlxG.switchState(new PlayState([ songs[curSel] ], curDifficulty, false, 0));
 				if( FlxG.sound.music.playing)
 					FlxG.sound.music.stop();
 				return;
-			case 5: // SpaceUK
+			case 1: // SpaceUK
 				playing = !playing;
 
 				if(playing){
@@ -171,20 +119,10 @@ class FreeplayState extends MusicBeatState
 				}
 
 				prevTime = FlxG.sound.music.time;
-				vocals.loadEmbedded (Paths.playableSong(songs[curSelected], true));
-				FlxG.sound.playMusic(Paths.playableSong(songs[curSelected]));
+				vocals.loadEmbedded (Paths.playableSong(songs[curSel], true));
+				FlxG.sound.playMusic(Paths.playableSong(songs[curSel]));
 				vocals.play();
 				FlxG.sound.list.add(vocals);
-				return;
-			case 6: // Escape
-				if(leaving){
-					skipTrans();
-					return;
-				}
-				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
-				FlxG.switchState(new MainMenuState());
-				leaving = true;
-
 				return;
 		}
 	}

@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;
 import openfl.events.KeyboardEvent;
+import misc.Conductor;
 
 #if !debug @:noDebug #end
 class MusicBeatState extends FlxUIState
@@ -16,6 +17,10 @@ class MusicBeatState extends FlxUIState
 
 	override function create()
 	{
+		if(!Settings.pr.default_persist && !Settings.pr.launch_sprites){
+			openfl.Assets.cache.clear();
+			lime.utils.Assets.cache.clear();
+		}
 		// please put persistent update on for ui states.
 		// because it will make the navigation faster.
 		persistentUpdate = true;

@@ -7,15 +7,14 @@ import misc.Alphabet;
 #if !debug @:noDebug #end
 class HealthIcon extends FlxSprite
 {
-	public var hook:Alphabet;
+	public var curChar:String = '';
 
-	public function new(char:String = 'bf', isPlayer:Bool = false, hook:Alphabet = null)
+	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
 		super();
 		changeIcon(char, isPlayer);
-		if(hook != null)
-			this.hook = hook;
 	}
+	
 	public function changeIcon(char:String, isPlayer:Bool){
 		var path = Paths.lImage('icons/$char');
 		loadGraphic(Paths.lImage('icons/face'), true, 150, 150);
@@ -33,15 +32,7 @@ class HealthIcon extends FlxSprite
 
 		centerOffsets();
 		centerOrigin ();
-	}
-	override function update(elapsed:Float){
-		super.update(elapsed);
 
-		if(hook == null) return;
-
-		x = hook.futurePos + hook.members[0].x;
-		y = hook.members[0].y;
-		y += (hook.members[0].height / 2) - height / 2;
-		alpha = hook.members[0].alpha;
+		curChar = char;
 	}
 }

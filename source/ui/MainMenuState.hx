@@ -10,6 +10,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
 import openfl.events.KeyboardEvent;
+import flixel.input.keyboard.FlxKey;
 import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
@@ -90,7 +91,7 @@ class MainMenuState extends MusicBeatState
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		var k = key.deepCheck([NewControls.UI_U, NewControls.UI_D, NewControls.UI_ACCEPT, NewControls.UI_BACK]);
+		var k = key.deepCheck([NewControls.UI_U, NewControls.UI_D, NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.B] ]);
 		switch(k){
 			case 0, 1:
 				changeItem((k * 2) - 1);
@@ -113,6 +114,9 @@ class MainMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
 				FlxG.switchState(new TitleState());
 	
+				return;
+			case 4:
+				FlxG.switchState(new TestMenu());
 				return;
 		}
 	}

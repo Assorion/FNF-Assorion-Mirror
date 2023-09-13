@@ -89,16 +89,15 @@ class PlayState extends MusicBeatState
 
 	public function new(?songs:Array<String>, difficulty:Int = 1, storyMode:Bool = false, week:Int = 0){
 		super();
+		if(songs == null) return;
+		
+		storyPlaylist = songs;
+		curDifficulty = difficulty;
+		isStoryMode = storyMode;
+		storyWeek = week;
+		totalScore = 0;
 
-		if(songs != null){
-			storyPlaylist = songs;
-			curDifficulty = difficulty;
-			isStoryMode = storyMode;
-			storyWeek = week;
-			totalScore = 0;
-
-			SONG = misc.Song.loadFromJson(storyPlaylist[0], curDifficulty);
-		}
+		SONG = misc.Song.loadFromJson(storyPlaylist[0], curDifficulty);
 	}
 
 	// # Create (obvious) where game starts.

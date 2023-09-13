@@ -1,5 +1,20 @@
 package misc;
 
+import ui.MenuTemplate;
+import flixel.FlxSprite;
+
+/*
+    Putting all of these here for simplicity sake.
+    Not that I expect this to be much easier to work with but y'know.
+*/
+
+typedef MenuObject = {
+	var obj:FlxSprite;
+	var targetX:Int;
+	var targetY:Int;
+	var targetA:Float;
+}
+
 // used for charts
 typedef SwagSection =
 {
@@ -45,7 +60,7 @@ typedef RatingThing = {
 	var value:Int;
 }
 
-// used for delayed events
+// used for event system in musicbeatstate
 typedef DelayedEvent = {
 	var curTime:Float;
 	var endTime:Float;

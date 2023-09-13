@@ -3,7 +3,6 @@ package misc;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
-import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 
 using StringTools;
@@ -19,7 +18,7 @@ class Alphabet extends FlxSpriteGroup
 
 	public var text(default, set):String = "";
 
-	public var futurePos:Float = 0;
+	public var fWidth:Float = 0;
 	public var isBold:Bool = false;
 
 	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false)
@@ -34,7 +33,7 @@ class Alphabet extends FlxSpriteGroup
 		for (character in text.split(''))
 		{
 			if(' -_'.contains(character)) {
-				futurePos += 40;
+				fWidth += 40;
 				continue;
 			}
 
@@ -42,18 +41,18 @@ class Alphabet extends FlxSpriteGroup
 
 			// # add text
 
-			var letter:AlphaCharacter = new AlphaCharacter(futurePos, 0, character);
+			var letter:AlphaCharacter = new AlphaCharacter(fWidth, 0, character);
 
 			isBold ? letter.createBold() : letter.createLetter();
 			add(letter);
 
-			futurePos += letter.width;
+			fWidth += letter.width;
 		}
 
 	private function set_text(value:String){
 		text = value.toLowerCase();
 		clear();
-		futurePos = 0;
+		fWidth = 0;
 
 		if(value != '')
 			addText();
@@ -64,13 +63,13 @@ class Alphabet extends FlxSpriteGroup
 	override function update(elapsed:Float){
 		super.update(elapsed);
 
-		if(!lerpPos) return;
+		/*if(!lerpPos) return;
 
 		var lerpVal = 1 - Math.pow(0.5, elapsed * 20);
 		x = FlxMath.lerp(x, targetX, lerpVal);
 		y = FlxMath.lerp(y, targetY, lerpVal);
 
-		alpha = FlxMath.lerp(alpha, alpMult, lerpVal);
+		alpha = FlxMath.lerp(alpha, alpMult, lerpVal);*/
 	}
 }
 

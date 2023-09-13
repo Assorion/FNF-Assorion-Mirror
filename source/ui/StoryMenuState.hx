@@ -135,19 +135,14 @@ class StoryMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
 				leaving = true;
 
-				PlayState.storyPlaylist = weekData[curSel].songs;
-				PlayState.storyWeek = curSel;
-				PlayState.SONG = Song.loadFromJson(weekData[curSel].songs[0], curDif);
-				PlayState.isStoryMode = true;
-				//PlayState.storyDifficulty = curDif;
-				PlayState.totalScore = 0;
+				var tP:PlayState = new PlayState(weekData[curSel].songs, curDif, true, curSel);
 
 				for(i in 0...8)
 					postEvent(i / 8, ()->{
 						wSprites.members[curSel].color = (i % 2 == 0 ? whiteColour : selectColour);
 					});
 				postEvent(1, ()->{
-					FlxG.switchState(new PlayState());
+					FlxG.switchState(tP);
 					if( FlxG.sound.music.playing)
 						FlxG.sound.music.stop();
 				});

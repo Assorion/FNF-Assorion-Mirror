@@ -33,8 +33,8 @@ class TitleState extends MusicBeatState
 	static var textSequence:Array<Array<String>> = [
 		['hi'],
 		['Original game by','ninjamuffin'],
-		['assorion engine by', 'me'],
-		['This took ages', 'bruh', 'cmon'],
+		['assorion engine by', 'candice joe'],
+		['This took ages', 'but it payed off', 'probably'],
 		['RANDOM'],
 		['Well any way', 'have fun']
 	];
@@ -81,6 +81,7 @@ class TitleState extends MusicBeatState
 			transIn = FlxTransitionableState.defaultTransIn;
 			transOut = FlxTransitionableState.defaultTransOut;
 
+			FlxG.sound.music.volume = 0;
 			FlxG.sound.music.pause();
 			if(Settings.pr.launch_sprites)
 				misc.AssetCacher.loadAssets(this);
