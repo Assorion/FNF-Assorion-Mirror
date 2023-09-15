@@ -8,16 +8,13 @@ import flixel.tweens.FlxTween;
 import misc.Alphabet;
 import gameplay.HealthIcon;
 import flixel.text.FlxText;
+import flixel.FlxObject;
 
 /**
 	Looks messy so lemme give you a quick write-up on how this works.
 
 	You have option sub categories. They are visual and do not effect how the options are applied.
 	If you press escape when optionSub is not 0 then you exit back to option sub 0.
-
-	My silly menu template doesn't use groups, it only uses array's. I'll have to re-work this later.
-	But this means that the createNewList function has to remove the decription text and box
-	and then re-add it because otherwise the actual option text goes top of it.
 **/
 
 #if !debug @:noDebug #end
@@ -76,14 +73,14 @@ class OptionsState extends MenuTemplate
 		descText = new FlxText(5, FlxG.height - 25, 0, "", 20);
 		descText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
 		adds = [400];
+		
+		sAdd(bottomBlack);
+		sAdd(descText);
 
 		createNewList();
 	}
 	
 	public function createNewList(?appendOption:Bool = false){
-		remove(bottomBlack);
-		remove(descText);
-
 		clearEverything();
 
 		splitNumb = appendOption ? 2 : 1;
@@ -112,9 +109,6 @@ class OptionsState extends MenuTemplate
 
 			pushObject(new Alphabet(0, (60 * i), optionStr, true));
 		}
-		add(bottomBlack);
-		add(descText);
-
 		changeSelection();
 	}
 
@@ -138,7 +132,7 @@ class OptionsState extends MenuTemplate
 
 	// this is where you add your integer or slidable(?) options
 	override function altChange(ch:Int = 0){
-		var atg:Alphabet = cast objGroup[(curSel * 2) + 1].obj;
+		var atg:Alphabet = cast objGroup.members[(curSel * 2) + 1];
 		switch(optionSub[curSub][curSel]){
 			case 'start_volume':
 				Settings.pr.start_volume = CoolUtil.boundTo(Settings.pr.start_volume + (ch * 10), 0, 100, true);

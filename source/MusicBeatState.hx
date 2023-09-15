@@ -8,11 +8,11 @@ import openfl.events.KeyboardEvent;
 #if !debug @:noDebug #end
 class MusicBeatState extends FlxUIState
 {
-
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
 	private var correctMusic:Bool = true;
+	private var alignCamera:Bool = false;
 
 	override function create()
 	{
@@ -20,6 +20,7 @@ class MusicBeatState extends FlxUIState
 			openfl.Assets.cache.clear();
 			lime.utils.Assets.cache.clear();
 		}
+		
 		// please put persistent update on for ui states.
 		// because it will make the navigation faster.
 		persistentUpdate = true;
@@ -62,13 +63,13 @@ class MusicBeatState extends FlxUIState
 			exeFunc: func
 		});
 	}
-	private inline function handleEvents(elapsed:Float){
+	private inline function handleEvents(el:Float){
 		if(events.length == 0) return;
 
 		var i = 0;
 		while(i < events.length){
 			var e = events[i];
-			e.curTime += elapsed;
+			e.curTime += el;
 			if(e.curTime >= e.endTime){
 				e.exeFunc();
 				events.splice(i, 1);
@@ -100,6 +101,9 @@ class MusicBeatState extends FlxUIState
 
 	public function stepHit():Void
 	{
+		if(alignCamera)
+			FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
+
 		if (curStep % 4 == 0){
 			curBeat = Math.floor(curStep * 0.25);
 			beatHit();

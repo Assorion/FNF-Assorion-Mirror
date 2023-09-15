@@ -27,7 +27,7 @@ class DialogueSubstate extends MusicBeatSubstate {
     var voicesText:FlxText;
 
     public function new(camera:FlxCamera, closeFunc:Void->Void, dPath:String, playState:PlayState){
-        super();
+        super(false);
 
         // take a look at pausesubstate pls
         PauseSubState.newCanvas();

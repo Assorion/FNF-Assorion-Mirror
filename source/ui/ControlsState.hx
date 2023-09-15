@@ -13,7 +13,7 @@ import misc.Alphabet;
 */
 
 #if !debug @:noDebug #end
-class ControlsState extends MusicBeatState {
+class ControlsState extends MenuTemplate {
 	var controlList:Array<String> = [
         'note_left',
         'note_down',
@@ -28,40 +28,25 @@ class ControlsState extends MusicBeatState {
         'ui_accept',
         'ui_back'
     ];
-
-	var activeTextGroup:FlxTypedGroup<Alphabet>;
     var rebinding:Bool = false;
     var dontCancel:Bool = false;
-	public static var curSel:Int = 0;
-    public static var curAlt:Int = 0;
 
 	override function create()
 	{
-		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.lImage('ui/menuDesat'));
-		menuBG.color = 0xFFea71fd;
-		menuBG.antialiasing = Settings.pr.antialiasing;
-		add(menuBG);
+		splitNumb = 3;
+		super.create();
 
-		activeTextGroup = new FlxTypedGroup<Alphabet>();
-		add(activeTextGroup);
+		background.color = ChartingState.colorFromRGBArray([0,255,110]);
+		adds = [150, 450];
 
 		createNewList();
-
-		super.create();
 	}
 
-	private function quicklyAddText(str:String, p:Int){
-		var opT:Alphabet = new Alphabet(0, (60 * p) + 30, str, true);
-			opT.alpMult = 0.4;
-			opT.alpha = 0;
-			opT.lerpPos = true;
-			activeTextGroup.add(opT);
-	}
 	public function createNewList(){
-		activeTextGroup.clear();
+		clearEverything();
 
 		for(i in 0...controlList.length){
-			quicklyAddText(controlList[i], i);
+			pushObject(new Alphabet(0, (60 * i) + 30, controlList[i], true));
 
             var str:String = '';
             var s2r:String = '';
@@ -72,15 +57,11 @@ class ControlsState extends MusicBeatState {
                 s2r = misc.InputString.getKeyNameFromString(val[1], true, false);
             }
 
-			quicklyAddText(str, i);
-            quicklyAddText(s2r, i);
+			pushObject(new Alphabet(0, (60 * i) + 30, str, true));
+			pushObject(new Alphabet(0, (60 * i) + 30, s2r, true));
 		}
-		for(i in 0...activeTextGroup.length)
-			if(Math.floor(i / 2) != curSel)
-				activeTextGroup.members[i].alpMult = 1;
-		/////////////////////
 
-		changeSel();
+		changeSelection();
 	}
 
     override function update(elasped:Float){
@@ -103,75 +84,37 @@ class ControlsState extends MusicBeatState {
         trace(k);
     }
 
+	override public function exitFunc(){
+		if(leaving){
+            skipTrans();
+            return;
+        }
+        leaving = true;
+        FlxG.switchState(new OptionsState());
+	}
+	override public function changeSelection(to:Int = 0){
+		if(curSel + to >= 0 && controlList[curSel + to] == '')
+			to *= 2;
+
+		super.changeSelection(to);
+	}
+
 	override public function keyHit(ev:KeyboardEvent){
+		if(rebinding) return;
+		
 		super.keyHit(ev);
 
-        if(rebinding) return;
+		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
 
-		var k = key.deepCheck([NewControls.UI_U,NewControls.UI_D, NewControls.UI_L,NewControls.UI_R , 
-			NewControls.UI_ACCEPT, NewControls.UI_BACK]);
-		switch(k){
-			case 0,1:
-				changeSel((k * 2) - 1);
-				return;
-			case 2,3:
-				curAlt += ((k - 2) * 2) - 1;
-				curAlt = CoolUtil.boundTo(curAlt, 0, 1, true);
-				changeSel(0);
-				return;
-			case 4: // Enter
-				if(controlList[curSel] == '')
-					return;
-	
-				for(i in 0...activeTextGroup.length)
-					if(Math.floor(i / 3) != curSel)
-						activeTextGroup.members[i].alpMult = 0;
-	
-				dontCancel = true;
-				rebinding = true;
-				return;
-			case 5: // Escape
-				Settings.apply();
-				Settings.flush();
+		if(controlList[curSel] == '')
+			return;
 
-				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
-				FlxG.switchState(new OptionsState());
-				return;
-		}
-	}
+		for(i in 0...objGroup.length)
+			if(Math.floor(i / splitNumb) != curSel)
+				arrGroup[i].targetA = 0;
 
-	private inline function recenterBind(grp:Alphabet, alt:Int){
-		grp.screenCenter(X);
-		grp.x += 150 + (300 * alt);
-		grp.targetX = grp.x;
-	}
-
-	function changeSel(to:Int = 0)
-	{
-		FlxG.sound.play(Paths.lSound('menu/scrollMenu'), 0.4);
-
-		curSel += to;
-		curSel %= controlList.length;
-		if(curSel < 0) curSel = controlList.length - 1;
-
-		for(i in 0...Math.floor(activeTextGroup.length / 3)){
-			var item = activeTextGroup.members[i * 3];
-			var it2m = activeTextGroup.members[(i * 3) + 1];
-            var it3m = activeTextGroup.members[(i * 3) + 2];
-
-			it3m.alpMult = it2m.alpMult = item.alpMult = 0.4;
-			if(i == curSel) {
-                item.alpMult = 1;
-                [it2m, it3m][curAlt].alpMult = 1;
-            }
-
-			it3m.targetY = it2m.targetY = item.targetY = (i - curSel) * 90;
-			it3m.targetY = it2m.targetY = item.targetY = item.targetY + 160;
-			item.targetX = (i - curSel) * 15;
-			item.targetX += 30;
-
-			recenterBind(it2m, 0);
-            recenterBind(it3m, 1);
-		}
+		dontCancel = true;
+		rebinding = true;
+		return;
 	}
 }

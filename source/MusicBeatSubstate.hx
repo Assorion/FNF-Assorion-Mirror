@@ -6,14 +6,16 @@ import flixel.FlxSubState;
 #if !debug @:noDebug #end
 class MusicBeatSubstate extends FlxSubState
 {
-	public function new()
+	public function new(alignCamera:Bool)
 	{
+		this.alignCamera = alignCamera;
 		super();
 	}
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
+	private var alignCamera:Bool = false;
 
 	override function create()
 	{
@@ -89,5 +91,8 @@ class MusicBeatSubstate extends FlxSubState
 		}
 	}
 
-	public function beatHit():Void {}
+	public function beatHit():Void {
+		if(alignCamera)
+			FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
+	}
 }

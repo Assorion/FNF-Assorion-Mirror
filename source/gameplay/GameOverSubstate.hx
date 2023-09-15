@@ -18,7 +18,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public function new(deadChar:Character, fadeOutCam:FlxCamera, pState:PlayState)
 	{
-		super();
+		super(true);
 
 		var z:Float = 1 / FlxG.camera.zoom;
 		blackFadeIn = new FlxSprite(0,0).makeGraphic(Math.round(FlxG.width * z), Math.round(FlxG.height * z), FlxColor.BLACK);
@@ -53,8 +53,6 @@ class GameOverSubstate extends MusicBeatSubstate
 	private var notLoop:Bool = true;
 	override function update(elapsed:Float)
 	{
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, elapsed * 2)) * (60 / Settings.pr.framerate);
-
 		if(notLoop && charRef.animation.curAnim.finished){
 			charRef.animation.play('deathLoop');
 			notLoop = false;

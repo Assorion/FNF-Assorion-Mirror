@@ -10,12 +10,6 @@ using StringTools;
 #if !debug @:noDebug #end
 class Alphabet extends FlxSpriteGroup
 {
-	// for menus.
-	public var targetY:Float = 0;
-	public var targetX:Float = 0;
-	public var lerpPos:Bool  = false;
-	public var alpMult:Float = 1;
-
 	public var text(default, set):String = "";
 
 	public var fWidth:Float = 0;
@@ -58,18 +52,6 @@ class Alphabet extends FlxSpriteGroup
 			addText();
 
 		return value;
-	}
-
-	override function update(elapsed:Float){
-		super.update(elapsed);
-
-		/*if(!lerpPos) return;
-
-		var lerpVal = 1 - Math.pow(0.5, elapsed * 20);
-		x = FlxMath.lerp(x, targetX, lerpVal);
-		y = FlxMath.lerp(y, targetY, lerpVal);
-
-		alpha = FlxMath.lerp(alpha, alpMult, lerpVal);*/
 	}
 }
 

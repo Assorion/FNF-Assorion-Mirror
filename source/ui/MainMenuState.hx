@@ -77,21 +77,18 @@ class MainMenuState extends MusicBeatState
 		curSelected = 0;
 		changeItem(o);
 
+		alignCamera = true;
+
 		super.create();
 	}
-
-	override function stepHit(){
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
-		super.stepHit();
-	}
-
+	
 	// # Input code
 
 	var twns:Array<FlxTween> = [];
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		var k = key.deepCheck([NewControls.UI_U, NewControls.UI_D, NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.B] ]);
+		var k = key.deepCheck([NewControls.UI_U, NewControls.UI_D, NewControls.UI_ACCEPT, NewControls.UI_BACK ]);
 		switch(k){
 			case 0, 1:
 				changeItem((k * 2) - 1);
@@ -114,9 +111,6 @@ class MainMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
 				FlxG.switchState(new TitleState());
 	
-				return;
-			case 4:
-				FlxG.switchState(new TestMenu());
 				return;
 		}
 	}

@@ -25,7 +25,7 @@ using StringTools;
 #if !debug @:noDebug #end
 class PlayState extends MusicBeatState
 {
-	public static inline var inputRange:Float = 1.25; // 1 = step. 1.25 = 1 + 1/4 step range.
+	public static inline var inputRange:Float = 1.25; // 1 = step. 1.5 = 1 + 1/4 step range.
 
 	public static var curStage:String = '';
 	public static var curSong :String = '';
@@ -227,8 +227,7 @@ class PlayState extends MusicBeatState
 			scoreTxt.cameras       = [camHUD];
 		}
 
-		songTime = -16;
-		songTime -= Settings.pr.offset * Conductor.songDiv;
+		songTime = -16 - (Settings.pr.offset * Conductor.songDiv);
 		updateHealth(0);
 
 		super.create();
@@ -241,7 +240,6 @@ class PlayState extends MusicBeatState
 			});
 			return;
 		}
-
 		seenCutscene = true;
 		postEvent(SONG.beginTime, () -> {startCountdown(); });
 	}
@@ -301,7 +299,7 @@ class PlayState extends MusicBeatState
 			var player   :Int = Std.int(fNote[3]);
 			var ntype    :Int = Std.int(fNote[4]);
 
-			var newNote = new Note(time, noteData, ntype, false, false);
+			var newNote = new Note(time, noteData % 4, ntype, false, false);
 			newNote.scrollFactor.set();
 			newNote.player = player;
 			unspawnNotes.push(newNote);
@@ -329,21 +327,24 @@ class PlayState extends MusicBeatState
 		}
 
 	var countTickFunc:Void->Void;
-	var countingDown:Bool = false;
-	var swagCounter:Int = -1;
 	function startCountdown():Void
 	{
-		countingDown = true;
 		for(i in 0...strumLineNotes.length)
 			FlxTween.tween(strumLineNotes.members[i], {alpha: 1}, 0.5, {startDelay: (i + 1) * 0.2});
 
 		var introSprites:Array<FlxSprite> = [];
+		var introSounds:Array<FlxSound>   = [];
 		var introAssets :Array<String>    = [
 			'ready', 'set', 'go', '',
 			'intro3', 'intro2', 'intro1', 'introGo'
 		]; 
+		for(i in 0...4){
+			var snd:FlxSound = new FlxSound().loadEmbedded(Paths.lSound('gameplay/' + introAssets[i + 4]));
+				snd.volume = 0.6;
+			introSounds[i] = snd;
 
-		for(i in 0...3){
+			if(i > 3) continue;
+
 			var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.lImage('gameplay/${ introAssets[i] }'));
 				spr.scrollFactor.set();
 				spr.screenCenter();
@@ -355,6 +356,7 @@ class PlayState extends MusicBeatState
 		}
 
 		// remove FlxTimer.
+		var swagCounter:Int = 0;
 		countTickFunc = function(){
 			if(swagCounter >= 4){
 				startSong();
@@ -363,17 +365,23 @@ class PlayState extends MusicBeatState
 			for(pc in allCharacters)
 				pc.dance();
 
-			FlxG.sound.play(Paths.lSound('gameplay/' + introAssets[swagCounter + 4]), 0.6);
+			songTime = (swagCounter - 4) * 4;
+			songTime -= Settings.pr.offset * Conductor.songDiv;
+
+			introSounds[swagCounter].play();
 			if(introSprites[swagCounter] != null)
 				introSpriteTween(introSprites[swagCounter], 3, Conductor.stepCrochet, true);
+
+			swagCounter++;
 		}
+		for(i in 0...5)
+			postEvent(((Conductor.crochet * (i + 1)) - Settings.pr.offset) * 0.001, countTickFunc);
 	}
 
 	// if a function is called once.
 	// you should probably inline it.
 	inline function startSong():Void
 	{
-		countingDown = false;
 		FlxG.sound.music.play();
 		FlxG.sound.music.volume = 1;
 		vocals.play();
@@ -405,15 +413,7 @@ class PlayState extends MusicBeatState
 
 		if(seenCutscene)
 			songTime += (elapsed * 1000) * Conductor.songDiv;
-		if(countingDown){
-			var introBeat = CoolUtil.boundTo(Math.floor((songTime + (Settings.pr.offset * Conductor.songDiv)) * 0.25) + 4, -1, 4, true);
-			if(introBeat != swagCounter){
-				songTime = (introBeat - 4) * 4;
-				songTime -= Settings.pr.offset * Conductor.songDiv;
-				swagCounter = introBeat;
-				countTickFunc();
-			}
-		}
+
 		// note spawning
 		var uNote = unspawnNotes[noteCount];
 		if (uNote != null && uNote.strumTime - songTime < 64)
@@ -433,8 +433,7 @@ class PlayState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-
-		// moving to beatHit cause this probably doesn't need to be done every single frame.
+		
 		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
 
 		if(curBeat % 4 == 0 && FlxG.sound.music.playing){
@@ -470,10 +469,10 @@ class PlayState extends MusicBeatState
 		healthBar.percent = health;
 
 		var calc = (0 - ((health - 50) * 0.01)) * healthBar.width;
-		iconP1.screenCenter(X); iconP1.x += calc;
-		iconP2.screenCenter(X); iconP2.x += calc;
-		iconP1.x += iconSpacing;
-		iconP2.x -= iconSpacing;
+		iconP1.screenCenter(X); 
+		iconP2.screenCenter(X); 
+		iconP1.x += calc + iconSpacing;
+		iconP2.x += calc - iconSpacing;
 
 		var animStr = health < 20 ? 'losing' : 'neutral';
 		iconP1.animation.play(animStr);
@@ -531,12 +530,11 @@ class PlayState extends MusicBeatState
 
 		updateHealth(Math.round(-Settings.pr.miss_health * 0.5));
 	}
+	// # input code.
+	// please add any keys or stuff you want to add here.
 
 	public var hittableNotes:Array<Note> = [null, null, null, null];
 	public var keysPressed:Array<Bool>   = [false, false, false, false];
-
-	// # input code.
-	// please add any keys or stuff you want to add here.
 	override function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
@@ -629,11 +627,10 @@ class PlayState extends MusicBeatState
 
 		songScore += pscore.score;
 
-		if(pscore.value > fcValue) fcValue = pscore.value;
-		
+		if(pscore.value > fcValue) 
+			fcValue = pscore.value;
 		if(pscore.score < 50 || combo > 999)
 			combo = 0;
-
 		if(scoreTweens[0] != null)
 			for(i in 0...4) scoreTweens[i].cancel();
 
@@ -707,13 +704,14 @@ class PlayState extends MusicBeatState
 			
 			vocals.volume = 1;
 
+			daNote.ignore = true;
 			notes.remove(daNote, true);
 			daNote.destroy();
 			
-			if(Settings.pr.light_bot_strums){
-				strumRef.playAnim(2);
-				strumRef.pressTime = Conductor.stepCrochet * 0.001;
-			}
+			if(!Settings.pr.light_bot_strums) return;
+
+			strumRef.playAnim(2);
+			strumRef.pressTime = Conductor.stepCrochet * 0.001;
 
 			return;
 		}
@@ -750,8 +748,8 @@ class PlayState extends MusicBeatState
 
 	override function stepHit(){
 		super.stepHit();
-		if(countingDown) return;
 
+		if(!FlxG.sound.music.playing) return;
 		songTime = Conductor.songPosition * Conductor.songDiv;
 	}
 	// Smaller helper functions
@@ -783,7 +781,7 @@ class PlayState extends MusicBeatState
 	}
 	override function onFocusLost(){
 		super.onFocusLost();
-		if(paused) return;
+		if(paused || !FlxG.sound.music.playing) return;
 		
 		pauseGame(new PauseSubState(camHUD, this));
 	}

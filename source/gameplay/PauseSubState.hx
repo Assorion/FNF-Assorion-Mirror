@@ -12,18 +12,22 @@ import flixel.FlxCamera;
 import misc.Alphabet;
 import misc.CoolUtil;
 import openfl.display.BitmapData;
+import flixel.math.FlxMath;
 
 #if !debug @:noDebug #end
 class PauseSubState extends MusicBeatSubstate
 {
-	public static var curSelected:Int = 0;
 	public static var bdat:BitmapData;
-	var optionList:Array<String> = ['Resume Game', 'Restart Song', 'Toggle Botplay', 'Exit To Menu'];
-	var alphaTexts:FlxTypedGroup<Alphabet>;
+	public static var optionList:Array<String> = ['Resume Game', 'Restart Song', 'Toggle Botplay', 'Exit To Menu'];
+	
+	var curSelected:Int = 0;
+	var colour:Float = 255;
+	var gameSpr:FlxSprite;
 	var pauseMusic:FlxSound;
-	var bg:FlxSprite;
-	var prevAng:Float = 0;
 	var ps:PlayState;
+
+	var alphaTexts:FlxTypedGroup<Alphabet>;
+	var trackThings:Array<MenuObject> = [];
 
 	// quick helper function.
 	public static function exitToProperMenu(){
@@ -36,7 +40,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	public function new(camera:FlxCamera, ps:PlayState)
 	{
-		super();
+		super(false);
 
 		// music
 		pauseMusic = new FlxSound().loadEmbedded(Paths.lMusic('breakfast'), true, true);
@@ -48,47 +52,42 @@ class PauseSubState extends MusicBeatSubstate
 			we create a fake sprite, effectively a screenshot of playstate.
 			and we work with that instead.
 		*/
+
 		newCanvas();
 		for(gcam in FlxG.cameras.list)
 			CoolUtil.copyCameraToData(bdat, gcam);
 
-		var gameSpr:FlxSprite = new FlxSprite(0,0).loadGraphic(bdat);
+		gameSpr = new FlxSprite(0,0).loadGraphic(bdat);
 		gameSpr.scrollFactor.set();
 		gameSpr.antialiasing = Settings.pr.antialiasing;
-		add(gameSpr);
 
 		this.ps = ps;
 		ps.persistentDraw = false;
-		prevAng = camera.angle;
-		camera.angle = 0;
-
-		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		bg.alpha = 0;
-		bg.scrollFactor.set();
-		add(bg);
 
 		// text stuff
 		alphaTexts = new FlxTypedGroup<Alphabet>();
+		add(gameSpr);
 		add(alphaTexts);
 
 		for (i in 0...optionList.length)
 		{
 			var option:Alphabet = new Alphabet(0, (60 * i) + 30, optionList[i], true);
-			option.alpMult = 1;
 			option.alpha = 0;
-			option.lerpPos = true;
 			alphaTexts.add(option);
 
-			if(i != curSelected)
-				option.alpMult = 0.4;
+			trackThings.push({
+				obj: null,
+				targetX: 0,
+				targetY: 0,
+				targetA: 1
+			});
 		}
 
-		var o:Int = curSelected;
-		curSelected = 0;
-		changeSelection(o);
-
+		changeSelection(0);
 		cameras = [camera];
 	}
+
+	// # create new empty background sprite
 	public static function newCanvas(f:Bool = false){
 		if(bdat == null || !Settings.pr.default_persist || f)
 			bdat = new BitmapData(1280, 720, true, 0);
@@ -112,7 +111,6 @@ class PauseSubState extends MusicBeatSubstate
 				pauseMusic.stop();
 				pauseMusic.destroy();
 				close();
-				camera.angle = prevAng;
 			case 1:
 				FlxG.resetState();
 			case 2:
@@ -124,15 +122,32 @@ class PauseSubState extends MusicBeatSubstate
 		}
 	}
 
-	// shouldn't be needed but if you leave the pause menu
-	// while the music is fading in (using the fadeIn function) -
-	//  then the game will crash
 	override function update(elapsed:Float){
 		super.update(elapsed);
+
+		// yeah sorry
+
+		var lerpVal = 1 - Math.pow(0.5, elapsed * 15);
+        for(i in 0...alphaTexts.length){
+			var alT = alphaTexts.members[i];
+			var pos = trackThings[i];
+			alT.alpha = FlxMath.lerp(alT.alpha, pos.targetA, lerpVal);
+			alT.y     = FlxMath.lerp(alT.y    , pos.targetY, lerpVal);
+			alT.x     = FlxMath.lerp(alT.x    , pos.targetX, lerpVal);
+        }
+
+		/* shouldn't be needed but if you leave the pause menu
+		   while the music is fading in (using the fadeIn function) -
+		   then the game will crash */
+
 		if(pauseMusic.volume < 0.5) 
 			pauseMusic.volume += elapsed * 0.01;
-		if(bg.alpha < 0.6)
-			bg.alpha += elapsed * 2;
+		if(colour > 120){
+			colour -= elapsed * 250;
+
+			var tCol:Int = Math.floor(colour);
+			gameSpr.color = FlxColor.fromRGB(tCol, tCol, tCol);
+		}
 	}
 
 	function changeSelection(change:Int = 0)
@@ -141,15 +156,14 @@ class PauseSubState extends MusicBeatSubstate
 
 		curSelected = (curSelected + change + optionList.length) % optionList.length;
 
-		for(i in 0...alphaTexts.length){
-			var item = alphaTexts.members[i];
-			item.alpMult = 1;
+		for(i in 0...trackThings.length){
+			var item = trackThings[i];
+			item.targetA = i != curSelected ? 0.4 : 1;
 
-			if(i != curSelected) item.alpMult = 0.4;
-			item.targetY = (i - curSelected) * 90;
-			item.targetX = (i - curSelected) * 15;
-			item.targetY += 80;
-			item.targetX += 40;
+			item.targetY = (i - curSelected) * 110;
+			item.targetX = (i - curSelected) * 20;
+			item.targetY += 110;
+			item.targetX += 60;
 		}
 	}
 }

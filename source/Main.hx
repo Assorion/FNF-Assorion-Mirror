@@ -47,7 +47,7 @@ class Main extends Sprite
 		memC = new ui.MemCounter(10, 18, 0xFFFFFF);
 		addChild(fpsC);
 		addChild(memC);
-
+		
 		Settings.apply();
 	}
 }
