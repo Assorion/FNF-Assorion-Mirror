@@ -37,7 +37,7 @@ although Assorion Engine may have several <a href="https://github.com/Legendary-
 
 ### Big Note for Devs
 
-Please use the <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases">**latest release**</a> source code, not the cloned or downloaded source code at the top. Mainly because working on a lot of things throughout the source code during the weeks. Which will necessitate numerous commits.
+Please use the <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases">**latest release**</a> source code, not the cloned or downloaded source code at the top. Mainly because of working on a lot of things throughout the source code during the weeks. Which will necessitate numerous commits.
 
 Thus inevitably exists the potential that something might be wrong if you use the most recent **source** code, as opposed to the most recent <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases">**release**</a> code.
 
