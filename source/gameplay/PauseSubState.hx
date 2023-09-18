@@ -1,5 +1,7 @@
 package gameplay;
 
+import flixel.addons.transition.FlxTransitionableState;
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -112,6 +114,9 @@ class PauseSubState extends MusicBeatSubstate
 				pauseMusic.destroy();
 				close();
 			case 1:
+				FlxTransitionableState.skipNextTransIn  = true;
+				FlxTransitionableState.skipNextTransOut = true;
+				
 				FlxG.resetState();
 			case 2:
 				ps.persistentDraw = false;

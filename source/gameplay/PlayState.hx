@@ -1,20 +1,17 @@
 package gameplay;
 
-import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxGame;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.FlxCamera;
 import flixel.math.FlxMath;
-import flixel.math.FlxRect;
-import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
-import lime.utils.Assets;
+import flixel.system.FlxSound;
 import flixel.input.keyboard.FlxKey;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import lime.utils.Assets;
 import gameplay.HealthIcon;
 import misc.Highscore;
 import ui.FreeplayState;
@@ -81,7 +78,7 @@ class PlayState extends MusicBeatState
 		400,
 		130
 	];
-	// this should be the notes the the player is meant to hit.
+	
 	private var playerPos:Int = 1;
 	private var allCharacters:Array<Character> = [];
 
@@ -186,7 +183,6 @@ class PlayState extends MusicBeatState
 			add(sRef);
 		}
 		///////////////////////////////////////////////
-
 		var baseY:Int = Settings.pr.downscroll ? 80 : 650;
 
 		healthBarBG = new FlxSprite(0, baseY).loadGraphic(Paths.lImage('gameplay/healthBar'));
@@ -201,7 +197,7 @@ class PlayState extends MusicBeatState
 
 		// score
 		scoreTxt = new FlxText(0, baseY + 40, 0, "", 20);
-		scoreTxt.setFormat("assets/fonts/vcr.ttf", 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		scoreTxt.setFormat("assets/fonts/vcr.ttf", 16, 0xFFFFFFFF, CENTER, OUTLINE, 0xFF000000);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
 
@@ -355,7 +351,6 @@ class PlayState extends MusicBeatState
 			introSprites[i+1] = spr;
 		}
 
-		// remove FlxTimer.
 		var swagCounter:Int = 0;
 		countTickFunc = function(){
 			if(swagCounter >= 4){
@@ -378,8 +373,7 @@ class PlayState extends MusicBeatState
 			postEvent(((Conductor.crochet * (i + 1)) - Settings.pr.offset) * 0.001, countTickFunc);
 	}
 
-	// if a function is called once.
-	// you should probably inline it.
+	// Pro Tip: if a function is called once, you should probably inline it.
 	inline function startSong():Void
 	{
 		FlxG.sound.music.play();
@@ -402,7 +396,7 @@ class PlayState extends MusicBeatState
 	}
 
 	// # THE GRAND UPDATE FUNCTION!!!
-	private var changeArray:Array<Bool> = [true,true,true,true];
+
 	override public function update(elapsed:Float)
 	{
 		if(paused) return;
@@ -421,15 +415,17 @@ class PlayState extends MusicBeatState
 			notes.add(uNote);
 			noteCount++;
 		}
-
-		changeArray = [true,true,true,true];
 		notes.forEachAlive(handleNotes);
 
 		super.update(elapsed);
 	}
 
-	// # on beat hit
+	override function stepHit(){
+		super.stepHit();
 
+		if(!FlxG.sound.music.playing) return;
+		songTime = Conductor.songPosition * Conductor.songDiv;
+	}
 	override function beatHit()
 	{
 		super.beatHit();
@@ -489,12 +485,9 @@ class PlayState extends MusicBeatState
 
 	function goodNoteHit(note:Note):Void
 	{
-		note.ignore = true;
-		note.handleTypeFunctions(0);
-		notes.remove(note, true);
-		note.destroy();
+		destroyNote(note, 0);
 
-		if(!note.mustHit){
+		if(!note.curType.mustHit){
 			noteMiss(note.noteData);
 			return;
 		}
@@ -509,8 +502,6 @@ class PlayState extends MusicBeatState
 		}
 		updateHealth(5);
 	}
-
-	// # On note miss
 
 	function noteMiss(direction:Int = 1):Void
 	{
@@ -530,6 +521,19 @@ class PlayState extends MusicBeatState
 
 		updateHealth(Math.round(-Settings.pr.miss_health * 0.5));
 	}
+
+	inline function destroyNote(note:Note, act:Int){
+		note.typeAction(act);
+		notes.remove(note, true);
+		note.destroy();
+
+		if(hittableNotes[note.noteData] == null 
+		|| hittableNotes[note.noteData] != note)
+			return;
+		
+		hittableNotes[note.noteData] = null;
+	}
+
 	// # input code.
 	// please add any keys or stuff you want to add here.
 
@@ -559,7 +563,7 @@ class PlayState extends MusicBeatState
 
 		var sRef = playerStrums.members[nkey];
 		var nRef = hittableNotes[nkey];
-		if(nRef != null && !nRef.ignore){
+		if(nRef != null){
 			goodNoteHit(nRef);
 			sRef.pressTime = Conductor.stepCrochet * 0.001;
 			
@@ -571,7 +575,6 @@ class PlayState extends MusicBeatState
 		if(!Settings.pr.ghost_tapping)
 			noteMiss(nkey);
 	}
-
 	override public function keyRel(ev:KeyboardEvent){
 		super.keyRel(ev);
 
@@ -580,6 +583,60 @@ class PlayState extends MusicBeatState
 
 		keysPressed[nkey] = false;
 		playerStrums.members[nkey].playAnim();
+	}
+
+	// # handle notes. Note scrolling etc
+
+	private inline function handleNotes(daNote:Note){
+		var dir = Settings.pr.downscroll ? 45 : -45;
+		var nDiff:Float = songTime - daNote.strumTime;
+		daNote.y = dir * nDiff * SONG.speed;
+		daNote.y += strumLine.y;
+
+		// 1.5 because we need room for the player to miss.
+		daNote.visible = daNote.active = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
+		if(!daNote.active) return;
+		
+		var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
+		if((daNote.player != playerPos || Settings.pr.botplay) && daNote.curType.mustHit && songTime >= daNote.strumTime){
+			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData]);
+			vocals.volume = 1;
+
+			notes.remove(daNote, true);
+			daNote.destroy();
+			
+			if(!Settings.pr.light_bot_strums) return;
+
+			strumRef.playAnim(2);
+			strumRef.pressTime = Conductor.stepCrochet * 0.001;
+
+			return;
+		}
+
+		daNote.x     = strumRef.x + daNote.offsetX;
+		daNote.angle = strumRef.angle;
+		daNote.y    += daNote.offsetY;
+
+		if(daNote.player != playerPos || Settings.pr.botplay) return;
+
+		if(nDiff > inputRange){
+			if(daNote.curType.mustHit)
+				noteMiss(daNote.noteData);
+			
+			destroyNote(daNote, 1);
+			return;
+		}
+
+		if (!daNote.isSustainNote && hittableNotes[daNote.noteData] == null && Math.abs(nDiff) <= inputRange * daNote.curType.rangeMul){
+			hittableNotes[daNote.noteData] = daNote;
+			return;
+		}
+
+		// sustain note input.
+		if(daNote.isSustainNote && Math.abs(nDiff) < 0.8 && keysPressed[daNote.noteData]){
+			goodNoteHit(daNote);
+			return;
+		}
 	}
 
 	// you can add your own scores too.
@@ -670,7 +727,6 @@ class PlayState extends MusicBeatState
 			storyPlaylist.splice(0,1);
 
 			if (storyPlaylist.length <= 0){
-				// sotry menu code.
 				Highscore.saveScore('week-$storyWeek', totalScore, curDifficulty);
 				PauseSubState.exitToProperMenu();
 				return;
@@ -686,72 +742,6 @@ class PlayState extends MusicBeatState
 		PauseSubState.exitToProperMenu();
 	}
 
-	// # handle notes. Note scrolling etc
-
-	private inline function handleNotes(daNote:Note){
-		var dir = Settings.pr.downscroll ? 45 : -45;
-		var nDiff:Float = songTime - daNote.strumTime;
-		daNote.y = dir * nDiff * SONG.speed;
-		daNote.y += strumLine.y;
-
-		// 1.5 because we need room for the player to miss.
-		daNote.visible = daNote.active = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
-		if(!daNote.active) return;
-		
-		var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
-		if((daNote.player != playerPos || Settings.pr.botplay) && daNote.mustHit && songTime >= daNote.strumTime){
-			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData]);
-			
-			vocals.volume = 1;
-
-			daNote.ignore = true;
-			notes.remove(daNote, true);
-			daNote.destroy();
-			
-			if(!Settings.pr.light_bot_strums) return;
-
-			strumRef.playAnim(2);
-			strumRef.pressTime = Conductor.stepCrochet * 0.001;
-
-			return;
-		}
-
-		daNote.x     = strumRef.x + daNote.offsetX;
-		daNote.angle = strumRef.angle;
-		daNote.y    += daNote.offsetY;
-
-		if(daNote.player != playerPos || Settings.pr.botplay || daNote.ignore) return;
-
-		if(nDiff > inputRange){
-			if(daNote.mustHit)
-				noteMiss(daNote.noteData);
-			
-			daNote.ignore = true;
-			daNote.handleTypeFunctions(1);
-			notes.remove(daNote, true);
-			daNote.destroy();
-			return;
-		}
-
-		if (Math.abs(nDiff) < inputRange * (daNote.mustHit ? 1 : 0.5) && !daNote.isSustainNote && changeArray[daNote.noteData]){
-			hittableNotes[daNote.noteData] = daNote;
-			changeArray[daNote.noteData] = false;
-			return;
-		}
-
-		// sustain note input.
-		if(daNote.isSustainNote && Math.abs(nDiff) < 0.8 && keysPressed[daNote.noteData]){
-			goodNoteHit(daNote);
-			return;
-		}
-	}
-
-	override function stepHit(){
-		super.stepHit();
-
-		if(!FlxG.sound.music.playing) return;
-		songTime = Conductor.songPosition * Conductor.songDiv;
-	}
 	// Smaller helper functions
 	function syncEverything(forceTime:Float){
 		var roundedTime:Float = (forceTime == -1 ? Conductor.songPosition + Settings.pr.offset : forceTime);

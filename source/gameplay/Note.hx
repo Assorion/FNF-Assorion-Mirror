@@ -10,8 +10,10 @@ class Note extends FlxSprite
 	public static var possibleTypes:Array<NoteType> = [
 		{
 			assets: 'NOTE_assets',
-			missIfHit: false,
-			onHit: null, onMiss: null
+			mustHit: true,
+			rangeMul: 1,
+			onHit: null, 
+			onMiss: null
 		}
 	];
 
@@ -25,9 +27,7 @@ class Note extends FlxSprite
 
 	public var chartRef:Array<Dynamic> = [];
 	public var isSustainNote:Bool = false;
-	public var noteType:NoteType;
-	public var mustHit:Bool = true;
-	public var ignore:Bool = false;
+	public var curType:NoteType;
 
 	// this is inlined, you can't change this variable later.
 	public static inline var swagWidth:Float = 160 * 0.7;
@@ -41,12 +41,11 @@ class Note extends FlxSprite
 		isSustainNote  = sustainNote;
 		this.strumTime = strumTime;
 		this.noteData  = data % 4;
-		this.noteType  = possibleTypes[type];
-		mustHit = !noteType.missIfHit;
+		this.curType   = possibleTypes[type];
 
 		curColor = colArr[noteData];
 
-		frames = Paths.lSparrow('gameplay/${noteType.assets}');
+		frames = Paths.lSparrow('gameplay/${curType.assets}');
 
 		animation.addByPrefix('scroll' , curColor + '0');
 		if(isSustainNote){
@@ -92,8 +91,8 @@ class Note extends FlxSprite
 	}
 
 	// helper function
-	public function handleTypeFunctions(action:Int){
-		var curAct:Void->Void = [noteType.onHit, noteType.onMiss][action];
+	public function typeAction(action:Int){
+		var curAct:Void->Void = [curType.onHit, curType.onMiss][action];
 		if(curAct != null) curAct();
 	}
 }

@@ -89,6 +89,7 @@ class Character extends FlxSprite
 	public function playAnim(AnimName:String, INB:Bool = false):Void
 	{
 		idleNextBeat = INB;
+		
 		// this is so the game hopefully doesn't crash if an animation
 		// isn't added. By checking if the offset exists.
 		var curOffset:Array<Int> = animOffsets.get(AnimName);

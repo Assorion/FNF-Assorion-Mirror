@@ -131,13 +131,21 @@ class DialogueSubstate extends MusicBeatSubstate {
         charSpr.loadGraphic(Paths.lImage('characters/' + slides[curSlide].portrait));
         charSpr.screenCenter();
         charSpr.x -= slides[curSlide].side != 1 ? 230 : -230;
-        //charSpr.y = 50;
         charSpr.alpha = 1;
 
+        // if this isn't here the dialouge will skip the first character
         postEvent(0.2, ()->{trace('huh');});
 
+        var prevTime:Float = 0;
+
         for(i in 0...chars.length){
-            postEvent(i * 0.04, ()->{
+            prevTime += 0.04;
+            if(chars[i] == '`'){
+                prevTime += 0.4 - 0.04;
+                continue;
+            }
+
+            postEvent(prevTime, ()->{
                 voicesText.text += chars[i];
                 FlxG.sound.play(Paths.lSound('menu/pixelText'));
             });
@@ -148,6 +156,7 @@ class DialogueSubstate extends MusicBeatSubstate {
     {
         super.update(elapsed);
 
+        // yuck.
         if(leaving){
             graySpr   .alpha = CoolUtil.boundTo(graySpr   .alpha - elapsed, 0, 1);
             boxSpr    .alpha = CoolUtil.boundTo(boxSpr    .alpha - elapsed, 0, 1);

@@ -1,6 +1,5 @@
 package misc;
 
-import ui.MenuTemplate;
 import flixel.FlxSprite;
 
 /*
@@ -47,7 +46,8 @@ typedef SlideShowPoint = {
 // used for note tpyes.
 typedef NoteType = {
 	var assets:String;
-	var missIfHit:Bool;
+	var mustHit:Bool;
+	var rangeMul:Float;
 	var onHit:Void->Void;
 	var onMiss:Void->Void;
 }
