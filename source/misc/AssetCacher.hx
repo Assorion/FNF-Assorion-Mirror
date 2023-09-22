@@ -49,6 +49,8 @@ class AssetCacher {
         // for each file cache them.
         for(i in 0...paths.length){
             var tidalWave:Bool = false;
+            if(!Assets.exists(paths[i])) continue;
+
             if (paths[i].endsWith('png')){
                 var tmpImg:FlxSprite = new FlxSprite(0,0).loadGraphic(paths[i]);
                 tmpImg.graphic.persist = true;

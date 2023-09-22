@@ -16,55 +16,48 @@ import gameplay.PlayState;
 using StringTools;
 
 #if !debug @:noDebug #end
-class StoryMenuState extends MusicBeatState
+class StoryMenuState extends MenuTemplate
 {
-	public static var curSel:Int = 0;
 	public static var curDif:Int = 1;
 
 	static var weekData:Array<StoryData> = [
 		{
 			graphic: 'storymenu/storyportrait',
+			// btw the 'week' var is used for loading the selected image.
+			// It doesn't have to be a number or even in order.
 			week: '1',
 			songs: ['tutorial', 'fresh', 'test'],
 			topText: 'THIS IS A TEST'
 		}
 	];
 
-	var scoreText:FlxText;
 	var trackList:FlxText;
-	public var wSprites:FlxTypedGroup<FlxSprite>;
 	public var weekBG:FlxSprite;
 	public var topText:FlxText;
 
-	var arrSpr1:FlxSprite;
-	var arrSpr2:FlxSprite;
-	var diffSpr:FlxSprite;
+	var arrowSpr1:FlxSprite;
+	var arrowSpr2:FlxSprite;
+	var diffImage:FlxSprite;
 
-	public static var selectColour:Int = 0;
-	public static var whiteColour:Int = 0;
+	public static inline var selectColour:Int = 0xFF00FFFF;
+	public static inline var whiteColour:Int = 0xFFFFFFFF;
 
 	override function create(){
-		if(selectColour == 0){
-			selectColour = ChartingState.colorFromRGBArray([0,255,255]);
-			whiteColour  = ChartingState.colorFromRGBArray([255,255,255]);
-		}
+		super.create();
+		background.color = 0xFF000000;
+		alignCamera = false;
 
-		var blackBG:FlxSprite = new FlxSprite(0,0).makeGraphic(1280, 720, FlxColor.BLACK);
-		wSprites = new FlxTypedGroup<FlxSprite>();
-		add(blackBG);
-		add(wSprites);
+		remove(background);
 
 		for(i in 0...weekData.length){
 			var weekGraphic:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('storymenu/week-' + weekData[i].week));
 			weekGraphic.updateHitbox();
 			weekGraphic.centerOrigin();
-			weekGraphic.alpha = 0.4;
 			weekGraphic.scale.set(0.7, 0.7);
 			weekGraphic.antialiasing = Settings.pr.antialiasing;
-			wSprites.add(weekGraphic);
+			weekGraphic.offset.x += 75;
 
-			if(i == curSel)
-				weekGraphic.alpha = 1;
+			pushObject(weekGraphic);
 		}
 
 		var topBlack:FlxSprite = new FlxSprite(0,0).makeGraphic(640, 20, ChartingState.colorFromRGBArray([25,25,25]));
@@ -72,101 +65,71 @@ class StoryMenuState extends MusicBeatState
 		topText.setFormat('assets/fonts/vcr.ttf', 18, FlxColor.GRAY, CENTER);
 		topText.screenCenter(X);
 		topText.x -= 320;
-		add(topBlack);
-		add(topText);
+		sAdd(topBlack);
+		sAdd(topText);
 
 		// bruh
-		arrSpr1 = new FlxSprite(640 - 50, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
-		arrSpr1.antialiasing = Settings.pr.antialiasing;
-		arrSpr1.updateHitbox();
-		arrSpr1.centerOrigin();
-		arrSpr1.scale.set(0.7,0.7);
-		arrSpr2 = new FlxSprite(640 - 330, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
-		arrSpr2.antialiasing = Settings.pr.antialiasing;
-		arrSpr2.flipX = true;
-		arrSpr2.updateHitbox();
-		arrSpr2.centerOrigin();
-		arrSpr2.scale.set(0.7, 0.7);
-		diffSpr = new FlxSprite(640, 45).loadGraphic(Paths.lImage('storymenu/hard'));
-		diffSpr.antialiasing = Settings.pr.antialiasing;
-		diffSpr.scale.set(0.7, 0.7);
-		add(arrSpr1);
-		add(arrSpr2);
-		add(diffSpr);
+		arrowSpr1 = new FlxSprite(640 - 50, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
+		arrowSpr1.antialiasing = Settings.pr.antialiasing;
+		arrowSpr1.updateHitbox();
+		arrowSpr1.centerOrigin();
+		arrowSpr1.scale.set(0.7,0.7);
+		arrowSpr2 = new FlxSprite(640 - 330, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
+		arrowSpr2.antialiasing = Settings.pr.antialiasing;
+		arrowSpr2.flipX = true;
+		arrowSpr2.updateHitbox();
+		arrowSpr2.centerOrigin();
+		arrowSpr2.scale.set(0.7, 0.7);
+
+		diffImage = new FlxSprite(640, 45);
+		diffImage.antialiasing = Settings.pr.antialiasing;
+		diffImage.scale.set(0.7, 0.7);
 
 		trackList = new FlxText(0, 110, 0, "Tracks", 32);
 		trackList.setFormat('assets/fonts/vcr.ttf', 32, CENTER);
 		trackList.color = 0xFFE55777;
 		trackList.screenCenter(X);
 		trackList.x -= 167.5;
-		add(trackList);
-
-		changeSelection(0);
-
-		super.create();
+		sAdd(arrowSpr1);
+		sAdd(arrowSpr2);
+		sAdd(diffImage);
+		sAdd(trackList);
 	}
 
-	private var leaving:Bool = false;
-	override function update(elapsed:Float){
-		super.update(elapsed);
-		if(leaving) return;
-
-		var lerpVal = 1 - Math.pow(0.5, elapsed * 20);
-		for(i in 0...wSprites.length){
-			var wSpr:FlxSprite = wSprites.members[i];
-
-			wSpr.x = FlxMath.lerp(wSpr.x, ((i - curSel) * 20) - 30, lerpVal);
-			wSpr.y = FlxMath.lerp(wSpr.y, ((i - curSel) * 90) + 80, lerpVal);
-		}
-	}
 	override function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		var k = key.deepCheck([NewControls.UI_U,NewControls.UI_D, NewControls.UI_L,NewControls.UI_R,
-			NewControls.UI_ACCEPT, NewControls.UI_BACK]);
-		switch(k){
-			case 0,1:
-				changeSelection((k * 2) - 1);
-				return;
-			case 2,3:
-				changeDiff(((k - 2) * 2) - 1, true);
-				return;
-			case 4:
-				FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
-				leaving = true;
+		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
 
-				var tP:PlayState = new PlayState(weekData[curSel].songs, curDif, true, curSel);
-
-				for(i in 0...8)
-					postEvent(i / 8, ()->{
-						wSprites.members[curSel].color = (i % 2 == 0 ? whiteColour : selectColour);
-					});
-				postEvent(1, ()->{
-					FlxG.switchState(tP);
-					if( FlxG.sound.music.playing)
-						FlxG.sound.music.stop();
-				});
-				return;
-			case 5:
-				if(leaving){
-					skipTrans();
-					return;
-				}
-				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
-				FlxG.switchState(new MainMenuState());
-				leaving = true;
-				return;
+		if(leaving){
+			skipTrans();
+			return;
 		}
+		leaving = true;
+
+		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
+		var tP:PlayState = new PlayState(weekData[curSel].songs, curDif, true, curSel);
+
+		for(i in 0...8)
+			postEvent(i / 8, ()->{
+				objGroup.members[curSel].color = i % 2 == 0 ? whiteColour : selectColour;
+			});
+		// SWITCH!
+		postEvent(1, ()->{
+			FlxG.switchState(tP);
+			if (FlxG.sound.music.playing)
+				FlxG.sound.music.stop();
+		});
 	}
 
-	private function changeDiff(to:Int, showArr:Bool){
+	public function changeDiff(to:Int, showArr:Bool){
 		curDif = ((curDif + to) + CoolUtil.diffNumb) % CoolUtil.diffNumb;
 
-		diffSpr.loadGraphic(Paths.lImage('storymenu/' + CoolUtil.diffString(curDif, 1).toLowerCase()));
-		diffSpr.updateHitbox();
-		diffSpr.centerOrigin();
-		diffSpr.screenCenter(X);
-		diffSpr.x -= 167.5;
+		diffImage.loadGraphic(Paths.lImage('storymenu/' + CoolUtil.diffString(curDif, 1).toLowerCase()));
+		diffImage.centerOrigin();
+		diffImage.updateHitbox();
+		diffImage.screenCenter(X);
+		diffImage.x -= 167.5;
 
 		topText.text = weekData[curSel].topText + ' - ${Highscore.getScore('week-$curSel', curDif)}';
 		topText.screenCenter(X);
@@ -174,7 +137,7 @@ class StoryMenuState extends MusicBeatState
 
 		if(!showArr) return;
 
-		var arrow = [arrSpr2, arrSpr1][to >= 0 ? 1 : 0];
+		var arrow = [arrowSpr2, arrowSpr1][to >= 0 ? 1 : 0];
 		arrow.color = selectColour;
 		arrow.scale.set(0.6, 0.6);
 		postEvent(0.08, ()->{
@@ -182,43 +145,40 @@ class StoryMenuState extends MusicBeatState
 			arrow.scale.set(0.7, 0.7);
 		});
 	}
+	override function changeSelection(to:Int = 0){
+		objGroup.members[curSel].color = whiteColour;
 
-	private function changeSelection(to:Int){
-		FlxG.sound.play(Paths.lSound('menu/scrollMenu'), 0.4);
+		super.changeSelection(to);
+		changeDiff(0, false);
 
-		var oldSpr:FlxSprite = wSprites.members[curSel];
-		curSel = ((curSel + to) + weekData.length) % weekData.length;
-
-		var newSpr:FlxSprite = wSprites.members[curSel];
-
-		oldSpr.alpha = 0.4;
-		newSpr.alpha = 1;
-		oldSpr.color = whiteColour;
-		newSpr.color = selectColour;
-
-		var oldRef:FlxSprite = weekBG;
-		weekBG = new FlxSprite(640, 0).loadGraphic(Paths.lImage(weekData[curSel].graphic));
-		weekBG.antialiasing = Settings.pr.antialiasing;
-		add(weekBG);
+		objGroup.members[curSel].color = selectColour;
 
 		trackList.text = 'Tracks:\n';
 		for(i in 0...weekData[curSel].songs.length)
-			trackList.text += weekData[curSel].songs[i].trim().toUpperCase() + '\n';
+			trackList.text += weekData[curSel].songs[i].toUpperCase() + '\n';
 
 		trackList.screenCenter(X);
 		trackList.x -= 167.5;
 
-		changeDiff(0, false);
+		// handle fades
 
-		// fade between them
+		var oldRef:FlxSprite = weekBG;
+		weekBG = new FlxSprite(640, 0).loadGraphic(Paths.lImage(weekData[curSel].graphic));
+		weekBG.antialiasing = Settings.pr.antialiasing;
+		sAdd(weekBG);
+
 		if(oldRef == null) return;
 
 		weekBG.alpha = 0;
 		FlxTween.tween(weekBG, {alpha: 1}, 0.2);
 		postEvent(0.21, ()->{
 			if(oldRef == null) return;
+
 			oldRef.destroy();
 			oldRef = null;
+			remove(oldRef);
 		});
 	}
+	override function altChange(to:Int = 0)
+		changeDiff(to, true);
 }

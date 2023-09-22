@@ -40,7 +40,7 @@ class ChartingState extends MusicBeatState {
     public static var selectNoteColour:Array<Int> = [170, 170, 170];
 
     public static inline var gridSize:Int = 40;
-    public static inline var noteRange:Int = 0;
+    //public static inline var noteRange:Int = 0;
 
     public var selectedNotes:Array<Array<Dynamic>> = [];
 
@@ -248,7 +248,7 @@ class ChartingState extends MusicBeatState {
         T = key.deepCheck([[FlxKey.B], [FlxKey.N]]);
         if(T != -1){
             curNoteType += (T * 2) - 1;
-            curNoteType = CoolUtil.boundTo(curNoteType, 0, noteRange);
+            curNoteType = CoolUtil.boundTo(curNoteType, 0, Note.possibleTypes.length - 1);
 
             for(nt in selectedNotes)
                 nt[4] = curNoteType;

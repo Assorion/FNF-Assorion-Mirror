@@ -72,6 +72,7 @@ class FreeplayState extends MenuTemplate
 		vocals = new FlxSound();
 	}
 
+	// cause menutemplate has this functions originally, we can override and make them do different things.
 	override function altChange(change:Int = 0){
 		curDifficulty += change + CoolUtil.diffNumb;
 		curDifficulty %= CoolUtil.diffNumb;
