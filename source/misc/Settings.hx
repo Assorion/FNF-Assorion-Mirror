@@ -19,7 +19,8 @@ typedef Options = {
     var cache_text:Bool;
 
     var downscroll:Bool;
-    var offset:Int;
+    var audio_offset:Int;
+    var input_offset:Int;
     var botplay:Bool;
     var ghost_tapping:Bool;
     var miss_health:Int;

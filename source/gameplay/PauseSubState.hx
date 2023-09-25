@@ -15,6 +15,7 @@ import misc.Alphabet;
 import misc.CoolUtil;
 import openfl.display.BitmapData;
 import flixel.math.FlxMath;
+import flixel.text.FlxText;
 
 #if !debug @:noDebug #end
 class PauseSubState extends MusicBeatSubstate
@@ -22,7 +23,8 @@ class PauseSubState extends MusicBeatSubstate
 	public static var bdat:BitmapData;
 	public static var optionList:Array<String> = ['Resume Game', 'Restart Song', 'Toggle Botplay', 'Exit To Menu'];
 	
-	var curSelected:Int = 0;
+	public var curSelected:Int = 0;
+	public var pauseText:FlxText;
 	var colour:Float = 255;
 	var gameSpr:FlxSprite;
 	var pauseMusic:FlxSound;
@@ -38,6 +40,11 @@ class PauseSubState extends MusicBeatSubstate
 			FlxG.switchState(new ui.StoryMenuState());
 		} else
 			FlxG.switchState(new ui.FreeplayState());
+	}
+	// # create new empty background sprite
+	public static function newCanvas(f:Bool = false){
+		if(bdat == null || !Settings.pr.default_persist || f)
+			bdat = new BitmapData(1280, 720, true, 0);
 	}
 
 	public function new(camera:FlxCamera, ps:PlayState)
@@ -84,15 +91,22 @@ class PauseSubState extends MusicBeatSubstate
 				targetA: 1
 			});
 		}
+		var bottomBlack:FlxSprite = new FlxSprite(0, camera.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
+		bottomBlack.alpha = 0.6;
+		pauseText = new FlxText(5, camera.height - 25, 0, '', 20);
+		pauseText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
+		pauseText.alpha = 0;
+		add(bottomBlack);
+		add(pauseText);
 
 		changeSelection(0);
 		cameras = [camera];
+		updatePauseText();
 	}
-
-	// # create new empty background sprite
-	public static function newCanvas(f:Bool = false){
-		if(bdat == null || !Settings.pr.default_persist || f)
-			bdat = new BitmapData(1280, 720, true, 0);
+	private inline function updatePauseText(){
+		var coolString:String = 'SONG: ${PlayState.curSong.toUpperCase()} | WEEK: ${PlayState.isStoryMode ? Std.string(PlayState.storyWeek + 1) : "FREEPLAY"}' +
+		' | BOTPLAY: ${Settings.pr.botplay ? "YES" : "NO"} | DIFFICULTY: ${CoolUtil.diffString(PlayState.curDifficulty, 1).toUpperCase()} | ';
+		pauseText.text = '$coolString$coolString$coolString';
 	}
 
 	override public function keyHit(ev:KeyboardEvent){
@@ -120,8 +134,11 @@ class PauseSubState extends MusicBeatSubstate
 				FlxG.resetState();
 			case 2:
 				ps.persistentDraw = false;
+
 				Settings.pr.botplay = !Settings.pr.botplay;
 				alphaTexts.members[curSelected].alpha = 0;
+				pauseText.alpha = 0;
+				updatePauseText();
 			case 3:
 				exitToProperMenu();
 		}
@@ -141,10 +158,16 @@ class PauseSubState extends MusicBeatSubstate
 			alT.x     = FlxMath.lerp(alT.x    , pos.targetX, lerpVal);
         }
 
+		pauseText.x += elapsed * 70;
+		if(pauseText.x >= 5) 
+			pauseText.x = pauseText.x - (pauseText.width / 3);
+
 		/* shouldn't be needed but if you leave the pause menu
 		   while the music is fading in (using the fadeIn function) -
 		   then the game will crash */
 
+		if(pauseText.alpha < 1)
+			pauseText.alpha += elapsed * 2;
 		if(pauseMusic.volume < 0.5) 
 			pauseMusic.volume += elapsed * 0.01;
 		if(colour > 120){

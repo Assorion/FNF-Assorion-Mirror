@@ -8,7 +8,8 @@
     "cache_text": true,
 
     "downscroll": true,
-    "offset": 80,
+    "audio_offset": 80,
+    "input_offset": 0,
     "botplay": false,
     "ghost_tapping": true,
     "miss_health": 20,

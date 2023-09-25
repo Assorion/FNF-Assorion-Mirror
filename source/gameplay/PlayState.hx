@@ -82,7 +82,7 @@ class PlayState extends MusicBeatState
 	private var playerPos:Int = 1;
 	private var allCharacters:Array<Character> = [];
 
-	private var songTime:Float;
+	private static var songTime:Float;
 
 	public function new(?songs:Array<String>, difficulty:Int = 1, storyMode:Bool = false, week:Int = 0){
 		super();
@@ -223,7 +223,7 @@ class PlayState extends MusicBeatState
 			scoreTxt.cameras       = [camHUD];
 		}
 
-		songTime = -16 - (Settings.pr.offset * Conductor.songDiv);
+		songTime = -16 - (Settings.pr.audio_offset * Conductor.songDiv);
 		updateHealth(0);
 
 		super.create();
@@ -361,7 +361,7 @@ class PlayState extends MusicBeatState
 				pc.dance();
 
 			songTime = (swagCounter - 4) * 4;
-			songTime -= Settings.pr.offset * Conductor.songDiv;
+			songTime -= Settings.pr.audio_offset * Conductor.songDiv;
 
 			introSounds[swagCounter].play();
 			if(introSprites[swagCounter] != null)
@@ -370,7 +370,7 @@ class PlayState extends MusicBeatState
 			swagCounter++;
 		}
 		for(i in 0...5)
-			postEvent(((Conductor.crochet * (i + 1)) - Settings.pr.offset) * 0.001, countTickFunc);
+			postEvent(((Conductor.crochet * (i + 1)) - Settings.pr.audio_offset) * 0.001, countTickFunc);
 	}
 
 	// Pro Tip: if a function is called once, you should probably inline it.
@@ -673,7 +673,7 @@ class PlayState extends MusicBeatState
 	private var scoreTweens:Array<FlxTween> = [];
 	private inline function popUpScore(strumtime:Float):Void
 	{
-		var noteDiff:Float = Math.abs(strumtime - songTime);
+		var noteDiff:Float = Math.abs(strumtime - (songTime - (Settings.pr.input_offset * Conductor.songDiv)));
 		combo++;
 
 		var pscore:RatingThing = null;
@@ -744,11 +744,11 @@ class PlayState extends MusicBeatState
 
 	// Smaller helper functions
 	function syncEverything(forceTime:Float){
-		var roundedTime:Float = (forceTime == -1 ? Conductor.songPosition + Settings.pr.offset : forceTime);
+		var roundedTime:Float = (forceTime == -1 ? Conductor.songPosition + Settings.pr.audio_offset : forceTime);
 
 		FlxG.sound.music.time  = roundedTime;
 		vocals.time            = roundedTime;
-		Conductor.songPosition = roundedTime - Settings.pr.offset;
+		Conductor.songPosition = roundedTime - Settings.pr.audio_offset;
 		songTime = Conductor.songPosition * Conductor.songDiv;
 	}
 	function pauseGame(state:MusicBeatSubstate){

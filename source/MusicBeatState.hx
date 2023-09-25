@@ -24,7 +24,7 @@ class MusicBeatState extends FlxUIState
 		// please put persistent update on for ui states.
 		// because it will make the navigation faster.
 		persistentUpdate = true;
-		Conductor.songPosition = -Settings.pr.offset;
+		Conductor.songPosition = -Settings.pr.audio_offset;
 
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHit);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP  , keyRel);
@@ -84,7 +84,7 @@ class MusicBeatState extends FlxUIState
 
 	override function update(elapsed:Float)
 	{
-		Conductor.songPosition = FlxG.sound.music.time - Settings.pr.offset;
+		Conductor.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
 
 		var oldStep:Int = curStep;
 		updateCurStep();

@@ -66,7 +66,7 @@ class Note extends FlxSprite
 		alpha = 0.6;
 		flipY = Settings.pr.downscroll;
 		offsetX += width / 2;
-		var defaultOffset = (Settings.pr.downscroll ? -7 : 7) * PlayState.SONG.speed;
+		var defaultOffset = (flipY ? -7 : 7) * PlayState.SONG.speed;
 
 		animation.play('holdend');
 		animation.remove('scroll');
@@ -74,7 +74,7 @@ class Note extends FlxSprite
 		var calc:Float = Conductor.stepCrochet / 100 * ((Conductor.bpm / 100) * (44 / 140)) * PlayState.SONG.speed;
 		var holdScale = scale.y = (scale.y * calc);
 
-		if(Settings.pr.downscroll)
+		if(flipY)
 			offsetY += height * (calc * 0.5);
 
 		updateHitbox();

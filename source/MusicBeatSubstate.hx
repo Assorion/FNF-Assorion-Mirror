@@ -54,7 +54,7 @@ class MusicBeatSubstate extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
-		Conductor.songPosition = FlxG.sound.music.time - Settings.pr.offset;
+		Conductor.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
 
 		var oldStep:Int = curStep;
 		updateCurStep();

@@ -23,7 +23,7 @@ class OptionsState extends MenuTemplate
 	static var optionSub:Array<Array<String>> = [
 		['basic', 'gameplay', 'visuals', 'controls'],
 		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist','launch_sprites','cache_text'],
-		['downscroll', 'offset', 'botplay', 'ghost_tapping', 'miss_health'],
+		['downscroll', 'audio_offset', 'input_offset', 'botplay', 'ghost_tapping', 'miss_health'],
 		['useful_info', 'antialiasing', 'show_hud', 'framerate', 'light_bot_strums']
 	];
 
@@ -44,7 +44,8 @@ class OptionsState extends MenuTemplate
 		],
 		[
 			'Change the scroll direction',
-			'Change your audio offset (leave this as-is if you don\'t know yours)',
+			'Change your audio offset in MS (leave this as-is if you don\'t know yours)',
+			'Change your keyboard offset in MS. This only changes ratings, not the actual timing window.',
 			'Let the game handle your notes for you (does not count scores or health)',
 			'Allows pressing notes if there is no notes to hit',
 			'Changes the amount of health you lose from missing'
@@ -53,7 +54,7 @@ class OptionsState extends MenuTemplate
 			'Shows FPS and memory counter',
 			'If you don\'t know what this does, Google it.',
 			'Shows your health, stats, and other stuff in gameplay',
-			'Changes how fast the game runs',
+			'Changes how fast the game CAN run. I recommend setting it to 300, not the max	',
 			'Enemy notes glow like the players'
 		]
 	];
@@ -139,9 +140,12 @@ class OptionsState extends MenuTemplate
 				atg.text = Std.string(Settings.pr.start_volume);
 
 			// gameplay.
-			case 'offset':
-				Settings.pr.offset = CoolUtil.boundTo(Settings.pr.offset + ch, -100, 300, true);
-				atg.text = Std.string(Settings.pr.offset);
+			case 'audio_offset':
+				Settings.pr.audio_offset = CoolUtil.boundTo(Settings.pr.audio_offset + ch, 0, 300, true);
+				atg.text = Std.string(Settings.pr.audio_offset);
+			case 'input_offset':
+				Settings.pr.input_offset = CoolUtil.boundTo(Settings.pr.input_offset + ch, 0, 300, true);
+				atg.text = Std.string(Settings.pr.input_offset);
 			case 'miss_health':
 				Settings.pr.miss_health = CoolUtil.boundTo(Settings.pr.miss_health + ch, 10, 50, true);
 				atg.text = Std.string(Settings.pr.miss_health);
