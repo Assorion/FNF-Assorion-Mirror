@@ -23,8 +23,8 @@ class OptionsState extends MenuTemplate
 	static var optionSub:Array<Array<String>> = [
 		['basic', 'gameplay', 'visuals', 'controls'],
 		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist','launch_sprites','cache_text'],
-		['downscroll', 'audio_offset', 'input_offset', 'botplay', 'ghost_tapping', 'miss_health'],
-		['useful_info', 'antialiasing', 'show_hud', 'framerate', 'light_bot_strums']
+		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay', 'miss_health'],
+		['antialiasing', 'framerate', 'show_hud', 'useful_info', 'light_bot_strums']
 	];
 
 	static var descriptions:Array<Array<String>> = [
@@ -43,18 +43,18 @@ class OptionsState extends MenuTemplate
 			'Cache text files when they are loaded. Disable if you are trying to mod.'
 		],
 		[
-			'Change the scroll direction',
 			'Change your audio offset in MS (leave this as-is if you don\'t know yours)',
 			'Change your keyboard offset in MS. This only changes ratings, not the actual timing window.',
-			'Let the game handle your notes for you (does not count scores or health)',
+			'Change the scroll direction',
 			'Allows pressing notes if there is no notes to hit',
+			'Let the game handle your notes for you (does not count scores or health)',
 			'Changes the amount of health you lose from missing'
 		],
 		[
-			'Shows FPS and memory counter',
 			'If you don\'t know what this does, Google it.',
+			'Changes how fast the game CAN run. I recommend setting it to 300, not the max',
 			'Shows your health, stats, and other stuff in gameplay',
-			'Changes how fast the game CAN run. I recommend setting it to 300, not the max	',
+			'Shows FPS and memory counter',
 			'Enemy notes glow like the players'
 		]
 	];
