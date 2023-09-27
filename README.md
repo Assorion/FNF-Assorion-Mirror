@@ -17,7 +17,7 @@
 
 -------------------------------------------------------------
 
-# ✨ | What is Assorion Engine?
+# ⁂ | What is Assorion Engine?
 
 Assorion Engine is effectively the Linux of <a href="https://ninja-muffin24.itch.io/funkin">Friday Night Funkin'</a> Engines. 
 All original base Friday Night Funkin' code has been replaced with more efficient, optimized code. 
@@ -33,7 +33,7 @@ although Assorion Engine may have several <a href="https://github.com/Legendary-
 3. Assorion takes up less than ~70mb
 4. Assorion frequently has many bug fixes and consistently gets improvements compared to the original game and many other engines
 
-# 📝 | Important Notes/RoadMap
+# 🗒️ | Important Notes/RoadMap
 
 ### Big Note for Devs
 
