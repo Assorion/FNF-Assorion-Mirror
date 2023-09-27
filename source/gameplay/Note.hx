@@ -3,6 +3,14 @@ package gameplay;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 
+typedef NoteType = {
+	var assets:String;
+	var mustHit:Bool;
+	var rangeMul:Float;
+	var onHit:Void->Void;
+	var onMiss:Void->Void;
+}
+
 #if !debug @:noDebug #end
 class Note extends FlxSprite
 {

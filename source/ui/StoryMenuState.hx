@@ -15,6 +15,13 @@ import gameplay.PlayState;
 
 using StringTools;
 
+typedef StoryData = {
+	var graphic:String;
+	var week:String;
+	var songs:Array<String>;
+	var topText:String;
+}
+
 #if !debug @:noDebug #end
 class StoryMenuState extends MenuTemplate
 {

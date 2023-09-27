@@ -16,6 +16,7 @@ import misc.CoolUtil;
 import openfl.display.BitmapData;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
+import ui.MenuTemplate.MenuObject;
 
 #if !debug @:noDebug #end
 class PauseSubState extends MusicBeatSubstate

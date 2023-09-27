@@ -16,6 +16,8 @@ import gameplay.HealthIcon;
 import misc.Highscore;
 import ui.FreeplayState;
 import ui.ChartingState;
+import misc.Song.SwagSong;
+import misc.Song.SwagSection;
 
 using StringTools;
 
@@ -544,7 +546,7 @@ class PlayState extends MusicBeatState
 
 		if(paused) return;
 
-		var k = key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.SEVEN]]);
+		var k = key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.SEVEN], [123]]);
 		switch(k){
 			case 0, 1:
 				if(FlxG.sound.music.playing)
@@ -552,6 +554,9 @@ class PlayState extends MusicBeatState
 				return;
 			case 2:
 				FlxG.switchState(new ChartingState());
+				return;
+			case 3:
+				misc.Screenshot.takeScreenshot();
 				return;
 		}
 
@@ -775,4 +780,10 @@ class PlayState extends MusicBeatState
 		
 		pauseGame(new PauseSubState(camHUD, this));
 	}
+}
+typedef RatingThing = {
+	var score:Int;
+	var threshold:Float;
+	var name:String;
+	var value:Int;
 }

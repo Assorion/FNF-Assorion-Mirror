@@ -13,6 +13,13 @@ import flixel.FlxObject;
     Like freeplay or optionsstate.
 */
 
+typedef MenuObject = {
+	var obj:FlxSprite;
+	var targetX:Int;
+	var targetY:Int;
+	var targetA:Float;
+}
+
 class MenuTemplate extends MusicBeatState {
     public var curSel:Int = 0;
     public var curAlt:Int = 0;

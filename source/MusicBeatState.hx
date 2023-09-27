@@ -5,6 +5,12 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;
 import openfl.events.KeyboardEvent;
 
+typedef DelayedEvent = {
+	var curTime:Float;
+	var endTime:Float;
+	var exeFunc:Void->Void;
+}
+
 #if !debug @:noDebug #end
 class MusicBeatState extends FlxUIState
 {
