@@ -3,6 +3,7 @@
 ## V - 1.0.0
 
 Making the MK (MakeMeGenius) engine a reality.
+Btw it used to be called MKG, it's Assorion now.
 
 ## V - 1.1.0
 
@@ -36,3 +37,21 @@ Chart editor fix (again).
 1. Actually **Actually** fixed the chart editor this time (hopefully).
 2. Fixed bug where you can't delete notes in 1/3 zoom level.
 3. Added navigation stuff.
+
+## V - 1.2.0
+
+1. **Hopefully** Once and for all, fixed input problems.
+2. Added input offset option.
+3. All menus are standardized under MenuTemplate.hx.
+4. Bug fixes (obv).
+5. More navigation improvements.
+6. Added text file / chart caching.
+7. Added pause menu info.
+8. All menu current selection variables no longer static.
+9. Rebinding controls menu improvements (colour and skip over blank space).
+10. Background menu scrolling effect.
+11. Pausemenu lag hopefully gone.
+12. Gameplay icons properly centered.
+13. Chart editor fixes.
+14. You can take screenshots during gameplay.
+15. Code clean-up in many places.

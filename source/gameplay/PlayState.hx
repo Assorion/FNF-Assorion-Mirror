@@ -546,7 +546,7 @@ class PlayState extends MusicBeatState
 
 		if(paused) return;
 
-		var k = key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.SEVEN], [123]]);
+		var k = key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12]]);
 		switch(k){
 			case 0, 1:
 				if(FlxG.sound.music.playing)

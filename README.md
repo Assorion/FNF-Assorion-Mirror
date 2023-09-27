@@ -49,14 +49,15 @@ Thus inevitably exists the potential that something might be wrong if you use th
 -	Charts are handled differently to the base game. Absolute positions are used instead of millisecond values. In addition, notes have player values in the chart
 -	Assorion Engine based off <a href="https://github.com/FunkinCrew/Funkin/releases/tag/v0.2.6">`0.2.6`</a> version of the base game
 -	Songs and Data folder have been merged into the songs-data folder
+- Pressing the F12 key in gameplay uses an experimental screenshot feature. When pressed, a folder and file will be created.
   
  **RoadMap**
 * [X]	Bug Fixes and Optimizations
 * [X]	Code Cleanup
 * [X]	Navigation Improvements
+* [X]	More Options
 * [ ]	Improvements to the chart editor
 * [ ]	Events System
-* [ ]	More Options
 
 #### **Branches**
 | `Assorion Branch's`                                | `Windows` | `Linux` | `HTML5 (WEB)`     |
