@@ -40,9 +40,9 @@ thank's again for downloading Assorion Engine!
 Information/Links and Credits:
 
 Official Github Repo 🢂 https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine
-GitHub Account 🢂 https://github.com/Legendary-Candice-Joe/
-Programmer 🢂 https://www.youtube.com/@rapidoffriends777
-Artist 🢂 https://www.youtube.com/@Byzol
+GitHub Account       🢂 https://github.com/Legendary-Candice-Joe/
+Programmer           🢂 https://www.youtube.com/@rapidoffriends777
+Artist               🢂 https://www.youtube.com/@Byzol
 
 
 Friday Night Funkin' Original Game 🢂 https://ninja-muffin24.itch.io/funkin 
