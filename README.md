@@ -52,12 +52,12 @@ Thus inevitably exists the potential that something might be wrong if you use th
 - Pressing the F12 key in gameplay uses an experimental screenshot feature. When pressed, a folder and file will be created.
   
  **RoadMap**
-* [X]	Bug Fixes and Optimizations
-* [X]	Code Cleanup
-* [X]	Navigation Improvements
-* [X]	More Options
 * [ ]	Improvements to the chart editor
 * [ ]	Events System
+* [ ]	Portuguese translation
+* [ ]	Offset wizard
+* [ ]	Fixes for newer Flixel
+* [ ]	Web build
 
 #### **Branches**
 | `Assorion Branch's`                                | `Windows` | `Linux` | `HTML5 (WEB)`     |
