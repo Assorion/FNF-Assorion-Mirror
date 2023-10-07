@@ -24,8 +24,8 @@ jobs:
           haxelib install lime
           haxelib install openfl
           haxelib install flixel 5.0.0 
-          flixel-ui: 2.5.0
-          flixel-addons: 3.0.2
+          haxelib install flixel-ui 2.5.0
+          haxelib install flixel-addons 3.0.2
 
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
@@ -55,8 +55,8 @@ jobs:
           haxelib install lime
           haxelib install openfl
           haxelib install flixel 5.0.0 
-          flixel-ui: 2.5.0
-          flixel-addons: 3.0.2
+          haxelib install flixel-ui 2.5.0
+          haxelib install flixel-addons 3.0.2
         shell: cmd
         
       - name: Version Tag
