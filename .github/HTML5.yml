@@ -1,0 +1,41 @@
+name: HTML5 (Web Builds)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  
+  workflow_dispatch:
+
+jobs:
+  HTML5-Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.3.2
+        
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null --quiet
+          haxelib install lime
+          haxelib install openfl
+          haxelib install flixel 5.0.0 
+          haxelib install flixel-ui 2.5.0
+          haxelib install flixel-addons 3.0.2
+
+      - name: Version Tag
+        run: echo "${{github.run_id}}" > VERSION
+
+      - name: Compilation
+        run: haxelib run lime build html5
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: HTML5 Build
+          path: 'export/release/html5/bin'
+          retention-days: 30
