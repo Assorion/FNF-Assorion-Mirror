@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Build_Linux:
+  Linux-Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -40,7 +40,7 @@ jobs:
           path: 'export/release/linux/bin'
           retention-days: 30
 
-  Build_Windows:
+  Windows-Build:
     runs-on: windows-latest
     steps:  
       - uses: actions/checkout@v2.3.0
@@ -52,6 +52,7 @@ jobs:
         run: |
           haxelib setup C:/haxelib
           haxelib install hxcpp > /dev/null --quiet
+          haxelib install hxcpp 4.3.2 
           haxelib install lime
           haxelib install openfl
           haxelib install flixel 5.0.0 
