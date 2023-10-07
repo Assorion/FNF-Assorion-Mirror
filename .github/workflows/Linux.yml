@@ -12,7 +12,7 @@ jobs:
   Linux-Build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.2
