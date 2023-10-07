@@ -38,6 +38,18 @@ jobs:
       - name: Publish Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: Windows Build
+          name: Windows-Build
           path: export/release/windows/bin
-          retention-days: 30
+
+  Build-Download: 
+    name: Build Download
+    runs-on: windows-latest
+    needs: Windows-Build
+    steps:
+    - name: Download Artifact 
+      uses: actions/download-artifact@v3
+      with: 
+        name: Windows-Build
+    
+    - name: Artifact Download
+      run: ls -R
