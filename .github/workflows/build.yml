@@ -21,6 +21,7 @@ jobs:
         run: |
           haxelib setup ~/haxelib
           haxelib install hxcpp > /dev/null --quiet
+          haxelib install lime
           haxelib install flixel 5.0.0 
           haxelib install flixel-addons
           haxelib install flixel-ui
@@ -50,6 +51,7 @@ jobs:
         run: |
           haxelib setup C:/haxelib
           haxelib install hxcpp > /dev/null --quiet
+          haxelib install lime
           haxelib install flixel 5.0.0 
           haxelib install flixel-addons
           haxelib install flixel-ui
