@@ -38,4 +38,16 @@ jobs:
         with:
           name: Linux Build
           path: 'export/release/linux/bin'
-          retention-days: 30
+
+  Build-Download: 
+    name: ubuntu-latest
+    runs-on: windows-latest
+    needs: Linux-Build
+    steps:
+    - name: Download Artifact 
+      uses: actions/download-artifact@v3
+      with: 
+        name: Linux-Build
+    
+    - name: Artifact Download
+      run: ls -R
