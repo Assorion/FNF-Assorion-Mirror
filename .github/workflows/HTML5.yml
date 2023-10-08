@@ -31,7 +31,7 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
 
       - name: Compilation
-        run: haxelib run lime build html5
+        run: haxelib run lime build html5 -release
 
       - name: Publish Artifact
         uses: actions/upload-artifact@v2.2.4
