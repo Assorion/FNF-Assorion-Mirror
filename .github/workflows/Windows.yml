@@ -47,7 +47,7 @@ jobs:
     needs: Windows-Build
     steps:
     - name: Download Artifact 
-      uses: actions/upload-artifact@main
+      uses: actions/download-artifact@main
       with: 
         name: Windows-Build
     
