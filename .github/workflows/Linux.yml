@@ -40,12 +40,12 @@ jobs:
           path: 'export/release/linux/bin'
 
   Build-Download: 
-    name: Build Download
+    name: Build-Download
     runs-on: ubuntu-latest
     needs: Linux-Build
     steps:
     - name: Download Artifact 
-      uses: actions/download-artifact@v3
+      uses: actions/upload-artifact@main
       with: 
         name: Linux-Build
     
