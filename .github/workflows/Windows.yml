@@ -42,12 +42,12 @@ jobs:
           path: export/release/windows/bin
 
   Build-Download: 
-    name: Build Download
+    name: Build-Download
     runs-on: windows-latest
     needs: Windows-Build
     steps:
     - name: Download Artifact 
-      uses: actions/download-artifact@v3
+      uses: actions/upload-artifact@main
       with: 
         name: Windows-Build
     
