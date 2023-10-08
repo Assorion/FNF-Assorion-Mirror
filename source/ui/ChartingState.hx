@@ -15,7 +15,9 @@ import gameplay.Note;
 import gameplay.PlayState;
 import misc.Song;
 import ui.CustomChartUI;
+#if desktop
 import sys.io.File;
+#end
 import gameplay.HealthIcon;
 import flixel.tweens.FlxTween;
 
@@ -655,9 +657,16 @@ class ChartingState extends MusicBeatState {
         }, 'Clear Song', 120); 
         var saveSong:ChartUI_Button = new ChartUI_Button(reloadAudio.x, clearAllNotes.y + 40, true, ()->{
             var path = 'assets/songs-data/${PlayState.curSong}/${PlayState.curSong}-edited.json';
+            var saveString:String = 'You cannot save charts in web build.';
+
+            #if desktop
+            saveString = 'Saved song to "$path"';
+
             var stringedSong:String = haxe.Json.stringify({"song": PlayState.SONG}, '\t');
             File.saveContent(path,stringedSong);
-            var newText:FlxText = new FlxText(uiBG.x - 10, (uiBG.y + uiBG.height + 30) + textOffset, 0, 'Saved song to "$path"', 16);
+            #end
+            
+            var newText:FlxText = new FlxText(uiBG.x - 10, (uiBG.y + uiBG.height + 30) + textOffset, 0, saveString, 16);
             add(newText);
 
             FlxTween.tween(newText, {alpha: 0}, 1);

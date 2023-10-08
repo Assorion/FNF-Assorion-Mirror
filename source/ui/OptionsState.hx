@@ -39,7 +39,7 @@ class OptionsState extends MenuTemplate
 			'Change the games starting volume',
 			'Skip the haxeflixel intro logo',
 			'Makes all loaded sprites stay in RAM. Uses tons more memory but will decrease load times.',
-			'Load assets at startup. Uses even more RAM and increases startup time.',
+			'Load assets at startup. Uses even more RAM and increases startup time. Doesn\'t work in web browser.',
 			'Cache text files when they are loaded. Disable if you are trying to mod.'
 		],
 		[

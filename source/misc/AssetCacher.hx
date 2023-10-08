@@ -4,7 +4,9 @@ import misc.Settings;
 import flixel.FlxG;
 import flixel.system.FlxSound;
 import flixel.FlxSprite;
+#if desktop
 import sys.FileSystem;
+#end
 import flixel.addons.ui.FlxUIState;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.Assets;
@@ -18,6 +20,7 @@ using StringTools;
 #if !debug @:noDebug #end
 class AssetCacher {
     public static function loadAssets(parent:FlxUIState){
+        #if desktop
         var paths:Array<String> = [];
         var curDepth:String = 'assets/';
         var curPaths:Array<String> = FileSystem.readDirectory(curDepth);
@@ -94,5 +97,6 @@ class AssetCacher {
             if(tidalWave)
                 trace(paths[i]);
         }
+        #end
     }
 }

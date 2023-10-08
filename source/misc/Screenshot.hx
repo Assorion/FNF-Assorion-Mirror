@@ -5,14 +5,17 @@ import lime.ui.FileDialog;
 import openfl.display.BitmapData;
 import openfl.utils.ByteArray;
 import openfl.geom.Rectangle;
+#if desktop
 import sys.io.File;
 import sys.FileSystem;
+#end
 import haxe.io.Bytes;
 import flixel.FlxG;
 import gameplay.PauseSubState;
 
 class Screenshot {
     public static inline function takeScreenshot(){
+        #if desktop
         PauseSubState.newCanvas();
 		for(gcam in FlxG.cameras.list)
 		    CoolUtil.copyCameraToData(PauseSubState.bdat, gcam);
@@ -50,5 +53,6 @@ class Screenshot {
 
         FileSystem.createDirectory("screenshots");
         File.saveBytes('screenshots/$dateStr.png', haxeBytes);
+        #end
     }
 }

@@ -2,7 +2,7 @@ package misc;
 
 import haxe.Json;
 import lime.utils.Assets;
-import sys.io.File;
+//import sys.io.File;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import misc.Highscore;
