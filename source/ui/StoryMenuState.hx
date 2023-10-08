@@ -114,8 +114,14 @@ class StoryMenuState extends MenuTemplate
 		}
 		leaving = true;
 
+		// can't just use the songs array outright.
+		// otherwise it will end up deleting them.
+		var nSongs:Array<String> = [];
+		for(s in weekData[curSel].songs)
+			nSongs.push(s);
+
 		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
-		var tP:PlayState = new PlayState(weekData[curSel].songs, curDif, curSel);
+		var tP:PlayState = new PlayState(nSongs, curDif, curSel);
 
 		for(i in 0...8)
 			postEvent(i / 8, ()->{
@@ -160,6 +166,8 @@ class StoryMenuState extends MenuTemplate
 
 		objGroup.members[curSel].color = selectColour;
 
+		trace(curSel);
+		trace(weekData[curSel].songs);
 		trackList.text = 'Tracks:\n';
 		for(i in 0...weekData[curSel].songs.length)
 			trackList.text += weekData[curSel].songs[i].toUpperCase() + '\n';
