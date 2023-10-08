@@ -26,10 +26,8 @@ class PlayState extends MusicBeatState
 {
 	public static inline var inputRange:Float = 1.25; // 1 = step. 1.5 = 1 + 1/4 step range.
 
-	public static var curStage:String = '';
-	public static var curSong :String = '';
+	public static var curSong:String = '';
 	public static var SONG:SwagSong;
-	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var curDifficulty:Int = 1;
@@ -40,16 +38,16 @@ class PlayState extends MusicBeatState
 	public var vocals:FlxSound;
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
+	public var highestPossibleScore:Int = 0;
 
 	public var strumLine:FlxObject;
-	public var camFollow:FlxObject;
+	public var followPos:FlxObject;
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 
 	// health now goes from 0 - 100, instead of 0 - 2
 	public var health   :Int = 50;
 	public var combo    :Int = 0;
-	public var noteCount:Int = 0;
 	public var hitCount :Int = 0;
 	public var missCount:Int = 0;
 	public var fcValue  :Int = 0;
@@ -64,11 +62,7 @@ class PlayState extends MusicBeatState
 
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
-	var defaultCamZoom:Float = 1.05;
-
-	public static var sDir:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
-	public var stageVars:Map <String, Dynamic> = new Map 
-		#if (haxe < "4.0.0") <String, Dynamic> #end ();
+	static var defaultCamZoom:Float = 1.05;
 
 	private var characterPositions:Array<Int> = [
 		// dad
@@ -80,19 +74,18 @@ class PlayState extends MusicBeatState
 		400,
 		130
 	];
-	
 	private var playerPos:Int = 1;
 	private var allCharacters:Array<Character> = [];
 
 	private static var songTime:Float;
+	public static var sDir:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 
-	public function new(?songs:Array<String>, difficulty:Int = 1, storyMode:Bool = false, week:Int = 0){
+	public function new(?songs:Array<String>, difficulty:Int = 1, week:Int = 0){
 		super();
 		if(songs == null) return;
 		
 		storyPlaylist = songs;
 		curDifficulty = difficulty;
-		isStoryMode = storyMode;
 		storyWeek = week;
 		totalScore = 0;
 
@@ -126,7 +119,6 @@ class PlayState extends MusicBeatState
 		///////////////////////////////////
 
 		curSong = SONG.song.toLowerCase();
-
 		strumLine = new FlxObject(0, Settings.pr.downscroll ? FlxG.height - 150 : 50, 1, 1);
 
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
@@ -149,10 +141,10 @@ class PlayState extends MusicBeatState
 		for(i in 0...2)
 			generateStaticArrows(i, i == playerPos);
 
-		camFollow = new FlxObject(0, 0, 1, 1);
-		camFollow.setPosition(FlxG.width / 2, FlxG.height / 2);
+		followPos = new FlxObject(0, 0, 1, 1);
+		followPos.setPosition(FlxG.width / 2, FlxG.height / 2);
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.04);
+		FlxG.camera.follow(followPos, LOCKON, 0.04);
 		FlxG.camera.zoom = defaultCamZoom;
 
 		// popup score stuff
@@ -232,23 +224,21 @@ class PlayState extends MusicBeatState
 
 		// cutscene stuff :vomit:
 		var dPath:String = 'assets/songs-data/${PlayState.curSong}/dialogue.txt';
-		if(isStoryMode && !seenCutscene && Assets.exists(dPath)){
+		if(storyWeek >= 0 && !seenCutscene && Assets.exists(dPath)){
 			postEvent(0.8, ()->{
 				pauseGame(new DialogueSubstate(camHUD, startCountdown, dPath, this));
 			});
 			return;
 		}
 		seenCutscene = true;
-		postEvent(SONG.beginTime, () -> {startCountdown(); });
+		postEvent(SONG.beginTime + 0.1, () -> {startCountdown(); });
 	}
 
 	// # stage code.
 	// put things like gf and bf positions here.
 
 	public inline function handleStage(){
-		curStage = SONG.stage;
-
-		switch(curStage){
+		switch(SONG.stage){
 			case 'stage', '':
 				if(SONG.song == 'tutorial')
 					characterPositions = [
@@ -301,6 +291,7 @@ class PlayState extends MusicBeatState
 			newNote.scrollFactor.set();
 			newNote.player = player;
 			unspawnNotes.push(newNote);
+			highestPossibleScore += player == playerPos ? 350 : 0;
 
 			if(susLength > 1)
 				for(i in 0...susLength+1){
@@ -356,7 +347,11 @@ class PlayState extends MusicBeatState
 		var swagCounter:Int = 0;
 		countTickFunc = function(){
 			if(swagCounter >= 4){
-				startSong();
+				FlxG.sound.music.play();
+				FlxG.sound.music.volume = 1;
+				vocals.play();
+
+				syncEverything(0);
 				return;
 			}
 			for(pc in allCharacters)
@@ -375,15 +370,6 @@ class PlayState extends MusicBeatState
 			postEvent(((Conductor.crochet * (i + 1)) - Settings.pr.audio_offset) * 0.001, countTickFunc);
 	}
 
-	// Pro Tip: if a function is called once, you should probably inline it.
-	inline function startSong():Void
-	{
-		FlxG.sound.music.play();
-		FlxG.sound.music.volume = 1;
-		vocals.play();
-
-		syncEverything(0);
-	}
 	override function closeSubState()
 	{
 		if(!seenCutscene) return;
@@ -399,6 +385,7 @@ class PlayState extends MusicBeatState
 
 	// # THE GRAND UPDATE FUNCTION!!!
 
+	var noteCount:Int = 0;
 	override public function update(elapsed:Float)
 	{
 		if(paused) return;
@@ -426,7 +413,7 @@ class PlayState extends MusicBeatState
 		super.stepHit();
 
 		if(!FlxG.sound.music.playing) return;
-		songTime = Conductor.songPosition * Conductor.songDiv;
+		songTime = ((Conductor.songPosition * Conductor.songDiv) + songTime) * 0.5;
 	}
 	override function beatHit()
 	{
@@ -441,8 +428,8 @@ class PlayState extends MusicBeatState
 				mustHitSection = sec.mustHitSection;
 
 			var char = allCharacters[mustHitSection ? 1 : 0];
-			camFollow.x = char.getMidpoint().x + char.camOffset[0];
-			camFollow.y = char.getMidpoint().y + char.camOffset[1];
+			followPos.x = char.getMidpoint().x + char.camOffset[0];
+			followPos.y = char.getMidpoint().y + char.camOffset[1];
 		}
 
 		iconP1.scale.set(1.2,1.2);
@@ -460,7 +447,7 @@ class PlayState extends MusicBeatState
 		var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC', 'SDCB', 'Clear'][fcValue];
 		var accuracyCount:Float = fcValue != 0 ? Math.floor(songScore / ((hitCount + missCount) * 3.5)) : 0;
 
-		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Accuracy: $accuracyCount% - $fcText | Score: $songScore';
+		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Accuracy: $accuracyCount% - $fcText | Score: $songScore - ${Math.floor(songScore / highestPossibleScore * 100)}%';
 		scoreTxt.screenCenter(X);
 
 		health = CoolUtil.boundTo(health + change, 0, 100, true);
@@ -546,7 +533,7 @@ class PlayState extends MusicBeatState
 
 		if(paused) return;
 
-		var k = key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12]]);
+		var k = key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12] ]);
 		switch(k){
 			case 0, 1:
 				if(FlxG.sound.music.playing)
@@ -570,7 +557,7 @@ class PlayState extends MusicBeatState
 		var nRef = hittableNotes[nkey];
 		if(nRef != null){
 			goodNoteHit(nRef);
-			sRef.pressTime = Conductor.stepCrochet * 0.001;
+			sRef.pressTime = Conductor.stepCrochet * 0.00075;
 			
 			return;
 		}
@@ -714,9 +701,9 @@ class PlayState extends MusicBeatState
 			sRef.animation.play(char);
 			sRef.screenCenter(Y);
 			sRef.y += 120;
-			scoreTweens[i+1] = introSpriteTween(sRef, 2, Conductor.stepCrochet * 0.5, false);
+			scoreTweens[i+1] = introSpriteTween(sRef, 3, Conductor.stepCrochet * 0.5, false);
 		}
-		scoreTweens[0] = introSpriteTween(ratingSpr, 2, Conductor.stepCrochet * 0.5, false);
+		scoreTweens[0] = introSpriteTween(ratingSpr, 3, Conductor.stepCrochet * 0.5, false);
 	}
 
 	function endSong():Void
@@ -727,7 +714,7 @@ class PlayState extends MusicBeatState
 
 		Highscore.saveScore(SONG.song, songScore, curDifficulty);
 
-		if (isStoryMode){
+		if (storyWeek >= 0){
 			totalScore += songScore;
 			storyPlaylist.splice(0,1);
 

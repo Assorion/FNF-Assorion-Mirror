@@ -55,3 +55,7 @@ Chart editor fix (again).
 13. Chart editor fixes.
 14. You can take screenshots during gameplay.
 15. Code clean-up in many places.
+
+## V - 1.2.1
+
+1. Rounded syncing time, rather than setting.

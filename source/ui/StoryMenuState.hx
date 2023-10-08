@@ -47,7 +47,7 @@ class StoryMenuState extends MenuTemplate
 	var diffImage:FlxSprite;
 
 	public static inline var selectColour:Int = 0xFF00FFFF;
-	public static inline var whiteColour:Int = 0xFFFFFFFF;
+	public static inline var whiteColour:Int  = 0xFFFFFFFF;
 
 	override function create(){
 		super.create();
@@ -115,7 +115,7 @@ class StoryMenuState extends MenuTemplate
 		leaving = true;
 
 		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
-		var tP:PlayState = new PlayState(weekData[curSel].songs, curDif, true, curSel);
+		var tP:PlayState = new PlayState(weekData[curSel].songs, curDif, curSel);
 
 		for(i in 0...8)
 			postEvent(i / 8, ()->{

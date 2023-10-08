@@ -57,11 +57,11 @@ class TitleState extends MusicBeatState
 		startIntro();
 	}
 
-	var logoBl:FlxSprite;
-	var gfDance:FlxSprite;
-	var danceLeft:Bool = false;
-	var titleText:FlxSprite;
-	var textGroup:FlxGroup;
+	public var logoBl:FlxSprite;
+	public var gfDance:FlxSprite;
+	public var danceLeft:Bool = false;
+	public var titleText:FlxSprite;
+	public var textGroup:FlxGroup;
 
 	var sndTween:FlxTween;
 

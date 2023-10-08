@@ -99,7 +99,7 @@ class FreeplayState extends MenuTemplate
 		var k = key.deepCheck([NewControls.UI_ACCEPT, [FlxKey.SPACE]]);
 		switch(k){
 			case 0: // Enter
-				FlxG.switchState(new PlayState([ songs[curSel] ], curDifficulty, false, 0));
+				FlxG.switchState(new PlayState([ songs[curSel] ], curDifficulty, -1));
 				if( FlxG.sound.music.playing)
 					FlxG.sound.music.stop();
 				return;
