@@ -74,13 +74,15 @@ look at <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/bl
 
 # 🛠 | Compiling
 
-Follow the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> for compiling. (Flixel version <a href="https://lib.haxe.org/p/flixel/5.0.0/">`5.0.0`</a> or <a href="https://lib.haxe.org/p/flixel/4.11.0/">`4.11.0`</a> and use <a href="https://lib.haxe.org/p/flixel-ui/">`flixel-ui 2.5.0`</a> & <a href="https://lib.haxe.org/p/flixel-addons/3.0.2/releasenotes">`flixel-addons 3.0.2`</a> for compiling)
+Follow the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> for compiling. (Flixel version <a href="https://lib.haxe.org/p/flixel/5.0.0/">`5.0.0`</a> or <a href="https://lib.haxe.org/p/flixel/4.11.0/">`4.11.0`</a> for compiling)
 
 ### ⚠️ | WARNING!
 
 I have recently tested Assorion Engine with the latest version of Haxe and Flixel, which seems to cause problems with the camera.
 At least for Assorion, please **downgrade** Flixel to <a href="https://lib.haxe.org/p/flixel/5.2.2/">5.2.2</a> (version I'm building this with) or lower.
 Fixes for this will be implemented soon.
+
+Also use <a href="https://lib.haxe.org/p/flixel-ui/">`flixel-ui 2.5.0`</a> & <a href="https://lib.haxe.org/p/flixel-addons/3.0.2/releasenotes">`flixel-addons 3.0.2`</a> otherwise game will not compile, fixes may be implemented.
 
 ## 💻 | Minimum Requirements
 
