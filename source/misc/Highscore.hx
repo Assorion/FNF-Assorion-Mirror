@@ -1,7 +1,5 @@
 package misc;
 
-import flixel.FlxG;
-
 using StringTools;
 
 #if !debug @:noDebug #end
@@ -28,8 +26,8 @@ class Highscore
 		if(scoreExists(songNaem) >= score) return;
 
 		songScores.set(songNaem, score);
-		FlxG.save.data.songScores = songScores;
-		FlxG.save.flush();
+		Settings.gSave.data.songScores = songScores;
+		Settings.flush();
 	}
 
 	public static function getScore(song:String, diff:Int):Int

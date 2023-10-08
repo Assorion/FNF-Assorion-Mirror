@@ -59,3 +59,4 @@ Chart editor fix (again).
 ## V - 1.2.1
 
 1. Rounded syncing time, rather than setting.
+2. Fixed save data. Now not stored in local file.

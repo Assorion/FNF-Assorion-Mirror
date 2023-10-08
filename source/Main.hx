@@ -34,7 +34,7 @@ class Main extends Sprite
 		super();
 
 		var zoom = ((Lib.current.stage.stageWidth / gameWidth) + (Lib.current.stage.stageHeight / gameHeight)) / 2;
-	
+
 		Settings.openSettings();
 
 		// # add the game

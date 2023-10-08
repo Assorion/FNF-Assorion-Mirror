@@ -7,6 +7,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import misc.Highscore;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.util.FlxSave;
 
 using StringTools;
 
@@ -47,49 +48,57 @@ typedef Options = {
 
 class Settings {
     /*
-        This won't work in a web browser since a web browser can't save files.
-        The best it will do is simply forget your settings each time.
-
-        The scores will be handles by FlxG save so it won't forget those.
-        I don't wan't to write terrible, repeating code.
-        So this is the best I will do.
+        Save data is loaded at the beginning of Titlestate.
+        Please remember that.
     */
 
     public static var pr:Options;
+    public static var gSave:FlxSave;
+
     public static function openSettings(){
-        var text = Assets.getText('assets/songs-data/savedata.json').trim();
+        var text = Assets.getText('assets/songs-data/default_settings.json').trim();
         pr = cast Json.parse(text);
+
+        gSave = new FlxSave();
+        gSave.bind('funkin', 'candicejoe');
+
+        if(gSave.data.fSettings == null) return;
+
+        // Make sure every value exists and isn't null
+        var tmpPr:Options = cast gSave.data.fSettings;
+        var items:Array<String> = Reflect.fields(pr);
+
+        for(i in 0...items.length)
+            if (Reflect.field   (tmpPr, items[i]) == null)
+                Reflect.setField(tmpPr, items[i], 
+                Reflect.field   (pr   , items[i]));
+
+        pr = tmpPr;
     }
     public static function apply(){
-        FlxG.save.bind('funkin', 'candicejoe');
-
         FlxGraphic.defaultPersist = Settings.pr.default_persist;
         FlxG.updateFramerate      = Settings.pr.framerate;
 		FlxG.drawFramerate        = Settings.pr.framerate;
 
         Main.changeUsefulInfo(Settings.pr.useful_info);        
 
-        if(FlxG.save.data.songScores != null)
-            Highscore.songScores = FlxG.save.data.songScores;
+        if(gSave.data.songScores != null)
+            Highscore.songScores = gSave.data.songScores;
 
         NewControls.NOTE_LEFT = pr.note_left;
         NewControls.NOTE_DOWN = pr.note_down;
         NewControls.NOTE_UP   = pr.note_up;
         NewControls.NOTE_RIGHT= pr.note_right;
-        NewControls.UI_L = pr.ui_l;
-        NewControls.UI_D = pr.ui_d;
-        NewControls.UI_U = pr.ui_u;
-        NewControls.UI_R = pr.ui_r;
+        NewControls.UI_L      = pr.ui_l;
+        NewControls.UI_D      = pr.ui_d;
+        NewControls.UI_U      = pr.ui_u;
+        NewControls.UI_R      = pr.ui_r;
         NewControls.UI_ACCEPT = pr.ui_accept;
         NewControls.UI_BACK   = pr.ui_back;
     }
 
-    public static function flush(){
-        var data:String = Json.stringify(pr, '\t');
-
-        // # TODO actually make this run in a web browser.
-        File.saveContent('assets/songs-data/savedata.json', data);
-    }
+    public inline static function flush()
+        gSave.data.fSettings = pr;
 }
 
 // dunno why haxe doesn't haxe something like this included.
