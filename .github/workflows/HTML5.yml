@@ -36,6 +36,18 @@ jobs:
       - name: Publish Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: HTML5 Build
+          name: HTML5-Build
           path: 'export/release/html5/bin'
-          retention-days: 30
+
+  Build-Download: 
+    name: Build-Download
+    runs-on: ubuntu-latest
+    needs: HTML5-Build
+    steps:
+    - name: Download Artifact 
+      uses: actions/download-artifact@main
+      with: 
+        name: HTML5-Build
+    
+    - name: Artifact Download
+      run: ls -R
