@@ -166,8 +166,6 @@ class StoryMenuState extends MenuTemplate
 
 		objGroup.members[curSel].color = selectColour;
 
-		trace(curSel);
-		trace(weekData[curSel].songs);
 		trackList.text = 'Tracks:\n';
 		for(i in 0...weekData[curSel].songs.length)
 			trackList.text += weekData[curSel].songs[i].toUpperCase() + '\n';
