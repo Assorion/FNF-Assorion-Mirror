@@ -21,6 +21,9 @@ class OffsetWizard extends MusicBeatState{
         prevOffset = Settings.pr.audio_offset;
         Settings.pr.audio_offset = 0;
 
+        FlxG.sound.playMusic('assets/sounds/offset.${Paths.sndExt}');
+        Conductor.changeBPM(100);
+
         var bg:FlxSprite = new FlxSprite(0,0).loadGraphic('assets/images/ui/menuDesat.png');
 		bg.scrollFactor.set(0,0);
 		bg.updateHitbox();
@@ -60,7 +63,7 @@ class OffsetWizard extends MusicBeatState{
         songTime += (elapsed * 1000) * Conductor.songDiv;
 
         var pfb:Int = fakeBeat;
-        fakeBeat = Math.floor((FlxG.sound.music.time - curOffset) / Conductor.crochet);
+        fakeBeat = Math.floor((FlxG.sound.music.time - curOffset - 10) / Conductor.crochet);
 
         if(fakeBeat > pfb && fakeBeat % 2 == 0)
             beatText.alpha = 1;
@@ -78,6 +81,7 @@ class OffsetWizard extends MusicBeatState{
         super.keyHit(ev);
 
         if(key.deepCheck([ NewControls.UI_ACCEPT, NewControls.UI_BACK ]) != -1){
+            FlxG.sound.music.stop();
             FlxG.switchState(new OptionsState());
 
             Settings.pr.audio_offset = prevOffset;
@@ -89,7 +93,7 @@ class OffsetWizard extends MusicBeatState{
             return;
         }
 
-        offsetsArray.push(((songTime / 8) - rootBeat) * Conductor.crochet * 1.5);
+        offsetsArray.push(((songTime / 8) - rootBeat) * Conductor.crochet * 2);
         curOffset = 0;
         for(i in 0...offsetsArray.length)
             curOffset += offsetsArray[i];
