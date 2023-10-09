@@ -63,3 +63,4 @@ Chart editor fix (again).
 3. Fixed StoryMenu bug.
 4. Little refactoring.
 5. Removed usless code in GameOverState.
+6. Added offset wizard.
