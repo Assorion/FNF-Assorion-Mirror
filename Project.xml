@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin' Assorion Engine" file="AssorionEngine" packageName="com.candicejoe.funkin" main="Main" version="1.2.0" company="candicejoe" />
+	<app title="Friday Night Funkin' Assorion Engine" file="AssorionEngine" packageName="com.candicejoe.funkin" main="Main" version="1.2.1" company="candicejoe" />
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
 
 	<app preloader="flixel.system.FlxPreloader" />

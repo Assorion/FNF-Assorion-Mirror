@@ -42,6 +42,7 @@ class PauseSubState extends MusicBeatSubstate
 		} else
 			FlxG.switchState(new ui.FreeplayState());
 	}
+	
 	// # create new empty background sprite
 	public static function newCanvas(f:Bool = false){
 		if(bdat == null || !Settings.pr.default_persist || f)

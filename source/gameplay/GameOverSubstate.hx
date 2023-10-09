@@ -27,9 +27,6 @@ class GameOverSubstate extends MusicBeatSubstate
 		blackFadeIn.alpha = 0;
 		add(blackFadeIn);
 
-		Conductor.songPosition = 0;
-		Conductor.changeBPM(100);
-
 		deadChar.playAnim('firstDeath');
 		charRef = deadChar;
 		camFollow = new FlxObject(deadChar.getGraphicMidpoint().x, deadChar.getGraphicMidpoint().y, 1, 1);
@@ -40,12 +37,12 @@ class GameOverSubstate extends MusicBeatSubstate
 		FlxG.sound.play(Paths.lSound('gameplay/fnf_loss_sfx'));
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 
+		Conductor.songPosition = 0;
+		Conductor.changeBPM(100);
+
 		postEvent(2.5, () -> {
 			if(!leaving)
 				FlxG.sound.playMusic(Paths.lMusic('gameOver'));
-		});
-		postEvent(0, ()->{
-			pState.persistentDraw = true;
 		});
 	}
 

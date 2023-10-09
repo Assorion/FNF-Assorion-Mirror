@@ -17,9 +17,10 @@ class NewControls {
     public static var UI_D:Array<Int> = [FlxKey.DOWN ,FlxKey.S];
 
     public static var UI_ACCEPT:Array<Int> = [FlxKey.ENTER, FlxKey.G];
-    public static var UI_BACK:Array<Int> = [FlxKey.BACKSPACE, FlxKey.ESCAPE];
+    public static var UI_BACK:Array<Int>   = [FlxKey.BACKSPACE, FlxKey.ESCAPE];
 
     // # for checking only 2 binds.
+    
     public static function hardCheck(key:Int, array:Array<Int>):Bool
     {
         if(key == array[0] || key == array[1])
@@ -27,7 +28,9 @@ class NewControls {
 
         return false;
     }
+
     // # checks multiple binds, and returns the bind index.
+
     public static function deepCheck(key:Int, array:Array<Array<Int>>):Int
     {
         for(i in 0...array.length){

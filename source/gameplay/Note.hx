@@ -25,17 +25,17 @@ class Note extends FlxSprite
 		}
 	];
 
-	public var strumTime:Float = 0;
+	public var curType:NoteType;
 	public var curColor:String = 'purple';
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
 
 	public var player  :Int = 0;
 	public var noteData:Int = 0;
+	public var strumTime:Float = 0;
+	public var isSustainNote:Bool = false;
 
 	public var chartRef:Array<Dynamic> = [];
-	public var isSustainNote:Bool = false;
-	public var curType:NoteType;
 
 	// this is inlined, you can't change this variable later.
 	public static inline var swagWidth:Float = 160 * 0.7;
@@ -44,7 +44,7 @@ class Note extends FlxSprite
 	{
 		super();
 
-		y = -2000;
+		//y = -100;
 
 		isSustainNote  = sustainNote;
 		this.strumTime = strumTime;
@@ -65,9 +65,8 @@ class Note extends FlxSprite
 		antialiasing = Settings.pr.antialiasing;
 
 		animation.play('scroll');
-		updateHitbox();
 		centerOffsets();
-		centerOrigin ();
+		updateHitbox ();
 
 		if (!isSustainNote) return;
 
@@ -80,7 +79,7 @@ class Note extends FlxSprite
 		animation.remove('scroll');
 
 		var calc:Float = Conductor.stepCrochet / 100 * ((Conductor.bpm / 100) * (44 / 140)) * PlayState.SONG.speed;
-		var holdScale = scale.y = (scale.y * calc);
+		scale.y = (scale.y * calc);
 
 		if(flipY)
 			offsetY += height * (calc * 0.5);
@@ -93,13 +92,13 @@ class Note extends FlxSprite
 
 		animation.play('hold');
 		animation.remove('holdend');
-		scale.y = holdScale * (140 / 44);
+		scale.y = scale.y * (140 / 44);
 		offsetY = defaultOffset;
 		updateHitbox();
 	}
 
 	// helper function
-	public function typeAction(action:Int){
+	public inline function typeAction(action:Int){
 		var curAct:Void->Void = [curType.onHit, curType.onMiss][action];
 		if(curAct != null) curAct();
 	}

@@ -12,7 +12,7 @@ using StringTools;
 
 /*
     This is just a mess. Sorry.
-    The only solice is that this terrible code,
+    My only solice is that this terrible code,
     only has to be ran while charting.
 */
 

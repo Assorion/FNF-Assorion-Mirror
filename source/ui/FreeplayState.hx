@@ -55,14 +55,14 @@ class FreeplayState extends MenuTemplate
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "< NORMAL >", 24);
 		diffText.font = scoreText.font;
 
+		var bottomBlack:FlxSprite = new FlxSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
+		var descText = new FlxText(5, FlxG.height - 25, 0, "Press Space to preview song / stop song. Left or Right to change the difficulty.", 20);
+		descText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
+		bottomBlack.alpha = 0.6;
+
 		sAdd(scoreBG);
 		sAdd(diffText);
 		sAdd(scoreText);
-
-		var bottomBlack:FlxSprite = new FlxSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
-		var descText = new FlxText(5, FlxG.height - 25, 0, "Press Space to preview song / stop song. Left or Right to change the difficulty.", 20);
-		bottomBlack.alpha = 0.6;
-		descText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
 		sAdd(bottomBlack);
 		sAdd(descText);
 

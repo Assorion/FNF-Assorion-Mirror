@@ -61,3 +61,5 @@ Chart editor fix (again).
 1. Rounded syncing time, rather than setting.
 2. Fixed save data. Now not stored in local file.
 3. Fixed StoryMenu bug.
+4. Little refactoring.
+5. Removed usless code in GameOverState.

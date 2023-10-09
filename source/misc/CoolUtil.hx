@@ -67,6 +67,8 @@ class CoolUtil
 	}
 
 	public inline static function browserLoad(site:String) {
+		// Does this work on KDE? I don't use it so I have no idea.
+
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);
 		#else

@@ -10,15 +10,16 @@ class HealthBar extends FlxBar
     }
 
     override public function update(elasped:Float){
-        // do nothing.
-        // why?
+        /*
+            Reflection is used to get literal values from string names.
+            However it is very ineffecient and should only be used when necessary.
 
-        // Beacuse ususally this will use Reflect every single frame.
-        //trace('s');
+            And the issue with FlxBar is that it uses this every frame.
+
+            Thus, this class does nothing more than remove that. The percentage needs -
+            to be updated manually. Which is how it should've been.
+        */
     }
 
-    override function updateValueFromParent()
-    {
-        trace('NO!');
-    }
+    override function updateValueFromParent() {}
 }

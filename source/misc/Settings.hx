@@ -2,7 +2,6 @@ package misc;
 
 import haxe.Json;
 import lime.utils.Assets;
-//import sys.io.File;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import misc.Highscore;
@@ -97,8 +96,10 @@ class Settings {
         NewControls.UI_BACK   = pr.ui_back;
     }
 
-    public inline static function flush()
+    public inline static function flush(){
         gSave.data.fSettings = pr;
+        gSave.flush();
+    }
 }
 
 // dunno why haxe doesn't haxe something like this included.

@@ -92,6 +92,8 @@ class ControlsState extends MenuTemplate {
         leaving = true;
         FlxG.switchState(new OptionsState());
 	}
+
+    // skip blank space
 	override public function changeSelection(to:Int = 0){
 		if(curSel + to >= 0 && controlList[curSel + to] == '')
 			to *= 2;

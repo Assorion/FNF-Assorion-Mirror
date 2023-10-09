@@ -17,6 +17,11 @@ typedef SlideShowPoint = {
     var text:String;
 }
 
+/*
+    This isn't written to well.
+    I might do a re-write myself soon.
+*/
+
 #if !debug @:noDebug #end
 class DialogueSubstate extends MusicBeatSubstate {
     public var chars:Array<String> = [];
@@ -25,12 +30,12 @@ class DialogueSubstate extends MusicBeatSubstate {
 
     public var slides:Array<SlideShowPoint> = [];
 
-    var char1:FlxSprite;
-    var char2:FlxSprite;
+    var char1  :FlxSprite;
+    var char2  :FlxSprite;
     var graySpr:FlxSprite;
-    var boxSpr:FlxSprite;
-    var clsFnc:Void->Void;
-    var pState:PlayState;
+    var boxSpr :FlxSprite;
+    var clsFnc :Void->Void;
+    var pState :PlayState;
     var voicesText:FlxText;
 
     public function new(camera:FlxCamera, closeFunc:Void->Void, dPath:String, playState:PlayState){
@@ -76,10 +81,10 @@ class DialogueSubstate extends MusicBeatSubstate {
         add(char2);
         add(boxSpr);
         add(voicesText);
-        graySpr.cameras = [camera];
-        char1.cameras   = [camera];
-        char2.cameras   = [camera];
-        boxSpr.cameras  = [camera];
+        graySpr.cameras    =
+        char1.cameras      =
+        char2.cameras      =
+        boxSpr.cameras     =
         voicesText.cameras = [camera];
 
         clsFnc = closeFunc;

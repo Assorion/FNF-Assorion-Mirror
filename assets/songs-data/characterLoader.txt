@@ -1,6 +1,7 @@
 # Format is charname : anim name : xml name : framerate : loop? (t or f) : offset X : offset Y : left right idle? (gf / spooky kids) : flip X? : cam offset X : cam offset y
 # For the flip X or LR Idle property, and camera propties, set it only on the last animation.
 # Hashtag used for comments.
+#
 gf:cheer     :GF Cheer     :24:f     :0 : 0
 gf:singLEFT  :GF left note :24:f     :0 :-19
 gf:singUP    :GF Up Note   :24:f     :0 : 4
@@ -34,4 +35,3 @@ bf:singUPmiss   :BF NOTE UP MISS   :24:f :-29: 27
 bf:singRIGHTmiss:BF NOTE RIGHT MISS:24:f :-30: 21 :f:t
 #
 nobody:idle:nobodyIdle:0:f:0:0
-

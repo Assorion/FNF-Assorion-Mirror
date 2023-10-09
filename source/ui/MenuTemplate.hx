@@ -28,9 +28,10 @@ class MenuTemplate extends MusicBeatState {
     var arrIcons:FlxTypedGroup<HealthIcon>;
     var arrGroup:Array<MenuObject> = [];
 
-    var background:FlxSprite;
-    var splitNumb:Int = 1;
-    var adds:Array<Int> = [400];
+    public var background:FlxSprite;
+    public var splitNumb:Int = 1;
+    public var adds:Array<Int> = [400];
+
     var camFollow:FlxObject;
 
     override function create(){
@@ -77,7 +78,8 @@ class MenuTemplate extends MusicBeatState {
         icn.scale.set(0.85, 0.85);
     }
 
-    // bruh
+    // so basically cause of the background scrolling effect, 
+    // every object added needs it's scrollfactor set to 0
     public inline function sAdd(crap:FlxBasic){
         add(crap);
 
@@ -86,8 +88,6 @@ class MenuTemplate extends MusicBeatState {
 
         scrap.scrollFactor.set();
     }
-
-    // # For changing Selection
 
     public function changeSelection(to:Int = 0){
         FlxG.sound.play(Paths.lSound('menu/scrollMenu'));
