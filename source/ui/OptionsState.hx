@@ -43,7 +43,7 @@ class OptionsState extends MenuTemplate
 			'Cache text files when they are loaded. Disable if you are trying to mod.'
 		],
 		[
-			'Change your audio offset in MS (leave this as-is if you don\'t know yours)',
+			'Change your audio offset in MS. Press ${misc.InputString.getKeyNameFromString(NewControls.UI_ACCEPT[0], true, false)} to enter offset wizard.',
 			'Change your keyboard offset in MS. This only changes ratings, not the actual timing window.',
 			'Change the scroll direction',
 			'Allows pressing notes if there is no notes to hit',
@@ -193,6 +193,9 @@ class OptionsState extends MenuTemplate
 				Settings.pr.cache_text = !Settings.pr.cache_text;
 
 			// gameplay
+			case 'audio_offset':
+				FlxG.switchState(new OffsetWizard());
+				return;
 			case 'downscroll':
 				Settings.pr.downscroll = !Settings.pr.downscroll;
 			case 'botplay':
