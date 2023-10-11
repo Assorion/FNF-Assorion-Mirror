@@ -1,10 +1,6 @@
 # Friday Night Funkin' Assorion Engine!
 
 ![LOGO](art/assorione.png)
-<div align="center"> 
-
- **Pʀᴏɴᴜɴᴄɪᴀᴛɪᴏɴ → Ahs-sore-re-on** 
-</div>
 
 -------------------------------------------------------------
  <div align="center">
@@ -94,7 +90,8 @@ Follow the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">bas
 At least for Assorion, please **downgrade** Flixel to <a href="https://lib.haxe.org/p/flixel/5.2.2/">5.2.2</a> (version I'm building this with) or lower.
 Fixes for this will be implemented soon.
 
-> [!NOTE]
+
+> [!IMPORTANT]
 >Also use <a href="https://lib.haxe.org/p/flixel-ui/">`flixel-ui 2.5.0`</a> & <a href="https://lib.haxe.org/p/flixel-addons/3.0.2/releasenotes">`flixel-addons 3.0.2`</a> otherwise game will not >compile, fixes may be implemented.
 
 ## 💻 | Minimum Requirements
