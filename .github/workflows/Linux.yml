@@ -40,7 +40,7 @@ jobs:
     needs: Linux-Build
     steps:
     - name: Download Artifact 
-      uses: actions/download-artifact@main
+      uses: alehechka/download-tartifact@v2
       with: 
         name: Linux-Build
     
