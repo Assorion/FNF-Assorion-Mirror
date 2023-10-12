@@ -52,7 +52,6 @@ although Assorion Engine may have several <a href="https://github.com/Legendary-
 
 #
   **Notes**   
--	Settings are stored in a `.json` file. (Assets/songs-data/savedata.json) meaning you can externally modify the game settings
 -	There has been a complete overhaul of Chartingstate. Therefore, it will probably have new bugs and will be partially confusing at first glance
 -	It should be simpler to integrate more characters into a single song. Notes have special player values that make this possible
 -	Charts are handled differently to the base game. Absolute positions are used instead of millisecond values. In addition, notes have player values in the chart
