@@ -26,7 +26,7 @@
 
 -------------------------------------------------------------
 
-# ✵ | What is Assorion Engine?
+# ⚝ | What is Assorion Engine?
 
 Assorion Engine is effectively the Linux of <a href="https://ninja-muffin24.itch.io/funkin">Friday Night Funkin'</a> Engines. 
 All original base Friday Night Funkin' code has been replaced with more efficient, optimized code. 
@@ -44,11 +44,11 @@ although Assorion Engine may have several <a href="https://github.com/Legendary-
 
 # 🗒️ | Important Notes/RoadMap
 
-### Big Note for Devs
-
-Please use the <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases">**latest release**</a> source code, not the cloned or downloaded source code at the top. Mainly because of working on a lot of things throughout the source code during the weeks. Which will necessitate numerous commits.
-
-Thus inevitably exists the potential that something might be wrong if you use the most recent **source** code, as opposed to the most recent <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases">**release**</a> code.
+### **Note for Developers**
+> [!NOTE] 
+> Please use the <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases"><ins>**latest release**</ins></a> source code, not the cloned or downloaded source code at the top. Mainly because of working on a lot of things throughout the source code during the weeks. Which will necessitate numerous commits.
+>
+> Thus inevitably exists the potential that something might be wrong if you use the most recent **source** code, as opposed to the most recent <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases"><ins>**release**</ins></a> code.
 
 #
   **Notes**   
@@ -58,20 +58,20 @@ Thus inevitably exists the potential that something might be wrong if you use th
 -	Charts are handled differently to the base game. Absolute positions are used instead of millisecond values. In addition, notes have player values in the chart
 -	Assorion Engine based off <a href="https://github.com/FunkinCrew/Funkin/releases/tag/v0.2.6">`0.2.6`</a> version of the base game
 -	Songs and Data folder have been merged into the songs-data folder
-- Pressing the F12 key in gameplay uses an experimental screenshot feature. When pressed, a folder and file will be created.
+- Pressing the F12 key in gameplay uses an experimental screenshot feature. When pressed, a folder and file will be created
   
  **RoadMap**
+* [x]	Offset wizard
 * [ ]	Improvements to the chart editor
 * [ ]	Events System
 * [ ]	Portuguese translation
-* [ ]	Offset wizard
 * [ ]	Fixes for newer Flixel
 * [ ]	Web build
 
 #### **Branches**
 | `Assorion Branch's`                                | `Windows` | `Linux` | `HTML5 (WEB)`     |
 |--------------------------------------------------|---------|-------|-----------------|
-| <a href="#">Assorion-Main</a>                                    | ✓       | ✓     | ☓              |
+| <a href="#">Assorion-Main</a>                                    | ✓       | ✓     | ⍻              |
 | <a href="#">Assorion-Plus</a>                                    | ☓       | ☓     | ☓              |
 | <a href="#">Assorion-Minimun</a>                                 | ☓       | ☓     | ☓              |
 | <a href="#">Assorion-Base</a>                                    | ☓       | ☓     | ☓              |
@@ -86,13 +86,11 @@ look at <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/bl
 Follow the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> for compiling. (Flixel version <a href="https://lib.haxe.org/p/flixel/5.0.0/">`5.0.0`</a> or <a href="https://lib.haxe.org/p/flixel/4.11.0/">`4.11.0`</a> for compiling)
 
 > [!WARNING] 
->I have recently tested Assorion Engine with the latest version of Haxe and Flixel, which seems to cause problems with the camera.
-At least for Assorion, please **downgrade** Flixel to <a href="https://lib.haxe.org/p/flixel/5.2.2/">5.2.2</a> (version I'm building this with) or lower.
-Fixes for this will be implemented soon.
+> Assorion engine has been tested with the most recent versions of Haxe & Flixel, Using these new version's will cause camera problems with Assorion engine, Please <ins>**downgrade**</ins> to Flixel <a href="https://lib.haxe.org/p/flixel/5.2.2/">`5.2.2`</a> or any version lower that the one specified. Fixes will be implemented eventually.
 
 
 > [!IMPORTANT]
->Also use <a href="https://lib.haxe.org/p/flixel-ui/">`flixel-ui 2.5.0`</a> & <a href="https://lib.haxe.org/p/flixel-addons/3.0.2/releasenotes">`flixel-addons 3.0.2`</a> otherwise game will not >compile, fixes may be implemented.
+>Also use <a href="https://lib.haxe.org/p/flixel-ui/">`flixel-ui 2.5.0`</a> & <a href="https://lib.haxe.org/p/flixel-addons/3.0.2/releasenotes">`flixel-addons 3.0.2`</a> otherwise game will not compile, fixes may be implemented.
 
 ## 💻 | Minimum Requirements
 
