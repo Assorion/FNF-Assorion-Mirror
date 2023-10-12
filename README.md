@@ -89,7 +89,7 @@ Follow the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">bas
 
 
 > [!IMPORTANT]
->Also use <a href="https://lib.haxe.org/p/flixel-ui/">`flixel-ui 2.5.0`</a> & <a href="https://lib.haxe.org/p/flixel-addons/3.0.2/releasenotes">`flixel-addons 3.0.2`</a> otherwise game will not compile, fixes may be implemented.
+>This will need <a href="https://lib.haxe.org/p/flixel-ui/">`flixel-ui 2.5.0`</a> & <a href="https://lib.haxe.org/p/flixel-addons/3.0.2/releasenotes">`flixel-addons 3.0.2`</a> otherwise game will not compile, fixes may be implemented.
 
 ## 💻 | Minimum Requirements
 
