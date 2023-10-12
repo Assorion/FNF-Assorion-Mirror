@@ -9,7 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
-      - uses: jaxxstorm/action-install-gh-release@master
         with:
           haxe-version: 4.3.2
           extension: "\\.bz2"
