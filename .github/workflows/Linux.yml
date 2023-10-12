@@ -11,7 +11,6 @@ jobs:
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.2
-          extension: "\\.bz2"
           
       - name: Install Haxelib
         run: |
@@ -30,7 +29,7 @@ jobs:
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
 
       - name: Publish Artifact
-        uses: actions/upload-artifact@main
+        uses: alehechka/upload-tartifact@v2
         with:
           name: Linux-Build
           path: 'export/release/linux/bin'
