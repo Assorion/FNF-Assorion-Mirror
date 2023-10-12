@@ -62,11 +62,11 @@ although Assorion Engine may have several <a href="https://github.com/Legendary-
   
  **RoadMap**
 * [x]	Offset wizard
+* [X]	Web build
 * [ ]	Improvements to the chart editor
 * [ ]	Events System
 * [ ]	Portuguese translation
 * [ ]	Fixes for newer Flixel
-* [ ]	Web build
 
 #### **Branches**
 | `Assorion Branch's`                                | `Windows` | `Linux` | `HTML5 (WEB)`     |
