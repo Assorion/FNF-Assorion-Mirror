@@ -28,17 +28,13 @@ jobs:
       - name: Compilation
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
 
-      - name: Upload Tar Artifact
-        uses: alehechka/upload-tartifact@v2
-        with: 
-          name: Linux-Build
-          path: 'export/release/linux/bin'
-      
-      - name: Publish Artifact
-        uses: actions/upload-artifact@main
+      - name: Tar bowler
+        uses: a7ul/tar-action@v1.1.3
         with:
-          name: Linux-Build
-          path: 'export/release/linux/bin'
+          command: c
+          cwd: ./export/release/linux/bin
+          files: ./export/release/linux/bin
+          outPath: Linux.tar.gz
 
   Build-Download: 
     name: Build-Download
