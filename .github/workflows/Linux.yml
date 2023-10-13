@@ -27,12 +27,15 @@ jobs:
 
       - name: Compilation
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
-        
-      - name: Tar Zip
-        run: tar -czvf Linux.tar.gz export/release/linux/bin
+
+      - name: Upload Tar Artifact
+        uses: alehechka/upload-tartifact@v2
+        with: 
+          name: Linux-Build
+          path: 'export/release/linux/bin'
       
       - name: Publish Artifact
-        uses: alehechka/upload-tartifact@v2
+        uses: actions/upload-artifact@main
         with:
           name: Linux-Build
           path: 'export/release/linux/bin'
@@ -46,6 +49,4 @@ jobs:
       uses: alehechka/download-tartifact@v2
       with: 
         name: Linux-Build
-    
-    - name: Artifact Download
-      run: ls -R
+
