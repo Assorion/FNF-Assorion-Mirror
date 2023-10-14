@@ -27,7 +27,13 @@ jobs:
 
       - name: Compilation
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
-
+        
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: Linux-Build
+          path: 'export/release/linux/bin'
+          
       - name: Upload Gzip Artifact
         uses: nmerget/upload-gzip-artifact@v1.0.0
         with:
