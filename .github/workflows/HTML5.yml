@@ -42,7 +42,7 @@ jobs:
         shell: bash
   
       - name: Upload Artifact
-        uses: alehechka/upload-tartifact@main
+        uses: actions/upload-artifact@main
         with:
           name: HTML5-Build
           path: HTML5-Build.tar.gz
