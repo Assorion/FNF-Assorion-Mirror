@@ -37,6 +37,7 @@ jobs:
         run: | 
           cd 'export/release/html5/'
           tar -czf HTML5-Build.tar.gz 'bin'
+          mv HTML5-Build.tar.gz '../../../'
           cd '../../../'
         shell: bash
   
