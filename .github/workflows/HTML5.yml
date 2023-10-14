@@ -26,23 +26,24 @@ jobs:
           haxelib install flixel 5.0.0 
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
-
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
 
       - name: Compilation
         run: haxelib run lime build html5 -release
 
-      - name: Tar.gz Compression 
-        run: | 
-          cd 'export/release/html5/'
-          tar -czf HTML5-Build.tar.gz 'bin'
-          mv HTML5-Build.tar.gz '../../../'
-          cd '../../../'
-        shell: bash
-
-      - name: Upload Artifact
-        uses: nmerget/upload-gzip-artifact@main
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main
         with:
           name: HTML5-Build
-          path: HTML5-Build.tar.gz
+          path: 'export/release/html5/bin'
+
+  Build-Download: 
+    name: Build-Download
+    runs-on: ubuntu-latest
+    needs: HTML5-Build
+    steps:
+    - name: Download Artifact 
+      uses: actions/download-artifact@main
+      with: 
+        name: HTML5-Build
