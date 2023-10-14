@@ -11,9 +11,6 @@ jobs:
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.2
-
-      - name: Cache
-        uses: nmerget/npm-cache-action@main
           
       - name: Install Haxelib
         run: |
@@ -31,11 +28,15 @@ jobs:
       - name: Compilation
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
         
-      - name: Upload Gzip Artifact
-        uses: nmerget/upload-gzip-artifact@main
+      - name: Tar.gz Compression
+        run: tar -czf ${{ inputs.name }}.tar.gz ${{ inputs.path }}
+        shell: bash
+  
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: Linux-Build
-          path: 'export/release/linux/bin'
+          name: ${{ inputs.name }}
+          path: ${{ inputs.name }}.tar.gz
 
   Build-Download: 
     name: Build-Download
