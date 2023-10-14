@@ -33,7 +33,7 @@ jobs:
         shell: bash
   
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: petemcw/deploy-artifact-upload@v1.0.0
         with:
           name: Linux-Build
           path: Linux-Build.tar.gz
