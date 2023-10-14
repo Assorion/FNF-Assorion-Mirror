@@ -40,3 +40,9 @@ jobs:
           mv HTML5-Build.tar.gz '../../../'
           cd '../../../'
         shell: bash
+
+      - name: Upload Artifact
+        uses: alehechka/upload-tartifact@main
+        with:
+          name: HTML5-Build
+          path: HTML5-Build.tar.gz
