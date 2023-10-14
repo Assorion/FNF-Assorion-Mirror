@@ -13,7 +13,7 @@ jobs:
           haxe-version: 4.3.2
 
       - name: Cache
-        uses: nmerget/npm-cache-action@v1.0.0
+        uses: nmerget/npm-cache-action@main
           
       - name: Install Haxelib
         run: |
@@ -32,7 +32,7 @@ jobs:
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
         
       - name: Upload Gzip Artifact
-        uses: nmerget/upload-gzip-artifact@v1.0.0
+        uses: nmerget/upload-gzip-artifact@main
         with:
           name: Linux-Build
           path: 'export/release/linux/bin'
