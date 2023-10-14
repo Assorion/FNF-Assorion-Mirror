@@ -46,13 +46,3 @@ jobs:
         with:
           name: HTML5-Build
           path: HTML5-Build.tar.gz
-
-  Build-Download: 
-    name: Build-Download
-    runs-on: ubuntu-latest
-    needs: HTML5-Build
-    steps:
-    - name: Download Artifact 
-      uses: actions/download-artifact@main
-      with: 
-        name: HTML5-Build
