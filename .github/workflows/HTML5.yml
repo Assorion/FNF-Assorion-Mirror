@@ -34,7 +34,10 @@ jobs:
         run: haxelib run lime build html5 -release
 
       - name: Tar.gz Compression 
-        run: tar -czf HTML5-Build.tar.gz 'export/release/html5/bin'
+        run: | 
+          cd 'export/release/html5/'
+          tar -czf HTML5-Build.tar.gz 'bin'
+          cd '../../../'
         shell: bash
   
       - name: Upload Artifact
