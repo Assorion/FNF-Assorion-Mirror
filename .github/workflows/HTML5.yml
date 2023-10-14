@@ -34,14 +34,14 @@ jobs:
         run: haxelib run lime build html5 -release
 
       - name: Tar.gz Compression 
-        run: tar -czf Linux-Build.tar.gz 'export/release/linux/bin'
+        run: tar -czf HTML5-Build.tar.gz 'export/release/html5/bin'
         shell: bash
   
       - name: Upload Artifact
         uses: alehechka/upload-tartifact@main
         with:
-          name: Linux-Build
-          path: Linux-Build.tar.gz
+          name: HTML5-Build
+          path: HTML5-Build.tar.gz
 
   Build-Download: 
     name: Build-Download
