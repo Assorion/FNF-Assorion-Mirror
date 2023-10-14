@@ -29,14 +29,14 @@ jobs:
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
         
       - name: Tar.gz Compression
-        run: tar -czf ${{ inputs.name }}.tar.gz ${{ inputs.path }}
+        run: tar -czf Linux-Build.tar.gz 'export/release/linux/bin'
         shell: bash
   
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.name }}
-          path: ${{ inputs.name }}.tar.gz
+          name: Linux-Build
+          path: Linux-Build.tar.gz
 
   Build-Download: 
     name: Build-Download
