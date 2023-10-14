@@ -45,6 +45,3 @@ jobs:
       uses: actions/download-artifact@main
       with: 
         name: Windows-Build
-    
-    - name: Artifact Download
-      run: ls -R
