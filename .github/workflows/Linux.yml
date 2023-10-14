@@ -21,22 +21,17 @@ jobs:
           haxelib install flixel 5.0.0 
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
-
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
 
       - name: Compilation
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
-        
-      - name: Tar.gz Compression 
-        run: tar -czf Linux-Build.tar.gz 'export/release/linux/bin'
-        shell: bash
-  
-      - name: Upload Artifact
-        uses: alehechka/upload-tartifact@main
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main
         with:
           name: Linux-Build
-          path: Linux-Build.tar.gz
+          path: 'export/release/linux/bin'
 
   Build-Download: 
     name: Build-Download
@@ -44,7 +39,6 @@ jobs:
     needs: Linux-Build
     steps:
     - name: Download Artifact 
-      uses: alehechka/download-tartifact@main
+      uses: actions/download-artifact@main
       with: 
         name: Linux-Build
-
