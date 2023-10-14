@@ -33,7 +33,7 @@ jobs:
         shell: bash
   
       - name: Upload Artifact
-        uses: alehechka/upload-tartifact@v2
+        uses: alehechka/upload-tartifact@main
         with:
           name: Linux-Build
           path: Linux-Build.tar.gz
@@ -44,7 +44,7 @@ jobs:
     needs: Linux-Build
     steps:
     - name: Download Artifact 
-      uses: nmerget/download-gzip-artifact@v1.0.0
+      uses: alehechka/download-tartifact@main
       with: 
         name: Linux-Build
 
