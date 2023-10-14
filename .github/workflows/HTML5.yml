@@ -49,7 +49,7 @@ jobs:
     needs: HTML5-Build
     steps:
     - name: Download Artifact 
-      uses: aalehechka/download-tartifact@main
+      uses: alehechka/download-tartifact@main
       with: 
         name: HTML5-Build
     
