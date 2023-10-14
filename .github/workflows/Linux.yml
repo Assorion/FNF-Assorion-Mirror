@@ -28,12 +28,12 @@ jobs:
       - name: Compilation
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
         
-      - name: Tar.gz Compression
+      - name: Tar.gz Compression 
         run: tar -czf Linux-Build.tar.gz 'export/release/linux/bin'
         shell: bash
   
       - name: Upload Artifact
-        uses: petemcw/deploy-artifact-upload@v1.0.0
+        uses: alehechka/upload-tartifact@v2
         with:
           name: Linux-Build
           path: Linux-Build.tar.gz
