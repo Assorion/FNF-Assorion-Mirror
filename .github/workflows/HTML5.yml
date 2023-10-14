@@ -33,11 +33,15 @@ jobs:
       - name: Compilation
         run: haxelib run lime build html5 -release
 
-      - name: Publish Artifact
-        uses: actions/upload-artifact@main
+      - name: Tar.gz Compression 
+        run: tar -czf Linux-Build.tar.gz 'export/release/linux/bin'
+        shell: bash
+  
+      - name: Upload Artifact
+        uses: alehechka/upload-tartifact@main
         with:
-          name: HTML5-Build
-          path: 'export/release/html5/bin'
+          name: Linux-Build
+          path: Linux-Build.tar.gz
 
   Build-Download: 
     name: Build-Download
@@ -45,7 +49,7 @@ jobs:
     needs: HTML5-Build
     steps:
     - name: Download Artifact 
-      uses: actions/download-artifact@main
+      uses: aalehechka/download-tartifact@main
       with: 
         name: HTML5-Build
     
