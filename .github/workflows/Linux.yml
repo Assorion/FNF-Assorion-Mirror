@@ -28,8 +28,8 @@ jobs:
       - name: Compilation
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
 
-      - name: Tar Artifact Upload
-        uses: petemcw/deploy-artifact-upload@v1.0.0
+      - name: Upload Gzip Artifact
+        uses: nmerget/upload-gzip-artifact@v1.0.0
         with:
           name: Linux-Build
           path: 'export/release/linux/bin'
@@ -40,7 +40,7 @@ jobs:
     needs: Linux-Build
     steps:
     - name: Download Artifact 
-      uses: alehechka/download-tartifact@v2
+      uses: nmerget/download-gzip-artifact@v1.0.0
       with: 
         name: Linux-Build
 
