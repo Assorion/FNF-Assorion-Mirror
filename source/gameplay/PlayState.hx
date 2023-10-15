@@ -247,8 +247,8 @@ class PlayState extends MusicBeatState
 						780,
 						450
 					];
-
 				defaultCamZoom = 0.9;
+
 				var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.lImage('stages/stageback'));
 					bg.antialiasing = Settings.pr.antialiasing;
 					bg.setGraphicSize(Std.int(bg.width * 2));
@@ -256,7 +256,6 @@ class PlayState extends MusicBeatState
 					bg.scrollFactor.set(0.9, 0.9);
 					bg.active = false;
 				add(bg);
-
 				var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.lImage('stages/stagefront'));
 					stageFront.setGraphicSize(Std.int(stageFront.width * 2.2));
 					stageFront.updateHitbox();
@@ -264,15 +263,20 @@ class PlayState extends MusicBeatState
 					stageFront.scrollFactor.set(0.9, 0.9);
 					stageFront.active = false;
 				add(stageFront);
-
-				var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.lImage('stages/stagecurtains'));
-					stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 1.8));
-					stageCurtains.updateHitbox();
-					stageCurtains.antialiasing = Settings.pr.antialiasing;
-					stageCurtains.scrollFactor.set(1.3, 1.3);
-					stageCurtains.active = false;
-
-				add(stageCurtains);
+				var curtainLeft:FlxSprite = new FlxSprite(-500, -165).loadGraphic(Paths.lImage('stages/curtainLeft'));
+					curtainLeft.setGraphicSize(Std.int(curtainLeft.width * 1.8));
+					curtainLeft.updateHitbox();
+					curtainLeft.antialiasing = Settings.pr.antialiasing;
+					curtainLeft.scrollFactor.set(1.3, 1.3);
+					curtainLeft.active = false;
+				add(curtainLeft);
+				var curtainRight:FlxSprite = new FlxSprite(1406, -165).loadGraphic(Paths.lImage('stages/curtainRight'));
+					curtainRight.setGraphicSize(Std.int(curtainRight.width * 1.8));
+					curtainRight.updateHitbox();
+					curtainRight.antialiasing = Settings.pr.antialiasing;
+					curtainRight.scrollFactor.set(1.3, 1.3);
+					curtainRight.active = false;
+				add(curtainRight);
 		}
 	}
 
