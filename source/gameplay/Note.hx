@@ -1,6 +1,5 @@
 package gameplay;
 
-import flixel.FlxSprite;
 import flixel.util.FlxColor;
 
 typedef NoteType = {
@@ -12,7 +11,7 @@ typedef NoteType = {
 }
 
 #if !debug @:noDebug #end
-class Note extends FlxSprite
+class Note extends StaticSprite
 {
 	public static var colArr:Array<String> = ['purple', 'blue', 'green', 'red'];
 	public static var possibleTypes:Array<NoteType> = [
@@ -24,6 +23,9 @@ class Note extends FlxSprite
 			onMiss: null
 		}
 	];
+
+	// this is inlined, you can't change this variable later.
+	public static inline var swagWidth:Float = 160 * 0.7;
 
 	public var curType:NoteType;
 	public var curColor:String = 'purple';
@@ -37,14 +39,9 @@ class Note extends FlxSprite
 
 	public var chartRef:Array<Dynamic> = [];
 
-	// this is inlined, you can't change this variable later.
-	public static inline var swagWidth:Float = 160 * 0.7;
-
 	public function new(strumTime:Float, data:Int, type:Int, ?sustainNote:Bool = false, ?isEnd:Bool = false)
 	{
-		super();
-
-		//y = -100;
+		super(0,-100);
 
 		isSustainNote  = sustainNote;
 		this.strumTime = strumTime;
@@ -67,6 +64,8 @@ class Note extends FlxSprite
 		animation.play('scroll');
 		centerOffsets();
 		updateHitbox ();
+
+		active = false;
 
 		if (!isSustainNote) return;
 

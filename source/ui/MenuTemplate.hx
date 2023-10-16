@@ -28,14 +28,14 @@ class MenuTemplate extends MusicBeatState {
     var arrIcons:FlxTypedGroup<HealthIcon>;
     var arrGroup:Array<MenuObject> = [];
 
-    public var background:FlxSprite;
+    public var background:StaticSprite;
     public var splitNumb:Int = 1;
     public var adds:Array<Int> = [400];
 
     var camFollow:FlxObject;
 
     override function create(){
-        background = new FlxSprite(0,0).loadGraphic(Paths.lImage('ui/menuDesat'));
+        background = new StaticSprite(0,0).loadGraphic(Paths.lImage('ui/menuDesat'));
 		background.antialiasing = Settings.pr.antialiasing;
         background.scale.set(1.1, 1.1);
         background.screenCenter();

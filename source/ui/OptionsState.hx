@@ -1,7 +1,6 @@
 package ui;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxTween;
@@ -61,14 +60,14 @@ class OptionsState extends MenuTemplate
 
 	public var curSub:Int = 0;
 	public var descText:FlxText;
-	var bottomBlack:FlxSprite;
+	var bottomBlack:StaticSprite;
 
 	override function create()
 	{
 		super.create();
 		background.color = 0xFFea71fd;
 
-		bottomBlack = new FlxSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
+		bottomBlack = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
 		bottomBlack.alpha = 0.6;
 
 		descText = new FlxText(5, FlxG.height - 25, 0, "", 20);

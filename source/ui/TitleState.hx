@@ -98,7 +98,7 @@ class TitleState extends MusicBeatState
 
 		//////////////////////////
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		var bg:StaticSprite = new StaticSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
 		// # create logo

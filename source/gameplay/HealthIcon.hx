@@ -1,17 +1,17 @@
 package gameplay;
 
-import flixel.FlxSprite;
 import lime.utils.Assets;
 import misc.Alphabet;
 
 #if !debug @:noDebug #end
-class HealthIcon extends FlxSprite
+class HealthIcon extends StaticSprite
 {
 	public var curChar:String = '';
 
 	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
 		super();
+
 		changeIcon(char, isPlayer);
 	}
 	

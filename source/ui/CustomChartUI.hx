@@ -1,7 +1,7 @@
 package ui;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxG;
 import openfl.display.BitmapData;
 import flixel.util.FlxColor;
 import ui.ChartingState;

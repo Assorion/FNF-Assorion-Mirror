@@ -1,7 +1,6 @@
 package ui;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxTween;

@@ -52,7 +52,7 @@ class PlayState extends MusicBeatState
 	public var missCount:Int = 0;
 	public var fcValue  :Int = 0;
 
-	public var healthBarBG:FlxSprite;
+	public var healthBarBG:StaticSprite;
 	public var healthBar:HealthBar;
 	public var paused:Bool = false;
 	public var iconP1:HealthIcon;
@@ -149,7 +149,7 @@ class PlayState extends MusicBeatState
 
 		// popup score stuff
 		// I agree this is a mess.
-		ratingSpr = new FlxSprite(0,0).loadGraphic(Paths.lImage('gameplay/sick'));
+		ratingSpr = new StaticSprite(0,0).loadGraphic(Paths.lImage('gameplay/sick'));
 		ratingSpr.graphic.persist = true;
 		ratingSpr.updateHitbox();
 		ratingSpr.centerOrigin();
@@ -160,8 +160,7 @@ class PlayState extends MusicBeatState
 		add(ratingSpr);
 
 		for(i in 0...3){
-			comboSprs[i] = new FlxSprite(0,0);
-			var sRef = comboSprs[i];
+			var sRef = comboSprs[i] = new StaticSprite(0,0);
 			sRef.frames = Paths.lSparrow('gameplay/comboNumbers');
 			for(i in 0...10) 
 				sRef.animation.addByPrefix('$i', '${i}num', 1, false);
@@ -179,7 +178,7 @@ class PlayState extends MusicBeatState
 		///////////////////////////////////////////////
 		var baseY:Int = Settings.pr.downscroll ? 80 : 650;
 
-		healthBarBG = new FlxSprite(0, baseY).loadGraphic(Paths.lImage('gameplay/healthBar'));
+		healthBarBG = new StaticSprite(0, baseY).loadGraphic(Paths.lImage('gameplay/healthBar'));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		healthBarBG.antialiasing = Settings.pr.antialiasing;
@@ -249,33 +248,29 @@ class PlayState extends MusicBeatState
 					];
 				defaultCamZoom = 0.9;
 
-				var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.lImage('stages/stageback'));
+				var bg:StaticSprite = new StaticSprite(-600, -200).loadGraphic(Paths.lImage('stages/stageback'));
 					bg.antialiasing = Settings.pr.antialiasing;
 					bg.setGraphicSize(Std.int(bg.width * 2));
 					bg.updateHitbox();
 					bg.scrollFactor.set(0.9, 0.9);
-					bg.active = false;
 				add(bg);
-				var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.lImage('stages/stagefront'));
+				var stageFront:StaticSprite = new StaticSprite(-650, 600).loadGraphic(Paths.lImage('stages/stagefront'));
 					stageFront.setGraphicSize(Std.int(stageFront.width * 2.2));
 					stageFront.updateHitbox();
 					stageFront.antialiasing = Settings.pr.antialiasing;
 					stageFront.scrollFactor.set(0.9, 0.9);
-					stageFront.active = false;
 				add(stageFront);
-				var curtainLeft:FlxSprite = new FlxSprite(-500, -165).loadGraphic(Paths.lImage('stages/curtainLeft'));
+				var curtainLeft:StaticSprite = new StaticSprite(-500, -165).loadGraphic(Paths.lImage('stages/curtainLeft'));
 					curtainLeft.setGraphicSize(Std.int(curtainLeft.width * 1.8));
 					curtainLeft.updateHitbox();
 					curtainLeft.antialiasing = Settings.pr.antialiasing;
 					curtainLeft.scrollFactor.set(1.3, 1.3);
-					curtainLeft.active = false;
 				add(curtainLeft);
-				var curtainRight:FlxSprite = new FlxSprite(1406, -165).loadGraphic(Paths.lImage('stages/curtainRight'));
+				var curtainRight:StaticSprite = new StaticSprite(1406, -165).loadGraphic(Paths.lImage('stages/curtainRight'));
 					curtainRight.setGraphicSize(Std.int(curtainRight.width * 1.8));
 					curtainRight.updateHitbox();
 					curtainRight.antialiasing = Settings.pr.antialiasing;
 					curtainRight.scrollFactor.set(1.3, 1.3);
-					curtainRight.active = false;
 				add(curtainRight);
 		}
 	}
@@ -325,7 +320,7 @@ class PlayState extends MusicBeatState
 		for(i in 0...strumLineNotes.length)
 			FlxTween.tween(strumLineNotes.members[i], {alpha: 1}, 0.5, {startDelay: (i + 1) * 0.2});
 
-		var introSprites:Array<FlxSprite> = [];
+		var introSprites:Array<StaticSprite> = [];
 		var introSounds:Array<FlxSound>   = [];
 		var introAssets :Array<String>    = [
 			'ready', 'set', 'go', '',
@@ -338,11 +333,12 @@ class PlayState extends MusicBeatState
 
 			if(i > 3) continue;
 
-			var spr:FlxSprite = new FlxSprite().loadGraphic(Paths.lImage('gameplay/${ introAssets[i] }'));
+			var spr:StaticSprite = new StaticSprite().loadGraphic(Paths.lImage('gameplay/${ introAssets[i] }'));
 				spr.scrollFactor.set();
 				spr.screenCenter();
 				spr.antialiasing = Settings.pr.antialiasing;
 				spr.alpha = 0;
+				spr.active = false;
 			add(spr);
 
 			introSprites[i+1] = spr;
@@ -590,8 +586,8 @@ class PlayState extends MusicBeatState
 		daNote.y += strumLine.y;
 
 		// 1.5 because we need room for the player to miss.
-		daNote.visible = daNote.active = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
-		if(!daNote.active) return;
+		daNote.visible = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
+		if(!daNote.visible) return;
 		
 		var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
 		if((daNote.player != playerPos || Settings.pr.botplay) && daNote.curType.mustHit && songTime >= daNote.strumTime){
@@ -663,9 +659,9 @@ class PlayState extends MusicBeatState
 		}
 	];
 
-	private var ratingSpr:FlxSprite;
+	private var ratingSpr:StaticSprite;
 	private var prevString:String = 'sick';
-	private var comboSprs:Array<FlxSprite> = [];
+	private var comboSprs:Array<StaticSprite> = [];
 	private var scoreTweens:Array<FlxTween> = [];
 	private inline function popUpScore(strumtime:Float):Void
 	{
@@ -754,7 +750,7 @@ class PlayState extends MusicBeatState
 
 		openSubState(state);
 	}
-	private inline function introSpriteTween(spr:FlxSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
+	private inline function introSpriteTween(spr:StaticSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
 	{
 		spr.alpha = 1;
 		return FlxTween.tween(spr, {y: spr.y + 10, alpha: 0}, (steps * Conductor.stepCrochet) / 1000, { ease: FlxEase.cubeInOut, startDelay: delay * 0.001,

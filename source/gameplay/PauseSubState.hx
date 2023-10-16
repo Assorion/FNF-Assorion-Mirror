@@ -3,7 +3,6 @@ package gameplay;
 import flixel.addons.transition.FlxTransitionableState;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
@@ -27,7 +26,7 @@ class PauseSubState extends MusicBeatSubstate
 	public var curSelected:Int = 0;
 	public var pauseText:FlxText;
 	var colour:Float = 255;
-	var gameSpr:FlxSprite;
+	var gameSpr:StaticSprite;
 	var pauseMusic:FlxSound;
 	var ps:PlayState;
 
@@ -68,7 +67,7 @@ class PauseSubState extends MusicBeatSubstate
 		for(gcam in FlxG.cameras.list)
 			CoolUtil.copyCameraToData(bdat, gcam);
 
-		gameSpr = new FlxSprite(0,0).loadGraphic(bdat);
+		gameSpr = new StaticSprite(0,0).loadGraphic(bdat);
 		gameSpr.scrollFactor.set();
 		gameSpr.antialiasing = Settings.pr.antialiasing;
 
@@ -93,7 +92,7 @@ class PauseSubState extends MusicBeatSubstate
 				targetA: 1
 			});
 		}
-		var bottomBlack:FlxSprite = new FlxSprite(0, camera.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
+		var bottomBlack:StaticSprite = new StaticSprite(0, camera.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
 		bottomBlack.alpha = 0.6;
 		pauseText = new FlxText(5, camera.height - 25, 0, '', 20);
 		pauseText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);

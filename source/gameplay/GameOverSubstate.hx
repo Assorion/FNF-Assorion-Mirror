@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSubState;
 import flixel.util.FlxColor;
-import flixel.FlxSprite;
 import flixel.FlxCamera;
 import openfl.display.BitmapData;
 
@@ -13,7 +12,7 @@ class GameOverSubstate extends MusicBeatSubstate
 {
 	var camFollow:FlxObject;
 	var charRef:Character;
-	var blackFadeIn:FlxSprite;
+	var blackFadeIn:StaticSprite;
 	var fadeCam:FlxCamera;
 
 	public function new(deadChar:Character, fadeOutCam:FlxCamera, pState:PlayState)
@@ -21,7 +20,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		super(true);
 
 		var z:Float = 1 / FlxG.camera.zoom;
-		blackFadeIn = new FlxSprite(0,0).makeGraphic(Math.round(FlxG.width * z), Math.round(FlxG.height * z), FlxColor.BLACK);
+		blackFadeIn = new StaticSprite(0,0).makeGraphic(Math.round(FlxG.width * z), Math.round(FlxG.height * z), FlxColor.BLACK);
 		blackFadeIn.scrollFactor.set();
 		blackFadeIn.screenCenter();
 		blackFadeIn.alpha = 0;

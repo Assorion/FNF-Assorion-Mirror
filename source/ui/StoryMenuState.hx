@@ -42,9 +42,9 @@ class StoryMenuState extends MenuTemplate
 	public var weekBG:FlxSprite;
 	public var topText:FlxText;
 
-	var arrowSpr1:FlxSprite;
-	var arrowSpr2:FlxSprite;
-	var diffImage:FlxSprite;
+	var arrowSpr1:StaticSprite;
+	var arrowSpr2:StaticSprite;
+	var diffImage:StaticSprite;
 
 	public static inline var selectColour:Int = 0xFF00FFFF;
 	public static inline var whiteColour:Int  = 0xFFFFFFFF;
@@ -67,7 +67,7 @@ class StoryMenuState extends MenuTemplate
 			pushObject(weekGraphic);
 		}
 
-		var topBlack:FlxSprite = new FlxSprite(0,0).makeGraphic(640, 20, ChartingState.colorFromRGBArray([25,25,25]));
+		var topBlack:StaticSprite = new StaticSprite(0,0).makeGraphic(640, 20, ChartingState.colorFromRGBArray([25,25,25]));
 		topText = new FlxText(0, 2, 0, "1234567890ABCDEFG", 18);
 		topText.setFormat('assets/fonts/vcr.ttf', 18, FlxColor.GRAY, CENTER);
 		topText.screenCenter(X);
@@ -76,19 +76,19 @@ class StoryMenuState extends MenuTemplate
 		sAdd(topText);
 
 		// bruh
-		arrowSpr1 = new FlxSprite(640 - 50, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
+		arrowSpr1 = new StaticSprite(640 - 50, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
 		arrowSpr1.antialiasing = Settings.pr.antialiasing;
 		arrowSpr1.updateHitbox();
 		arrowSpr1.centerOrigin();
 		arrowSpr1.scale.set(0.7,0.7);
-		arrowSpr2 = new FlxSprite(640 - 330, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
+		arrowSpr2 = new StaticSprite(640 - 330, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
 		arrowSpr2.antialiasing = Settings.pr.antialiasing;
 		arrowSpr2.flipX = true;
 		arrowSpr2.updateHitbox();
 		arrowSpr2.centerOrigin();
 		arrowSpr2.scale.set(0.7, 0.7);
 
-		diffImage = new FlxSprite(640, 45);
+		diffImage = new StaticSprite(640, 45);
 		diffImage.antialiasing = Settings.pr.antialiasing;
 		diffImage.scale.set(0.7, 0.7);
 

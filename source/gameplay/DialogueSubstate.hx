@@ -32,8 +32,8 @@ class DialogueSubstate extends MusicBeatSubstate {
 
     var char1  :FlxSprite;
     var char2  :FlxSprite;
-    var graySpr:FlxSprite;
-    var boxSpr :FlxSprite;
+    var graySpr:StaticSprite;
+    var boxSpr :StaticSprite;
     var clsFnc :Void->Void;
     var pState :PlayState;
     var voicesText:FlxText;
@@ -47,14 +47,14 @@ class DialogueSubstate extends MusicBeatSubstate {
 
         playState.persistentDraw = false;
 
-        var gspr:FlxSprite = new FlxSprite(0,0).loadGraphic(PauseSubState.bdat);
+        var gspr:StaticSprite = new StaticSprite(0,0).loadGraphic(PauseSubState.bdat);
         gspr.antialiasing = Settings.pr.antialiasing;
         gspr.screenCenter();
         gspr.scrollFactor.set();
         gspr.scale.set(1 / FlxG.camera.zoom, 1 / FlxG.camera.zoom);
         add(gspr);
 
-        graySpr = new FlxSprite(0,0).makeGraphic(FlxG.width,FlxG.height, FlxColor.GRAY);
+        graySpr = new StaticSprite(0,0).makeGraphic(FlxG.width,FlxG.height, FlxColor.GRAY);
 		graySpr.screenCenter();
 		graySpr.alpha = 0;
 
@@ -66,7 +66,7 @@ class DialogueSubstate extends MusicBeatSubstate {
         char2.centerOrigin ();
         char1.antialiasing = char2.antialiasing = Settings.pr.antialiasing;
 
-        boxSpr = new FlxSprite(0,0).loadGraphic(Paths.lImage('gameplay/dialoguebox'));
+        boxSpr = new StaticSprite(0,0).loadGraphic(Paths.lImage('gameplay/dialoguebox'));
         boxSpr.setGraphicSize(Std.int(boxSpr.width * 4), Std.int(boxSpr.height * 1.75));
         boxSpr.updateHitbox();
         boxSpr.screenCenter();

@@ -2,7 +2,6 @@ package ui;
 
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.FlxSprite;
 import openfl.display.BitmapData;
 import flixel.util.FlxColor;
 import openfl.events.KeyboardEvent;
@@ -46,19 +45,19 @@ class ChartingState extends MusicBeatState {
 
     public var selectedNotes:Array<Array<Dynamic>> = [];
 
-    var gridSpr:FlxSprite;
-    var gridSel:FlxSprite;
-    var selectSpr:FlxSprite;
+    var gridSpr:StaticSprite;
+    var gridSel:StaticSprite;
+    var selectSpr:StaticSprite;
     var curSec:Int = 0;
     private var vocals:FlxSound;
-    public var musicLine:FlxSprite;
+    public var musicLine:StaticSprite;
 
     public static var zooms:Array<Float> = [0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8];
     public static var zoomDivs:Array<Int>= [2,   3,    4,   3, 4, 3, 4, 3, 4];
     public var curZoom:Int = 2;
 
     public var notes:FlxTypedGroup<Note>;
-    public var uiElements:FlxTypedGroup<FlxSprite>;
+    public var uiElements:FlxTypedGroup<flixel.FlxSprite>;
 
     public var camUI:FlxCamera;
     public var camGR:FlxCamera;
@@ -70,8 +69,8 @@ class ChartingState extends MusicBeatState {
     public static var activeUIElement:Dynamic;
     public static var curNoteType:Int = 0;
 
-    var uiBG:FlxSprite;
-    var uiFront:FlxSprite;
+    var uiBG:StaticSprite;
+    var uiFront:StaticSprite;
 
     override public function create(){
         if(FlxG.sound.music.playing){
@@ -97,7 +96,7 @@ class ChartingState extends MusicBeatState {
 
         // # create bg
 
-        var bgspr:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('ui/menuDesat'));
+        var bgspr:StaticSprite = new StaticSprite(0,0).loadGraphic(Paths.lImage('ui/menuDesat'));
         bgspr.screenCenter();
         bgspr.color = FlxColor.fromRGB(0, 40, 8);
         add(bgspr);
@@ -108,7 +107,7 @@ class ChartingState extends MusicBeatState {
             fColArr.push([colorFromRGBArray(i[0]), colorFromRGBArray(i[1])]);
 
         gridSpr = createGrid(gridSize, gridSize, 8, 16, fColArr);
-        gridSel = new FlxSprite(0,0).makeGraphic(gridSize, gridSize, FlxColor.WHITE);
+        gridSel = new StaticSprite(0,0).makeGraphic(gridSize, gridSize, FlxColor.WHITE);
         add(gridSpr);
         add(gridSel);
 
@@ -126,7 +125,7 @@ class ChartingState extends MusicBeatState {
         iconP2.updateHitbox();
 
         notes = new FlxTypedGroup<Note>();
-        musicLine = new FlxSprite(gridSpr.x, gridSpr.y).makeGraphic(Std.int(gridSpr.width), 4, FlxColor.WHITE);
+        musicLine = new StaticSprite(gridSpr.x, gridSpr.y).makeGraphic(Std.int(gridSpr.width), 4, FlxColor.WHITE);
         add(iconP1);
         add(iconP2);
         add(notes);
@@ -150,11 +149,11 @@ class ChartingState extends MusicBeatState {
 
         // # create ui
 
-        uiElements = new FlxTypedGroup<FlxSprite>();
-        uiBG    = new FlxSprite(0,0).makeGraphic(420, 550, colorFromRGBArray(uiColours[0]));
+        uiElements = new FlxTypedGroup<flixel.FlxSprite>();
+        uiBG    = new StaticSprite(0,0).makeGraphic(420, 550, colorFromRGBArray(uiColours[0]));
         uiBG.screenCenter();
         uiBG.x += 100;
-        uiFront = new FlxSprite(0,0).makeGraphic(412, 542, colorFromRGBArray(uiColours[1]));
+        uiFront = new StaticSprite(0,0).makeGraphic(412, 542, colorFromRGBArray(uiColours[1]));
         uiFront.screenCenter();
         uiFront.x += 100;
         add(uiBG);
@@ -171,7 +170,7 @@ class ChartingState extends MusicBeatState {
         createSongUI();
         loadNotes();
 
-        selectSpr = new FlxSprite(-1,-1).makeGraphic(1,1, FlxColor.fromRGB(140,225,255));
+        selectSpr = new StaticSprite(-1,-1).makeGraphic(1,1, FlxColor.fromRGB(140,225,255));
 		selectSpr.origin.set(0,0);
 		selectSpr.alpha = 0.55;
         selectSpr.cameras = [camGR];
@@ -237,6 +236,10 @@ class ChartingState extends MusicBeatState {
             curSec += (T * 2) - 1;
             if(curSec < 0) curSec = 0;
             FlxG.sound.music.time = curSec * Conductor.crochet * 4;
+
+            // this is to make sure there are no trashy rounding errors.
+            while(Math.floor(FlxG.sound.music.time / (Conductor.crochet * 4)) < curSec)
+                FlxG.sound.music.time += 0.01;
 
             expandCheck();
             if(inSecUi) createSecUI();
@@ -709,7 +712,7 @@ class ChartingState extends MusicBeatState {
     }
 
     // basically stolen from FlxGridOverlay
-    public static function createGrid(cWidth:Int, cHeight:Int, columns:Int, rows:Int, Colours:Array<Array<FlxColor>>, division:Int = 4):FlxSprite
+    public static function createGrid(cWidth:Int, cHeight:Int, columns:Int, rows:Int, Colours:Array<Array<FlxColor>>, division:Int = 4):StaticSprite
     {
         var emptySprite:BitmapData = new BitmapData(cWidth * columns, cHeight * rows, true);
         var colOffset:Int = 0;
@@ -722,7 +725,7 @@ class ChartingState extends MusicBeatState {
 
         emptySprite.fillRect(new Rectangle(((cWidth * columns) / 2) - 2, 0, 4, cHeight * rows), FlxColor.BLACK);
 
-        var retSprite = new FlxSprite().loadGraphic(emptySprite);
+        var retSprite = new StaticSprite().loadGraphic(emptySprite);
         return retSprite;
     }
 }

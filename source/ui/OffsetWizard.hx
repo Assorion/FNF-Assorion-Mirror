@@ -1,6 +1,5 @@
 package ui;
 
-import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.text.FlxText;
@@ -24,7 +23,7 @@ class OffsetWizard extends MusicBeatState{
         FlxG.sound.playMusic('assets/sounds/offset.${Paths.sndExt}');
         Conductor.changeBPM(100);
 
-        var bg:FlxSprite = new FlxSprite(0,0).loadGraphic('assets/images/ui/menuDesat.png');
+        var bg:StaticSprite = new StaticSprite(0,0).loadGraphic('assets/images/ui/menuDesat.png');
 		bg.scrollFactor.set(0,0);
 		bg.updateHitbox();
 		bg.screenCenter();

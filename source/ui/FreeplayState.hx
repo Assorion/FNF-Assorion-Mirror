@@ -1,7 +1,6 @@
 package ui;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -46,7 +45,7 @@ class FreeplayState extends MenuTemplate
 			pushIcon(new gameplay.HealthIcon(lines[i].split(':')[1], false));
 		}
 
-		var scoreBG:FlxSprite = new FlxSprite((FlxG.width * 0.7) - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
+		var scoreBG:StaticSprite = new StaticSprite((FlxG.width * 0.7) - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
 
 		scoreText = new FlxText(scoreBG.x + 6, 5, 0, "", 32);
@@ -55,7 +54,7 @@ class FreeplayState extends MenuTemplate
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "< NORMAL >", 24);
 		diffText.font = scoreText.font;
 
-		var bottomBlack:FlxSprite = new FlxSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
+		var bottomBlack:StaticSprite = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
 		var descText = new FlxText(5, FlxG.height - 25, 0, "Press Space to preview song / stop song. Left or Right to change the difficulty.", 20);
 		descText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
 		bottomBlack.alpha = 0.6;
