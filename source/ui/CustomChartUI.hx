@@ -19,6 +19,7 @@ using StringTools;
 // # chart ui elements
 class ChartUI_Button extends FlxSprite {
     public var clickFunc:Void->Void;
+    private var highlighted:Bool = false;
 
     public function new(x:Float, y:Float, useBright:Bool = false, onClick:Void->Void, text:String = '', twidth:Int = 90){
         super(x,y);
@@ -36,7 +37,18 @@ class ChartUI_Button extends FlxSprite {
     }
 
     override public function update(elapsed:Float){
-        if(FlxG.mouse.justPressed && FlxG.mouse.overlaps(this) && ChartingState.activeUIElement == null)
+        if(!FlxG.mouse.overlaps(this)) {
+            if(highlighted)
+                color = 0xFFFFFFFF;
+
+            highlighted = false;
+            return;
+        }
+
+        highlighted = true;
+        color = ChartingState.colorFromRGBArray([ 230, 230, 230 ]);
+
+        if(FlxG.mouse.justPressed && ChartingState.activeUIElement == null)
             clickFunc();
     }
 }
@@ -46,6 +58,7 @@ class ChartUI_DropDown extends FlxSprite {
     public var buttonWidth:Int = 200;
     private var dropped:Bool = false;
     private var changeFunc:String->Void;
+    private var highlighted:Bool = false;
 
     public function createButton(items:Array<String>)
     {
@@ -77,11 +90,25 @@ class ChartUI_DropDown extends FlxSprite {
     }
 
     override public function update(elapsed:Float){
+        if(FlxG.mouse.overlaps(this)){
+            if(!highlighted){
+                highlighted = true;
+                color = ChartingState.colorFromRGBArray([ 230, 230, 230 ]);
+            }
+        } else if(highlighted) {
+            highlighted = false;
+            color = 0xFFFFFFFF;
+        }
+
         if(!FlxG.mouse.justPressed || (ChartingState.activeUIElement != this && ChartingState.activeUIElement != null) ) return;
 
         
         if(!FlxG.mouse.overlaps(this)){
             if(dropped) createButton([selectedItem]);
+            if(highlighted)
+                color = 0xFFFFFFFF;
+
+            highlighted = false;
             return;
         }
 
@@ -105,6 +132,7 @@ class ChartUI_InputBox extends FlxSprite {
     public var boxWidth:Int = 200;
     public static var allowedCharacters:String = "abcdefghijklmnopqrstuvwxyz1234567890-+=_!@#$%^&*(){}[]\\;'\":,.<>/? ";
     public var typing:Bool = false;
+    //private var highlighted:Bool = false;
 
     public function updateEverything(){
         var emptySprite:BitmapData = new BitmapData(boxWidth, 30, true);
@@ -118,6 +146,8 @@ class ChartUI_InputBox extends FlxSprite {
         text.color = typing ? FlxColor.BLACK : FlxColor.WHITE;
         stamp(text, Std.int((width / 2) - (text.width / 2)), Std.int(15 - (text.height / 2)));
         changeFunc(curText);
+
+        //typing ? color = ChartingState.colorFromRGBArray([ 230, 230, 230 ]) : color = 0xFFFFFFFF;
     }
 
     public function new(x:Float, y:Float, twidth:Int = 200, startText:String = '', onChange:String->Void){
@@ -148,7 +178,7 @@ class ChartUI_InputBox extends FlxSprite {
             updateEverything();
             return;
         }
-
+        
         if(!typing || !FlxG.keys.justPressed.ANY) return;
         if (FlxG.keys.justPressed.SHIFT) return;
 
@@ -167,6 +197,7 @@ class ChartUI_InputBox extends FlxSprite {
 class ChartUI_CheckBox extends FlxSprite{
     public var changeFunc:Bool->Void;
     public var checked:Bool = false;
+    private var highlighted:Bool = false;
 
     public function swap(makeChanges:Bool = true){
         if(makeChanges){
@@ -194,7 +225,18 @@ class ChartUI_CheckBox extends FlxSprite{
     }
 
     override public function update(elapsed:Float){
-        if(FlxG.mouse.justPressed && FlxG.mouse.overlaps(this) && ChartingState.activeUIElement == null)
+        if(!FlxG.mouse.overlaps(this)) {
+            if(highlighted)
+                color = 0xFFFFFFFF;
+
+            highlighted = false;
+            return;
+        }
+
+        highlighted = true;
+        color = ChartingState.colorFromRGBArray([ 230, 230, 230 ]);
+
+        if(FlxG.mouse.justPressed && ChartingState.activeUIElement == null)
             swap();
     }
 }

@@ -544,8 +544,8 @@ class ChartingState extends MusicBeatState {
             PlayState.SONG.notes[curSec].sectionNotes = [];
             selectedNotes = [];
             loadNotes();
-        }, 'Clear');
-        var copyLast:ChartUI_InputBox = new ChartUI_InputBox(uiBG.x + 10, clearButton.y - 80, 90, Std.string(copyLastInt), (str:String)->{
+        }, 'Clear', 110);
+        var copyLast:ChartUI_InputBox = new ChartUI_InputBox(uiBG.x + 10, clearButton.y - 80, 110, Std.string(copyLastInt), (str:String)->{
             copyLastInt = Std.parseInt(str);
         });
         var copyButton:ChartUI_Button = new ChartUI_Button(uiBG.x + 10, clearButton.y - 40, true, ()->{
@@ -554,23 +554,25 @@ class ChartingState extends MusicBeatState {
             for(nt in PlayState.SONG.notes[curSec-copyLastInt].sectionNotes)
                 PlayState.SONG.notes[curSec].sectionNotes.push([nt[0]+(copyLastInt*16), nt[1], nt[2], nt[3]]);
             loadNotes();
-        }, 'Copy');
+        }, 'Copy Last', 110);
         var swapButton:ChartUI_Button = new ChartUI_Button(uiBG.x + 10, copyLast.y - 40, true, ()->{
             for(nt in PlayState.SONG.notes[curSec].sectionNotes)
                 // % 2 or how ever many characters you want
                 nt[3] = (nt[3] + 1) % 2;
             selectedNotes = [];
             loadNotes();
-        }, 'Swap');
+        }, 'Swap', 110);
         var snButton:ChartUI_Button = new ChartUI_Button(uiBG.x + 10, swapButton.y - 40, true, ()->{
             selectedNotes = [];
             for(nt in PlayState.SONG.notes[curSec].sectionNotes)
                 selectedNotes.push(nt);
 
             loadNotes();
-        }, 'Select');
-        var mhText:FlxText = new FlxText(mustHitSection.x+mustHitSection.width + 5, mustHitSection.y + textOffset, 0, 'Move Camera to BF', 16);
-
+        }, 'Select', 110);
+        var mhText:FlxText = new FlxText(mustHitSection.x+mustHitSection.width + 5, mustHitSection.y + 10 + textOffset, 0, 'Move Camera to BF', 16);
+        var clText:FlxText = new FlxText(copyLast.x + copyLast.width + 5, copyLast.y + 10 + textOffset, 0, 'Copy Last sections back', 16);
+        
+        uiElements.add(clText);
         uiElements.add(mhText);
         uiElements.add(mustHitSection);
         uiElements.add(clearButton);
@@ -629,7 +631,7 @@ class ChartingState extends MusicBeatState {
             PlayState.SONG.stage = str;
         });
 
-        var reloadAudio:ChartUI_Button = new ChartUI_Button((uiBG.x+uiBG.width - 120) - 10, (uiBG.y+uiBG.height - 120) - 10, true, ()->{
+        var reloadAudio:ChartUI_Button = new ChartUI_Button((uiBG.x+uiBG.width - 120) - 10, uiBG.y+uiBG.height - 120, true, ()->{
             FlxG.sound.playMusic(Paths.playableSong(PlayState.SONG.song, false));
             FlxG.sound.music.pause();
             FlxG.sound.music.time = 0;
@@ -681,6 +683,13 @@ class ChartingState extends MusicBeatState {
                 }
             });
         }, 'Save Song', 120);
+        var selectAll:ChartUI_Button = new ChartUI_Button(reloadAudio.x, reloadAudio.y - 40, true, ()->{
+            for(sec in PlayState.SONG.notes)
+                for(note in sec.sectionNotes)
+                    selectedNotes.push(note);
+
+            loadNotes();
+        }, 'Select All', 120);
         var voicesText:FlxText = new FlxText(voicesCheck.x + voicesCheck.width+5,voicesCheck.y + 10 + textOffset,0,'Enable Vocals',16);
         var sSpeedText:FlxText = new FlxText(speedBox.x+speedBox.width+5        ,   speedBox.y + 10 + textOffset,0,'Scroll Speed', 16);
         var playerText:FlxText = new FlxText(voicesText.x+5, voicesText.y - 40,0,'Player', 16);
@@ -709,6 +718,7 @@ class ChartingState extends MusicBeatState {
         uiElements.add(clearAllNotes);
         uiElements.add(saveSong);
         uiElements.add(playerBox);
+        uiElements.add(selectAll);
     }
 
     // basically stolen from FlxGridOverlay
