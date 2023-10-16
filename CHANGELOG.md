@@ -64,3 +64,9 @@ Chart editor fix (again).
 4. Little refactoring.
 5. Removed usless code in GameOverState.
 6. Added offset wizard.
+
+## V - 1.2.2
+
+1. Added StaticSprite, a sprite with no update. Mild performance increase I guess.
+2. Fixed chart editor bug where the section would get stuck at the end.
+3. Split stage curtains into 2 sprites, and lowered the res on the back sprite, big peformance increase.
