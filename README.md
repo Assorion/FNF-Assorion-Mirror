@@ -4,14 +4,14 @@
 
 -------------------------------------------------------------
  <div align="center">
- <a href="#"><img src="https://img.shields.io/github/repo-size/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/></a>
- <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/</a> 
- <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/github/v/release/Legendary-Candice-Joe/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/></a>
+ <a href="#"><img src="https://img.shields.io/github/repo-size/Assorion/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/></a>
+ <a href="https://github.com/Assorion/FNF-Assorion-Engine/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/Assorion/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/</a> 
+ <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/github/v/release/Assorion/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/></a>
  </div>
  <div align="center">
- <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
- <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/badge/Linux_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
- <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/actions/workflows/HTML5.yml"><img src="https://img.shields.io/badge/Web_Build-Testing-blue?style=for-the-badge&color=e1b100"/></a>  
+ <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
+ <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/badge/Linux_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
+ <a href="https://github.com/Assorion/FNF-Assorion-Engine/actions/workflows/HTML5.yml"><img src="https://img.shields.io/badge/Web_Build-Testing-blue?style=for-the-badge&color=e1b100"/></a>  
  </div>
 
 -------------------------------------------------------------
@@ -33,7 +33,7 @@ All original base Friday Night Funkin' code has been replaced with more efficien
 
 Assorion Engine doesn't have mods folder capabilities planned and it won't be implemented. 
 In addition to cutscenes, events, discordRPC, etc, most other features will have to be added yourself, 
-although Assorion Engine may have several <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine#branches">branches</a> with more features soon.
+although Assorion Engine may have several <a href="https://github.com/Assorion/FNF-Assorion-Engine#branches">branches</a> with more features soon.
 
 ## ⚡ | Why choose Assorion Engine?
 
@@ -46,9 +46,9 @@ although Assorion Engine may have several <a href="https://github.com/Legendary-
 
 ### **Note for Developers**
 > [!NOTE] 
-> Please use the <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases"><ins>**latest release**</ins></a> source code, not the cloned or downloaded source code at the top. Mainly because of working on a lot of things throughout the source code during the weeks. Which will necessitate numerous commits.
+> Please use the <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><ins>**latest release**</ins></a> source code, not the cloned or downloaded source code at the top. Mainly because of working on a lot of things throughout the source code during the weeks. Which will necessitate numerous commits.
 >
-> Thus inevitably exists the potential that something might be wrong if you use the most recent **source** code, as opposed to the most recent <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/releases"><ins>**release**</ins></a> code.
+> Thus inevitably exists the potential that something might be wrong if you use the most recent **source** code, as opposed to the most recent <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><ins>**release**</ins></a> code.
 
 #
   **Notes**   
@@ -78,7 +78,7 @@ although Assorion Engine may have several <a href="https://github.com/Legendary-
 
 ## 🖼️ | Screenshots
 
-look at <a href="https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/blob/main/art/screenshots.md">`art/screenshots.md`</a>. 
+look at <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/art/screenshots.md">`art/screenshots.md`</a>. 
 
 # 🛠 | Compiling
 
