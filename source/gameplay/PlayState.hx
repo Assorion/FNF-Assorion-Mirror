@@ -38,7 +38,6 @@ class PlayState extends MusicBeatState
 	public var vocals:FlxSound;
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
-	public var highestPossibleScore:Int = 0;
 
 	public var strumLine:FlxObject;
 	public var followPos:FlxObject;
@@ -290,7 +289,6 @@ class PlayState extends MusicBeatState
 			newNote.scrollFactor.set();
 			newNote.player = player;
 			unspawnNotes.push(newNote);
-			highestPossibleScore += player == playerPos ? 350 : 0;
 
 			if(susLength > 1)
 				for(i in 0...susLength+1){
@@ -306,7 +304,7 @@ class PlayState extends MusicBeatState
 	private function generateStaticArrows(player:Int, playable:Bool):Void
 		for (i in 0...4)
 		{
-			var babyArrow:StrumNote = new StrumNote(0, strumLine.y, i, player);
+			var babyArrow:StrumNote = new StrumNote(0, strumLine.y - 10, i, player);
 			babyArrow.alpha = 0;
 
 			strumLineNotes.add(babyArrow);
@@ -318,7 +316,7 @@ class PlayState extends MusicBeatState
 	function startCountdown():Void
 	{
 		for(i in 0...strumLineNotes.length)
-			FlxTween.tween(strumLineNotes.members[i], {alpha: 1}, 0.5, {startDelay: (i + 1) * 0.2});
+			FlxTween.tween(strumLineNotes.members[i], {alpha: 1, y: strumLineNotes.members[i].y + 10}, 0.5, {startDelay: ((i % 4) + 1) * 0.2});
 
 		var introSprites:Array<StaticSprite> = [];
 		var introSounds:Array<FlxSound>   = [];
@@ -377,6 +375,7 @@ class PlayState extends MusicBeatState
 		if(!paused) return;
 
 		paused = false;
+		if(FlxG.sound.music.time == 0) return;
 
 		FlxG.sound.music.play();
 		vocals.play();
@@ -447,7 +446,7 @@ class PlayState extends MusicBeatState
 		var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC', 'SDCB', 'Clear'][fcValue];
 		var accuracyCount:Float = fcValue != 0 ? Math.floor(songScore / ((hitCount + missCount) * 3.5)) : 0;
 
-		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Accuracy: $accuracyCount% - $fcText | Score: $songScore - ${Math.floor(songScore / highestPossibleScore * 100)}%';
+		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Accuracy: $accuracyCount% - $fcText | Score: $songScore';
 		scoreTxt.screenCenter(X);
 
 		health = CoolUtil.boundTo(health + change, 0, 100, true);
@@ -511,18 +510,6 @@ class PlayState extends MusicBeatState
 		updateHealth(Math.round(-Settings.pr.miss_health * 0.5));
 	}
 
-	inline function destroyNote(note:Note, act:Int){
-		note.typeAction(act);
-		notes.remove(note, true);
-		note.destroy();
-
-		if(hittableNotes[note.noteData] == null 
-		|| hittableNotes[note.noteData] != note)
-			return;
-		
-		hittableNotes[note.noteData] = null;
-	}
-
 	// # input code.
 	// please add any keys or stuff you want to add here.
 
@@ -536,8 +523,8 @@ class PlayState extends MusicBeatState
 		var k = key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12] ]);
 		switch(k){
 			case 0, 1:
-				if(FlxG.sound.music.playing)
-					pauseGame(new PauseSubState(camHUD, this));
+				//if(FlxG.sound.music.playing)
+				pauseGame(new PauseSubState(camHUD, this));
 				return;
 			case 2:
 				FlxG.switchState(new ChartingState());
@@ -749,6 +736,17 @@ class PlayState extends MusicBeatState
 		vocals.pause();
 
 		openSubState(state);
+	}
+	inline function destroyNote(note:Note, act:Int){
+		note.typeAction(act);
+		notes.remove(note, true);
+		note.destroy();
+
+		if(hittableNotes[note.noteData] == null 
+		|| hittableNotes[note.noteData] != note)
+			return;
+		
+		hittableNotes[note.noteData] = null;
 	}
 	private inline function introSpriteTween(spr:StaticSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
 	{

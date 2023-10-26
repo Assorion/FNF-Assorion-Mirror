@@ -71,3 +71,7 @@ Chart editor fix (again).
 2. Fixed chart editor bug where the section would get stuck at the end.
 3. Split stage curtains into 2 sprites, and lowered the res on the back sprite, big peformance increase.
 4. ChartingState UI highlighting effect.
+5. Input and framerate fixes for web build.
+6. Windows and Linux release now compiled with GCC, and compiler optimizations. (Read Release please!)
+7. Allow pausing on countdown without breaking.
+8. Fixed arrow fade in (whoopsie it's been wrong all this time).

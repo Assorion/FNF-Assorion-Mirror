@@ -23,7 +23,7 @@ class OptionsState extends MenuTemplate
 		['basic', 'gameplay', 'visuals', 'controls'],
 		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist','launch_sprites','cache_text'],
 		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay', 'miss_health'],
-		['antialiasing', 'framerate', 'show_hud', 'useful_info', 'light_bot_strums']
+		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info', 'light_bot_strums']
 	];
 
 	static var descriptions:Array<Array<String>> = [
@@ -51,7 +51,9 @@ class OptionsState extends MenuTemplate
 		],
 		[
 			'If you don\'t know what this does, Google it.',
+			#if desktop
 			'Changes how fast the game CAN run. I recommend setting it to 300, not the max',
+			#end
 			'Shows your health, stats, and other stuff in gameplay',
 			'Shows FPS and memory counter',
 			'Enemy notes glow like the players'

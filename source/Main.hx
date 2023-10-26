@@ -47,6 +47,11 @@ class Main extends Sprite
 		memC = new ui.MemCounter(10, 18, 0xFFFFFF);
 		addChild(fpsC);
 		addChild(memC);
+
+		#if (!desktop)
+		flixel.FlxG.keys.preventDefaultKeys = [];
+		Settings.pr.framerate = 60;
+		#end
 		
 		Settings.apply();
 	}

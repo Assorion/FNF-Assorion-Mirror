@@ -58,6 +58,7 @@ although Assorion Engine may have several <a href="https://github.com/Assorion/F
 -	Assorion Engine based off <a href="https://github.com/FunkinCrew/Funkin/releases/tag/v0.2.6">`0.2.6`</a> version of the base game
 -	Songs and Data folder have been merged into the songs-data folder
 - Pressing the F12 key in gameplay uses an experimental screenshot feature. When pressed, a folder and file will be created
+- Web build compiles, but is full of bugs still. These will be fixed later.
   
  **RoadMap**
 * [x]	Offset wizard
