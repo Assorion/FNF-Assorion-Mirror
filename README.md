@@ -21,7 +21,7 @@
 </div>
 <div align="center">
  
-┃ [**`• What is Assorion?`**](#--what-is-assorion-engine) ┃ [**`• Important Notes`**](#%EF%B8%8F--important-notesroadmap) ┃ [**`• Compiling`**](#--compiling) ┃ [**`• Minimun Requirements`**](#--compiling) ┃
+┃ [**`• What is Assorion?`**](#--what-is-assorion-engine) ┃ [**`• Important Notes`**](#%EF%B8%8F--important-notesroadmap) ┃ [**`• Compiling`**](#--compiling) ┃ [**`• Min Reqs`**](#--compiling) ┃ <a href="https://assorion.github.io/wiki/">**`• Wiki`**</a> ┃ 
 </div>
 
 -------------------------------------------------------------
