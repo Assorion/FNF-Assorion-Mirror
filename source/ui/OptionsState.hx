@@ -14,6 +14,15 @@ import flixel.FlxObject;
 
 	You have option sub categories. They are visual and do not effect how the options are applied.
 	If you press escape when optionSub is not 0 then you exit back to option sub 0.
+
+	If you want to add an option, please add it first to "assets/songs-data/default_settings.json" -
+	and then add it to Settings.hx -> Options (typedef).
+	Next add it to optionSub, either add it to the end of one of the arrays, or create your own sub-category.
+
+	Add a description and scroll down, if it's a togglable option (boolean) then do this under the "keyHit" function.
+	If your option is an integer, then do this under "altChange" function, and take a look at the surrounding code to get an idea.
+
+	After that you should be good to go!
 **/
 
 #if !debug @:noDebug #end

@@ -37,6 +37,12 @@ class Main extends Sprite
 
 		Settings.openSettings();
 
+		// have to give credit for psych engine here.
+		// Wouldn't have cared enough to fix this on my own.
+		#if linux
+		Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("assets/images/icon.png"));
+		#end
+
 		// # add the game
 
 		addChild(new FlxGame(gameWidth, gameHeight, initState, 
