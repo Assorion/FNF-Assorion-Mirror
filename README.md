@@ -86,7 +86,7 @@ look at <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/art/s
 Follow the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> for compiling. (Flixel version <a href="https://lib.haxe.org/p/flixel/5.0.0/">`5.0.0`</a> or <a href="https://lib.haxe.org/p/flixel/4.11.0/">`4.11.0`</a> for compiling)
 
 > [!WARNING] 
-> Assorion engine has been tested with the most recent versions of Haxe & Flixel, Using these new version's will cause camera problems with Assorion engine, Please <ins>**downgrade**</ins> to Flixel <a href="https://lib.haxe.org/p/flixel/5.2.2/">`5.2.2`</a> or any version lower that the one specified. Fixes will be implemented eventually.
+> Assorion engine has been tested with the most recent versions of Haxe & Flixel, Using these new versions will cause camera problems with Assorion engine, Please <ins>**downgrade**</ins> to Flixel <a href="https://lib.haxe.org/p/flixel/5.2.2/">`5.2.2`</a> or any version lower that the one specified. Fixes will be implemented eventually.
 
 
 > [!IMPORTANT]
