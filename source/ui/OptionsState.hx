@@ -41,6 +41,7 @@ class OptionsState extends MenuTemplate
 			'Options for the gameplay itself', 
 			'Options for visuals and effects', 
 			'Change the key bindings',
+			'View the history of Assorion Engine'
 		],
 		[
 			'Start the game in fullscreen mode',
@@ -187,6 +188,9 @@ class OptionsState extends MenuTemplate
 				curSub = 3;
 			case 'controls':
 				FlxG.switchState(new ControlsState());
+				return;
+			case 'changelog':
+				FlxG.switchState(new HistoryState());
 				return;
 
 			// basic

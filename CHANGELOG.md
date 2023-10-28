@@ -2,7 +2,7 @@
 
 ## V - 1.0.0
 
-Making the MK (MakeMeGenius) engine a reality.
+Making the MKG (MakeMeGenius) engine a reality.
 Btw it used to be called MKG, it's Assorion now.
 
 ## V - 1.1.0
@@ -17,7 +17,8 @@ Btw it used to be called MKG, it's Assorion now.
 8. Made sure and improved all settings and works.
 9. Set up a test song and week to demo the engine.
 10. Added dialogue code.
-11. Fixed a lot of tiny bugs (post events timer being corrected, freeplay song not unpausing on vocals, highscore problems, etc).
+11. Fixed a lot of tiny bugs (post events timer being corrected, 
+        freeplay song not unpausing on vocals, highscore problems, etc).
 12. Donate button replaced with Github button.
 13. Made note types easier to implement!
 
@@ -27,7 +28,8 @@ Minor update with a few fixes.
 
 1. **Actually** Fixed the README fully this time (I promise) (Thx to Byzol).
 2. Fixed NOTE_assets again.
-3. Fixed bug with the chart editor that locked your input forever (Thus losing your work).
+3. Fixed bug with the chart editor that locked your input forever
+        (Thus losing your work).
 4. Exclude Firealpaca's art files (.mdp) in the build folder.
 
 ## V - 1.1.2
@@ -69,9 +71,11 @@ Chart editor fix (again).
 
 1. Added StaticSprite, a sprite with no update. Mild performance increase I guess.
 2. Fixed chart editor bug where the section would get stuck at the end.
-3. Split stage curtains into 2 sprites, and lowered the res on the back sprite, big peformance increase.
+3. Split stage curtains into 2 sprites, 
+        and lowered the res on the back sprite, big peformance increase.
 4. ChartingState UI highlighting effect.
 5. Input and framerate fixes for web build.
-6. Windows and Linux release now compiled with GCC, and compiler optimizations. (Read Release please!)
+6. Windows and Linux release now compiled with GCC, 
+        and compiler optimizations. (Read Release please!)
 7. Allow pausing on countdown without breaking.
 8. Fixed arrow fade in (whoopsie it's been wrong all this time).
