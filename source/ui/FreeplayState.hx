@@ -99,8 +99,10 @@ class FreeplayState extends MenuTemplate
 		switch(k){
 			case 0: // Enter
 				FlxG.switchState(new PlayState([ songs[curSel] ], curDifficulty, -1));
+				leaving = true;
 				if( FlxG.sound.music.playing)
 					FlxG.sound.music.stop();
+
 				return;
 			case 1: // SpaceUK
 				playing = !playing;

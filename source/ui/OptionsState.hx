@@ -99,7 +99,7 @@ class OptionsState extends MenuTemplate
 		for(i in 0...optionSub[curSub].length){
 			pushObject(new Alphabet(0, (60 * i), optionSub[curSub][i], true));
 			if(!appendOption){
-				var ican:HealthIcon = new HealthIcon(['settings1','settings2'][Math.floor(i / 2)], false);
+				var ican:HealthIcon = new HealthIcon('settings' + (Math.floor(i / 2) + 1), false);
 
 				if(ican.curChar == 'face')
 					continue;
