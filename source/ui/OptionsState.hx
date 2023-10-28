@@ -29,7 +29,7 @@ import flixel.FlxObject;
 class OptionsState extends MenuTemplate
 {
 	static var optionSub:Array<Array<String>> = [
-		['basic', 'gameplay', 'visuals', 'controls'],
+		['basic', 'gameplay', 'visuals', 'controls', 'changelog'],
 		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist','launch_sprites','cache_text'],
 		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay', 'miss_health'],
 		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info', 'light_bot_strums']
