@@ -32,14 +32,7 @@ class Song
 	public static function loadFromJson(song:String, diff:Int):SwagSong
 	{
 		song = song.toLowerCase();
-		/*if(Settings.pr.cache_text && CoolUtil.cachedLines.exists(song))
-			return parseJSON(CoolUtil.cachedLines.get(song)[0]);
-
-		var rawJson = Assets.getText('assets/songs-data/$song/$song${CoolUtil.diffString(diff, 0)}.json').trim();
-		if(Settings.pr.cache_text)
-			CoolUtil.cachedLines.set(song, [rawJson]);*/
-
-
+		
 		return parseJSON(Paths.lText('$song/$song${CoolUtil.diffString(diff, 0)}.json'));
 	}
 
