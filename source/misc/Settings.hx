@@ -1,7 +1,6 @@
 package misc;
 
 import haxe.Json;
-import lime.utils.Assets;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import misc.Highscore;
@@ -16,7 +15,7 @@ typedef Options = {
     var skip_logo:Bool;
     var default_persist:Bool;
     var launch_sprites:Bool;
-    var cache_text:Bool;
+    var cache_misc:Bool;
 
     var downscroll:Bool;
     var audio_offset:Int;
@@ -55,7 +54,7 @@ class Settings {
     public static var gSave:FlxSave;
 
     public static function openSettings(){
-        var text = Assets.getText('assets/songs-data/default_settings.json').trim();
+        var text = lime.utils.Assets.getText('assets/songs-data/default_settings.json').trim();
         pr = cast Json.parse(text);
 
         gSave = new FlxSave();
@@ -83,6 +82,16 @@ class Settings {
 
         if(gSave.data.songScores != null)
             Highscore.songScores = gSave.data.songScores;
+        
+        if(Settings.pr.cache_misc){
+            CoolUtil.textFileLines = CoolUtil.cTFL;
+            Paths.lSparrow = Paths.cLS;
+            Paths.lText = Paths.cLT;
+        } else {
+            CoolUtil.textFileLines = CoolUtil.ncTFL;
+            Paths.lSparrow = Paths.ncLS;
+            Paths.lText = Paths.ncLT;
+        }
 
         NewControls.NOTE_LEFT = pr.note_left;
         NewControls.NOTE_DOWN = pr.note_down;

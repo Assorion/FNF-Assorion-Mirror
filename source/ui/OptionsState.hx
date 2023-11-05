@@ -30,7 +30,7 @@ class OptionsState extends MenuTemplate
 {
 	static var optionSub:Array<Array<String>> = [
 		['basic', 'gameplay', 'visuals', 'controls', 'changelog'],
-		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist','launch_sprites','cache_text'],
+		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist','launch_sprites','cache_misc'],
 		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay', 'miss_health'],
 		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info', 'light_bot_strums']
 	];
@@ -49,7 +49,7 @@ class OptionsState extends MenuTemplate
 			'Skip the haxeflixel intro logo',
 			'Makes all loaded sprites stay in RAM. Uses tons more memory but will decrease load times.',
 			'Load assets at startup. Uses even more RAM and increases startup time. Doesn\'t work in web browser.',
-			'Cache text files when they are loaded. Disable if you are trying to mod.'
+			'Cache text files and XML frames (doesn\'t really help that much). DISABLE IF YOU ARE TRYING TO MOD!!!'
 		],
 		[
 			'Change your audio offset in MS. Press ${misc.InputString.getKeyNameFromString(NewControls.UI_ACCEPT[0], true, false)} to enter offset wizard.',
@@ -203,8 +203,9 @@ class OptionsState extends MenuTemplate
 				if(Settings.pr.default_persist) gameplay.PauseSubState.newCanvas(true);
 			case 'launch_sprites':
 				Settings.pr.launch_sprites = !Settings.pr.launch_sprites;
-			case 'cache_text':
-				Settings.pr.cache_text = !Settings.pr.cache_text;
+			case 'cache_misc':
+				Settings.pr.cache_misc = !Settings.pr.cache_misc;
+				Settings.apply();
 
 			// gameplay
 			case 'audio_offset':

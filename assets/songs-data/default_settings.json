@@ -5,7 +5,7 @@
     "skip_logo": false,
     "default_persist": false,
     "launch_sprites": false,
-    "cache_text": true,
+    "cache_misc": true,
 
     "downscroll": true,
     "audio_offset": 80,

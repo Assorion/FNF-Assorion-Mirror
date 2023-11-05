@@ -78,25 +78,15 @@ class AssetCacher {
                 sound.stop();
                 tidalWave = true;
             }
-            if(paths[i].endsWith('txt')){
-                var fullText = Assets.getText(paths[i]).split('\n');
-                var storePath:String = '';
-                var splitPath:Array<String> = paths[i].split('/');
-                for(i in 0...splitPath.length)
-                    if(i > 1) storePath += splitPath[i] + '/';
-
-                storePath = storePath.split('.')[0];
-                misc.CoolUtil.cachedLines.set(storePath, fullText);
-                tidalWave = true;
-            }
-            if(paths[i].endsWith('json')){
-                var rawJson = Assets.getText(paths[i]);
-                misc.CoolUtil.cachedLines.set(paths[i].split('/')[2].toLowerCase(), [rawJson]);
+            if(paths[i].endsWith('txt') || paths[i].endsWith('json')){
+                var rawText = Paths.lText(paths[i], '');
                 tidalWave = true;
             }
             if(tidalWave)
                 trace(paths[i]);
         }
+        #else
+        trace('WARNING! Launch Caching doesn\'t work on browser. Due to finding files with the Filesystem Haxe API :(');
         #end
     }
 }

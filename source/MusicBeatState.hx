@@ -22,10 +22,7 @@ class MusicBeatState extends FlxUIState
 
 	override function create()
 	{
-		if(!Settings.pr.default_persist && !Settings.pr.launch_sprites){
-			openfl.Assets.cache.clear();
-			lime.utils.Assets.cache.clear();
-		}
+		Paths.clearCache();
 		
 		// please put persistent update on for ui states.
 		// because it will make the navigation faster.

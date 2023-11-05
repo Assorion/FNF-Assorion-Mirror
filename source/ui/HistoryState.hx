@@ -27,7 +27,7 @@ class HistoryState extends MenuTemplate {
         var currentContent:Int = -1;
 
         // coolutil textfile lines would've worked if I could use "../../" in the path.
-        for(item in lime.utils.Assets.getText('CHANGELOG.md').split('\n')){
+        for(item in Paths.lText('CHANGELOG.md', '').split('\n')){
             if(item.startsWith("# ")) continue;
             if(item == "" || item == " ") continue;
 

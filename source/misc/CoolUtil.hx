@@ -6,6 +6,7 @@ import flixel.FlxCamera;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
 import openfl.geom.Matrix;
+import flixel.graphics.frames.FlxFramesCollection;
 
 using StringTools;
 
@@ -13,6 +14,7 @@ using StringTools;
 class CoolUtil
 {
 	public static var cachedLines:Map<String, Array<String>> = new Map<String, Array<String>>();
+	public static var cachedFrames:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
 
 	// should be the diffArray divided by 2.
 	// don't change this unless you're adding a custom difficulty. (or removing.)
@@ -32,18 +34,7 @@ class CoolUtil
 	{
 		return diffArr[diff + (diffNumb * mode)];
 	}
-
-	public static function textFileLines(path:String, ?ext:String = 'txt'):Array<String>
-	{
-		if(Settings.pr.cache_text && cachedLines.exists(path))
-			return cachedLines.get(path);
-
-		var fullText = Assets.getText('assets/songs-data/$path.$ext').split('\n');
-		if(Settings.pr.cache_text)
-			cachedLines.set(path, fullText);
-
-		return fullText;
-	}
+	public static var textFileLines:String->?String->Array<String> = ncTFL;
 
 	public static function boundTo(val:Float, min:Float, max:Float, retInt:Bool = false):Dynamic
 	{
@@ -75,4 +66,22 @@ class CoolUtil
 		FlxG.openURL(site);
 		#end
 	}
+
+	/*
+		CACHE SWITCHING FUNCTIONS!!!
+		YES THIS IS A HACK, BUT I FEEL OVERALL IT'S BETTER!
+	*/
+	public static function cTFL(path:String, ?ext:String = 'txt'):Array<String>
+	{
+		var tmp:Array<String> = cachedLines.get(path);
+
+		if(tmp != null) return tmp;
+
+		tmp = Paths.lText('$path.$ext').split('\n');
+		cachedLines.set(path, tmp);
+
+		return tmp;
+	}
+	public static function ncTFL(path:String, ?ext:String = 'txt'):Array<String>
+		return Paths.lText('$path.$ext').split('\n');
 }

@@ -91,7 +91,7 @@ class DialogueSubstate extends MusicBeatSubstate {
         pState = playState;
 
         // parse text data. Yeah sorry this is not too good.
-        var lines:Array<String> = Assets.getText(dPath).split(',');
+        var lines:Array<String> = Paths.lText(dPath).split(',');
         for(i in 0...lines.length){
             var splitL:Array<String> = lines[i].split(':');
 

@@ -221,8 +221,8 @@ class PlayState extends MusicBeatState
 		super.create();
 
 		// cutscene stuff :vomit:
-		var dPath:String = 'assets/songs-data/${PlayState.curSong}/dialogue.txt';
-		if(storyWeek >= 0 && !seenCutscene && Assets.exists(dPath)){
+		var dPath:String = '${PlayState.curSong}/dialogue.txt';
+		if(storyWeek >= 0 && !seenCutscene && Assets.exists('assets/songs-data/' + dPath)){
 			postEvent(0.8, ()->{
 				pauseGame(new DialogueSubstate(camHUD, startCountdown, dPath, this));
 			});
