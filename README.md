@@ -83,7 +83,7 @@ Take a look at <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/mai
 
 # 🛠 | Compiling
 
-**Libraries:**
+**Libraries:**  
 Read ahead to your OS and read those instructions. Then come back here.
 
 Run `haxelib setup <library name>` replacing `<library name>` with these libraries below:
