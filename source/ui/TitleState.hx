@@ -85,23 +85,12 @@ class TitleState extends MusicBeatState
 
 			/////////////////////////////
 
-			FlxG.sound.music.volume = 0;
-			FlxG.sound.music.pause();
-
-			#if desktop
-			if(Settings.pr.launch_sprites)
-				misc.AssetCacher.loadAssets(this);
-			#end
-
-			FlxG.sound.music.play();
-			//FlxG.sound.music.fadeIn(4, 0, 0.7);			
 			FlxG.sound.volume = Settings.pr.start_volume / 100;
+			FlxG.sound.music.volume = 0;
 			sndTween = FlxTween.tween(FlxG.sound.music, {volume: 1}, 3);
 		}
 
 		// # load all sprites
-
-		//////////////////////////
 
 		var bg:StaticSprite = new StaticSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);

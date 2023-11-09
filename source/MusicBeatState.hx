@@ -17,6 +17,7 @@ class MusicBeatState extends FlxUIState
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
+
 	private var correctMusic:Bool = true;
 	private var alignCamera:Bool = false;
 
@@ -29,6 +30,7 @@ class MusicBeatState extends FlxUIState
 		persistentUpdate = true;
 		Conductor.songPosition = -Settings.pr.audio_offset;
 
+		FlxG.camera.bgColor.alpha = 0;
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHit);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP  , keyRel);
 
