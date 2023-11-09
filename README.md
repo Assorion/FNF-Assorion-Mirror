@@ -90,7 +90,7 @@ Follow the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">bas
 
 
 > [!IMPORTANT]
->This will need <a href="https://lib.haxe.org/p/flixel-ui/">`flixel-ui 2.5.0`</a> & <a href="https://lib.haxe.org/p/flixel-addons/3.0.2/releasenotes">`flixel-addons 3.0.2`</a> & <a href="https://lib.haxe.org/p/lime/7.9.0/">lime 7.9.0 (or 8.0.0)</a> otherwise game will not compile (or will be broken). Remember, these versions are the versions that I've tested with, and know works. Other versions can work however these are the versions the engine was built with.
+>This will need <a href="https://lib.haxe.org/p/flixel-ui/">`flixel-ui 2.5.0`</a> & <a href="https://lib.haxe.org/p/flixel-addons/3.0.2/releasenotes">`flixel-addons 3.0.2`</a> & <a href="https://lib.haxe.org/p/lime/7.9.0/">`lime 7.9.0 (or 8.0.0)`</a> otherwise game will not compile (or will be broken). Remember, these versions are the versions that I've tested with, and know works. Other versions can work however these are the versions the engine was built with.
 
 ## 💻 | Minimum Requirements
 
