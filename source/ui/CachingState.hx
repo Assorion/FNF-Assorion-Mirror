@@ -16,6 +16,7 @@ using StringTools;
 // YAY IT NO LONGER SUCKS!!!
 
 #if !debug @:noDebug #end
+#if desktop
 class CachingState extends MusicBeatState {
     public static inline var barWidth:Int = 1150;
     public static inline var barTopLn:Int = 150; 
@@ -132,3 +133,4 @@ class CachingState extends MusicBeatState {
         FlxG.camera.bgColor = FlxColor.fromRGB(0, Math.round(percent * 120), Math.round(percent * 103));
     }
 }
+#end
