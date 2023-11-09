@@ -30,7 +30,7 @@ class OptionsState extends MenuTemplate
 {
 	static var optionSub:Array<Array<String>> = [
 		['basic', 'gameplay', 'visuals', 'controls', 'changelog'],
-		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist','launch_sprites','cache_misc'],
+		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist', #if desktop 'launch_sprites', #end 'cache_misc'],
 		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay', 'miss_health'],
 		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info', 'light_bot_strums']
 	];
@@ -48,7 +48,9 @@ class OptionsState extends MenuTemplate
 			'Change the games starting volume',
 			'Skip the haxeflixel intro logo',
 			'Makes all loaded sprites stay in RAM. Uses tons more memory but will decrease load times.',
+			#if desktop
 			'Load assets at startup. Uses even more RAM and increases startup time. Doesn\'t work in web browser.',
+			#end
 			'Cache text files and XML frames (doesn\'t really help that much). DISABLE IF YOU ARE TRYING TO MOD!!!'
 		],
 		[

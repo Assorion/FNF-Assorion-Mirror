@@ -39,10 +39,10 @@ class Main extends Sprite
 
 		// # add the game
 
-		#if desktop
 		if(Settings.pr.launch_sprites)
-			initState = ui.CachingState;
-		#end
+			#if desktop initState = ui.CachingState;
+			#else trace('CACHING DOES NOT WORK IN BROWSER!');
+			#end
 
 		fpsC = new ui.FPSCounter(10, 3, 0xFFFFFF);
 		memC = new ui.MemCounter(10, 18, 0xFFFFFF);
