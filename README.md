@@ -111,7 +111,7 @@ Run `haxelib setup <library name>` replacing `<library name>` with these librari
 - Test to make sure both `gcc` and `g++` commands work. They should already be installed in your distro
 - Run `lime test linux` in your terminal
 
-**If you're confused:**
+**If you're confused:**  
 Follow a YouTube guide, or the base game instructions on compiling. Do NOT use Visual Studio's Clang-Compiler, please use MinGW-w64.  
 Remember to install the library versions listed above though.
 
