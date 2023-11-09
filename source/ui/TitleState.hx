@@ -83,10 +83,15 @@ class TitleState extends MusicBeatState
 			transIn = FlxTransitionableState.defaultTransIn;
 			transOut = FlxTransitionableState.defaultTransOut;
 
+			/////////////////////////////
+
 			FlxG.sound.music.volume = 0;
 			FlxG.sound.music.pause();
+
+			#if desktop
 			if(Settings.pr.launch_sprites)
 				misc.AssetCacher.loadAssets(this);
+			#end
 
 			FlxG.sound.music.play();
 			//FlxG.sound.music.fadeIn(4, 0, 0.7);			

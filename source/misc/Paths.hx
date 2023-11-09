@@ -15,7 +15,7 @@ class Paths {
 
     // btw the 'l' in every single function was meant to stand for "load".
 
-    public static var lSparrow:String->FlxFramesCollection = ncLS;
+    public static var lSparrow:String->?String->FlxFramesCollection = ncLS;
     public static var lText:String->?String->String = ncLT;
 
     public static inline function lImage(path:String):String
@@ -49,13 +49,13 @@ class Paths {
 
     }
 
-    public static function cLS(path:String):FlxFramesCollection
+    public static function cLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
     {
         var tmp:FlxFramesCollection = CoolUtil.cachedFrames.get(path);
 
         if(tmp != null) return tmp;
 
-        var fStr = 'assets/images/$path';
+        var fStr = '$prePath$path';
 
         tmp = FlxAtlasFrames.fromSparrow('$fStr.png', '$fStr.xml');
         CoolUtil.cachedFrames.set(path, tmp);
@@ -74,8 +74,8 @@ class Paths {
         return tmp[0];
     }
 
-    public static function ncLS(path:String):FlxFramesCollection
-        return FlxAtlasFrames.fromSparrow('assets/images/$path.png', 'assets/images/$path.xml');
+    public static function ncLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
+        return FlxAtlasFrames.fromSparrow('$prePath$path.png', '$prePath$path.xml');
 
     public static function ncLT(path:String, ?prePath:String = 'assets/songs-data/'):String
         return Assets.getText(prePath + path);

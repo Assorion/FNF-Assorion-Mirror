@@ -13,80 +13,68 @@ import openfl.utils.Assets;
 
 using StringTools;
 
-/**
-    This kinda sucks.
-**/
+// YAY IT NO LONGER SUCKS!!!
 
 #if !debug @:noDebug #end
 class AssetCacher {
-    public static function loadAssets(parent:FlxUIState){
-        #if desktop
-        var paths:Array<String> = [];
-        var curDepth:String = 'assets/';
-        var curPaths:Array<String> = FileSystem.readDirectory(curDepth);
-        var ignoreDirectories:Array<String> = [];
-        var i:Int = 0;
-        // loop through every singe file / direcotry
-        while(i < curPaths.length){
-            if(!ignoreDirectories.contains(curDepth + curPaths[i] + '/'))
-                if(FileSystem.isDirectory(curDepth + curPaths[i])){
-                    curDepth = curDepth + curPaths[i] + '/';
-                    curPaths = FileSystem.readDirectory(curDepth);
-                    i = -1;
-                } else 
-                    paths.push(curDepth + curPaths[i]);
-    
-            if(i == curPaths.length - 1){
-                ignoreDirectories.push(curDepth);
-                var depthCrap:Array<String> = curDepth.split('/');
-                curDepth = '';
-                for(i in 0...depthCrap.length-2)
-                    curDepth += depthCrap[i] + '/';
-                if(curDepth == '')
-                    break;
-                curPaths = FileSystem.readDirectory(curDepth);
-                i = -1;
-            }
-            i++;
-        }
-        // for each file cache them.
-        for(i in 0...paths.length){
-            var tidalWave:Bool = false;
-            if(!Assets.exists(paths[i])) continue;
+    public static var objects:Array<String> = [];
 
-            if (paths[i].endsWith('png')){
-                var tmpImg:FlxSprite = new FlxSprite(0,0).loadGraphic(paths[i]);
-                tmpImg.graphic.persist = true;
-                tmpImg.graphic.destroyOnNoUse = false;
-                parent.add(tmpImg);
-                parent.remove(tmpImg);
-                tidalWave = true;
+    private static function cacheDir(path:String){
+        var keepDirectories:Array<String> = [];
+        var itemsInDir:Array<String> = FileSystem.readDirectory(path);
+
+        for(i in 0...itemsInDir.length){
+            var curItem:String = path + itemsInDir[i];
+
+            if(FileSystem.isDirectory(curItem)){
+                keepDirectories.push(curItem + '/');
+                continue;
             }
-            if (paths[i].endsWith('xml')){
-                var rawName:String = paths[i].split('.')[0];
-                var tmpImg:FlxSprite = new FlxSprite(0,0);
-                tmpImg.frames = FlxAtlasFrames.fromSparrow(rawName + '.png', rawName + '.xml');
-                tmpImg.graphic.persist = true;
-                tmpImg.graphic.destroyOnNoUse = false;
-                parent.add(tmpImg);
-                parent.remove(tmpImg);
-                tidalWave = true;
-            }
-            if(paths[i].endsWith(Paths.sndExt)){
-                var sound:FlxSound = new FlxSound().loadEmbedded(paths[i]);
-                sound.play();
-                sound.stop();
-                tidalWave = true;
-            }
-            if(paths[i].endsWith('txt') || paths[i].endsWith('json')){
-                var rawText = Paths.lText(paths[i], '');
-                tidalWave = true;
-            }
-            if(tidalWave)
-                trace(paths[i]);
+            if(!Assets.exists(curItem)) continue;
+
+            objects.push(curItem);
         }
-        #else
-        trace('WARNING! Launch Caching doesn\'t work on browser. Due to finding files with the Filesystem Haxe API :(');
-        #end
+        for(i in 0...keepDirectories.length)
+            cacheDir(keepDirectories[i]);
+    }
+
+    private static inline function addAsset(objectPath:String, objFormat:String, parent:FlxUIState)
+        switch(objFormat){
+            case 'png':
+                var tmpImg:FlxSprite = new FlxSprite(0,0).loadGraphic(objectPath);
+                    tmpImg.graphic.persist = true;
+                    tmpImg.graphic.destroyOnNoUse = false;
+                parent.add(tmpImg);
+                parent.remove(tmpImg);
+            case 'xml':
+                var tmpImg:FlxSprite = new FlxSprite(0,0);
+                    tmpImg.frames = Paths.lSparrow(objectPath.substring(0, objectPath.length - 4), '');
+                    tmpImg.graphic.persist = true;
+                    tmpImg.graphic.destroyOnNoUse = false;
+                parent.add(tmpImg);
+                parent.remove(tmpImg);
+            
+            // since web browser doesn't work, we can just use this
+            case 'ogg':
+                var sound:FlxSound = new FlxSound().loadEmbedded(objectPath);
+                    sound.play();
+                    sound.stop();
+            case 'txt', 'json':
+                Paths.cLT(objectPath, '');
+        }
+
+    public static function loadAssets(parent:FlxUIState){
+        cacheDir('assets/');
+
+        for(obj in objects){
+            trace('Caching: $obj');
+
+            // in case somehow it has multiple dots
+            var tmp = obj.split('.');
+            var ending:String = tmp[tmp.length - 1];
+
+            addAsset(obj, ending, parent);
+        }
+        objects = null;
     }
 }

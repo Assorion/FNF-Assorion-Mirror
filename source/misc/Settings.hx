@@ -85,12 +85,12 @@ class Settings {
         
         if(Settings.pr.cache_misc){
             CoolUtil.textFileLines = CoolUtil.cTFL;
-            Paths.lSparrow = Paths.cLS;
-            Paths.lText = Paths.cLT;
+            Paths.lSparrow         = Paths.cLS;
+            Paths.lText            = Paths.cLT;
         } else {
             CoolUtil.textFileLines = CoolUtil.ncTFL;
-            Paths.lSparrow = Paths.ncLS;
-            Paths.lText = Paths.ncLT;
+            Paths.lSparrow         = Paths.ncLS;
+            Paths.lText            = Paths.ncLT;
         }
 
         NewControls.NOTE_LEFT = pr.note_left;
