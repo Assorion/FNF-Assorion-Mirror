@@ -50,7 +50,7 @@ Though, Assorion Engine does have several <a href="https://github.com/Assorion/F
 >
 > Thus inevitably exists the potential that something may be broken if you use the most recent **source** code, as opposed to the most recent <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><ins>**release**</ins></a> code.
 
-#.
+#
   **Other Notes**   
 -	There has been a complete overhaul of Chartingstate. Therefore, it will probably have new bugs and will be partially confusing at first glance
 -	The characters in the song are entirely un-hardcoded. Thus you can define 2 or 4 characters instead of 3. Notes have a `player` value that makes this work
