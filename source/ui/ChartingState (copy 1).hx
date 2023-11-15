@@ -3,13 +3,12 @@ package ui;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.display.BitmapData;
+import flixel.util.FlxColor;
 import openfl.events.KeyboardEvent;
 import openfl.geom.Rectangle;
-import openfl.events.MouseEvent;
 import flixel.input.keyboard.FlxKey;
 import flixel.system.FlxSound;
 import flixel.FlxCamera;
-import flixel.util.FlxColor;
 import flixel.text.FlxText;
 import gameplay.Note;
 import gameplay.PlayState;
@@ -25,12 +24,13 @@ using StringTools;
 
 #if !debug @:noDebug #end
 class ChartingState extends MusicBeatState {
+    public static function colorFromRGBArray(array:Array<Int>):Int
+        return FlxColor.fromRGB(array[0], array[1], array[2]);
+
     public static var uiColours:Array<Array<Int>> = [
         [155, 100, 160], // dark
         [200, 120, 210], // light
-        [240, 150, 250], // button light
-        [170, 170, 200], // note select colour
-        [0,   40,  8  ], // swamp green background colour
+        [240, 150, 250]  // button light
     ];
     public static var gridColours:Array<Array<Array<Int>>> = [
         [[255, 200, 200], [255, 215, 215]], // Red
@@ -38,37 +38,39 @@ class ChartingState extends MusicBeatState {
         [[240, 240, 200], [240, 240, 215]], // Yellow / White
         [[200, 255, 200], [215, 255, 215]], // Green
     ];
-    public static inline var gridSize:Int = 40;
+    public static var selectNoteColour:Array<Int> = [170, 170, 170];
 
-    public static var zooms:Array<Float> = [0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8];
-    public var curZoom:Int = 2;
+    public static inline var gridSize:Int = 40;
+    //public static inline var noteRange:Int = 0;
 
     public var selectedNotes:Array<Array<Dynamic>> = [];
-    public static var curNoteType:Int = 0;
 
-    var gridLayer:FlxTypedGroup<StaticSprite>;
-    var noteHighlight:StaticSprite;
-    var blueSelectBox:StaticSprite;
-
-    public var curSec:Int = 0;
+    var gridSpr:StaticSprite;
+    var gridSel:StaticSprite;
+    var selectSpr:StaticSprite;
+    var curSec:Int = 0;
+    private var vocals:FlxSound;
     public var musicLine:StaticSprite;
+
+    public static var zooms:Array<Float> = [0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8];
+    public static var zoomDivs:Array<Int>= [2,   3,    4,   3, 4, 3, 4, 3, 4];
+    public var curZoom:Int = 2;
 
     public var notes:FlxTypedGroup<Note>;
     public var uiElements:FlxTypedGroup<flixel.FlxSprite>;
 
     public var camUI:FlxCamera;
     public var camGR:FlxCamera;
+    var iconP1:HealthIcon;
+    var iconP2:HealthIcon;
 
     public static var blockInput:Bool = false;
-
     // this is used to stop conflicts with other UI elements
-    //public static var activeUIElement:Dynamic;
+    public static var activeUIElement:Dynamic;
+    public static var curNoteType:Int = 0;
 
     var uiBG:StaticSprite;
     var uiFront:StaticSprite;
-
-    private var vocals:FlxSound;
-    private var song:SwagSong;
 
     override public function create(){
         if(FlxG.sound.music.playing){
@@ -79,13 +81,14 @@ class ChartingState extends MusicBeatState {
                 FlxG.sound.music.time = 0;
             };
         }
-        song = PlayState.SONG;
 
         // # cam code
 
         camUI = new FlxCamera();
-        camGR = new FlxCamera(100,50, 0, 0);
-        camGR.bgColor.alpha = camUI.bgColor.alpha = 0;
+        camGR = new FlxCamera(0,0, 1280, 800);
+        camGR.x += 100;
+        camGR.y += 50;
+        camGR.bgColor.alpha = 0;
 
         FlxG.cameras.reset(camUI);
 		FlxG.cameras.add(camGR);
@@ -94,56 +97,86 @@ class ChartingState extends MusicBeatState {
         // # create bg
 
         var bgspr:StaticSprite = new StaticSprite(0,0).loadGraphic(Paths.lImage('ui/menuDesat'));
-            bgspr.screenCenter();
-            bgspr.color = CoolUtil.cfArray(uiColours[4]);
+        bgspr.screenCenter();
+        bgspr.color = FlxColor.fromRGB(0, 40, 8);
         add(bgspr);
 
         // # create grid
+        var fColArr:Array<Array<Int>> = [];
+        for(i in gridColours)
+            fColArr.push([colorFromRGBArray(i[0]), colorFromRGBArray(i[1])]);
 
-        gridLayer = new FlxTypedGroup<StaticSprite>();
-        noteHighlight = new StaticSprite(0,0).makeGraphic(gridSize, gridSize, 0xFFFFFFFF);
-        add(gridLayer);
-        add(noteHighlight);
+        gridSpr = createGrid(gridSize, gridSize, 8, 16, fColArr);
+        gridSel = new StaticSprite(0,0).makeGraphic(gridSize, gridSize, FlxColor.WHITE);
+        add(gridSpr);
+        add(gridSel);
 
         // # create line and notes
 
-        makeGrid();
+        iconP1 = new HealthIcon('face');
+        iconP2 = new HealthIcon('bf');
+        iconP1.x = gridSize * 1;
+        iconP2.x = gridSize * 5;
+        iconP1.y = iconP2.y = gridSpr.height + 10;
+        iconP1.cameras = iconP2.cameras = [camGR];
+        iconP1.scale.set(0.5, 0.5);
+        iconP2.scale.set(0.5, 0.5);
+        iconP1.updateHitbox();
+        iconP2.updateHitbox();
 
-        notes     = new FlxTypedGroup<Note>();
-        musicLine = new StaticSprite(0, 0).makeGraphic(960, 4, 0xFFFFFFFF);
+        notes = new FlxTypedGroup<Note>();
+        musicLine = new StaticSprite(gridSpr.x, gridSpr.y).makeGraphic(Std.int(gridSpr.width), 4, FlxColor.WHITE);
+        add(iconP1);
+        add(iconP2);
         add(notes);
         add(musicLine);
 
-        noteHighlight.cameras =
-        gridLayer.cameras =
-        notes    .cameras =
-        musicLine.cameras = [camGR];
+        gridSpr.cameras = [camGR];
+        gridSel.cameras = [camGR];
+        notes  .cameras = [camGR];
+        musicLine.cameras=[camGR];
 
         // # Creates vocals.
 
         vocals = new FlxSound();
-		if (song.needsVoices)
+		if (PlayState.SONG.needsVoices)
 			vocals.loadEmbedded(Paths.playableSong(PlayState.curSong, true));
 
         vocals.time = 0;
 		FlxG.sound.list.add(vocals);
+
         FlxG.mouse.visible = true;
 
-        reloadNotes();
+        // # create ui
 
-        // # Create Selection box
+        uiElements = new FlxTypedGroup<flixel.FlxSprite>();
+        uiBG    = new StaticSprite(0,0).makeGraphic(420, 550, colorFromRGBArray(uiColours[0]));
+        uiBG.screenCenter();
+        uiBG.x += 100;
+        uiFront = new StaticSprite(0,0).makeGraphic(412, 542, colorFromRGBArray(uiColours[1]));
+        uiFront.screenCenter();
+        uiFront.x += 100;
+        add(uiBG);
+        add(uiFront);
+        add(uiElements);
 
-        blueSelectBox = new StaticSprite(-1,-1).makeGraphic(1,1, FlxColor.fromRGB(140,225,255));
-		blueSelectBox.origin.set(0,0);
-		blueSelectBox.alpha = 0.55;
-        blueSelectBox.cameras = [camGR];
-		add(blueSelectBox);
+        var songButton:ChartUI_Button = new ChartUI_Button(uiBG.x + uiBG.width - 4, uiBG.y + 20, false, createSongUI, 'SONG');
+        var infoButton:ChartUI_Button = new ChartUI_Button(uiBG.x + uiBG.width - 4, uiBG.y +500, false, createInfoUI, 'ABOUT');
+        var secButton :ChartUI_Button = new ChartUI_Button(uiBG.x + uiBG.width - 4, uiBG.y + 60, false, createSecUI , 'SECTION');
+        add(secButton );
+        add(songButton);
+        add(infoButton);
+
+        createSongUI();
+        loadNotes();
+
+        selectSpr = new StaticSprite(-1,-1).makeGraphic(1,1, FlxColor.fromRGB(140,225,255));
+		selectSpr.origin.set(0,0);
+		selectSpr.alpha = 0.55;
+        selectSpr.cameras = [camGR];
+		add(selectSpr);
 
         correctMusic = false;
-
-        FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEvent);
-        FlxG.stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
-        FlxG.stage.addEventListener(MouseEvent.MOUSE_UP  , mouseUpEvent);
 
         super.create();
     }
@@ -152,233 +185,180 @@ class ChartingState extends MusicBeatState {
         FlxG.sound.music.pause();
         vocals.pause();
     }
-    public inline function changeSec(changeTo:Int){
-        curSec = CoolUtil.boundTo(changeTo, 0, song.notes.length + 1);
-        expandCheck();
-        reloadNotes();
-    }
 
     // for changing zoom level
     public function makeGrid(){
-        var gridSprite:StaticSprite = new ChartUI_Grid(gridSize, gridSize, 4 * (song.playLength), Math.floor(16 * zooms[curZoom]), (curZoom + 1) % 2 + 3);
+        remove(notes);
+        remove(musicLine);
+        remove(gridSel);
+        remove(selectSpr);
 
-        gridLayer.clear();
-        gridLayer.add(gridSprite);
+        var fColArr:Array<Array<FlxColor>> = [];
+        for(i in gridColours)
+            fColArr.push([colorFromRGBArray(i[0]), colorFromRGBArray(i[1])]);
 
-        for(i in 0...song.playLength){
-            if(song.characters.length - 1 < i) break;
+        gridSpr.destroy();
+        gridSpr = createGrid(gridSize, gridSize, 8, Math.floor(16 * zooms[curZoom]), fColArr, zoomDivs[curZoom]);
+        gridSpr.cameras = [camGR];
+        camGR.height = Std.int(710 * zooms[curZoom]);
 
-            var tmpIcon = new HealthIcon(song.characters[i]);
-            tmpIcon.x = gridSize * i * 4 + gridSize;
-            tmpIcon.y = gridSprite.height + 10;
-            tmpIcon.scale.set(0.5, 0.5);
-            tmpIcon.updateHitbox();
-
-            gridLayer.add(tmpIcon);
-        }
-
-        camGR.width  = Math.round(gridSprite.width);
-        camGR.height = Math.round(gridSprite.height + 85);
+        iconP1.y = iconP2.y = gridSpr.height + 10;
+        
+        add(gridSpr);
+        add(gridSel);
+        add(notes);
+        add(musicLine);
+        add(selectSpr);
     }
 
-    // # Keyboard input
-
-    private var holdingControl:Bool = false;
-    private var holdingShift:Bool   = false;
+    // # Semi Input code. Mouse still gets handled by Update.
     override function keyHit(ev:KeyboardEvent){
         super.keyHit(ev);
 
         if(blockInput) return;
 
-        if(key == FlxKey.SHIFT){
-            holdingShift = true;
-            return;
-        }
-
-        // ONLY FOR CONTROL. READ AHEAD!
-
-        if(holdingControl){
-            var T:Int = key.deepCheck([
-                [FlxKey.J],
-                [FlxKey.L],
-                [FlxKey.I],
-                [FlxKey.K],
-
-                [FlxKey.C],
-                [FlxKey.V],
-                [FlxKey.A]
-            ]);
-
-            switch(T){
-                case 0:
-                    for(nt in selectedNotes){
-                        nt[1]--;
-                        if (nt[1] < 0) {
-                            nt[1] = 3;
-                            nt[3] = ((nt[3] - 1) + song.playLength) % song.playLength;
-                        }
-                    }
-                case 1:
-                    for(nt in selectedNotes){
-                        nt[1]++;
-                        if (nt[1] > 3){
-                            nt[1] = 0;
-                            nt[3] = (nt[3] + 1) % song.playLength;
-                        }
-                    }
-                case 2:
-                    for(nt in selectedNotes){
-                        song.notes[Math.floor(nt[0] / 16)].sectionNotes.remove(nt);
-                        nt[0]--;
-                        if(nt[0] < 0) nt[0] = 0;
-                        song.notes[Math.floor(nt[0] / 16)].sectionNotes.push(nt);
-                    }
-                case 3:
-                    for(nt in selectedNotes){
-                        song.notes[Math.floor(nt[0] / 16)].sectionNotes.remove(nt);
-                        nt[0]++;
-                        song.notes[Math.floor(nt[0] / 16)].sectionNotes.push(nt);
-                    }
-                // other stuff
-                case 4:
-                    var dupeNotes:Array<Array<Dynamic>> = [];
-                    for(nt in selectedNotes){
-                        var dupe = [nt[0], nt[1], nt[2], nt[3]];
-                        dupeNotes.push(dupe);
-                        song.notes[Math.floor(nt[0] / 16)].sectionNotes.push(dupe);
-                    }
-                    selectedNotes = dupeNotes;
-                case 5:
-                    for(nt in selectedNotes)
-                        nt[1] = 3 - nt[1];
-                
-                case 6:
-                    selectedNotes = [];
-                    for(nt in song.notes[curSec].sectionNotes)
-                        selectedNotes.push(nt);
-            }
-            if(T >= 0)
-                reloadNotes();
-
-            return;
-        }
-
-        var T:Int = key.deepCheck([ 
-            NewControls.UI_BACK, 
-            NewControls.UI_ACCEPT, 
-            [FlxKey.SPACE],
-            NewControls.UI_L, 
-            NewControls.UI_R, 
-            [FlxKey.B],
-            [FlxKey.N], 
-            [FlxKey.Q],
-            [FlxKey.E],
-            [FlxKey.X],
-            [FlxKey.Z],
-            [FlxKey.CONTROL]
-        ]);
-
-        switch(T){
-            case 0, 1:
-                FlxG.mouse.visible = false;
-                FlxG.switchState(new PlayState());
-
-                FlxG.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEvent);
-                FlxG.stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
-                FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP  , mouseUpEvent);
-
-                PlayState.SONG = song;
-            case 2:
-                if(FlxG.sound.music.playing)
-                    pauseSong();
-                else {
-                    FlxG.sound.music.play();
-
-                    vocals.play();
-                    vocals.time = FlxG.sound.music.time;
-                }
-                return;
-            case 3, 4:
+        // pausing and playing
+        if(key == FlxKey.SPACE){
+            if(FlxG.sound.music.playing)
                 pauseSong();
-                changeSec(curSec + (((T - 3) * 2) - 1));
-
-                var offTime = curSec * Conductor.crochet * 4;
-                    offTime += Settings.pr.audio_offset;
-
-                // this is to make sure there are no trashy rounding errors.
-                while(Math.floor((offTime + Settings.pr.audio_offset) / (Conductor.crochet * 4)) < curSec)
-                    offTime += 0.01;
-
-                Conductor.songPosition = vocals.time = FlxG.sound.music.time = offTime;
-                Conductor.songPosition -= Settings.pr.audio_offset;
-
-                expandCheck();
-                reloadNotes();
-                return;
-            case 5, 6:
-                curNoteType += ((T - 5) * 2) - 1;
-                curNoteType = CoolUtil.boundTo(curNoteType, 0, Note.possibleTypes.length - 1);
-
-                for(nt in selectedNotes)
-                    nt[4] = curNoteType;
-
-                reloadNotes();
-                return;
-            case 7, 8:
-                for(nt in selectedNotes)
-                    nt[2] = CoolUtil.boundTo(nt[2] + ((T - 7) * 2 - 1), 0, 1000);
-    
-                reloadNotes();
-                return;
-            case 9, 10:
-                curZoom += ((T - 9) * 2) - 1;
-                curZoom = CoolUtil.boundTo(curZoom, 0, 8);
-
-                makeGrid();
-                reloadNotes();
-
-                return;
-            case 11:
-                holdingControl = true;
+            else {
+                FlxG.sound.music.play();
+                vocals.play();
+                
+                vocals.time = FlxG.sound.music.time;
+            }
+            return;
         }
-    }
-    override public function keyRel(ev:KeyboardEvent){
-        super.keyRel(ev);
 
-        if(key == FlxKey.CONTROL)
-            holdingControl = false;
+        // changing sections
+        var T:Int = key.deepCheck([NewControls.UI_L, NewControls.UI_R]);
+        if(T != -1){
+            curSec += (T * 2) - 1;
+            if(curSec < 0) curSec = 0;
+            FlxG.sound.music.time = curSec * Conductor.crochet * 4;
 
-        if(key == FlxKey.SHIFT)
-            holdingShift = false;
+            // this is to make sure there are no trashy rounding errors.
+            while(Math.floor(FlxG.sound.music.time / (Conductor.crochet * 4)) < curSec)
+                FlxG.sound.music.time += 0.01;
+
+            expandCheck();
+            if(inSecUi) createSecUI();
+
+            pauseSong();
+            loadNotes();
+            return;
+        }
+
+        // note types
+        T = key.deepCheck([[FlxKey.B], [FlxKey.N]]);
+        if(T != -1){
+            curNoteType += (T * 2) - 1;
+            curNoteType = CoolUtil.boundTo(curNoteType, 0, Note.possibleTypes.length - 1);
+
+            for(nt in selectedNotes)
+                nt[4] = curNoteType;
+
+            loadNotes();
+            return;
+        }
+
+        // change note sustains
+        T = key.deepCheck([[FlxKey.Q], [FlxKey.E]]);
+        if(T != -1){
+            for(nt in selectedNotes)
+                nt[2] = CoolUtil.boundTo(nt[2] + (T * 2 - 1), 0, 1000);
+
+            loadNotes();
+            return;
+        }
+        // Zoom
+        T = key.deepCheck([ [FlxKey.X], [FlxKey.Z] ]);
+        if(T != -1){
+            curZoom += (T * 2) - 1;
+            curZoom = CoolUtil.boundTo(curZoom, 0, 8);
+            //zoomLevel = zooms[curZoom];
+
+            makeGrid();
+            loadNotes();
+
+            return;
+        }
+
+        if(key.hardCheck(NewControls.UI_BACK) || key.hardCheck(NewControls.UI_ACCEPT)){
+            FlxG.mouse.visible = false;
+            FlxG.switchState(new PlayState());
+        }
+
+        if(!FlxG.keys.pressed.CONTROL || key == FlxKey.CONTROL) return;
+
+        if(key == FlxKey.J)
+            for(nt in selectedNotes){
+                nt[1]--;
+                if (nt[1] < 0) {
+                    nt[1] = 3;
+                    nt[3] = ((nt[3] - 1) + 2) % 2;
+                }
+            }
+        if(key == FlxKey.L)
+            for(nt in selectedNotes){
+                nt[1]++;
+                if (nt[1] > 3){
+                    nt[1] = 0;
+                    nt[3] = (nt[3] + 1) % 2;
+                }
+            }
+        if(key == FlxKey.I)
+            for(nt in selectedNotes){
+                PlayState.SONG.notes[Math.floor(nt[0] / 16)].sectionNotes.remove(nt);
+                nt[0]--;
+                if(nt[0] < 0) nt[0] = 0;
+                PlayState.SONG.notes[Math.floor(nt[0] / 16)].sectionNotes.push(nt);
+            }
+        if(key == FlxKey.K)
+            for(nt in selectedNotes){
+                PlayState.SONG.notes[Math.floor(nt[0] / 16)].sectionNotes.remove(nt);
+                nt[0]++;
+                PlayState.SONG.notes[Math.floor(nt[0] / 16)].sectionNotes.push(nt);
+            }
+        if(key == FlxKey.C){
+            var dupeNotes:Array<Array<Dynamic>> = [];
+            for(nt in selectedNotes){
+                var dupe = [nt[0], nt[1], nt[2], nt[3]];
+                dupeNotes.push(dupe);
+                PlayState.SONG.notes[Math.floor(nt[0] / 16)].sectionNotes.push(dupe);
+            }
+            selectedNotes = dupeNotes;
+        }
+        if(key == FlxKey.V)
+            for(nt in selectedNotes)
+                nt[1] = 3 - nt[1];
+
+        loadNotes();
     }
 
     // # Note rendering code.
-
-    public inline function reloadNotes(){
+    public function loadNotes(){
         notes.clear();
-        for(newnote in song.notes[curSec].sectionNotes){
+        for(newnote in PlayState.SONG.notes[curSec].sectionNotes){
             var daNote = new Note(newnote[0], newnote[1], newnote[4]);
             daNote.setGraphicSize(gridSize, gridSize);
-            daNote.updateHitbox();
-            daNote.x  = gridSize * daNote.noteData;
+            daNote.x = gridSize * daNote.noteData;
             daNote.x += gridSize * 4 * newnote[3];
-            daNote.y  = (daNote.strumTime - (curSec * 16)) * zooms[curZoom] * gridSize;
-            daNote.player = newnote[3];
+            daNote.y = (daNote.strumTime - (curSec * 16)) * zooms[curZoom] * gridSize;
+            daNote.chartRef = newnote;
 
-            if(selectedNotes.contains(newnote)) 
-                daNote.color = CoolUtil.cfArray(uiColours[3]);
+            if(selectedNotes.contains(newnote)) daNote.color = colorFromRGBArray(selectNoteColour);
             
+            daNote.updateHitbox();
             notes.add(daNote);
 
             for(i in 1...Math.floor((newnote[2] * zooms[curZoom]) + 1)){
                 var susNote = new Note(newnote[0] + (i / zooms[curZoom]), newnote[1], newnote[4], true, i == Math.floor(newnote[2]*zooms[curZoom]));
-                if(Settings.pr.downscroll)
-                    susNote.flipY = false;
-
+                if(Settings.pr.downscroll) susNote.flipY = false;
                 susNote.setGraphicSize(Std.int(gridSize / 2.5), gridSize);
-                susNote.updateHitbox();
                 susNote.x = daNote.x;
                 susNote.y = (susNote.strumTime - (curSec * 16)) * zooms[curZoom] * gridSize;
+                susNote.updateHitbox();
 
                 susNote.x += (gridSize / 2) - (susNote.width / 2);
 
@@ -387,145 +367,135 @@ class ChartingState extends MusicBeatState {
         }
     }
 
-    // # Note functions
+    // # Add note code.
+    public function addNote(){
+        // 1280 / 3
+        if(FlxG.mouse.x > 426) return;
+        if(delNote()) return;
 
-    public function delNote(nn:Array<Dynamic>):Bool {
-        for(findNote in song.notes[curSec].sectionNotes)
-            if(Math.abs(findNote[0] - nn[0]) < 1 / zooms[curZoom]
-            && findNote[3] == nn[3] && findNote[1] == nn[1]){
-                song.notes[curSec].sectionNotes.remove(findNote);
-                reloadNotes();
+        var newnote:Array<Dynamic> = [
+            (Math.floor(gridSel.y / gridSize) / zooms[curZoom]) + (curSec * 16),
+             Math.floor(gridSel.x / gridSize) % 4,
+            0,
+            Math.floor(gridSel.x / (gridSize * 4)),
+            curNoteType
+        ];
 
+        PlayState.SONG.notes[curSec].sectionNotes.push(newnote);
+        selectedNotes = [newnote];
+        loadNotes();
+    }
+
+    public function delNote():Bool
+    {
+        for(nt in notes.members)
+            if(nt.x == gridSel.x && Math.round(nt.y) == Math.round(gridSel.y)){
+                PlayState.SONG.notes[curSec].sectionNotes.remove(nt.chartRef);
+                selectedNotes = [];
+                loadNotes();
                 return true;
             }
         return false;
     }
-    public function addNote(x:Int, y:Int){
-        var newnote:Array<Dynamic> = [
-            (Math.floor(y / gridSize) / zooms[curZoom]) + (curSec * 16),
-            Math.floor(x / gridSize) % 4,
-            0,
-            Math.floor(x / (gridSize * 4)),
-            curNoteType
-        ];
-
-        if(FlxG.mouse.x > camGR.x + camGR.width || delNote(newnote)) return;
-
-        song.notes[curSec].sectionNotes.push(newnote);
-        selectedNotes = [newnote];
-
-        reloadNotes();
-    }
-
-    // # Mouse Events.
-
     var mouseHookX:Int = -1;
     var mouseHookY:Int = -1;
+            
+    override public function update(elapsed:Float){
 
-    public function mouseMoveEvent(ev:MouseEvent){
-        noteHighlight.x = CoolUtil.boundTo(Math.floor((FlxG.mouse.x - camGR.x) / gridSize), 0, (song.playLength * 4) - 1) * gridSize;
-        noteHighlight.y = CoolUtil.boundTo(Math.floor((FlxG.mouse.y - camGR.y) / gridSize), 0, Math.floor(16 * zooms[curZoom]) - 1) * gridSize;
+        // handle music timing crap.
+        var fakeTime:Float = FlxG.sound.music.time;
+        var fakeSec :Float = fakeTime / (Conductor.crochet * 4);
 
-        // # Selecting
-
-        if(!holdingControl || mouseHookX == -1) return;
-
-        var fakeX = FlxG.mouse.x - camGR.x;
-        var fakeY = FlxG.mouse.y - camGR.y;
-        if(fakeX < mouseHookX) blueSelectBox.x = fakeX;
-        if(fakeY < mouseHookY) blueSelectBox.y = fakeY;
-
-        blueSelectBox.scale.x = fakeX - mouseHookX;
-        blueSelectBox.scale.y = fakeY - mouseHookY;
-        blueSelectBox.updateHitbox();
-
-        if(!holdingShift)
-            selectedNotes = [];
-
-        var relativeNote:Note = null;
-        for(ppNote in song.notes[curSec].sectionNotes){
-            notes.forEachAlive(function(daNote:Note){
-                if (ppNote[0] != daNote.strumTime || daNote.isSustainNote ||
-                    ppNote[1] != daNote.noteData  || ppNote[3] != daNote.player)
-                    return;
-                
-                relativeNote = daNote;
-            });
-            relativeNote.color = 0xFFFFFFFF;
-
-            if(selectedNotes.contains(ppNote)) {
-                relativeNote.color = CoolUtil.cfArray(uiColours[3]);
-                continue;
-            }
-            if (relativeNote.x < blueSelectBox.x || relativeNote.x + gridSize >= blueSelectBox.x + blueSelectBox.width ||
-                relativeNote.y < blueSelectBox.y || relativeNote.y + gridSize >= blueSelectBox.y + blueSelectBox.height)
-                continue;
-
-            selectedNotes.push(ppNote);
-            relativeNote.color = CoolUtil.cfArray(uiColours[3]);
+        if(FlxG.mouse.wheel != 0 && !blockInput){
+            vocals.time = fakeTime = FlxG.sound.music.time = CoolUtil.boundTo(fakeTime + (-FlxG.mouse.wheel * 50), 0, FlxG.sound.music.length);
+            pauseSong();
         }
-    }
-    public function mouseDownEvent(ev:MouseEvent){
-        if(!holdingControl){
-            addNote(Math.round(noteHighlight.x), Math.round(noteHighlight.y));
+
+        if(fakeSec >= curSec+1 || fakeSec < curSec){
+            curSec = Math.floor(fakeSec);
+            expandCheck();
+            loadNotes();
+            if(inSecUi) createSecUI();
+        }
+
+        gridSel.x = CoolUtil.boundTo(Math.floor((FlxG.mouse.x - camGR.x) / gridSize) * gridSize, 0, gridSpr.width  - gridSize);
+        gridSel.y = CoolUtil.boundTo(Math.floor((FlxG.mouse.y - camGR.y) / gridSize) * gridSize, 0, gridSpr.height - gridSize);
+
+        // grid Y code.
+        var calcY:Float = fakeSec - curSec;
+        camGR.y = calcY * zooms[curZoom] * 2 * -250;
+        camGR.y += 75;
+        musicLine.y = calcY * gridSpr.height;
+
+        // this entire bit here actually handles all the mouse code.
+        // I'm not sure if there's a mouse event, but even if so,
+        // I don't think it really matters here.
+        if(FlxG.keys.pressed.CONTROL && FlxG.mouse.pressed){
+            if(FlxG.mouse.justPressed){
+                mouseHookX = Math.floor(FlxG.mouse.x - camGR.x);
+                mouseHookY = Math.floor(FlxG.mouse.y - camGR.y);
+                selectSpr.x = mouseHookX;
+                selectSpr.y = mouseHookY;
+                return;
+            }
+            var fakeX = FlxG.mouse.x - camGR.x;
+            var fakeY = FlxG.mouse.y - camGR.y;
+            if(fakeX < mouseHookX) selectSpr.x = fakeX;
+            if(fakeY < mouseHookY) selectSpr.y = fakeY;
+
+            selectSpr.scale.x = fakeX - mouseHookX;
+            selectSpr.scale.y = fakeY - mouseHookY;
+            selectSpr.updateHitbox();
+
+            var shift = !FlxG.keys.pressed.SHIFT;
+            if(shift)
+                selectedNotes = [];
+
+            for(i in 0...notes.length){
+                var nt = notes.members[i];
+                if(shift)
+                    nt.color = colorFromRGBArray([255,255,255]);
+                ////////////////////////////////////////////////
+                if(nt.x >= selectSpr.x && nt.y >= selectSpr.y &&
+                    nt.x + nt.width < selectSpr.x + selectSpr.width  &&
+                    nt.y + nt.height< selectSpr.y + selectSpr.height && !nt.isSustainNote){
+                        if(!selectedNotes.contains(nt.chartRef))
+                            selectedNotes.push(nt.chartRef);
+                        nt.color = colorFromRGBArray(selectNoteColour);
+                    }
+            }
+
             return;
         }
 
-        blueSelectBox.x = mouseHookX = Math.floor(FlxG.mouse.x - camGR.x);
-        blueSelectBox.y = mouseHookY = Math.floor(FlxG.mouse.y - camGR.y);
-    }
-    public function mouseUpEvent(ev:MouseEvent){
-        blueSelectBox.x = blueSelectBox.y = 
-        mouseHookX = mouseHookY = -1;
-        blueSelectBox.scale.set(0.1,0.1);
-    }
-    
-    /////////////////////////////////////////////////
+        if(mouseHookX != -1){
+            mouseHookX = mouseHookY = -1;
+            selectSpr.x = selectSpr.y = -1;
+            selectSpr.scale.set(0.1,0.1);
 
-    override public function update(elapsed:Float){
-        var secRef:Float = CoolUtil.boundTo(Conductor.songPosition / (Conductor.crochet * 4), 0, FlxG.sound.music.length);
+            return;
+        }
 
-        // # Right click
-
+        if(FlxG.mouse.justPressed)
+            addNote();
+        // delete all your selected notes.
         if(FlxG.mouse.justPressedRight){
             for(rem in selectedNotes)
                 PlayState.SONG.notes[Math.floor(rem[0] / 16)].sectionNotes.remove(rem);
 
             selectedNotes = [];
-            reloadNotes();
-            return;
+            loadNotes();
         }
-        // # Scrolling
-
-        var wheel = FlxG.mouse.wheel * -50;
-        if(wheel != 0 && !blockInput){
-            pauseSong();
-
-            vocals.time = 
-            FlxG.sound.music.time = 
-            CoolUtil.boundTo(vocals.time + wheel, 0, vocals.length);
-        }
-
-        // # Changing Sections
-
-        if(secRef >= curSec + 1 || secRef < curSec)
-            changeSec(Math.floor(secRef));
-
-        var calcY:Float = secRef - curSec;
-            camGR.y = calcY * zooms[curZoom] * 2 * -250;
-            camGR.y += 75;
-        musicLine.y = calcY * gridLayer.members[0].height;
-
+        
         super.update(elapsed);
     }
 
     private inline function expandCheck()
-        if(curSec >= song.notes.length){
+        if(curSec >= PlayState.SONG.notes.length){
             trace('NEW SEC');
-            song.notes.push({
+            PlayState.SONG.notes.push({
                 sectionNotes: [],
-                mustHitSection: false,
-                bpmChange: 0
+                mustHitSection: false
             });
         }
 
@@ -561,13 +531,12 @@ class ChartingState extends MusicBeatState {
     public static inline var textOffset:Int = -5;
     public function createSecUI():Void
     {
-        /*uiElements.clear();
+        uiElements.clear();
         inSecUi = true;
         blockInput = false;
-        //activeUIElement = null;
+        activeUIElement = null;
 
-        var mustHitSection:CharFlxG.mouse.visible = false;
-            FlxG.switchState(new PlayState());tUI_CheckBox = new ChartUI_CheckBox(uiBG.x + 10, uiBG.y + 10, PlayState.SONG.notes[curSec].mustHitSection, (c:Bool)->{
+        var mustHitSection:ChartUI_CheckBox = new ChartUI_CheckBox(uiBG.x + 10, uiBG.y + 10, PlayState.SONG.notes[curSec].mustHitSection, (c:Bool)->{
             PlayState.SONG.notes[curSec].mustHitSection = c;
         });
 
@@ -610,12 +579,12 @@ class ChartingState extends MusicBeatState {
         uiElements.add(copyLast);
         uiElements.add(copyButton);
         uiElements.add(swapButton);
-        uiElements.add(snButton);*/
+        uiElements.add(snButton);
     }
 
     public function createSongUI():Void
     {
-        /*uiElements.clear();
+        uiElements.clear();
         inSecUi = false;
 
         var nameBox:ChartUI_InputBox = new ChartUI_InputBox(uiBG.x + 10, uiBG.y + 10, 150, PlayState.SONG.song, (str:String) -> {
@@ -749,6 +718,24 @@ class ChartingState extends MusicBeatState {
         uiElements.add(clearAllNotes);
         uiElements.add(saveSong);
         uiElements.add(playerBox);
-        uiElements.add(selectAll);*/
+        uiElements.add(selectAll);
+    }
+
+    // basically stolen from FlxGridOverlay
+    public static function createGrid(cWidth:Int, cHeight:Int, columns:Int, rows:Int, Colours:Array<Array<FlxColor>>, division:Int = 4):StaticSprite
+    {
+        var emptySprite:BitmapData = new BitmapData(cWidth * columns, cHeight * rows, true);
+        var colOffset:Int = 0;
+
+        for(i in 0...columns)
+            for(j in 0...rows){
+                emptySprite.fillRect(new Rectangle(i * cWidth, j * cHeight, cWidth, cHeight), Colours[j % division][(i + colOffset) % 2]);
+                colOffset++;
+            }
+
+        emptySprite.fillRect(new Rectangle(((cWidth * columns) / 2) - 2, 0, 4, cHeight * rows), FlxColor.BLACK);
+
+        var retSprite = new StaticSprite().loadGraphic(emptySprite);
+        return retSprite;
     }
 }

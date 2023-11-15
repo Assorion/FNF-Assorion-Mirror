@@ -67,7 +67,7 @@ class StoryMenuState extends MenuTemplate
 			pushObject(weekGraphic);
 		}
 
-		var topBlack:StaticSprite = new StaticSprite(0,0).makeGraphic(640, 20, ChartingState.colorFromRGBArray([25,25,25]));
+		var topBlack:StaticSprite = new StaticSprite(0,0).makeGraphic(640, 20, FlxColor.fromRGB(25,25,25));
 		topText = new FlxText(0, 2, 0, "1234567890ABCDEFG", 18);
 		topText.setFormat('assets/fonts/vcr.ttf', 18, FlxColor.GRAY, CENTER);
 		topText.screenCenter(X);

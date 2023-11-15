@@ -20,7 +20,7 @@ class HistoryState extends MenuTemplate {
     override function create()
     {
         super.create();
-        background.color = ChartingState.colorFromRGBArray([145, 113, 255]);
+        background.color = CoolUtil.cfArray([145, 113, 255]);
         adds = [0];
         splitNumb = 2;
 

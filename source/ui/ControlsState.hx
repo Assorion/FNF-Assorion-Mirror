@@ -35,7 +35,7 @@ class ControlsState extends MenuTemplate {
 		splitNumb = 3;
 		super.create();
 
-		background.color = ChartingState.colorFromRGBArray([0,255,110]);
+		background.color = FlxColor.fromRGB(0,255,110);
 		adds = [150, 450];
 
 		createNewList();

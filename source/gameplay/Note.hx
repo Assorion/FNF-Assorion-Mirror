@@ -37,7 +37,7 @@ class Note extends StaticSprite
 	public var strumTime:Float = 0;
 	public var isSustainNote:Bool = false;
 
-	public var chartRef:Array<Dynamic> = [];
+	//public var chartRef:Array<Dynamic> = [];
 
 	public function new(strumTime:Float, data:Int, type:Int, ?sustainNote:Bool = false, ?isEnd:Bool = false)
 	{
@@ -64,8 +64,6 @@ class Note extends StaticSprite
 		animation.play('scroll');
 		centerOffsets();
 		updateHitbox ();
-
-		active = false;
 
 		if (!isSustainNote) return;
 

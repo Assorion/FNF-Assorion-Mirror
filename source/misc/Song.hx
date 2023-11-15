@@ -10,6 +10,7 @@ typedef SwagSection =
 {
 	var sectionNotes:Array<Dynamic>;
 	var mustHitSection:Bool;
+	var bpmChange:Int;
 }
 
 typedef SwagSong =
@@ -20,6 +21,7 @@ typedef SwagSong =
 	var needsVoices:Bool;
 	var speed:Float;
 
+	var playLength:Int;
 	var characters:Array<String>;
 	var activePlayer:Int;
 	var stage:String;
@@ -38,6 +40,9 @@ class Song
 
 	public static inline function parseJSON(rawJson:String):SwagSong
 	{
-		return cast Json.parse(rawJson).song;
+		var tmpCast:SwagSong = cast Json.parse(rawJson).song;
+		if(tmpCast.playLength < 1) tmpCast.playLength = 2;
+
+		return tmpCast;
 	}
 }

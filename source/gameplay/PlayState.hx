@@ -137,8 +137,8 @@ class PlayState extends MusicBeatState
 		correctMusic = false;
 
 		generateSong();
-		for(i in 0...2)
-			generateStaticArrows(i, i == playerPos);
+		for(i in 0...SONG.playLength)
+			generateStaticArrows(i, SONG.activePlayer == i);
 
 		followPos = new FlxObject(0, 0, 1, 1);
 		followPos.setPosition(FlxG.width / 2, FlxG.height / 2);

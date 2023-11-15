@@ -7,6 +7,7 @@ import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
 import openfl.geom.Matrix;
 import flixel.graphics.frames.FlxFramesCollection;
+import flixel.util.FlxColor;
 
 using StringTools;
 
@@ -44,8 +45,9 @@ class CoolUtil
 
 		return val;
 	}
+	public inline static function cfArray(array:Array<Int>):Int
+        return FlxColor.fromRGB(array[0], array[1], array[2]);
 
-	// TODO: Make this support web browsers. Web build handles rendering differently.
 	// # Copy camera to bitmap data keeping rotation and zoom.
 	public static function copyCameraToData(bitmapDat:BitmapData, camera:FlxCamera){
 		var matr:Matrix = new Matrix(camera.zoom, 0, 0, camera.zoom, 0, 0);

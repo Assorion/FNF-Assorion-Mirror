@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
+import flixel.text.FlxText;
 import openfl.utils.Assets;
 import openfl.geom.Rectangle;
 import openfl.display.BitmapData;
@@ -25,6 +26,7 @@ class CachingState extends MusicBeatState {
 
     private var loadingBarBG:FlxSprite;
     private var loadingBarPC:FlxSprite;
+    private var assetText:FlxText;
     private var keepGraphic:BitmapData;
 
     public var objects:Array<String> = [];
@@ -48,10 +50,14 @@ class CachingState extends MusicBeatState {
             findItems(keepDirectories[i]);
     }
 
+    var prevFramerate:Int;
     public override function create(){
         FlxG.mouse.visible =
         persistentUpdate =
         correctMusic = false;
+
+        prevFramerate = Settings.pr.framerate;
+        Settings.pr.framerate = 999;
 
         findItems('assets/');
 
@@ -71,6 +77,19 @@ class CachingState extends MusicBeatState {
         loadingBarPC.screenCenter();
         add(loadingBarBG);
         add(loadingBarPC);
+
+        var ldText = new FlxText(0, 0, 0, "Loading:", 20);
+		ldText.setFormat("assets/fonts/vcr.ttf", 50, 0xFFFFFFFF, CENTER);
+		ldText.screenCenter();
+        ldText.y -= ldText.height * 4;
+
+        assetText = new FlxText(0, 0, 0, "", 20);
+		assetText.setFormat("assets/fonts/vcr.ttf", 40, 0xFFFFFFFF, CENTER);
+		assetText.screenCenter();
+        assetText.y -= assetText.height * 3.3;
+
+        add(ldText);
+        add(assetText);
 
         super.create();
     }
@@ -106,12 +125,17 @@ class CachingState extends MusicBeatState {
         if(index == objects.length - 1){
             objects = null;
             FlxG.switchState(new ui.TitleState());
-            
+            Settings.pr.framerate = prevFramerate;
+            Settings.apply();
+
             return;
         }
         
         var obj:String = objects[index];
         trace('Caching: $obj');
+
+        assetText.text = obj;
+        assetText.screenCenter(X);
 
         // in case somehow it has multiple dots
         var tmp = obj.split('.');
