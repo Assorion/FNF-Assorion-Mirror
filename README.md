@@ -83,7 +83,7 @@ Take a look at <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/mai
 
 # 🛠 | Compiling
 
-**Libraries:**  
+#### **Libraries:**  
 Read ahead to your OS and read those instructions. Then come back here.
 
 Run `haxelib setup <library name>` replacing `<library name>` with these libraries below:
@@ -94,7 +94,7 @@ Run `haxelib setup <library name>` replacing `<library name>` with these librari
 - `flixel-addons 3.0.2`
 - `flixel-ui 2.5.0`
 
-**For Windows:**
+#### **For Windows:**
 - Install <a href="https://haxe.org/">`Haxe`</a>
 - Run `haxelib setup` in CMD. Using the defaults is fine
 - Install libraries above
@@ -103,7 +103,7 @@ Run `haxelib setup <library name>` replacing `<library name>` with these librari
 - Test to make sure both the `gcc` and `g++` commands work in CMD
 - Run `lime test windows -D HXCPP_MINGW` in CMD. Make sure it's in the project root folder, not the source folder
 
-**For Linux:**
+#### **For Linux:**
 - Install Haxe using your package manager
 - Run `haxelib setup` in your terminal
 - Install libraries above
@@ -111,12 +111,14 @@ Run `haxelib setup <library name>` replacing `<library name>` with these librari
 - Test to make sure both `gcc` and `g++` commands work. They should already be installed in your distro
 - Run `lime test linux` in your terminal
 
-**If you're confused:**  
+#### **If you're confused:**  
 Follow a YouTube guide, or the base game instructions on compiling. Do NOT use Visual Studio's Clang-Compiler, please use MinGW-w64.  
 Remember to install the library versions listed above though.
 
 > [!WARNING] 
-> Assorion has been tested with the latest versions of Lime & Flixel. These recent versions cause issues with compiling, cameras, etc. I advise that you downgrade Flixel & Lime to the versions listed above to make sure Assorion works as intended.  
+> Assorion has been tested with the latest versions of Lime & Flixel. These recent versions cause issues with compiling, cameras, etc. I advise that you downgrade Flixel & Lime to the versions listed above to make sure Assorion works as intended.
+>
+> 
 > Every version of the libraries listed before are the versions that Assorion has been tested / built with, so using those versions will gurantee that Assorion will compile and behave correctly. Fixes for these issues will hopefully be implemented soon.
 
 ## 💻 | Minimum Requirements
