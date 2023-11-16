@@ -90,10 +90,13 @@ class ChartUI_CheckBox extends ChartUI_Generic{
     public var changeFunc:Bool->Void;
     public var checked:Bool = false;
 
-    public function new(x:Float, y:Float, ?w:Int = 30, ?h:Int = 30, onChange:Bool->Void){
+    public function new(x:Float, y:Float, ?w:Int = 30, ?h:Int = 30, startChecked:Bool = false, onChange:Bool->Void){
         super(x,y,w,h,true,'');
 
         changeFunc = onChange;
+        checked = startChecked;
+        if(checked)
+            drawSquare(6,6, w - 12, h - 12, false);
     }
     override public function mouseClicked(){
         checked = !checked;
@@ -233,6 +236,7 @@ class ChartUI_InputBox extends ChartUI_Persistent {
         super(x,y,w,h,true,startText);
 
         changeFunc = onChange;
+        uneditedText = startText;
     }
     
     //////////////////////////////////

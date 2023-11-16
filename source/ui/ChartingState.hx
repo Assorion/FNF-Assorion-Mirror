@@ -632,16 +632,18 @@ class ChartingState extends MusicBeatState {
 
         uiElements.clear();
 
-        var coolButton   = new   ChartUI_Button(20, 20, 200, function(){ trace('CoolBeans!'); }, 'Print!');
-        var coolCheckBox = new ChartUI_CheckBox(20, 55, 200, function(ch:Bool){ trace('T: $ch'); });
-        var coolDropdown = new ChartUI_DropDown(20, 90, 170, ['Cool1', 'COol2', 'Cool3'], 'Cool1', function(index:Int, item:String){
+        var coolButton   = new   ChartUI_Button(20, 20, 120, function(){ trace('CoolBeans!'); }, 'Print!');
+        var coolCheckBox = new ChartUI_CheckBox(20, 55, 30, false, function(ch:Bool){ trace('T: $ch'); });
+        var coolCh2ckBox = new ChartUI_CheckBox(55, 55, 30, true , function(ch:Bool){ trace('T: $ch'); });
+        var coolDropdown = new ChartUI_DropDown(20, 90, 90, ['Cool1', 'COol2', 'Cool3'], 'pens', function(index:Int, item:String){
             trace('I: $index O: $item');
         }, uiElements);
 
-        var coolInputBox = new ChartUI_InputBox(20, 125, 200, '', function(ch:String){ trace(ch); });
+        var coolInputBox = new ChartUI_InputBox(20, 125, 120, 'test', function(ch:String){ trace(ch); });
 
         uiElements.add(coolButton);
         uiElements.add(coolCheckBox);
+        uiElements.add(coolCh2ckBox);
         uiElements.add(coolDropdown);
         uiElements.add(coolInputBox);
     }
