@@ -1,6 +1,7 @@
 package ui;
 
 import flixel.FlxG;
+import flixel.group.FlxGroup.FlxTypedSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.display.BitmapData;
 import flixel.util.FlxColor;
@@ -57,7 +58,7 @@ class ChartingState extends MusicBeatState {
     public var curZoom:Int = 2;
 
     public var notes:FlxTypedGroup<Note>;
-    public var uiElements:FlxTypedGroup<flixel.FlxSprite>;
+    public var uiElements:FlxTypedSpriteGroup<flixel.FlxSprite>;
 
     public var camUI:FlxCamera;
     public var camGR:FlxCamera;

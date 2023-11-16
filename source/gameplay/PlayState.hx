@@ -285,7 +285,7 @@ class PlayState extends MusicBeatState
 			var player   :Int = Std.int(fNote[3]);
 			var ntype    :Int = Std.int(fNote[4]);
 
-			var newNote = new Note(time, noteData % 4, ntype, false, false);
+			var newNote = new Note(time, noteData, ntype, false, false);
 			newNote.scrollFactor.set();
 			newNote.player = player;
 			unspawnNotes.push(newNote);
@@ -302,7 +302,7 @@ class PlayState extends MusicBeatState
 	}
 
 	private function generateStaticArrows(player:Int, playable:Bool):Void
-		for (i in 0...4)
+		for (i in 0...Note.keyCount)
 		{
 			var babyArrow:StrumNote = new StrumNote(0, strumLine.y - 10, i, player);
 			babyArrow.alpha = 0;
@@ -316,7 +316,7 @@ class PlayState extends MusicBeatState
 	function startCountdown():Void
 	{
 		for(i in 0...strumLineNotes.length)
-			FlxTween.tween(strumLineNotes.members[i], {alpha: 1, y: strumLineNotes.members[i].y + 10}, 0.5, {startDelay: ((i % 4) + 1) * 0.2});
+			FlxTween.tween(strumLineNotes.members[i], {alpha: 1, y: strumLineNotes.members[i].y + 10}, 0.5, {startDelay: ((i % Note.keyCount) + 1) * 0.2});
 
 		var introSprites:Array<StaticSprite> = [];
 		var introSounds:Array<FlxSound>   = [];
@@ -515,6 +515,8 @@ class PlayState extends MusicBeatState
 
 	public var hittableNotes:Array<Note> = [null, null, null, null];
 	public var keysPressed:Array<Bool>   = [false, false, false, false];
+	public var keyArray:Array<Array<Int>> = [NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT];
+
 	override function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
@@ -523,7 +525,6 @@ class PlayState extends MusicBeatState
 		var k = key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12] ]);
 		switch(k){
 			case 0, 1:
-				//if(FlxG.sound.music.playing)
 				pauseGame(new PauseSubState(camHUD, this));
 				return;
 			case 2:
@@ -535,7 +536,7 @@ class PlayState extends MusicBeatState
 		}
 
 		// actual input system
-		var nkey = key.deepCheck([NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT]);
+		var nkey = key.deepCheck(keyArray);
 		if(nkey == -1 || keysPressed[nkey] || Settings.pr.botplay) return;
 
 		keysPressed[nkey] = true;
@@ -557,7 +558,7 @@ class PlayState extends MusicBeatState
 	override public function keyRel(ev:KeyboardEvent){
 		super.keyRel(ev);
 
-		var nkey = key.deepCheck([NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT]);
+		var nkey = key.deepCheck(keyArray);
 		if (nkey == -1) return;
 
 		keysPressed[nkey] = false;
@@ -576,7 +577,7 @@ class PlayState extends MusicBeatState
 		daNote.visible = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
 		if(!daNote.visible) return;
 		
-		var strumRef = strumLineNotes.members[daNote.noteData + (4 * daNote.player)];
+		var strumRef = strumLineNotes.members[daNote.noteData + (Note.keyCount * daNote.player)];
 		if((daNote.player != playerPos || Settings.pr.botplay) && daNote.curType.mustHit && songTime >= daNote.strumTime){
 			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData]);
 			vocals.volume = 1;

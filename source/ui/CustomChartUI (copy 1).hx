@@ -1,6 +1,5 @@
 package ui;
 
-import flixel.group.FlxSpriteGroup;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import openfl.display.BitmapData;
@@ -8,7 +7,6 @@ import flixel.util.FlxColor;
 import ui.ChartingState;
 import openfl.geom.Rectangle;
 import flixel.text.FlxText;
-import gameplay.Note;
 
 using StringTools;
 
@@ -34,8 +32,8 @@ class ChartUI_Grid extends StaticSprite {
             }
 
         // blackline down the middle.
-        for(i in 1...Math.floor(columns / Note.keyCount))
-            emptySprite.fillRect(new Rectangle((cWidth * Note.keyCount * i) - 2, 0, 4, cHeight * rows), FlxColor.BLACK);
+        for(i in 1...Math.floor(columns * 0.25))
+            emptySprite.fillRect(new Rectangle((cWidth * 4 * i) - 2, 0, 4, cHeight * rows), FlxColor.BLACK);
 
         super(0,0);
         
@@ -43,112 +41,43 @@ class ChartUI_Grid extends StaticSprite {
     }
 }
 
-class ChartUI_Generic extends FlxSprite {
-    var canvas:BitmapData;
+class ChartUI_Button extends FlxSprite {
+    public var clickFunc:Void->Void;
+    private var highlighted:Bool = false;
 
-    // # drawing
-    public inline function drawSquare(dx:Int, dy:Int, w:Int, h:Int, ?indent:Bool = false){
-        var col1:Int = indent ? 0 : 2;
-        var col2:Int = indent ? 2 : 0;
-
-        canvas.fillRect(new Rectangle(dx,  dy,   w,   h)  , CoolUtil.cfArray(ChartingState.uiColours[col1 ]));
-        canvas.fillRect(new Rectangle(dx+3,dy+3, w-3, h-3), CoolUtil.cfArray(ChartingState.uiColours[col2 ]));
-        canvas.fillRect(new Rectangle(dx+3,dy+3, w-6, h-6), CoolUtil.cfArray(ChartingState.uiColours[1    ]));
-    }
-    public inline function makeText(w:Int, h:Int, ?indent:Bool = false, ?txt:String = '', ?dx:Int = 0, ?dy:Int = 0){
-        drawSquare(dx,dy, w,h, indent);
-
-        if(txt == null || txt == '') return;
-
-        var text:FlxText = new FlxText(0,0,0,txt,16);
-        stamp(text, dx + Std.int((w - text.width) / 2), dy + Std.int((h - text.height) / 2));
-    }
-
-    // # Mouse movements
-
-    public function mouseOverlaps(){}
-    public function mouseClicked(){}
-
-    /////////////////////////////
-
-    public function new(x:Float, y:Float, w:Int, h:Int, i:Bool, t:String){
+    public function new(x:Float, y:Float, useBright:Bool = false, onClick:Void->Void, text:String = '', twidth:Int = 90){
         super(x,y);
 
-        canvas = new BitmapData(w, h, true);
-        loadGraphic(canvas);
-        makeText(w,h,i,t);
-    }
-}
+        var emptySprite:BitmapData = new BitmapData(twidth, 30, true);
+        emptySprite.fillRect(new Rectangle(0,0, twidth  , 30), CoolUtil.cfArray(ChartingState.uiColours[0]));
+        emptySprite.fillRect(new Rectangle(4,4, twidth-8, 22), CoolUtil.cfArray(ChartingState.uiColours[ useBright ? 2 : 1 ]));
 
-class ChartUI_Button extends ChartUI_Generic {
-    public var clickFunc:Void->Void;
-    public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, onClick:Void->Void, ?text:String){
-        super(x,y,w,h,false,text);
+        loadGraphic(emptySprite);
+        updateHitbox();
 
+        var text:FlxText = new FlxText(0,0,0,text,16);
+        stamp(text, Std.int((width / 2) - (text.width / 2)), Std.int((height / 2) - (text.height / 2)));
         clickFunc = onClick;
     }
 
-    override public function mouseClicked()
-        clickFunc();
-}
-class ChartUI_DropDown extends ChartUI_Generic {
-    public var changeFunc:Int->String->Void;
-    public var buttonList:Array<ChartUI_Button> = [];
-    public var items:Array<String>;
-    public var expanded:Bool = false;
-    public var parentGroup:FlxTypedSpriteGroup<ChartUI_Generic>;
+    override public function update(elapsed:Float){
+        if(!FlxG.mouse.overlaps(this)) {
+            if(highlighted)
+                color = 0xFFFFFFFF;
 
-    public function dotButton()
-        makeText(30, Math.floor(height), expanded, '.' , Math.floor(width - 30), 0);
-
-    public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, items:Array<String>, text:String = '', onChange:Int->String->Void, parent:FlxTypedSpriteGroup<ChartUI_Generic>){
-        super(x,y,w + 30,h,false,'');
-
-        changeFunc = onChange;
-        parentGroup = parent;
-        this.items = items;
-
-        makeText(w , h, text, 0, 0);
-        dotButton();
-    }
-
-    public function closeDropdowns(){
-        expanded = false;
-        ChartingState.activeDropDown = null;
-        dotButton();
-
-        for(i in 0...buttonList.length){
-            parentGroup.remove(buttonList[i]);
-
-            buttonList[i].destroy();
-            buttonList[i] = null;
-        }
-    }
-    public override function mouseClicked(){
-        expanded = !expanded;
-        if(!expanded){
-            closeDropdowns();
+            highlighted = false;
             return;
         }
 
-        dotButton();
-        ChartingState.activeDropDown = this;
+        highlighted = true;
+        color = FlxColor.fromRGB(230, 230, 230);
 
-        var w:Int = Math.floor(width) - 30;
-        var h:Int = Math.floor(height);
-
-        for(i in 0...items.length){
-            buttonList[i] = new ChartUI_Button(x - parentGroup.x,(y - parentGroup.y) + (h * (i + 1)), w + 30, h, function(){
-                changeFunc(i, items[i]);
-
-                makeText(w, h, items[i], 0, 0);
-                closeDropdowns();
-            }, items[i]);
-            parentGroup.add(buttonList[i]);
-        }
+        if(FlxG.mouse.justPressed /* && ChartingState.activeUIElement == null*/)
+            clickFunc();
     }
-
-    /*public var itemList:Array<String> = [];
+}
+class ChartUI_DropDown extends FlxSprite {
+    public var itemList:Array<String> = [];
     public var selectedItem:String = '';
     public var buttonWidth:Int = 200;
     private var dropped:Bool = false;
@@ -195,7 +124,7 @@ class ChartUI_DropDown extends ChartUI_Generic {
             color = 0xFFFFFFFF;
         }
 
-        if(!FlxG.mouse.justPressed /*|| (ChartingState.activeUIElement != this && ChartingState.activeUIElement != null) ) return;
+        if(!FlxG.mouse.justPressed /*|| (ChartingState.activeUIElement != this && ChartingState.activeUIElement != null)*/ ) return;
 
         
         if(!FlxG.mouse.overlaps(this)){
@@ -219,7 +148,7 @@ class ChartUI_DropDown extends ChartUI_Generic {
         var sel = CoolUtil.boundTo(Math.floor(fY / 30), 0, itemList.length - 1, true);
         createButton([ itemList[sel] ]);
         changeFunc(itemList[sel]);
-    }*/
+    }
 }
 class ChartUI_InputBox extends FlxSprite {
     public var curText:String = '';
@@ -289,25 +218,49 @@ class ChartUI_InputBox extends FlxSprite {
     }
 }
 
-class ChartUI_CheckBox extends ChartUI_Generic{
+class ChartUI_CheckBox extends FlxSprite{
     public var changeFunc:Bool->Void;
     public var checked:Bool = false;
+    private var highlighted:Bool = false;
 
-    public function new(x:Float, y:Float, ?w:Int = 30, ?h:Int = 30, onChange:Bool->Void){
-        super(x,y,w,h,false,'');
+    public function swap(makeChanges:Bool = true){
+        if(makeChanges){
+            checked = !checked;
+            changeFunc(checked);
+        }
 
-        changeFunc = onChange;
-    }
-    override public function mouseClicked(){
-        checked = !checked;
+        var emptySprite:BitmapData = new BitmapData(30, 30, true);
+        emptySprite.fillRect(new Rectangle(0,0, 30, 30), CoolUtil.cfArray(ChartingState.uiColours[0]));
+        emptySprite.fillRect(new Rectangle(4,4, 22, 22), CoolUtil.cfArray(ChartingState.uiColours[2]));
 
-        var w = Math.floor(width);
-        var h = Math.floor(height);
-
-        drawSquare(0,0,w,h,false);
         if(checked)
-            drawSquare(6,6, w - 12, h - 12, true);
+            emptySprite.fillRect(new Rectangle(8,8, 14, 14), CoolUtil.cfArray(ChartingState.uiColours[0]));
 
-        changeFunc(checked);
+        loadGraphic(emptySprite);
+        updateHitbox();
+    }
+
+    public function new(x:Float, y:Float, checked:Bool = false, onChange:Bool->Void){
+        super(x,y);
+
+        this.checked = checked;
+        changeFunc   = onChange;
+        swap(false);
+    }
+
+    override public function update(elapsed:Float){
+        if(!FlxG.mouse.overlaps(this)) {
+            if(highlighted)
+                color = 0xFFFFFFFF;
+
+            highlighted = false;
+            return;
+        }
+
+        highlighted = true;
+        color = FlxColor.fromRGB(230, 230, 230);
+
+        if(FlxG.mouse.justPressed /*&& ChartingState.activeUIElement == null*/)
+            swap();
     }
 }

@@ -26,6 +26,7 @@ class Note extends StaticSprite
 
 	// this is inlined, you can't change this variable later.
 	public static inline var swagWidth:Float = 160 * 0.7;
+	public static inline var keyCount:Int = 4;
 
 	public var curType:NoteType;
 	public var curColor:String = 'purple';
@@ -45,7 +46,7 @@ class Note extends StaticSprite
 
 		isSustainNote  = sustainNote;
 		this.strumTime = strumTime;
-		this.noteData  = data % 4;
+		this.noteData  = data % keyCount;
 		this.curType   = possibleTypes[type];
 
 		curColor = colArr[noteData];

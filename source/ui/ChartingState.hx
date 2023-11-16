@@ -2,6 +2,7 @@ package ui;
 
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
 import openfl.display.BitmapData;
 import openfl.events.KeyboardEvent;
 import openfl.geom.Rectangle;
@@ -28,7 +29,7 @@ class ChartingState extends MusicBeatState {
     public static var uiColours:Array<Array<Int>> = [
         [155, 100, 160], // dark
         [200, 120, 210], // light
-        [240, 150, 250], // button light
+        [240, 150, 250], // 3d light
         [170, 170, 200], // note select colour
         [0,   40,  8  ], // swamp green background colour
     ];
@@ -54,18 +55,16 @@ class ChartingState extends MusicBeatState {
     public var musicLine:StaticSprite;
 
     public var notes:FlxTypedGroup<Note>;
-    public var uiElements:FlxTypedGroup<flixel.FlxSprite>;
+    public var uiElements:FlxTypedSpriteGroup<ChartUI_Generic>;
 
     public var camUI:FlxCamera;
     public var camGR:FlxCamera;
 
     public static var blockInput:Bool = false;
+    public static var activeUIElement:ChartUI_Generic;
+    public static var activeDropDown:ChartUI_DropDown;
 
-    // this is used to stop conflicts with other UI elements
-    //public static var activeUIElement:Dynamic;
-
-    var uiBG:StaticSprite;
-    var uiFront:StaticSprite;
+    var uiBG:ChartUI_Generic;
 
     private var vocals:FlxSound;
     private var song:SwagSong;
@@ -104,6 +103,18 @@ class ChartingState extends MusicBeatState {
         noteHighlight = new StaticSprite(0,0).makeGraphic(gridSize, gridSize, 0xFFFFFFFF);
         add(gridLayer);
         add(noteHighlight);
+
+        // # UI
+
+        uiBG = new ChartUI_Generic(camGR.x + camGR.width + 10, 0, 420, 550, false, '');
+        uiBG.screenCenter(Y);
+        uiElements = new FlxTypedSpriteGroup<ChartUI_Generic>();
+        uiElements.y = uiBG.y;
+
+        add(uiBG);
+        add(uiElements);
+
+        createTestUI();
 
         // # create line and notes
 
@@ -160,7 +171,7 @@ class ChartingState extends MusicBeatState {
 
     // for changing zoom level
     public function makeGrid(){
-        var gridSprite:StaticSprite = new ChartUI_Grid(gridSize, gridSize, 4 * (song.playLength), Math.floor(16 * zooms[curZoom]), (curZoom + 1) % 2 + 3);
+        var gridSprite:StaticSprite = new ChartUI_Grid(gridSize, gridSize, Note.keyCount * (song.playLength), Math.floor(16 * zooms[curZoom]), (curZoom + 1) % 2 + 3);
 
         gridLayer.clear();
         gridLayer.add(gridSprite);
@@ -169,7 +180,7 @@ class ChartingState extends MusicBeatState {
             if(song.characters.length - 1 < i) break;
 
             var tmpIcon = new HealthIcon(song.characters[i]);
-            tmpIcon.x = gridSize * i * 4 + gridSize;
+            tmpIcon.x = gridSize * i * Note.keyCount + gridSize;
             tmpIcon.y = gridSprite.height + 10;
             tmpIcon.scale.set(0.5, 0.5);
             tmpIcon.updateHitbox();
@@ -179,6 +190,9 @@ class ChartingState extends MusicBeatState {
 
         camGR.width  = Math.round(gridSprite.width);
         camGR.height = Math.round(gridSprite.height + 85);
+
+        uiBG.x = camGR.width + camGR.x + 10;
+        uiElements.x = uiBG.x;
     }
 
     // # Keyboard input
@@ -214,14 +228,14 @@ class ChartingState extends MusicBeatState {
                     for(nt in selectedNotes){
                         nt[1]--;
                         if (nt[1] < 0) {
-                            nt[1] = 3;
+                            nt[1] = Note.keyCount - 1;
                             nt[3] = ((nt[3] - 1) + song.playLength) % song.playLength;
                         }
                     }
                 case 1:
                     for(nt in selectedNotes){
                         nt[1]++;
-                        if (nt[1] > 3){
+                        if (nt[1] > Note.keyCount - 1){
                             nt[1] = 0;
                             nt[3] = (nt[3] + 1) % song.playLength;
                         }
@@ -250,7 +264,7 @@ class ChartingState extends MusicBeatState {
                     selectedNotes = dupeNotes;
                 case 5:
                     for(nt in selectedNotes)
-                        nt[1] = 3 - nt[1];
+                        nt[1] = (Note.keyCount - 1) - nt[1];
                 
                 case 6:
                     selectedNotes = [];
@@ -286,6 +300,9 @@ class ChartingState extends MusicBeatState {
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEvent);
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP  , mouseUpEvent);
+
+                activeUIElement = null;
+                activeDropDown = null;
 
                 PlayState.SONG = song;
             case 2:
@@ -361,7 +378,7 @@ class ChartingState extends MusicBeatState {
             daNote.setGraphicSize(gridSize, gridSize);
             daNote.updateHitbox();
             daNote.x  = gridSize * daNote.noteData;
-            daNote.x += gridSize * 4 * newnote[3];
+            daNote.x += gridSize * Note.keyCount * newnote[3];
             daNote.y  = (daNote.strumTime - (curSec * 16)) * zooms[curZoom] * gridSize;
             daNote.player = newnote[3];
 
@@ -403,9 +420,9 @@ class ChartingState extends MusicBeatState {
     public function addNote(x:Int, y:Int){
         var newnote:Array<Dynamic> = [
             (Math.floor(y / gridSize) / zooms[curZoom]) + (curSec * 16),
-            Math.floor(x / gridSize) % 4,
+            Math.floor(x / gridSize) % Note.keyCount,
             0,
-            Math.floor(x / (gridSize * 4)),
+            Math.floor(x / (gridSize * Note.keyCount)),
             curNoteType
         ];
 
@@ -423,8 +440,40 @@ class ChartingState extends MusicBeatState {
     var mouseHookY:Int = -1;
 
     public function mouseMoveEvent(ev:MouseEvent){
-        noteHighlight.x = CoolUtil.boundTo(Math.floor((FlxG.mouse.x - camGR.x) / gridSize), 0, (song.playLength * 4) - 1) * gridSize;
+        noteHighlight.x = CoolUtil.boundTo(Math.floor((FlxG.mouse.x - camGR.x) / gridSize), 0, (song.playLength * Note.keyCount) - 1) * gridSize;
         noteHighlight.y = CoolUtil.boundTo(Math.floor((FlxG.mouse.y - camGR.y) / gridSize), 0, Math.floor(16 * zooms[curZoom]) - 1) * gridSize;
+
+        // # Ui stuff
+
+        if(FlxG.mouse.x > camGR.width + camGR.x){
+            var foundMember:Bool = false;
+
+            for(i in 0...uiElements.length){
+                var member = uiElements.members[(uiElements.length - 1) - i];
+                if(member == null) 
+                    continue;
+
+                if (FlxG.mouse.x < member.x || FlxG.mouse.y < member.y ||
+                    FlxG.mouse.x >= member.x + member.width  ||
+                    FlxG.mouse.y >= member.y + member.height || foundMember){
+                    member.color = 0xFFFFFFFF;
+                    continue;
+                }
+
+                foundMember = true;
+
+                if (activeUIElement == member) 
+                    continue;
+
+                activeUIElement = member;
+                member.color = 0xFFE5E5E5;
+                member.mouseOverlaps();
+            }
+            if(!foundMember)
+                activeUIElement = null;
+
+            return;
+        }
 
         // # Selecting
 
@@ -466,6 +515,16 @@ class ChartingState extends MusicBeatState {
         }
     }
     public function mouseDownEvent(ev:MouseEvent){
+        if(activeUIElement != null){
+            activeUIElement.mouseClicked();
+            return;
+        }
+        if (activeDropDown != null){
+            activeDropDown.closeDropdowns();
+            return;
+        }
+        ////////////////////
+
         if(!holdingControl){
             addNote(Math.round(noteHighlight.x), Math.round(noteHighlight.y));
             return;
@@ -531,7 +590,7 @@ class ChartingState extends MusicBeatState {
 
     public function createInfoUI():Void
     {
-        uiElements.clear();
+        /*uiElements.clear();
         inSecUi = false;
 
         var text:String = '
@@ -553,7 +612,22 @@ class ChartingState extends MusicBeatState {
         var aboutText:FlxText = new FlxText(uiBG.x - 37, (uiBG.y - 10) + textOffset, 0, text, 12);
         aboutText.scale.set(0.95, 0.95);
 
-        uiElements.add(aboutText);
+        uiElements.add(aboutText);*/
+    }
+
+    public function createTestUI():Void
+    {
+        uiElements.clear();
+
+        var coolButton   = new   ChartUI_Button(20, 20, function(){ trace('CoolBeans!'); }, 'Print!');
+        var coolCheckBox = new ChartUI_CheckBox(20, 55, function(ch:Bool){ trace('T: $ch'); });
+        var coolDropdown = new ChartUI_DropDown(20, 90, ['Cool1', 'COol2', 'Cool3'], 'Cool1', function(index:Int, item:String){
+            trace('I: $index O: $item');
+        }, uiElements);
+
+        uiElements.add(coolButton);
+        uiElements.add(coolCheckBox);
+        uiElements.add(coolDropdown);
     }
 
     private var inSecUi:Bool = false;
