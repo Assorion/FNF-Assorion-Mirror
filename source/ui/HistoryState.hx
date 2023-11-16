@@ -50,7 +50,7 @@ class HistoryState extends MenuTemplate {
 
         // literally stolen from freeplay.
         var bottomBlack:StaticSprite = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, 0xFF000000);
-        var str='Press ${misc.InputString.getKeyNameFromString(NewControls.UI_ACCEPT[0], true, false)} to see the entry. / ${misc.InputString.getKeyNameFromString(NewControls.UI_BACK[0], true, false)} to go back.';
+        var str='Press ${misc.InputString.getKeyNameFromString(Binds.UI_ACCEPT[0], true, false)} to see the entry. / ${misc.InputString.getKeyNameFromString(Binds.UI_BACK[0], true, false)} to go back.';
 		var descText = new FlxText(5, FlxG.height - 25, 0, str, 20);
 		descText.setFormat('assets/fonts/vcr.ttf', 20, 0xFFFFFF, LEFT);
 		bottomBlack.alpha = 0.6;
@@ -69,7 +69,7 @@ class HistoryState extends MenuTemplate {
 
         super.keyHit(ev);
 
-        if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
+        if(!key.hardCheck(Binds.UI_ACCEPT)) return;
 
         openSubState(new HistorySubstate(contents[curSel], this));
     }
@@ -124,7 +124,7 @@ class HistorySubstate extends MusicBeatSubstate {
     override public function keyHit(ev:KeyboardEvent){
         super.keyHit(ev);
 
-        if(!key.hardCheck(NewControls.UI_BACK)) return;
+        if(!key.hardCheck(Binds.UI_BACK)) return;
 
         parent.dontUpdate = false;
         close();

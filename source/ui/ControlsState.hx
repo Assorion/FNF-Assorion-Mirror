@@ -19,10 +19,10 @@ class ControlsState extends MenuTemplate {
         'note_up',
         'note_right',
         '',
-        'ui_l',
-        'ui_d',
-        'ui_u',
-        'ui_r',
+        'ui_left',
+        'ui_down',
+        'ui_up',
+        'ui_right',
         '',
         'ui_accept',
         'ui_back'
@@ -105,7 +105,7 @@ class ControlsState extends MenuTemplate {
 		
 		super.keyHit(ev);
 
-		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
+		if(!key.hardCheck(Binds.UI_ACCEPT)) return;
 
 		if(controlList[curSel] == '')
 			return;

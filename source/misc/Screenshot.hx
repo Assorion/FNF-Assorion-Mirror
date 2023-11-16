@@ -13,6 +13,7 @@ import haxe.io.Bytes;
 import flixel.FlxG;
 import gameplay.PauseSubState;
 
+#if !debug @:noDebug #end
 class Screenshot {
     public static inline function takeScreenshot(){
         #if desktop

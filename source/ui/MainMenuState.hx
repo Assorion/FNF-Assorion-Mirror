@@ -88,7 +88,7 @@ class MainMenuState extends MusicBeatState
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		var k = key.deepCheck([NewControls.UI_U, NewControls.UI_D, NewControls.UI_ACCEPT, NewControls.UI_BACK ]);
+		var k = key.deepCheck([Binds.UI_U, Binds.UI_D, Binds.UI_ACCEPT, Binds.UI_BACK ]);
 		switch(k){
 			case 0, 1:
 				changeItem((k * 2) - 1);

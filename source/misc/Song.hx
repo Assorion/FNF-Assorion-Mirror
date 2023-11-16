@@ -41,7 +41,16 @@ class Song
 	public static inline function parseJSON(rawJson:String):SwagSong
 	{
 		var tmpCast:SwagSong = cast Json.parse(rawJson).song;
-		if(tmpCast.playLength < 1) tmpCast.playLength = 2;
+
+		/* most stupid thing haxe ever does.
+		   my assumption is when you use JSON, e.g: an integer is actually Null<Int>, instead of Int.
+		   It's annoying cause haxe will NOT let you check if the value is null when that happens.
+		   So here I have to cast the value to what it should have already been, just to have this work.
+		   (I guess casting a null value will assume 0)
+		*/
+
+		if (cast(tmpCast.playLength, Int) < 1) 
+			tmpCast.playLength = 2;
 
 		return tmpCast;
 	}

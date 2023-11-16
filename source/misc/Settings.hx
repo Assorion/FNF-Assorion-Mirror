@@ -36,10 +36,10 @@ typedef Options = {
     var note_up   :Array<Int>;
     var note_down :Array<Int>;
     
-    var ui_l:Array<Int>;
-    var ui_r:Array<Int>;
-    var ui_u:Array<Int>;
-    var ui_d:Array<Int>;
+    var ui_left :Array<Int>;
+    var ui_right:Array<Int>;
+    var ui_up   :Array<Int>;
+    var ui_down :Array<Int>;
     var ui_accept:Array<Int>;
     var ui_back  :Array<Int>;
 }
@@ -72,6 +72,7 @@ class Settings {
                 Reflect.field   (pr   , items[i]));
 
         pr = tmpPr;
+        Binds.updateControls();
     }
     public static function apply(){
         FlxGraphic.defaultPersist = Settings.pr.default_persist;
@@ -92,17 +93,6 @@ class Settings {
             Paths.lSparrow         = Paths.ncLS;
             Paths.lText            = Paths.ncLT;
         }
-
-        NewControls.NOTE_LEFT = pr.note_left;
-        NewControls.NOTE_DOWN = pr.note_down;
-        NewControls.NOTE_UP   = pr.note_up;
-        NewControls.NOTE_RIGHT= pr.note_right;
-        NewControls.UI_L      = pr.ui_l;
-        NewControls.UI_D      = pr.ui_d;
-        NewControls.UI_U      = pr.ui_u;
-        NewControls.UI_R      = pr.ui_r;
-        NewControls.UI_ACCEPT = pr.ui_accept;
-        NewControls.UI_BACK   = pr.ui_back;
     }
 
     public inline static function flush(){

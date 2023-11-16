@@ -2,9 +2,11 @@ package;
 
 import flixel.FlxGame;
 import flixel.FlxState;
+import flixel.FlxG;
 import openfl.Lib;
-import openfl.display.FPS;
 import openfl.display.Sprite;
+import misc.FPSCounter;
+import misc.MemCounter;
 
 // tells haxe not to generate debugging info in the release build
 // ofc if you compile it with debugging enabled it will still work
@@ -15,8 +17,8 @@ import openfl.display.Sprite;
 #end
 class Main extends Sprite
 {
-	public static var fpsC:ui.FPSCounter;
-	public static var memC:ui.MemCounter;
+	public static var fpsC:FPSCounter;
+	public static var memC:MemCounter;
 	public static var initState:Class<FlxState> = ui.TitleState;
 
 	// inlined. Which means these variables cannot be changed later.
@@ -44,8 +46,8 @@ class Main extends Sprite
 			#else trace('CACHING DOES NOT WORK IN BROWSER!');
 			#end
 
-		fpsC = new ui.FPSCounter(10, 3, 0xFFFFFF);
-		memC = new ui.MemCounter(10, 18, 0xFFFFFF);
+		fpsC = new FPSCounter(10, 3, 0xFFFFFF);
+		memC = new MemCounter(10, 18, 0xFFFFFF);
 		addChild(new FlxGame(gameWidth, gameHeight, initState, 
 			#if (flixel < "5.0.0") zoom, #end 
 			initFPS, initFPS, Settings.pr.skip_logo, Settings.pr.start_fullscreen));
@@ -54,9 +56,10 @@ class Main extends Sprite
 		addChild(memC);
 
 		#if (!desktop)
-		flixel.FlxG.keys.preventDefaultKeys = [];
+		FlxG.keys.preventDefaultKeys = [];
 		Settings.pr.framerate = 60;
 		#end
+		
 		// have to give credit for psych engine here.
 		// Wouldn't have cared enough to fix this on my own.
 		#if linux

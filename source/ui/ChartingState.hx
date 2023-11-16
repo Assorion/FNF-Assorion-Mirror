@@ -60,9 +60,9 @@ class ChartingState extends MusicBeatState {
     public var camUI:FlxCamera;
     public var camGR:FlxCamera;
 
-    public static var blockInput:Bool = false;
     public static var activeUIElement:ChartUI_Generic;
-    public static var activeDropDown:ChartUI_DropDown;
+    public static var inputBlock:ChartUI_Persistent;
+    public var currentUI:Void->Void;
 
     var uiBG:ChartUI_Generic;
 
@@ -167,6 +167,7 @@ class ChartingState extends MusicBeatState {
         curSec = CoolUtil.boundTo(changeTo, 0, song.notes.length + 1);
         expandCheck();
         reloadNotes();
+        currentUI();
     }
 
     // for changing zoom level
@@ -202,7 +203,15 @@ class ChartingState extends MusicBeatState {
     override function keyHit(ev:KeyboardEvent){
         super.keyHit(ev);
 
-        if(blockInput) return;
+        if(inputBlock != null) {
+            if(key == FlxKey.ENTER){
+                inputBlock.clickedOff();
+                return;
+            }
+
+            inputBlock.insertChar(key);
+            return;
+        }
 
         if(key == FlxKey.SHIFT){
             holdingShift = true;
@@ -278,11 +287,11 @@ class ChartingState extends MusicBeatState {
         }
 
         var T:Int = key.deepCheck([ 
-            NewControls.UI_BACK, 
-            NewControls.UI_ACCEPT, 
+            Binds.UI_BACK, 
+            Binds.UI_ACCEPT, 
             [FlxKey.SPACE],
-            NewControls.UI_L, 
-            NewControls.UI_R, 
+            Binds.UI_L, 
+            Binds.UI_R, 
             [FlxKey.B],
             [FlxKey.N], 
             [FlxKey.Q],
@@ -301,8 +310,8 @@ class ChartingState extends MusicBeatState {
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP  , mouseUpEvent);
 
-                activeUIElement = null;
-                activeDropDown = null;
+                inputBlock = null;
+                activeUIElement = null; 
 
                 PlayState.SONG = song;
             case 2:
@@ -519,8 +528,8 @@ class ChartingState extends MusicBeatState {
             activeUIElement.mouseClicked();
             return;
         }
-        if (activeDropDown != null){
-            activeDropDown.closeDropdowns();
+        if (inputBlock != null){
+            inputBlock.clickedOff();
             return;
         }
         ////////////////////
@@ -557,7 +566,7 @@ class ChartingState extends MusicBeatState {
         // # Scrolling
 
         var wheel = FlxG.mouse.wheel * -50;
-        if(wheel != 0 && !blockInput){
+        if(wheel != 0 && inputBlock == null){
             pauseSong();
 
             vocals.time = 
@@ -617,17 +626,24 @@ class ChartingState extends MusicBeatState {
 
     public function createTestUI():Void
     {
+        currentUI = createTestUI;
+        activeUIElement = null;
+        inputBlock = null;
+
         uiElements.clear();
 
-        var coolButton   = new   ChartUI_Button(20, 20, function(){ trace('CoolBeans!'); }, 'Print!');
-        var coolCheckBox = new ChartUI_CheckBox(20, 55, function(ch:Bool){ trace('T: $ch'); });
-        var coolDropdown = new ChartUI_DropDown(20, 90, ['Cool1', 'COol2', 'Cool3'], 'Cool1', function(index:Int, item:String){
+        var coolButton   = new   ChartUI_Button(20, 20, 200, function(){ trace('CoolBeans!'); }, 'Print!');
+        var coolCheckBox = new ChartUI_CheckBox(20, 55, 200, function(ch:Bool){ trace('T: $ch'); });
+        var coolDropdown = new ChartUI_DropDown(20, 90, 170, ['Cool1', 'COol2', 'Cool3'], 'Cool1', function(index:Int, item:String){
             trace('I: $index O: $item');
         }, uiElements);
+
+        var coolInputBox = new ChartUI_InputBox(20, 125, 200, '', function(ch:String){ trace(ch); });
 
         uiElements.add(coolButton);
         uiElements.add(coolCheckBox);
         uiElements.add(coolDropdown);
+        uiElements.add(coolInputBox);
     }
 
     private var inSecUi:Bool = false;

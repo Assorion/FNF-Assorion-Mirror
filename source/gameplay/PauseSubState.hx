@@ -114,13 +114,13 @@ class PauseSubState extends MusicBeatSubstate
 		super.keyHit(ev);
 
 		// ui movements.
-		var t:Int = key.deepCheck([NewControls.UI_U, NewControls.UI_D]);
+		var t:Int = key.deepCheck([Binds.UI_U, Binds.UI_D]);
 		if (t != -1){
 			changeSelection((t * 2) - 1);
 			return;
 		}
 
-		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
+		if(!key.hardCheck(Binds.UI_ACCEPT)) return;
 
 		ps.persistentDraw = true;
 		switch(curSelected){

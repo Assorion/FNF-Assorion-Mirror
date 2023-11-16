@@ -189,13 +189,13 @@ class DialogueSubstate extends MusicBeatSubstate {
 
         if(leaving) return;
 
-        if(key.hardCheck(NewControls.UI_ACCEPT) && boxSpr.alpha == 1){
+        if(key.hardCheck(Binds.UI_ACCEPT) && boxSpr.alpha == 1){
             textSlide();
             FlxG.sound.play(Paths.lSound('menu/clickText'));
             return;
         }
 
-        if(!key.hardCheck(NewControls.UI_BACK)) return;
+        if(!key.hardCheck(Binds.UI_BACK)) return;
 
         exit();
     }

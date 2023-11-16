@@ -79,12 +79,12 @@ class OffsetWizard extends MusicBeatState{
     override public function keyHit(ev:KeyboardEvent){
         super.keyHit(ev);
 
-        if(key.deepCheck([ NewControls.UI_ACCEPT, NewControls.UI_BACK ]) != -1){
+        if(key.deepCheck([ Binds.UI_ACCEPT, Binds.UI_BACK ]) != -1){
             FlxG.sound.music.stop();
             FlxG.switchState(new OptionsState());
 
             Settings.pr.audio_offset = prevOffset;
-            if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
+            if(!key.hardCheck(Binds.UI_ACCEPT)) return;
 
             Settings.pr.audio_offset = Math.round(curOffset);
             Settings.flush();

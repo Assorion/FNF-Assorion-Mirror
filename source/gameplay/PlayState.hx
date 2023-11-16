@@ -423,8 +423,8 @@ class PlayState extends MusicBeatState
 		if(curBeat % 4 == 0 && FlxG.sound.music.playing){
 			mustHitSection = false;
 			var sec:SwagSection = SONG.notes[Math.floor(curBeat / 4)];
-			if (Std.string(sec != null ? sec.mustHitSection : null) != 'null')
-				mustHitSection = sec.mustHitSection;
+			if (sec != null)
+				mustHitSection = cast(sec.mustHitSection, Bool);
 
 			var char = allCharacters[mustHitSection ? 1 : 0];
 			followPos.x = char.getMidpoint().x + char.camOffset[0];
@@ -515,14 +515,14 @@ class PlayState extends MusicBeatState
 
 	public var hittableNotes:Array<Note> = [null, null, null, null];
 	public var keysPressed:Array<Bool>   = [false, false, false, false];
-	public var keyArray:Array<Array<Int>> = [NewControls.NOTE_LEFT, NewControls.NOTE_DOWN, NewControls.NOTE_UP, NewControls.NOTE_RIGHT];
+	public var keyArray:Array<Array<Int>> = [Binds.NOTE_LEFT, Binds.NOTE_DOWN, Binds.NOTE_UP, Binds.NOTE_RIGHT];
 
 	override function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
 		if(paused) return;
 
-		var k = key.deepCheck([NewControls.UI_ACCEPT, NewControls.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12] ]);
+		var k = key.deepCheck([Binds.UI_ACCEPT, Binds.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12] ]);
 		switch(k){
 			case 0, 1:
 				pauseGame(new PauseSubState(camHUD, this));

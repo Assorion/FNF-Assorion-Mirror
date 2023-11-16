@@ -12,13 +12,6 @@ import gameplay.Note;
 
 using StringTools;
 
-/*
-    This is just a mess. Sorry.
-    My only solice is that this terrible code,
-    only has to be ran while charting.
-*/
-
-// # chart ui elements
 class ChartUI_Grid extends StaticSprite {
     public function new(cWidth:Int, cHeight:Int, columns:Int, rows:Int, division:Int = 4)
     {
@@ -42,6 +35,8 @@ class ChartUI_Grid extends StaticSprite {
         loadGraphic(emptySprite);
     }
 }
+
+// Extenders or whatever.
 
 class ChartUI_Generic extends FlxSprite {
     var canvas:BitmapData;
@@ -79,27 +74,93 @@ class ChartUI_Generic extends FlxSprite {
         makeText(w,h,i,t);
     }
 }
+class ChartUI_Persistent extends ChartUI_Generic {
+    public function insertChar(k:Int):Void {}
+    public function clickedOff():Void {
+        ChartingState.inputBlock = null;
+    }
+    override public function mouseClicked(){
+        ChartingState.inputBlock = this;
+    }
+}
+
+// # Easy stuff
+
+class ChartUI_CheckBox extends ChartUI_Generic{
+    public var changeFunc:Bool->Void;
+    public var checked:Bool = false;
+
+    public function new(x:Float, y:Float, ?w:Int = 30, ?h:Int = 30, onChange:Bool->Void){
+        super(x,y,w,h,true,'');
+
+        changeFunc = onChange;
+    }
+    override public function mouseClicked(){
+        checked = !checked;
+
+        var w = Math.floor(width);
+        var h = Math.floor(height);
+
+        drawSquare(0,0,w,h,true);
+        if(checked)
+            drawSquare(6,6, w - 12, h - 12, false);
+
+        changeFunc(checked);
+    }
+}
 
 class ChartUI_Button extends ChartUI_Generic {
     public var clickFunc:Void->Void;
+    public var txt:String = '';
+    public var dropDownButton:Bool = false;
+
+    public var popupCounter:Float = 0;
+    private static inline var clickTime:Float = 0.08;
+
     public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, onClick:Void->Void, ?text:String){
         super(x,y,w,h,false,text);
 
         clickFunc = onClick;
+        txt = text;
     }
 
-    override public function mouseClicked()
+    override public function mouseClicked(){
         clickFunc();
+        if(dropDownButton) return;
+
+        makeText(Math.floor(width), Math.floor(height), true, txt);
+        popupCounter = 0;
+    }
+    override public function update(elapsed:Float){
+        if(popupCounter < clickTime){
+            popupCounter += elapsed;
+            return;
+        }
+        if(popupCounter == 100) return;
+
+        popupCounter = 100;
+        makeText(Math.floor(width), Math.floor(height), false, txt);
+    }
 }
-class ChartUI_DropDown extends ChartUI_Generic {
+
+// # Persistent stuff
+
+class ChartUI_DropDown extends ChartUI_Persistent {
     public var changeFunc:Int->String->Void;
     public var buttonList:Array<ChartUI_Button> = [];
     public var items:Array<String>;
     public var expanded:Bool = false;
     public var parentGroup:FlxTypedSpriteGroup<ChartUI_Generic>;
+    
+    public var curText:String = '';
 
-    public function dotButton()
-        makeText(30, Math.floor(height), expanded, '.' , Math.floor(width - 30), 0);
+    public inline function dotButton(){
+        var w:Int = Math.floor(width) - 30;
+        var h:Int = Math.floor(height);
+
+        makeText(w,  h, expanded, curText, 0, 0);
+        makeText(30, h, expanded, '.'    , w, 0);
+    }
 
     public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, items:Array<String>, text:String = '', onChange:Int->String->Void, parent:FlxTypedSpriteGroup<ChartUI_Generic>){
         super(x,y,w + 30,h,false,'');
@@ -108,13 +169,14 @@ class ChartUI_DropDown extends ChartUI_Generic {
         parentGroup = parent;
         this.items = items;
 
-        makeText(w , h, text, 0, 0);
+        curText = text;
         dotButton();
     }
 
-    public function closeDropdowns(){
+    override public function clickedOff(){
+        super.clickedOff();
+
         expanded = false;
-        ChartingState.activeDropDown = null;
         dotButton();
 
         for(i in 0...buttonList.length){
@@ -127,187 +189,96 @@ class ChartUI_DropDown extends ChartUI_Generic {
     public override function mouseClicked(){
         expanded = !expanded;
         if(!expanded){
-            closeDropdowns();
+            clickedOff();
             return;
         }
 
         dotButton();
-        ChartingState.activeDropDown = this;
+        super.mouseClicked();
 
-        var w:Int = Math.floor(width) - 30;
+        var w:Int = Math.floor(width);
         var h:Int = Math.floor(height);
 
         for(i in 0...items.length){
-            buttonList[i] = new ChartUI_Button(x - parentGroup.x,(y - parentGroup.y) + (h * (i + 1)), w + 30, h, function(){
-                changeFunc(i, items[i]);
+            buttonList[i] = new ChartUI_Button(x - parentGroup.x,(y - parentGroup.y) + (h * (i + 1)), w, h, function(){
+                curText = items[i];
 
-                makeText(w, h, items[i], 0, 0);
-                closeDropdowns();
+                changeFunc(i, items[i]);
+                clickedOff();
             }, items[i]);
+            buttonList[i].dropDownButton = true;
             parentGroup.add(buttonList[i]);
         }
     }
-
-    /*public var itemList:Array<String> = [];
-    public var selectedItem:String = '';
-    public var buttonWidth:Int = 200;
-    private var dropped:Bool = false;
-    private var changeFunc:String->Void;
-    private var highlighted:Bool = false;
-
-    public function createButton(items:Array<String>)
-    {
-        var emptySprite:BitmapData = new BitmapData(buttonWidth, 30 * items.length, true);
-        emptySprite.fillRect(new Rectangle(0,0, buttonWidth  ,   30 * items.length),    CoolUtil.cfArray(ChartingState.uiColours[0]));
-        emptySprite.fillRect(new Rectangle(4,4, buttonWidth-8,  (30 * items.length)-8), CoolUtil.cfArray(ChartingState.uiColours[2]));
-
-        loadGraphic(emptySprite);
-        updateHitbox();
-
-        for(i in 0...items.length){
-            var text = new FlxText(0,0,0, items[i], 16);
-            stamp(text, Std.int((width / 2) - (text.width / 2)), Std.int((30 * (i+1) - 15) - (text.height / 2)));
-        }
-        ChartingState.blockInput = dropped = false;
-        //ChartingState.activeUIElement = null;
-    }
-
-    public function new(x:Float, y:Float, twidth:Int = 200, items:Array<String>, startSelect:String = '', onChange:String->Void){
-        super(x,y);
-        
-        itemList = items;
-        selectedItem = items[0];
-        buttonWidth = twidth;
-        changeFunc = onChange;
-        if(startSelect != '') selectedItem = startSelect;
-
-        createButton([selectedItem]);
-    }
-
-    override public function update(elapsed:Float){
-        if(FlxG.mouse.overlaps(this)){
-            if(!highlighted){
-                highlighted = true;
-                color = FlxColor.fromRGB(230, 230, 230);
-            }
-        } else if(highlighted) {
-            highlighted = false;
-            color = 0xFFFFFFFF;
-        }
-
-        if(!FlxG.mouse.justPressed /*|| (ChartingState.activeUIElement != this && ChartingState.activeUIElement != null) ) return;
-
-        
-        if(!FlxG.mouse.overlaps(this)){
-            if(dropped) createButton([selectedItem]);
-            if(highlighted)
-                color = 0xFFFFFFFF;
-
-            highlighted = false;
-            return;
-        }
-
-        if(!dropped){
-            createButton(itemList);
-            dropped = true;
-            ChartingState.blockInput = true;
-            //ChartingState.activeUIElement = this;
-            return;
-        } 
-        //var fX = FlxG.mouse.x - x;
-        var fY = FlxG.mouse.y - y;
-        var sel = CoolUtil.boundTo(Math.floor(fY / 30), 0, itemList.length - 1, true);
-        createButton([ itemList[sel] ]);
-        changeFunc(itemList[sel]);
-    }*/
 }
-class ChartUI_InputBox extends FlxSprite {
+class ChartUI_InputBox extends ChartUI_Persistent {
     public var curText:String = '';
     public var changeFunc:String->Void;
-    public var boxWidth:Int = 200;
-    public static var allowedCharacters:String = "abcdefghijklmnopqrstuvwxyz1234567890-+=_!@#$%^&*(){}[]\\;'\":,.<>/? ";
-    public var typing:Bool = false;
-    //private var highlighted:Bool = false;
+    public var uneditedText:String = '';
+    public static inline var allowedCharacters:String = "abcdefghijklmnopqrstuvwxyz1234567890-+=_!@#$%^&*(){}[]\\;'\":,.<>/? ";
 
-    public function updateEverything(){
-        var emptySprite:BitmapData = new BitmapData(boxWidth, 30, true);
-        emptySprite.fillRect(new Rectangle(0,0, boxWidth  ,30), CoolUtil.cfArray(ChartingState.uiColours[0]));
-        emptySprite.fillRect(new Rectangle(4,4, boxWidth-8,22), CoolUtil.cfArray(ChartingState.uiColours[2]));
+    private var tickingCounter:Float = 0;
+    private var suffix:String = ' _';
 
-        loadGraphic(emptySprite);
-        updateHitbox();
+    public inline function redoText(?callFunc:Bool = true){
+        curText = uneditedText;
+        if(ChartingState.inputBlock == this)
+            curText += suffix;
 
-        var text = new FlxText(0,0,0, curText, 16);
-        text.color = typing ? FlxColor.BLACK : FlxColor.WHITE;
-        stamp(text, Std.int((width / 2) - (text.width / 2)), Std.int(15 - (text.height / 2)));
-        changeFunc(curText);
-
-        //typing ? color = CoolUtil.cfArray([ 230, 230, 230 ]) : color = 0xFFFFFFFF;
+        if(callFunc)
+            changeFunc(uneditedText);
+        makeText(Math.floor(width), Math.floor(height), true, curText, 0,0);
     }
+    public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, startText:String = '', onChange:String->Void){
+        super(x,y,w,h,true,startText);
 
-    public function new(x:Float, y:Float, twidth:Int = 200, startText:String = '', onChange:String->Void){
-        super(x,y);
-        
-        curText = startText;
-        boxWidth = twidth;
         changeFunc = onChange;
+    }
+    
+    //////////////////////////////////
 
-        updateEverything();
-        //createButton([selectedItem]);
+    public override function clickedOff(){
+        super.clickedOff();
+        redoText();
     }
 
-    override public function update(elapsed:Float){
-        //if(ChartingState.activeUIElement != this && ChartingState.activeUIElement != null) return;
+    public override function mouseClicked(){
+        super.mouseClicked();
 
-        if(FlxG.mouse.justPressed || FlxG.keys.justPressed.ENTER){
-            if(typing){
-                typing = ChartingState.blockInput = false;
-                //ChartingState.activeUIElement = null;
-            }
-
-            if(FlxG.mouse.overlaps(this)){
-                typing = ChartingState.blockInput = true;
-                //ChartingState.activeUIElement = this;
-            }
-
-            updateEverything();
+        pSuffix = '';
+        suffix  = ' _';
+        tickingCounter = 0;
+        redoText();
+    }
+    public override function insertChar(char:Int){
+        if(char == flixel.input.keyboard.FlxKey.BACKSPACE){
+            uneditedText = uneditedText.substring(0, uneditedText.length - 1);
+            redoText();
             return;
         }
-        
-        if(!typing || !FlxG.keys.justPressed.ANY) return;
-        if (FlxG.keys.justPressed.SHIFT) return;
 
-        if(FlxG.keys.justPressed.BACKSPACE)
-            curText = curText.substring(0, curText.length - 1);
-        else {
-            var char = misc.InputString.getKeyNameFromString( FlxG.keys.firstJustPressed(), true, true ).toLowerCase();
-            
-            if(allowedCharacters.contains(char))
-                curText += char;
+        var tmpChar:String = misc.InputString.getKeyNameFromString( char, true, true ).toLowerCase();
+        if(!allowedCharacters.contains(tmpChar)) return;
+
+        uneditedText += tmpChar;
+        redoText();
+    }
+
+    //////////////////////////////////
+
+    private var pSuffix:String = '';
+    override function update(elapsed:Float){
+        if(ChartingState.inputBlock != this) return;
+
+        tickingCounter += elapsed;
+        if(tickingCounter >= 1) 
+            tickingCounter -= 1;
+
+        pSuffix = tickingCounter < 0.5 ? ' _' : '   ';
+
+        if(pSuffix != suffix){
+            suffix = pSuffix;
+            redoText(false);
         }
-        updateEverything();
-    }
-}
-
-class ChartUI_CheckBox extends ChartUI_Generic{
-    public var changeFunc:Bool->Void;
-    public var checked:Bool = false;
-
-    public function new(x:Float, y:Float, ?w:Int = 30, ?h:Int = 30, onChange:Bool->Void){
-        super(x,y,w,h,false,'');
-
-        changeFunc = onChange;
-    }
-    override public function mouseClicked(){
-        checked = !checked;
-
-        var w = Math.floor(width);
-        var h = Math.floor(height);
-
-        drawSquare(0,0,w,h,false);
-        if(checked)
-            drawSquare(6,6, w - 12, h - 12, true);
-
-        changeFunc(checked);
     }
 }

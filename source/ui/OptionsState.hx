@@ -54,7 +54,7 @@ class OptionsState extends MenuTemplate
 			'Cache text files and XML frames (doesn\'t really help that much). DISABLE IF YOU ARE TRYING TO MOD!!!'
 		],
 		[
-			'Change your audio offset in MS. Press ${misc.InputString.getKeyNameFromString(NewControls.UI_ACCEPT[0], true, false)} to enter offset wizard.',
+			'Change your audio offset in MS. Press ${misc.InputString.getKeyNameFromString(Binds.UI_ACCEPT[0], true, false)} to enter offset wizard.',
 			'Change your keyboard offset in MS. This only changes ratings, not the actual timing window.',
 			'Change the scroll direction',
 			'Allows pressing notes if there is no notes to hit',
@@ -176,7 +176,7 @@ class OptionsState extends MenuTemplate
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		if(!key.hardCheck(NewControls.UI_ACCEPT)) return;
+		if(!key.hardCheck(Binds.UI_ACCEPT)) return;
 
 		switch(optionSub[curSub][curSel]){
 			case 'basic':

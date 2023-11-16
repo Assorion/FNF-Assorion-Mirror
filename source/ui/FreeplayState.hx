@@ -95,7 +95,7 @@ class FreeplayState extends MenuTemplate
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		var k = key.deepCheck([NewControls.UI_ACCEPT, [FlxKey.SPACE]]);
+		var k = key.deepCheck([Binds.UI_ACCEPT, [FlxKey.SPACE]]);
 		switch(k){
 			case 0: // Enter
 				FlxG.switchState(new PlayState([ songs[curSel] ], curDifficulty, -1));
