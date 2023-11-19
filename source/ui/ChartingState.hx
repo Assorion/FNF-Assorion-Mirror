@@ -106,15 +106,16 @@ class ChartingState extends MusicBeatState {
 
         // # UI
 
-        uiBG = new ChartUI_Generic(camGR.x + camGR.width + 10, 0, 420, 550, false, '');
+        uiBG = new ChartUI_Generic(camGR.x + camGR.width + 25, 0, 410, 600, false, '');
         uiBG.screenCenter(Y);
         uiElements = new FlxTypedSpriteGroup<ChartUI_Generic>();
-        uiElements.y = uiBG.y;
+        uiElements.y = uiBG.y + 10;
 
         add(uiBG);
         add(uiElements);
 
-        createTestUI();
+        //createTestUI();
+        createSongUI();
 
         // # create line and notes
 
@@ -192,8 +193,8 @@ class ChartingState extends MusicBeatState {
         camGR.width  = Math.round(gridSprite.width);
         camGR.height = Math.round(gridSprite.height + 85);
 
-        uiBG.x = camGR.width + camGR.x + 10;
-        uiElements.x = uiBG.x;
+        uiBG.x = camGR.width + camGR.x + 25;
+        uiElements.x = uiBG.x + 10;
     }
 
     // # Keyboard input
@@ -454,7 +455,7 @@ class ChartingState extends MusicBeatState {
 
         // # Ui stuff
 
-        if(FlxG.mouse.x > camGR.width + camGR.x){
+        if(FlxG.mouse.x >= uiBG.x){
             var foundMember:Bool = false;
 
             for(i in 0...uiElements.length){
@@ -597,6 +598,26 @@ class ChartingState extends MusicBeatState {
             });
         }
 
+    // # UI Tabs.
+
+    private inline function genText(ref:ChartUI_Generic, txt:String):FlxText
+    {
+        var tmpText:FlxText = new FlxText(ref.x + ref.width, ref.y, 0, txt, 16);
+            tmpText.x += 10;
+            tmpText.y += (ref.height - tmpText.height) / 2;
+        add(tmpText);
+
+        return tmpText;
+    }
+
+    private inline function secStart(area:Void->Void){
+        currentUI = area;
+        activeUIElement = null;
+        inputBlock = null;
+
+        uiElements.clear();
+    }
+
     public function createInfoUI():Void
     {
         /*uiElements.clear();
@@ -646,6 +667,134 @@ class ChartingState extends MusicBeatState {
         uiElements.add(coolCh2ckBox);
         uiElements.add(coolDropdown);
         uiElements.add(coolInputBox);
+    }
+
+    public function createSongUI():Void
+    {
+        secStart(createSongUI);
+
+        // Top stuff
+
+        var nameBox:ChartUI_InputBox = new ChartUI_InputBox(0, 0, 190, 30, song.song, function(ch:String){
+            song.song = ch;
+            PlayState.curSong = ch.toLowerCase();
+        });
+        var bpmBox:ChartUI_InputBox = new ChartUI_InputBox(200, 0, 90, 30, Std.string(song.bpm), function(ch:String){
+            song.bpm = Std.parseInt(ch);
+            Conductor.changeBPM(song.bpm);
+        });
+
+        var playerBox:ChartUI_InputBox = new ChartUI_InputBox(0, 40, 90, 30, Std.string(song.activePlayer), function(ch:String){
+            song.activePlayer = Std.parseInt(ch);
+        });
+        var delayBox:ChartUI_InputBox = new ChartUI_InputBox(200, 40, 70, 30, Std.string(song.beginTime), function(ch:String){
+            song.beginTime = Std.parseFloat(ch);
+        });
+
+        var stageDrop:ChartUI_DropDown = new ChartUI_DropDown(0, 80, 160, 30, CoolUtil.textFileLines('stageList'), song.stage, function(index:Int, ch:String){
+            song.stage = ch;
+        }, uiElements);
+        var speedBox:ChartUI_InputBox = new ChartUI_InputBox(200, 80, 90, 30, Std.string(song.speed), function(ch:String){
+            song.speed = Std.parseFloat(ch);
+        });
+
+        // Bottom stuff
+
+        var voicesCheck:ChartUI_CheckBox = new ChartUI_CheckBox(0, 550, song.needsVoices, function(ch:Bool){
+            song.needsVoices = ch;
+
+            vocals = new FlxSound();
+            vocals.time = FlxG.sound.music.time;
+            FlxG.sound.list.add(vocals);
+
+            if(!ch) return;
+
+            vocals.loadEmbedded(Paths.playableSong(song.song, true));
+        });
+
+        var reloadButton:ChartUI_Button = new ChartUI_Button(260, 430, 130, 30, function(){
+            FlxG.sound.playMusic(Paths.playableSong(song.song, false));
+
+            FlxG.sound.music.pause();
+            FlxG.sound.music.time = 0;
+            if(!song.needsVoices) return;
+
+            vocals = new FlxSound();
+            vocals.time = 0;
+            vocals.loadEmbedded(Paths.playableSong(song.song, true));
+
+            FlxG.sound.list.add(vocals);
+        }, 'Reload Audio');
+
+        var selectButton:ChartUI_Button = new ChartUI_Button(260, 470, 130, 30, function(){
+            selectedNotes = [];
+
+            for(sec in song.notes)
+                for(nt in sec.sectionNotes)
+                    selectedNotes.push(nt);
+
+            reloadNotes();
+        }, 'Select All');
+
+        var resetButton:ChartUI_Button = new ChartUI_Button(260, 510, 130, 30, function(){
+            song = {
+                song:         '',
+                notes:        [],
+                bpm:          120,
+                needsVoices:  false,
+                characters:   [],
+                stage:        '',
+                beginTime:    0,
+                playLength:   0,
+                activePlayer: 1,
+                speed:        1
+            };
+
+            reloadNotes();
+        }, 'Reset Song');
+
+        var saveSong:ChartUI_Button = new ChartUI_Button(260, 550, 130, 30, function(){
+            var path = 'assets/songs-data/${PlayState.curSong}/${PlayState.curSong}-edited.json';
+            var saveString:String = 'You cannot save charts in web build.';
+
+            #if desktop
+            saveString = 'Saved song to "$path"';
+
+            var stringedSong:String = haxe.Json.stringify({"song": song.song}, '\t');
+            File.saveContent(path,stringedSong);
+            #end
+            
+            var newText:FlxText = new FlxText(uiBG.x, uiBG.y - 30, 0, saveString, 16);
+            add(newText);
+
+            FlxTween.tween(newText, {alpha: 0}, 1, {onComplete: function(t:FlxTween){
+                if(newText == null) return;
+
+                remove(newText);
+                newText.destroy();
+                newText = null;
+            }});
+        }, 'Save Song');
+
+
+        uiElements.add(nameBox);
+        uiElements.add(bpmBox);
+        uiElements.add(playerBox);
+        uiElements.add(delayBox);
+        uiElements.add(stageDrop);
+        uiElements.add(speedBox);
+
+        uiElements.add(voicesCheck);
+        uiElements.add(reloadButton);
+        uiElements.add(selectButton);
+        uiElements.add(resetButton);
+        uiElements.add(saveSong);
+
+        genText(playerBox, 'Main Player');
+        genText(bpmBox,    'BPM');
+        genText(delayBox,  'Start Delay');
+        genText(speedBox,  'Scroll Speed');
+        genText(voicesCheck, 'Use Voices');
     }
 
     private var inSecUi:Bool = false;
@@ -703,144 +852,5 @@ class ChartingState extends MusicBeatState {
         uiElements.add(copyButton);
         uiElements.add(swapButton);
         uiElements.add(snButton);*/
-    }
-
-    public function createSongUI():Void
-    {
-        /*uiElements.clear();
-        inSecUi = false;
-
-        var nameBox:ChartUI_InputBox = new ChartUI_InputBox(uiBG.x + 10, uiBG.y + 10, 150, PlayState.SONG.song, (str:String) -> {
-            PlayState.SONG.song = str;
-            PlayState.curSong = str.toLowerCase();
-        });
-        var bpmBox:ChartUI_InputBox = new ChartUI_InputBox(nameBox.x + nameBox.width + 10, uiBG.y + 10, 50, Std.string(PlayState.SONG.bpm), (str:String) -> {
-            PlayState.SONG.bpm = Std.parseInt(str);
-            Conductor.changeBPM(PlayState.SONG.bpm);
-        });
-        var voicesCheck:ChartUI_CheckBox = new ChartUI_CheckBox(uiBG.x + 10, (uiBG.y+uiBG.height) - 40, PlayState.SONG.needsVoices, (c:Bool) -> {
-            PlayState.SONG.needsVoices = c;
-            vocals.destroy();
-
-            vocals = new FlxSound();
-            vocals.time = FlxG.sound.music.time;
-            if(c)
-                vocals.loadEmbedded(Paths.playableSong(PlayState.curSong, true));
-
-            FlxG.sound.list.add(vocals);
-        });
-        var playerBox:ChartUI_InputBox = new ChartUI_InputBox(voicesCheck.x, voicesCheck.y - 40, 30, Std.string(PlayState.SONG.activePlayer), (str:String) -> {
-            PlayState.SONG.activePlayer = Std.parseInt(str);
-        });
-        var delayBox:ChartUI_InputBox = new ChartUI_InputBox(uiBG.x + 10, uiBG.y + 50, 70, Std.string(PlayState.SONG.beginTime), (str:String) -> {
-            PlayState.SONG.beginTime = Std.parseFloat(str);
-        });
-        var speedBox:ChartUI_InputBox = new ChartUI_InputBox(delayBox.x+delayBox.width + 10, uiBG.y + 50, 70, Std.string(PlayState.SONG.speed), (str:String) -> {
-            PlayState.SONG.speed = Std.parseFloat(str);
-        });
-
-        var lines = CoolUtil.textFileLines('characterList');
-        var p1Drop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 90, 150, lines, PlayState.SONG.characters[1], (str:String) -> {
-            PlayState.SONG.characters[1] = str;
-        });
-        var p2Drop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 130, 150, lines, PlayState.SONG.characters[0], (str:String) -> {
-            PlayState.SONG.characters[0] = str;
-        });
-        var p3Drop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 170, 150, lines, PlayState.SONG.characters[2], (str:String) -> {
-            PlayState.SONG.characters[2] = str;
-        });
-
-        var stageDrop:ChartUI_DropDown = new ChartUI_DropDown(uiBG.x + 10, uiBG.y + 210, 150, CoolUtil.textFileLines('stageList'), PlayState.SONG.stage, (str:String) -> {
-            PlayState.SONG.stage = str;
-        });
-
-        var reloadAudio:ChartUI_Button = new ChartUI_Button((uiBG.x+uiBG.width - 120) - 10, uiBG.y+uiBG.height - 120, true, ()->{
-            FlxG.sound.playMusic(Paths.playableSong(PlayState.SONG.song, false));
-            FlxG.sound.music.pause();
-            FlxG.sound.music.time = 0;
-        }, 'Reload Inst', 120);
-        var clearAllNotes:ChartUI_Button = new ChartUI_Button(reloadAudio.x, reloadAudio.y + 40, true, ()->{
-            // hopefully removes stupid crap that old charts leave behind.
-            var osong:SwagSong = PlayState.SONG;
-            PlayState.SONG = {
-                song:        osong.song,
-                notes:       osong.notes,
-                bpm:         osong.bpm,
-                needsVoices: osong.needsVoices,
-                speed:       osong.speed,
-                characters:  osong.characters,
-                stage:       osong.stage,
-                beginTime:   osong.beginTime,
-                activePlayer:osong.activePlayer
-            };
-            for(i in 0...PlayState.SONG.notes.length){
-                var osec = PlayState.SONG.notes[i];
-                PlayState.SONG.notes[i] = {
-                    sectionNotes: [],
-                    mustHitSection: osec.mustHitSection
-                };
-            }
-
-            loadNotes();
-        }, 'Clear Song', 120); 
-        var saveSong:ChartUI_Button = new ChartUI_Button(reloadAudio.x, clearAllNotes.y + 40, true, ()->{
-            var path = 'assets/songs-data/${PlayState.curSong}/${PlayState.curSong}-edited.json';
-            var saveString:String = 'You cannot save charts in web build.';
-
-            #if desktop
-            saveString = 'Saved song to "$path"';
-
-            var stringedSong:String = haxe.Json.stringify({"song": PlayState.SONG}, '\t');
-            File.saveContent(path,stringedSong);
-            #end
-            
-            var newText:FlxText = new FlxText(uiBG.x - 10, (uiBG.y + uiBG.height + 30) + textOffset, 0, saveString, 16);
-            add(newText);
-
-            FlxTween.tween(newText, {alpha: 0}, 1);
-            postEvent(1.1, ()->{
-                if(newText != null){
-                    remove(newText);
-                    newText.destroy();
-                    newText = null;
-                }
-            });
-        }, 'Save Song', 120);
-        var selectAll:ChartUI_Button = new ChartUI_Button(reloadAudio.x, reloadAudio.y - 40, true, ()->{
-            for(sec in PlayState.SONG.notes)
-                for(note in sec.sectionNotes)
-                    selectedNotes.push(note);
-
-            loadNotes();
-        }, 'Select All', 120);
-        var voicesText:FlxText = new FlxText(voicesCheck.x + voicesCheck.width+5,voicesCheck.y + 10 + textOffset,0,'Enable Vocals',16);
-        var sSpeedText:FlxText = new FlxText(speedBox.x+speedBox.width+5        ,   speedBox.y + 10 + textOffset,0,'Scroll Speed', 16);
-        var playerText:FlxText = new FlxText(voicesText.x+5, voicesText.y - 40,0,'Player', 16);
-
-        var bfText:FlxText = new FlxText(p1Drop.x+p1Drop.width+5, p1Drop.y + 10 + textOffset, 0, 'BF',  16);
-        var dadTxt:FlxText = new FlxText(p2Drop.x+p2Drop.width+5, p2Drop.y + 10 + textOffset, 0, 'DAD', 16);
-        var gfText:FlxText = new FlxText(p3Drop.x+p3Drop.width+5, p3Drop.y + 10 + textOffset, 0, 'GF',  16);
-
-        uiElements.add(bfText);
-        uiElements.add(gfText);
-        uiElements.add(dadTxt);
-        uiElements.add(voicesText);
-        uiElements.add(sSpeedText);
-        uiElements.add(playerText);
-        
-        uiElements.add(nameBox);
-        uiElements.add(bpmBox);
-        uiElements.add(voicesCheck);
-        uiElements.add(speedBox);
-        uiElements.add(delayBox);
-        uiElements.add(stageDrop);
-        uiElements.add(p3Drop);
-        uiElements.add(p2Drop);
-        uiElements.add(p1Drop);
-        uiElements.add(reloadAudio);
-        uiElements.add(clearAllNotes);
-        uiElements.add(saveSong);
-        uiElements.add(playerBox);
-        uiElements.add(selectAll);*/
     }
 }

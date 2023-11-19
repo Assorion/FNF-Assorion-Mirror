@@ -223,13 +223,11 @@ class ChartUI_InputBox extends ChartUI_Persistent {
     private var tickingCounter:Float = 0;
     private var suffix:String = ' _';
 
-    public inline function redoText(?callFunc:Bool = true){
+    public inline function redoText(){
         curText = uneditedText;
         if(ChartingState.inputBlock == this)
             curText += suffix;
 
-        if(callFunc)
-            changeFunc(uneditedText);
         makeText(Math.floor(width), Math.floor(height), true, curText, 0,0);
     }
     public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, startText:String = '', onChange:String->Void){
@@ -243,6 +241,8 @@ class ChartUI_InputBox extends ChartUI_Persistent {
 
     public override function clickedOff(){
         super.clickedOff();
+
+        changeFunc(uneditedText);
         redoText();
     }
 
@@ -282,7 +282,7 @@ class ChartUI_InputBox extends ChartUI_Persistent {
 
         if(pSuffix != suffix){
             suffix = pSuffix;
-            redoText(false);
+            redoText();
         }
     }
 }

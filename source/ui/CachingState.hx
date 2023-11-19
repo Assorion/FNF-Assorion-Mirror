@@ -52,11 +52,12 @@ class CachingState extends MusicBeatState {
 
     var prevFramerate:Int;
     public override function create(){
+        prevFramerate = Settings.pr.framerate;
+
         FlxG.mouse.visible =
         persistentUpdate =
         correctMusic = false;
 
-        prevFramerate = Settings.pr.framerate;
         Settings.pr.framerate = 999;
 
         findItems('assets/');
@@ -125,6 +126,7 @@ class CachingState extends MusicBeatState {
         if(index == objects.length - 1){
             objects = null;
             FlxG.switchState(new ui.TitleState());
+
             Settings.pr.framerate = prevFramerate;
             Settings.apply();
 

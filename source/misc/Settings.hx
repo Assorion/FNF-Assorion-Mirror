@@ -44,6 +44,7 @@ typedef Options = {
     var ui_back  :Array<Int>;
 }
 
+#if !debug @:noDebug #end
 class Settings {
     /*
         Save data is loaded at the beginning of Titlestate.
@@ -60,6 +61,9 @@ class Settings {
         gSave = new FlxSave();
         gSave.bind('funkin', 'candicejoe');
 
+        Binds.updateControls();
+        Highscore.songScores = gSave.data.songScores != null ? gSave.data.songScores : new Map<String, Int>();
+
         if(gSave.data.fSettings == null) return;
 
         // Make sure every value exists and isn't null
@@ -72,27 +76,23 @@ class Settings {
                 Reflect.field   (pr   , items[i]));
 
         pr = tmpPr;
-        Binds.updateControls();
     }
     public static function apply(){
         FlxGraphic.defaultPersist = Settings.pr.default_persist;
         FlxG.updateFramerate      = Settings.pr.framerate;
 		FlxG.drawFramerate        = Settings.pr.framerate;
 
-        Main.changeUsefulInfo(Settings.pr.useful_info);        
-
-        if(gSave.data.songScores != null)
-            Highscore.songScores = gSave.data.songScores;
+        Main.changeUsefulInfo(Settings.pr.useful_info);
         
-        if(Settings.pr.cache_misc){
-            CoolUtil.textFileLines = CoolUtil.cTFL;
-            Paths.lSparrow         = Paths.cLS;
-            Paths.lText            = Paths.cLT;
-        } else {
-            CoolUtil.textFileLines = CoolUtil.ncTFL;
-            Paths.lSparrow         = Paths.ncLS;
-            Paths.lText            = Paths.ncLT;
-        }
+        CoolUtil.textFileLines = CoolUtil.cTFL;
+        Paths.lSparrow         = Paths.cLS;
+        Paths.lText            = Paths.cLT;
+        if(Settings.pr.cache_misc) 
+            return;
+
+        CoolUtil.textFileLines = CoolUtil.ncTFL;
+        Paths.lSparrow         = Paths.ncLS;
+        Paths.lText            = Paths.ncLT;
     }
 
     public inline static function flush(){
