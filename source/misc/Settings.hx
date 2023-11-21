@@ -15,7 +15,6 @@ typedef Options = {
     var skip_logo:Bool;
     var default_persist:Bool;
     var launch_sprites:Bool;
-    var cache_misc:Bool;
 
     var downscroll:Bool;
     var audio_offset:Int;
@@ -76,6 +75,7 @@ class Settings {
                 Reflect.field   (pr   , items[i]));
 
         pr = tmpPr;
+        Binds.updateControls();
     }
     public static function apply(){
         FlxGraphic.defaultPersist = Settings.pr.default_persist;
@@ -87,7 +87,7 @@ class Settings {
         CoolUtil.textFileLines = CoolUtil.cTFL;
         Paths.lSparrow         = Paths.cLS;
         Paths.lText            = Paths.cLT;
-        if(Settings.pr.cache_misc) 
+        if(Settings.pr.default_persist) 
             return;
 
         CoolUtil.textFileLines = CoolUtil.ncTFL;

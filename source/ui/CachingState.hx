@@ -18,7 +18,7 @@ using StringTools;
 
 #if !debug @:noDebug #end
 #if desktop
-class CachingState extends MusicBeatState {
+class CachingState extends flixel.addons.ui.FlxUIState {
     public static inline var barWidth:Int = 1150;
     public static inline var barTopLn:Int = 150; 
     public static inline var inBarWidth:Int = 1120;
@@ -54,10 +54,7 @@ class CachingState extends MusicBeatState {
     public override function create(){
         prevFramerate = Settings.pr.framerate;
 
-        FlxG.mouse.visible =
-        persistentUpdate =
-        correctMusic = false;
-
+        FlxG.mouse.visible = persistentUpdate = false;
         Settings.pr.framerate = 999;
 
         findItems('assets/');

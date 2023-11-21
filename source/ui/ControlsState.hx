@@ -52,8 +52,8 @@ class ControlsState extends MenuTemplate {
 
             if(controlList[i] != ''){
                 var val:Dynamic = Reflect.field(Settings.pr, controlList[i]);
-                str = misc.InputString.getKeyNameFromString(val[0], true, false);
-                s2r = misc.InputString.getKeyNameFromString(val[1], true, false);
+                str = misc.InputString.getKeyNameFromString(val[0], false, false);
+                s2r = misc.InputString.getKeyNameFromString(val[1], false, false);
             }
 
 			pushObject(new Alphabet(0, (60 * i) + 30, str, true));

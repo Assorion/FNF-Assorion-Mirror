@@ -37,15 +37,28 @@ class DialogueSubstate extends MusicBeatSubstate {
     var clsFnc :Void->Void;
     var pState :PlayState;
     var voicesText:FlxText;
+    var camRef :FlxCamera;
 
-    public function new(camera:FlxCamera, closeFunc:Void->Void, dPath:String, playState:PlayState){
+    public static function crDialogue(cam:FlxCamera, close:Void->Void, dPath:String, ps:PlayState, retState:Array<DialogueSubstate>):Bool
+    {
+        if (PlayState.storyWeek == -1 || !Assets.exists('assets/songs-data/' + dPath) || PlayState.seenCutscene){
+            PlayState.seenCutscene = true;
+            return true;
+        }
+
+        retState[0] = new DialogueSubstate(cam, close, dPath, ps);
+        retState[0].openCallback = function(){
+            // take a look at pausesubstate pls
+            CoolUtil.copyCameraToData(PauseSubState.bdat, FlxG.camera);
+            retState[0].pState.persistentDraw = false;
+        };
+        return false;
+    }
+
+    public function new(camera:FlxCamera, closeFunc:Void->Void, dPath:String, pState:PlayState){
         super(false);
 
-        // take a look at pausesubstate pls
         PauseSubState.newCanvas();
-        CoolUtil.copyCameraToData(PauseSubState.bdat, FlxG.camera);
-
-        playState.persistentDraw = false;
 
         var gspr:StaticSprite = new StaticSprite(0,0).loadGraphic(PauseSubState.bdat);
         gspr.antialiasing = Settings.pr.antialiasing;
@@ -76,6 +89,8 @@ class DialogueSubstate extends MusicBeatSubstate {
         voicesText = new FlxText(boxSpr.x + 30, boxSpr.y + 10, 0, '', 30);
         voicesText.color = FlxColor.BLACK;
 
+        ///////////////
+
         add(graySpr);
         add(char1);
         add(char2);
@@ -88,7 +103,7 @@ class DialogueSubstate extends MusicBeatSubstate {
         voicesText.cameras = [camera];
 
         clsFnc = closeFunc;
-        pState = playState;
+        this.pState = pState;
 
         // parse text data. Yeah sorry this is not too good.
         var lines:Array<String> = Paths.lText(dPath).split(',');
@@ -119,8 +134,8 @@ class DialogueSubstate extends MusicBeatSubstate {
         leaving = true;
         postEvent(1, ()->{
             PlayState.seenCutscene = true;
-            pState.paused = false;
-            pState.persistentDraw = true;
+            pState.paused          = false;
+            pState.persistentDraw  = true;
             close();
             clsFnc();
         });
@@ -132,6 +147,7 @@ class DialogueSubstate extends MusicBeatSubstate {
             exit();
             return;
         }
+        
         // in case you spam.
         events = [];
         voicesText.text = '';

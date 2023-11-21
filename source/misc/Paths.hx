@@ -41,12 +41,13 @@ class Paths {
     */
 
     public static inline function clearCache(){
-        if(Settings.pr.default_persist || Settings.pr.launch_sprites || Settings.pr.cache_misc) return;
+        if(Settings.pr.default_persist || Settings.pr.launch_sprites) 
+            return;
 
 		Assets.cache.clear();
+        openfl.utils.Assets.cache.clear();
         CoolUtil.cachedFrames.clear();
         CoolUtil.cachedLines.clear();
-
     }
 
     public static function cLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection

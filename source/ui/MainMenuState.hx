@@ -46,7 +46,6 @@ class MainMenuState extends MusicBeatState
 		menuItems = new FlxTypedGroup<FlxSprite>();
 
 		add(bg);
-		add(camFollow);
 		add(menuItems);
 
 		for (i in 0...optionList.length)
@@ -85,6 +84,7 @@ class MainMenuState extends MusicBeatState
 	// # Input code
 
 	var twns:Array<FlxTween> = [];
+	var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
@@ -108,9 +108,14 @@ class MainMenuState extends MusicBeatState
 
 					return;
 				}
+				if(leaving){
+					skipTrans();
+					return;
+				}
+
 				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
 				FlxG.switchState(new TitleState());
-				selectedSomethin = true;
+				leaving = true;
 	
 				return;
 		}

@@ -30,7 +30,7 @@ class OptionsState extends MenuTemplate
 {
 	static var optionSub:Array<Array<String>> = [
 		['basic', 'gameplay', 'visuals', 'controls', 'changelog'],
-		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist', #if desktop 'launch_sprites', #end 'cache_misc'],
+		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist', #if desktop 'launch_sprites' #end ],
 		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay', 'miss_health'],
 		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info', 'light_bot_strums']
 	];
@@ -47,22 +47,21 @@ class OptionsState extends MenuTemplate
 			'Start the game in fullscreen mode',
 			'Change the games starting volume',
 			'Skip the haxeflixel intro logo',
-			'Makes all loaded sprites stay in RAM. Uses tons more memory but will decrease load times.',
+			'All Graphics & text files stay in ram. Will use way more ram but reload times decrease. DISABLE WHEN MODDING!',
 			#if desktop
-			'Load assets at startup. Uses even more RAM and increases startup time. Doesn\'t work in web browser.',
+			'Load assets at startup. Uses even more RAM and increases startup time. Doesn\'t work in web browser'
 			#end
-			'Cache text files and XML frames (doesn\'t really help that much). DISABLE IF YOU ARE TRYING TO MOD!!!'
 		],
 		[
-			'Change your audio offset in MS. Press ${misc.InputString.getKeyNameFromString(Binds.UI_ACCEPT[0], true, false)} to enter offset wizard.',
-			'Change your keyboard offset in MS. This only changes ratings, not the actual timing window.',
+			'Change your audio offset in MS. Press accept to enter the offset wizard',
+			'Change your keyboard offset in MS. This only changes ratings, not the actual timing window',
 			'Change the scroll direction',
 			'Allows pressing notes if there is no notes to hit',
 			'Let the game handle your notes for you (does not count scores or health)',
 			'Changes the amount of health you lose from missing'
 		],
 		[
-			'If you don\'t know what this does, Google it.',
+			'If you don\'t know what this does, Google it',
 			#if desktop
 			'Changes how fast the game CAN run. I recommend setting it to 300, not the max',
 			#end
@@ -202,12 +201,12 @@ class OptionsState extends MenuTemplate
 				Settings.pr.skip_logo = !Settings.pr.skip_logo;
 			case 'default_persist':
 				Settings.pr.default_persist = !Settings.pr.default_persist;
-				if(Settings.pr.default_persist) gameplay.PauseSubState.newCanvas(true);
+				if(Settings.pr.default_persist) 
+					gameplay.PauseSubState.newCanvas(true);
+
+				Settings.apply();
 			case 'launch_sprites':
 				Settings.pr.launch_sprites = !Settings.pr.launch_sprites;
-			case 'cache_misc':
-				Settings.pr.cache_misc = !Settings.pr.cache_misc;
-				Settings.apply();
 
 			// gameplay
 			case 'audio_offset':

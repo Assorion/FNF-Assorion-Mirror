@@ -220,16 +220,18 @@ class PlayState extends MusicBeatState
 
 		super.create();
 
-		// cutscene stuff :vomit:
-		var dPath:String = '${PlayState.curSong}/dialogue.txt';
-		if(storyWeek >= 0 && !seenCutscene && Assets.exists('assets/songs-data/' + dPath)){
-			postEvent(0.8, ()->{
-				pauseGame(new DialogueSubstate(camHUD, startCountdown, dPath, this));
-			});
-			return;
-		}
-		seenCutscene = true;
-		postEvent(SONG.beginTime + 0.1, () -> {startCountdown(); });
+		// force it to pass an instance by reference.
+		var stateHolder:Array<DialogueSubstate> = [];
+		var seenCut:Bool = DialogueSubstate.crDialogue(camHUD, startCountdown, '$curSong/dialogue.txt', this, stateHolder);
+
+		postEvent(SONG.beginTime + 0.1, startCountdown);
+		if(seenCut) return;
+
+		events.splice(events.length - 1, 1);
+
+		postEvent(0.8, ()->{
+			pauseGame(stateHolder[0]);
+		});
 	}
 
 	// # stage code.
@@ -525,10 +527,12 @@ class PlayState extends MusicBeatState
 		var k = key.deepCheck([Binds.UI_ACCEPT, Binds.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12] ]);
 		switch(k){
 			case 0, 1:
-				pauseGame(new PauseSubState(camHUD, this));
+				if(seenCutscene)	
+					pauseGame(new PauseSubState(camHUD, this));
 				return;
 			case 2:
 				FlxG.switchState(new ChartingState());
+				seenCutscene = false;
 				return;
 			case 3:
 				misc.Screenshot.takeScreenshot();
@@ -762,7 +766,7 @@ class PlayState extends MusicBeatState
 	}
 	override function onFocusLost(){
 		super.onFocusLost();
-		if(paused || !FlxG.sound.music.playing) return;
+		if(paused || !seenCutscene) return;
 		
 		pauseGame(new PauseSubState(camHUD, this));
 	}

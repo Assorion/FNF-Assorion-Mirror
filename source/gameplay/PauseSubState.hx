@@ -105,8 +105,12 @@ class PauseSubState extends MusicBeatSubstate
 		updatePauseText();
 	}
 	private inline function updatePauseText(){
-		var coolString:String = 'SONG: ${PlayState.curSong.toUpperCase()} | WEEK: ${PlayState.storyWeek >= 0 ? Std.string(PlayState.storyWeek + 1) : "FREEPLAY"}' +
-		' | BOTPLAY: ${Settings.pr.botplay ? "YES" : "NO"} | DIFFICULTY: ${CoolUtil.diffString(PlayState.curDifficulty, 1).toUpperCase()} | ';
+		var coolString:String = 
+		'SONG: ${PlayState.curSong.toUpperCase()}' +
+		' | WEEK: ${PlayState.storyWeek >= 0 ? Std.string(PlayState.storyWeek + 1) : "FREEPLAY"}' +
+		' | BOTPLAY: ${Settings.pr.botplay ? "YES" : "NO"}' +
+		' | DIFFICULTY: ${CoolUtil.diffString(PlayState.curDifficulty, 1).toUpperCase()}' +
+		' | ';
 		pauseText.text = '$coolString$coolString$coolString';
 	}
 

@@ -80,11 +80,15 @@ Chart editor fix (again).
 7. Allow pausing on countdown without breaking.
 8. Fixed arrow fade in (whoopsie it's been wrong all this time).
 
-## V - 1.2.3 Unreleased
+## V - 1.3.0
 
 1. Defaulted camera BG alpha to 0. Might be faster.
 2. Overhauled cachingstate. Added a progress bar for it.
-3. Change a bit of web build stuff.
+3. Changed a bit of web build stuff.
 4. Allow for XML caching. Super cool!
 5. Added CHANGELOG.md parser (HistoryState.hx). Now you can view history in game.
 6. (Not very important) slightly un-hardcoded settings icons. Whoopsie!
+7. Fixed minor bugs (pause during dialogue, framerate issue on cachingstate)
+8. Overhauled chartingstate. New 3D ui!
+9. Now can skip all transitions!
+10. Fixed older crashing issue with cache_misc (option dissolved).

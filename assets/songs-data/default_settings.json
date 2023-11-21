@@ -5,7 +5,6 @@
     "skip_logo": false,
     "default_persist": false,
     "launch_sprites": false,
-    "cache_misc": true,
 
     "downscroll": true,
     "audio_offset": 80,
@@ -29,6 +28,6 @@
     "ui_right": [68, 39],
     "ui_up"   : [87, 38],
     "ui_down" : [83, 40],
-    "ui_accept": [13, 71],
+    "ui_accept": [13, 32],
     "ui_back":   [27, 8]
 }

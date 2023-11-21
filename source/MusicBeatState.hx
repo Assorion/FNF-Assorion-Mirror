@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.transition.Transition;
 import flixel.addons.ui.FlxUIState;
 import openfl.events.KeyboardEvent;
 
@@ -120,6 +121,11 @@ class MusicBeatState extends FlxUIState
 		FlxTransitionableState.skipNextTransOut = true;
 		for(i in 0...events.length)
 			events[i].exeFunc();
+
+		if(!Std.is(subState, Transition)) return;
+
+		cast(subState, Transition).finishCallback();
+		closeSubState();
 	}
 
 	public function beatHit():Void {}

@@ -98,6 +98,11 @@ class FreeplayState extends MenuTemplate
 		var k = key.deepCheck([Binds.UI_ACCEPT, [FlxKey.SPACE]]);
 		switch(k){
 			case 0: // Enter
+				if(leaving){
+					skipTrans();
+					return;
+				}
+
 				FlxG.switchState(new PlayState([ songs[curSel] ], curDifficulty, -1));
 				leaving = true;
 				if( FlxG.sound.music.playing)
