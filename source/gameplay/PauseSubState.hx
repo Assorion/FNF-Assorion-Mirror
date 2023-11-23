@@ -1,7 +1,5 @@
 package gameplay;
 
-import flixel.addons.transition.FlxTransitionableState;
-
 import flixel.FlxG;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -37,9 +35,9 @@ class PauseSubState extends MusicBeatSubstate
 	public static function exitToProperMenu(){
 		PlayState.seenCutscene = false;
 		if(PlayState.storyWeek >= 0){
-			FlxG.switchState(new ui.StoryMenuState());
+			MusicBeatState.changeState(new ui.StoryMenuState());
 		} else
-			FlxG.switchState(new ui.FreeplayState());
+			MusicBeatState.changeState(new ui.FreeplayState());
 	}
 	
 	// # create new empty background sprite
@@ -133,9 +131,6 @@ class PauseSubState extends MusicBeatSubstate
 				pauseMusic.destroy();
 				close();
 			case 1:
-				FlxTransitionableState.skipNextTransIn  = true;
-				FlxTransitionableState.skipNextTransOut = true;
-				
 				FlxG.resetState();
 			case 2:
 				ps.persistentDraw = false;

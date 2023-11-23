@@ -125,6 +125,10 @@ class CachingState extends flixel.addons.ui.FlxUIState {
             FlxG.switchState(new ui.TitleState());
 
             Settings.pr.framerate = prevFramerate;
+            // failsafe if somehow this ends up being hudge
+            if(prevFramerate > 500)
+                Settings.openSettings();
+
             Settings.apply();
 
             return;

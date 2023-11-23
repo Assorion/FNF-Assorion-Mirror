@@ -11,7 +11,7 @@ import flixel.util.FlxColor;
 import lime.app.Application;
 import openfl.events.KeyboardEvent;
 import flixel.input.keyboard.FlxKey;
-import flixel.addons.transition.FlxTransitionableState;
+//import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -114,7 +114,7 @@ class MainMenuState extends MusicBeatState
 				}
 
 				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
-				FlxG.switchState(new TitleState());
+				MusicBeatState.changeState(new TitleState());
 				leaving = true;
 	
 				return;
@@ -142,14 +142,14 @@ class MainMenuState extends MusicBeatState
 		postEvent(1, () -> {
 			switch (curSelected){
 				case 0:
-					FlxG.switchState(new StoryMenuState());
+					MusicBeatState.changeState(new StoryMenuState());
 				case 1:
-					FlxG.switchState(new FreeplayState());
+					MusicBeatState.changeState(new FreeplayState());
 				case 2:
 					CoolUtil.browserLoad('https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/');
 					FlxG.resetState();
 				case 3:
-					FlxG.switchState(new OptionsState());
+					MusicBeatState.changeState(new OptionsState());
 			}
 		});
 	}

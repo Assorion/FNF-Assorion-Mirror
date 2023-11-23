@@ -123,15 +123,18 @@ class MenuTemplate extends MusicBeatState {
         camFollow.y += 320;
     }
 
+    private inline function skipCheck():Bool
+    if(MusicBeatState.activeTransition != null){
+        skipTrans();
+        return true;
+    } else 
+        return false;
+
     // Will mostly likely not need changing for a lot of states.
     public function exitFunc(){
-        if(leaving){
-            skipTrans();
-            return;
-        }
+        if(skipCheck()) return;
 
-        leaving = true;
-        FlxG.switchState(new MainMenuState());
+        MusicBeatState.changeState(new MainMenuState());
         FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
     }
 
@@ -147,7 +150,6 @@ class MenuTemplate extends MusicBeatState {
 
     // # Input code
 
-    private var leaving:Bool = false;
     override function keyHit(ev:KeyboardEvent){
         super.keyHit(ev);
 

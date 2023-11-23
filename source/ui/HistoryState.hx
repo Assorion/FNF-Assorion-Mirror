@@ -52,18 +52,13 @@ class HistoryState extends MenuTemplate {
         var bottomBlack:StaticSprite = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, 0xFF000000);
         var str='Press ${misc.InputString.getKeyNameFromString(Binds.UI_ACCEPT[0], true, false)} to see the entry. / ${misc.InputString.getKeyNameFromString(Binds.UI_BACK[0], true, false)} to go back.';
 		var descText = new FlxText(5, FlxG.height - 25, 0, str, 20);
+
 		descText.setFormat('assets/fonts/vcr.ttf', 20, 0xFFFFFF, LEFT);
 		bottomBlack.alpha = 0.6;
 
         sAdd(bottomBlack);
 		sAdd(descText);
     }
-    override public function update(elapsed:Float){
-        if(dontUpdate) return;
-
-        super.update(elapsed);
-    }
-
     override function keyHit(ev:KeyboardEvent){
         if(dontUpdate) return;
 
@@ -75,13 +70,15 @@ class HistoryState extends MenuTemplate {
     }
 
     override public function exitFunc(){
-		if(leaving){
-            skipTrans();
+		if(skipCheck()) 
             return;
-        }
-        leaving = true;
-        FlxG.switchState(new OptionsState());
+
+        MusicBeatState.changeState(new OptionsState());
 	}
+
+    override public function update(elapsed:Float)
+        if(!dontUpdate)
+            super.update(elapsed);
 }
 class HistorySubstate extends MusicBeatSubstate {
     var bgSpr:FlxSprite;

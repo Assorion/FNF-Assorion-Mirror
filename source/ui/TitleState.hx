@@ -3,9 +3,6 @@ package ui;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup;
@@ -67,24 +64,8 @@ class TitleState extends MusicBeatState
 
 	inline function startIntro()
 	{
-		// # create fade transition
-
 		if (!initialized)
 		{
-			var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
-			diamond.persist = true;
-			diamond.destroyOnNoUse = false;
-
-			FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.WHITE, 0.7, new FlxPoint(0, -1), {asset: diamond, width: 32, height: 32},
-				new FlxRect(0, 0, FlxG.width, FlxG.height));
-			FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.WHITE, 0.4, new FlxPoint(0, 1), {asset: diamond, width: 32, height: 32}, 
-				new FlxRect(0, 0, FlxG.width, FlxG.height));
-
-			transIn = FlxTransitionableState.defaultTransIn;
-			transOut = FlxTransitionableState.defaultTransOut;
-
-			/////////////////////////////
-
 			FlxG.sound.volume = Settings.pr.start_volume / 100;
 			FlxG.sound.music.volume = 0;
 			sndTween = FlxTween.tween(FlxG.sound.music, {volume: 1}, 3);
@@ -162,7 +143,7 @@ class TitleState extends MusicBeatState
 			FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
 			postEvent(
 				(Conductor.crochet * 4) / 1000, 
-				() -> { FlxG.switchState(new MainMenuState()); 
+				() -> { MusicBeatState.changeState(new MainMenuState()); 
 			});
 		}
 		skipIntro();

@@ -84,12 +84,10 @@ class ControlsState extends MenuTemplate {
     }
 
 	override public function exitFunc(){
-		if(leaving){
-            skipTrans();
+		if(skipCheck())
             return;
-        }
-        leaving = true;
-        FlxG.switchState(new OptionsState());
+
+        MusicBeatState.changeState(new OptionsState());
 	}
 
     // skip blank space

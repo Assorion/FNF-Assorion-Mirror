@@ -103,6 +103,7 @@ class StoryMenuState extends MenuTemplate
 		sAdd(trackList);
 	}
 
+	var leaving:Bool = false;
 	override function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
@@ -129,7 +130,7 @@ class StoryMenuState extends MenuTemplate
 			});
 		// SWITCH!
 		postEvent(1, ()->{
-			FlxG.switchState(tP);
+			MusicBeatState.changeState(tP);
 			if (FlxG.sound.music.playing)
 				FlxG.sound.music.stop();
 		});

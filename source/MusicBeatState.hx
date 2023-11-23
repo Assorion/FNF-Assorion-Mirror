@@ -1,10 +1,12 @@
 package;
 
 import flixel.FlxG;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.transition.Transition;
+import flixel.FlxSubState;
+import flixel.FlxState;
 import flixel.addons.ui.FlxUIState;
 import openfl.events.KeyboardEvent;
+
+import ui.NewTransition;
 
 typedef DelayedEvent = {
 	var curTime:Float;
@@ -15,6 +17,8 @@ typedef DelayedEvent = {
 #if !debug @:noDebug #end
 class MusicBeatState extends FlxUIState
 {
+	public static var activeTransition:NewTransition;
+
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
@@ -24,6 +28,10 @@ class MusicBeatState extends FlxUIState
 
 	override function create()
 	{
+		// Don't worry the skipping is handled in the transition itself.
+		openSubState(new NewTransition(null, false));
+		activeTransition = null;
+
 		Paths.clearCache();
 		
 		// please put persistent update on for ui states.
@@ -46,12 +54,10 @@ class MusicBeatState extends FlxUIState
 	// # new input thing.
 
 	public var key = 0;
-	public function keyHit(ev:KeyboardEvent){
+	public function keyHit(ev:KeyboardEvent)
 		key = ev.keyCode;
-	}
-	public function keyRel(ev:KeyboardEvent){
+	public function keyRel(ev:KeyboardEvent)
 		key = ev.keyCode;
-	}
 
 	override function destroy(){
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHit);
@@ -93,7 +99,7 @@ class MusicBeatState extends FlxUIState
 		Conductor.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
 
 		var oldStep:Int = curStep;
-		updateCurStep();
+		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
 		
 		if(oldStep != curStep && curStep >= 0)
 			stepHit();
@@ -101,9 +107,6 @@ class MusicBeatState extends FlxUIState
 		handleEvents(elapsed);
 		super.update(elapsed);
 	}
-
-	private inline function updateCurStep():Void
-		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
 
 	public function stepHit():Void
 	{
@@ -115,18 +118,19 @@ class MusicBeatState extends FlxUIState
 			beatHit();
 		}
 	}
+	public function beatHit():Void {}
 
 	private inline function skipTrans(){
-		FlxTransitionableState.skipNextTransIn  = true;
-		FlxTransitionableState.skipNextTransOut = true;
 		for(i in 0...events.length)
 			events[i].exeFunc();
 
-		if(!Std.is(subState, Transition)) return;
-
-		cast(subState, Transition).finishCallback();
-		closeSubState();
+		if(activeTransition != null)
+			activeTransition.skip();
 	}
+	public static function changeState(target:FlxState){
+		activeTransition = new NewTransition(target, true);
 
-	public function beatHit():Void {}
+		FlxG.state.openSubState(activeTransition);
+		FlxG.state.persistentUpdate = false;
+	}
 }

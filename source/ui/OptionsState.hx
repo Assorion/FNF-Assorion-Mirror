@@ -61,7 +61,7 @@ class OptionsState extends MenuTemplate
 			'Changes the amount of health you lose from missing'
 		],
 		[
-			'If you don\'t know what this does, Google it',
+			'Makes the sprites look smoother. The game will look jagged without this option.',
 			#if desktop
 			'Changes how fast the game CAN run. I recommend setting it to 300, not the max',
 			#end
@@ -188,10 +188,12 @@ class OptionsState extends MenuTemplate
 				curSel = 0;
 				curSub = 3;
 			case 'controls':
-				FlxG.switchState(new ControlsState());
+				if(skipCheck()) return;
+				MusicBeatState.changeState(new ControlsState());
 				return;
 			case 'changelog':
-				FlxG.switchState(new HistoryState());
+				if(skipCheck()) return;
+				MusicBeatState.changeState(new HistoryState());
 				return;
 
 			// basic
@@ -210,7 +212,8 @@ class OptionsState extends MenuTemplate
 
 			// gameplay
 			case 'audio_offset':
-				FlxG.switchState(new OffsetWizard());
+				if(skipCheck()) return;
+				MusicBeatState.changeState(new OffsetWizard());
 				return;
 			case 'downscroll':
 				Settings.pr.downscroll = !Settings.pr.downscroll;

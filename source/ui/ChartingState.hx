@@ -305,7 +305,7 @@ class ChartingState extends MusicBeatState {
         switch(T){
             case 0, 1:
                 FlxG.mouse.visible = false;
-                FlxG.switchState(new PlayState());
+                MusicBeatState.changeState(new PlayState());
 
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEvent);
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
@@ -808,7 +808,7 @@ class ChartingState extends MusicBeatState {
         //activeUIElement = null;
 
         var mustHitSection:CharFlxG.mouse.visible = false;
-            FlxG.switchState(new PlayState());tUI_CheckBox = new ChartUI_CheckBox(uiBG.x + 10, uiBG.y + 10, PlayState.SONG.notes[curSec].mustHitSection, (c:Bool)->{
+            MusicBeatState.changeState(new PlayState());tUI_CheckBox = new ChartUI_CheckBox(uiBG.x + 10, uiBG.y + 10, PlayState.SONG.notes[curSec].mustHitSection, (c:Bool)->{
             PlayState.SONG.notes[curSec].mustHitSection = c;
         });
 

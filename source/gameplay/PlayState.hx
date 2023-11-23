@@ -531,7 +531,7 @@ class PlayState extends MusicBeatState
 					pauseGame(new PauseSubState(camHUD, this));
 				return;
 			case 2:
-				FlxG.switchState(new ChartingState());
+				MusicBeatState.changeState(new ChartingState());
 				seenCutscene = false;
 				return;
 			case 3:

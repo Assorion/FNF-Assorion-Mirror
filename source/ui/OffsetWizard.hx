@@ -81,7 +81,7 @@ class OffsetWizard extends MusicBeatState{
 
         if(key.deepCheck([ Binds.UI_ACCEPT, Binds.UI_BACK ]) != -1){
             FlxG.sound.music.stop();
-            FlxG.switchState(new OptionsState());
+            MusicBeatState.changeState(new OptionsState());
 
             Settings.pr.audio_offset = prevOffset;
             if(!key.hardCheck(Binds.UI_ACCEPT)) return;
