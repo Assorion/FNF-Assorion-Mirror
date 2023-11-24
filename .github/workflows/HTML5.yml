@@ -23,17 +23,11 @@ jobs:
         with:
           path: |
            ~/haxelib
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('~/haxelib') }}
-
-      - name: File Check
-        run: |
-         cd ~/haxelib
-         ls
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
         
       - name: Install Haxelib
         if: steps.HaxeCache.outputs.cache-hit != 'true'
         run: |
-          echo $HAXE_STD_PATH
           haxelib setup ~/haxelib
           haxelib install hxcpp > /dev/null --quiet
           haxelib install lime 7.9.0
