@@ -17,16 +17,14 @@ jobs:
         with:
           haxe-version: 4.3.2
 
-      - name: Caching dependencies
-        id: HaxeCache
+      - name: Caching Build
+        id: Caching Build
         uses: actions/cache@v3
         with:
-          path: |
-           ~/haxelib
+          path: export/release/html5/bin
           key: ${{ runner.os }}-buildx-${{ github.sha }}
         
       - name: Install Haxelib
-        if: steps.HaxeCache.outputs.cache-hit != 'true'
         run: |
           haxelib setup ~/haxelib
           haxelib install hxcpp > /dev/null --quiet
