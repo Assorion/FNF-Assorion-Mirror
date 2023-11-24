@@ -16,13 +16,6 @@ jobs:
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.2
-
-      - name: Caching Build
-        id: CachingBuild
-        uses: actions/cache@v3
-        with:
-          path: export
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
         
       - name: Install Haxelib
         run: |
@@ -36,11 +29,6 @@ jobs:
           
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
-
-      - name: file check
-        run: |
-         cd ~/haxelib
-         ls
 
       - name: Compilation
         run: haxelib run lime build html5 -release
