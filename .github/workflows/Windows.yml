@@ -27,7 +27,7 @@ jobs:
         run: echo "${{github.run_id}}" > VERSION
         
       - name: Compilation
-        run: haxelib run lime build windows -release -D HXCPP_MINGW --app-version="4.0.0-${{ github.run_id}}"
+        run: haxelib run lime build windows -release --app-version="4.0.0-${{ github.run_id}}"
         
       - name: Publish Artifact
         uses: actions/upload-artifact@main
