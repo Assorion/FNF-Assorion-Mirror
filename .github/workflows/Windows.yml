@@ -7,21 +7,17 @@ jobs:
   Windows-Build:
     runs-on: windows-latest
     steps:
-      - name: Get MinGW-w64
+      - name: Install MinGW-w64
         shell: bash
         run: |
           mkdir tmpMinGW
           cd tmpMinGW
-          curl -Lo tmp.zip "https://github.com/brechtsanders/winlibs_mingw/releases/download/13.2.0-17.0.4-11.0.1-msvcrt-r2/winlibs-x86_64-posix-seh-gcc-13.2.0-llvm-17.0.4-mingw-w64msvcrt-11.0.1-r2.zip"
+          curl -Lo tmp.zip "https://github.com/skeeto/w64devkit/releases/download/v1.20.0/w64devkit-1.20.0.zip"
           ls
           unzip *
+          mkdir /c/MinGW/
+          cp mingw/* /c/MinGW/
           cd ../
-      - name: Install MinGW-w64
-        shell: cmd
-        run: |
-          md C:\MinGW
-          dir
-          copy tmpMinGW\mingw64\* C:\MinGW\
 
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
