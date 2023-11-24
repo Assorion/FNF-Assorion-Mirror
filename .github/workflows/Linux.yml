@@ -21,6 +21,15 @@ jobs:
           haxelib install flixel 5.2.2 
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
+          
+      - name: Caching Dependancies 
+        uses: actions/cache@main
+        with:
+          path: ~/haxelib
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+              ${{ runner.os }}-buildx-
+          
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
 
