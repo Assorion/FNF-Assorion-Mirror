@@ -7,19 +7,6 @@ jobs:
   Windows-Build:
     runs-on: windows-latest
     steps:
-      - name: Install MinGW-w64
-        shell: bash
-        run: |
-          mkdir tmpMinGW
-          cd tmpMinGW
-          curl -Lo tmp.zip "https://github.com/skeeto/w64devkit/releases/download/v1.20.0/w64devkit-1.20.0.zip"
-          ls
-          unzip *
-          mkdir /c/MinGW/
-          ls
-          cp -r w64devkit/* /c/MinGW/
-          cd ../
-
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
         with:
@@ -35,6 +22,19 @@ jobs:
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
         shell: cmd
+
+      - name: Install MinGW-w64
+        shell: bash
+        run: |
+          mkdir tmpMinGW
+          cd tmpMinGW
+          curl -Lo tmp.zip "https://github.com/skeeto/w64devkit/releases/download/v1.20.0/w64devkit-1.20.0.zip"
+          ls
+          unzip *
+          mkdir /c/MinGW/
+          ls
+          cp -r w64devkit/* /c/MinGW/
+          cd ../
 
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
