@@ -21,10 +21,23 @@ jobs:
           haxelib install flixel 5.2.2 
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
-
-          copy C:\mingw64 C:\MinGW
         shell: cmd
-        
+      
+      - name: Get MinGW-w64
+        shell: bash
+        run: |
+          mkdir tmpMinGW
+          cd tmpMinGW
+          wget https://github.com/brechtsanders/winlibs_mingw/releases/download/13.2.0-17.0.4-11.0.1-msvcrt-r2/winlibs-x86_64-posix-seh-gcc-13.2.0-llvm-17.0.4-mingw-w64msvcrt-11.0.1-r2.zip
+          unzip *
+          cd ../
+      - name: Install MinGW-w64
+        shell: cmd
+        run: |
+          md C:\MinGW
+          dir
+          copy tmpMinGW\mingw64\* C:\MinGW\
+
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
         
