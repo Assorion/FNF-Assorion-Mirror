@@ -6,23 +6,7 @@ on:
 jobs:
   Windows-Build:
     runs-on: windows-latest
-    steps:  
-      - uses: actions/checkout@main
-      - uses: krdlab/setup-haxe@master
-        with:
-          haxe-version: 4.3.2
-          
-      - name: Install Haxelib
-        run: |
-          haxelib setup C:/haxelib
-          haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
-          haxelib install lime 7.9.0
-          haxelib install openfl 9.2.1
-          haxelib install flixel 5.2.2 
-          haxelib install flixel-ui 2.5.0
-          haxelib install flixel-addons 3.0.2
-        shell: cmd
-      
+    steps:
       - name: Get MinGW-w64
         shell: bash
         run: |
@@ -38,6 +22,22 @@ jobs:
           md C:\MinGW
           dir
           copy tmpMinGW\mingw64\* C:\MinGW\
+
+      - uses: actions/checkout@main
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.3.2
+          
+      - name: Install Haxelib
+        run: |
+          haxelib setup C:/haxelib
+          haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
+          haxelib install lime 7.9.0
+          haxelib install openfl 9.2.1
+          haxelib install flixel 5.2.2 
+          haxelib install flixel-ui 2.5.0
+          haxelib install flixel-addons 3.0.2
+        shell: cmd
 
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
