@@ -86,6 +86,15 @@ class ChartUI_Persistent extends ChartUI_Generic {
 
 // # Easy stuff
 
+class ChartUI_Text extends ChartUI_Generic {
+    public function new(x:Float, y:Float, t:String){
+        super(x,y, 0, 0, false, '');
+
+        var text:FlxText = new FlxText(0,0,0,t,12);
+        loadGraphic(text.graphic);
+    }
+}
+
 class ChartUI_CheckBox extends ChartUI_Generic{
     public var changeFunc:Bool->Void;
     public var checked:Bool = false;

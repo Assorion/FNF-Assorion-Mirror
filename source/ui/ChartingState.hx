@@ -106,7 +106,9 @@ class ChartingState extends MusicBeatState {
 
         // # UI
 
-        uiBG = new ChartUI_Generic(camGR.x + camGR.width + 25, 0, 410, 600, false, '');
+        uiBG = new ChartUI_Generic(camGR.x + camGR.width + 25, 0, 520, 600, false, '');
+        uiBG.drawSquare(0,   0, 410, 600);
+        uiBG.drawSquare(410, 0, 110, 600);
         uiBG.screenCenter(Y);
         uiElements = new FlxTypedSpriteGroup<ChartUI_Generic>();
         uiElements.y = uiBG.y + 10;
@@ -114,7 +116,10 @@ class ChartingState extends MusicBeatState {
         add(uiBG);
         add(uiElements);
 
-        //createTestUI();
+        tabButtons.push(new ChartUI_Button(400, uiBG.y    , 110, 30, createSongUI, 'SONG'));
+        tabButtons.push(new ChartUI_Button(400, uiBG.y+30 , 110, 30, createTestUI, 'TEST'));
+        tabButtons.push(new ChartUI_Button(400, uiBG.y+570, 110, 30, createInfoUI, 'HELP'));
+
         createSongUI();
 
         // # create line and notes
@@ -600,28 +605,33 @@ class ChartingState extends MusicBeatState {
 
     // # UI Tabs.
 
-    private inline function genText(ref:ChartUI_Generic, txt:String):FlxText
+    private inline function genText(ref:ChartUI_Generic, txt:String):ChartUI_Text
     {
-        var tmpText:FlxText = new FlxText(ref.x + ref.width, ref.y, 0, txt, 16);
-            tmpText.x += 10;
+        var tmpText:ChartUI_Text = new ChartUI_Text(ref.x + ref.width + 5, ref.y, txt);
             tmpText.y += (ref.height - tmpText.height) / 2;
-        add(tmpText);
+            tmpText.y -= uiElements.y;
+            tmpText.x -= uiElements.x;
+        uiElements.add(tmpText);
 
         return tmpText;
     }
 
+    private var tabButtons:Array<ChartUI_Button> = [];
     private inline function secStart(area:Void->Void){
         currentUI = area;
         activeUIElement = null;
         inputBlock = null;
 
+        for(i in 0...tabButtons.length) uiElements.remove(tabButtons[i]);
+
         uiElements.clear();
+
+        for(i in 0...tabButtons.length) uiElements.add(tabButtons[i]);
     }
 
     public function createInfoUI():Void
     {
-        /*uiElements.clear();
-        inSecUi = false;
+        secStart(createInfoUI);
 
         var text:String = '
         About / Info / How to use:\n
@@ -629,38 +639,33 @@ class ChartingState extends MusicBeatState {
         Left Click on note - Delete note
         Right Click - Delete selected notes
         Ctrl + Left Click - Select multiple notes
-        Q / E - Decrease or add length of selected notes
+        Q / E - Decrease / add length of selected notes
         Z / X - Zoom in or zoom out grid
-        B / N - Change note types (including selected notes)
+        B / N - Change note types
         SPACE - Pause / Play song\n
         Ctrl \"Power Moves\" (on selected notes):\n
-        Ctrl + J / L - Moves all notes left or right on the grid
-        Ctrl + I / K - Moves all notes up or down on the grid
+        Ctrl + J / L - Moves notes left / right on the grid
+        Ctrl + I / K - Moves notes up / down on the grid
         Ctrl + C - Makes of copy of selected notes
         Ctrl + V mirrors selected notes
         ';
-        var aboutText:FlxText = new FlxText(uiBG.x - 37, (uiBG.y - 10) + textOffset, 0, text, 12);
-        aboutText.scale.set(0.95, 0.95);
 
-        uiElements.add(aboutText);*/
+        var aboutText:ChartUI_Text = new ChartUI_Text(-35, -30, text);
+        uiElements.add(aboutText);
     }
 
     public function createTestUI():Void
     {
-        currentUI = createTestUI;
-        activeUIElement = null;
-        inputBlock = null;
+        secStart(createTestUI);
 
-        uiElements.clear();
-
-        var coolButton   = new   ChartUI_Button(20, 20, 120, function(){ trace('CoolBeans!'); }, 'Print!');
-        var coolCheckBox = new ChartUI_CheckBox(20, 55, 30, false, function(ch:Bool){ trace('T: $ch'); });
-        var coolCh2ckBox = new ChartUI_CheckBox(55, 55, 30, true , function(ch:Bool){ trace('T: $ch'); });
-        var coolDropdown = new ChartUI_DropDown(20, 90, 90, ['Cool1', 'COol2', 'Cool3'], 'pens', function(index:Int, item:String){
+        var coolButton   = new   ChartUI_Button(0 , 0, 120, function(){ trace('CoolBeans!'); }, 'Print!');
+        var coolCheckBox = new ChartUI_CheckBox(0 , 35, 30, false, function(ch:Bool){ trace('T: $ch'); });
+        var coolCh2ckBox = new ChartUI_CheckBox(35, 35, 30, true , function(ch:Bool){ trace('T: $ch'); });
+        var coolDropdown = new ChartUI_DropDown(0 , 70, 90, ['Cool1', 'COol2', 'Cool3'], 'pens', function(index:Int, item:String){
             trace('I: $index O: $item');
         }, uiElements);
 
-        var coolInputBox = new ChartUI_InputBox(20, 125, 120, 'test', function(ch:String){ trace(ch); });
+        var coolInputBox = new ChartUI_InputBox(0, 105, 120, 'test', function(ch:String){ trace(ch); });
 
         uiElements.add(coolButton);
         uiElements.add(coolCheckBox);
@@ -737,19 +742,12 @@ class ChartingState extends MusicBeatState {
         }, 'Select All');
 
         var resetButton:ChartUI_Button = new ChartUI_Button(260, 510, 130, 30, function(){
-            song = {
-                song:         '',
-                notes:        [],
-                bpm:          120,
-                needsVoices:  false,
-                characters:   [],
-                stage:        '',
-                beginTime:    0,
-                playLength:   0,
-                activePlayer: 1,
-                speed:        1
-            };
+            song.notes = [];
+            song.bpm = 120;
+            song.needsVoices = false;
+            song.speed = 1;
 
+            expandCheck();
             reloadNotes();
         }, 'Reset Song');
 
