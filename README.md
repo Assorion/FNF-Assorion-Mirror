@@ -123,7 +123,13 @@ Remember to install the library versions listed above though.
 
 ## 💻 | Minimum Requirements
 
-1. 512mb - 1gb of RAM
-2. Core 2 Duo CPU or higher
-3. 256mb of VRAM or more
-4. Windows 7 64-bit or higher
+The minimum essentials stated below are necessary to run this optimized engine on an operating system.
+
+> [!TIP] 
+> **OS**: Windows Vista 64-Bit or Higher
+> 
+> **Processor**: Core 2 Solo or Higher
+> 
+> **Memory**: 512MB - 1GB of Ram and 256mb or higher of VRAM
+> 
+> **Storage**: 36MB - 40MB Available space
