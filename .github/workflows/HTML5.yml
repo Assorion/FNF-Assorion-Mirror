@@ -21,8 +21,15 @@ jobs:
         id: HaxeCache
         uses: actions/cache@main
         with:
-          path: ~/haxelib
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('~/haxelib') }}
+          path: |
+           ~/haxelib
+           ~/haxelib/flixel
+           ~/haxelib/flixel-addons
+           ~/haxelib/flixel-ui
+           ~/haxelib/hxcpp
+           ~/haxelib/lime
+           ~/haxelib/openfl
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('~/haxelib','~/haxelib/flixel','~/haxelib/flixel-addons','~/haxelib/flixel-ui','~/haxelib/hxcpp','~/haxelib/lime','~/haxelib/openfl') }}
         
       - name: Install Haxelib
         if: steps.HaxeCache.outputs.cache-hit != 'true'
