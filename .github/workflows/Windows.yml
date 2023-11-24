@@ -28,7 +28,7 @@ jobs:
         run: |
           mkdir tmpMinGW
           cd tmpMinGW
-          curl https://github.com/brechtsanders/winlibs_mingw/releases/download/13.2.0-17.0.4-11.0.1-msvcrt-r2/winlibs-x86_64-posix-seh-gcc-13.2.0-llvm-17.0.4-mingw-w64msvcrt-11.0.1-r2.zip tmp.zip
+          curl -Lo tmp.zip "https://github.com/brechtsanders/winlibs_mingw/releases/download/13.2.0-17.0.4-11.0.1-msvcrt-r2/winlibs-x86_64-posix-seh-gcc-13.2.0-llvm-17.0.4-mingw-w64msvcrt-11.0.1-r2.zip"
           ls
           unzip *
           cd ../
