@@ -125,7 +125,7 @@ Remember to install the library versions listed above though.
 
 The minimum essentials stated below are necessary to run this optimized engine on an operating system.
 
-> [!TIP] 
+> [!NOTE] 
 > **OS**: Windows Vista 64-Bit or Higher
 > 
 > **Processor**: Core 2 Solo or Higher
