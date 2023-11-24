@@ -16,17 +16,11 @@ jobs:
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.2
-
-      - name: Caching dependencies
-        id: HaxeCache
-        uses: actions/cache@main
-        with:
-          path: ~/haxelib/../lib
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('~/haxelib/../lib') }}
         
       - name: Install Haxelib
         if: steps.HaxeCache.outputs.cache-hit != 'true'
         run: |
+          echo $HAXE_STD_PATH
           haxelib setup ~/haxelib
           haxelib install hxcpp > /dev/null --quiet
           haxelib install lime 7.9.0
@@ -34,6 +28,7 @@ jobs:
           haxelib install flixel 5.2.2 
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
+          
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
 
