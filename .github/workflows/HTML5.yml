@@ -21,8 +21,8 @@ jobs:
         id: HaxeCache
         uses: actions/cache@main
         with:
-          path: ~/haxelib
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('~/haxelib') }}
+          path: $HAXE_STD_PATH/../lib
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('$HAXE_STD_PATH/../lib') }}
         
       - name: Install Haxelib
         if: steps.HaxeCache.outputs.cache-hit != 'true'
