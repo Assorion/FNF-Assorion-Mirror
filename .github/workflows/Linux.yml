@@ -12,7 +12,15 @@ jobs:
         with:
           haxe-version: 4.3.2
           
+      - name: Caching dependencies
+        id: HaxeCache
+        uses: actions/cache@main
+        with:
+          path: ~/haxelib
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('~/haxelib') }}
+          
       - name: Install Haxelib
+        if: steps.HaxeCache.outputs.cache-hit != 'true'
         run: |
           haxelib setup ~/haxelib
           haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
@@ -21,14 +29,6 @@ jobs:
           haxelib install flixel 5.2.2 
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
-          
-      - name: Caching Dependancies 
-        uses: actions/cache@main
-        with:
-          path: ~/haxelib
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-              ${{ runner.os }}-buildx-
           
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
