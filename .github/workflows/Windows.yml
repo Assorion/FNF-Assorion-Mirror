@@ -16,7 +16,8 @@ jobs:
           ls
           unzip *
           mkdir /c/MinGW/
-          cp mingw/* /c/MinGW/
+          ls
+          cp w64devkit/* /c/MinGW/
           cd ../
 
       - uses: actions/checkout@main
