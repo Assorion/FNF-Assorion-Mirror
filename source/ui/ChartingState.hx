@@ -577,7 +577,7 @@ class ChartingState extends MusicBeatState {
 
             vocals.time = 
             FlxG.sound.music.time = 
-            CoolUtil.boundTo(vocals.time + wheel, 0, vocals.length);
+            CoolUtil.boundTo(FlxG.sound.music.time + wheel, 0, FlxG.sound.music.length);
         }
 
         // # Changing Sections
