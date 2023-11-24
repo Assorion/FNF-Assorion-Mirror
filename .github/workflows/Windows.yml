@@ -12,30 +12,24 @@ jobs:
         with:
           haxe-version: 4.3.2
           
-      - name: Caching Build
-        id: CachingBuild
-        uses: actions/cache@v3
-        with:
-          path: export
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          
       - name: Install Haxelib
         run: |
           haxelib setup C:/haxelib
-          haxelib install hxcpp > /dev/null --quiet
-          haxelib install hxcpp 4.3.2 
+          haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
           haxelib install lime 7.9.0
           haxelib install openfl 9.2.1
           haxelib install flixel 5.2.2 
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
+
+          copy C:\mingw64 C:\MinGW
         shell: cmd
         
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
         
       - name: Compilation
-        run: haxelib run lime build windows -release --app-version="4.0.0-${{ github.run_id}}"
+        run: haxelib run lime build windows -release -D HXCPP_MINGW --app-version="4.0.0-${{ github.run_id}}"
         
       - name: Publish Artifact
         uses: actions/upload-artifact@main
