@@ -11,7 +11,14 @@ jobs:
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.2
-
+          
+      - name: Caching Build
+        id: CachingBuild
+        uses: actions/cache@v3
+        with:
+          path: export
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          
       - name: Install Haxelib
         run: |
           haxelib setup C:/haxelib
