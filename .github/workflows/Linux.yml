@@ -11,13 +11,7 @@ jobs:
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.2
-          
-      - name: Caching dependencies
-        id: HaxeCache
-        uses: actions/cache@main
-        with:
-          path: ~/haxelib
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('~/haxelib') }}
+
           
       - name: Install Haxelib
         if: steps.HaxeCache.outputs.cache-hit != 'true'
