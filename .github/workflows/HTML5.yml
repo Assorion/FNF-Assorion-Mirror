@@ -42,6 +42,11 @@ jobs:
       - name: Compilation
         run: haxelib run lime build html5 -release
 
+      - name: file check
+        run: |
+         cd ~/haxelib
+         ls
+
       - name: Publish Artifact
         uses: actions/upload-artifact@main
         with:
