@@ -23,13 +23,12 @@ jobs:
         with:
           path: |
            ~/haxelib
-           ~/haxelib/flixel
-           ~/haxelib/flixel-addons
-           ~/haxelib/flixel-ui
-           ~/haxelib/hxcpp
-           ~/haxelib/lime
-           ~/haxelib/openfl
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('~/haxelib','~/haxelib/flixel','~/haxelib/flixel-addons','~/haxelib/flixel-ui','~/haxelib/hxcpp','~/haxelib/lime','~/haxelib/openfl') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('~/haxelib') }}
+
+      - name: File Check
+        run: |
+         cd ~/haxelib
+         ls
         
       - name: Install Haxelib
         if: steps.HaxeCache.outputs.cache-hit != 'true'
