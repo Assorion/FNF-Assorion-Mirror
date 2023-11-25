@@ -1,5 +1,6 @@
 package ui;
 
+import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxSpriteGroup;
 import flixel.FlxSprite;
 import flixel.FlxG;
@@ -128,11 +129,12 @@ class ChartUI_CheckBox extends ChartUI_Generic{
         var w = Math.floor(width);
         var h = Math.floor(height);
 
-        drawSquare(0,0,w,h,true);
-        if(checked)
-            drawSquare(6,6, w - 12, h - 12, false);
-
         changeFunc(checked);
+        drawSquare(0,0,w,h,true);
+
+        if(!checked) return;
+
+        drawSquare(6,6, w - 12, h - 12, false);
     }
 }
 
@@ -153,14 +155,20 @@ class ChartUI_Button extends ChartUI_Generic {
     }
 
     override public function mouseClicked(){
-        clickFunc();
+        makeText(Math.floor(width), Math.floor(height), true, txt);
         if(dropDownButton) return;
 
-        makeText(Math.floor(width), Math.floor(height), true, txt);
+        clickFunc();
     }
-    override public function mouseOff()
-        if(!dropDownButton)
+    override public function mouseOff(){
+        if(!dropDownButton){
             makeText(Math.floor(width), Math.floor(height), false, txt);
+            return;
+        }
+
+        clickFunc();
+    }
+
 }
 
 // # Persistent stuff
@@ -186,11 +194,11 @@ class ChartUI_DropDown extends ChartUI_Persistent {
     public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, items:Array<String>, text:String = '', onChange:Int->String->Void, parent:FlxTypedSpriteGroup<ChartUI_Generic>){
         super(x,y,w + 30,h,false,'');
 
-        changeFunc = onChange;
+        changeFunc  = onChange;
         parentGroup = parent;
-        this.items = items;
+        curText     = text;
+        this.items  = items;
 
-        curText = text;
         dotButton(false);
     }
 
@@ -228,6 +236,7 @@ class ChartUI_DropDown extends ChartUI_Persistent {
                 clickedOff();
                 dotButton(false);
             }, items[i]);
+
             buttonList[i].dropDownButton = true;
             parentGroup.add(buttonList[i]);
         }
@@ -265,6 +274,8 @@ class ChartUI_InputBox extends ChartUI_Persistent {
 
         changeFunc(uneditedText);
         redoText();
+
+        FlxG.sound.muteKeys = [FlxKey.ZERO];
     }
 
     public override function mouseClicked(){
@@ -273,10 +284,13 @@ class ChartUI_InputBox extends ChartUI_Persistent {
         pSuffix = '';
         suffix  = ' _';
         tickingCounter = 0;
+
         redoText();
+
+        FlxG.sound.muteKeys = [];
     }
     public override function insertChar(char:Int){
-        if(char == flixel.input.keyboard.FlxKey.BACKSPACE){
+        if(char == FlxKey.BACKSPACE){
             uneditedText = uneditedText.substring(0, uneditedText.length - 1);
             redoText();
             return;
@@ -301,9 +315,9 @@ class ChartUI_InputBox extends ChartUI_Persistent {
 
         pSuffix = tickingCounter < 0.5 ? ' _' : '   ';
 
-        if(pSuffix != suffix){
-            suffix = pSuffix;
-            redoText();
-        }
+        if(pSuffix == suffix) return;
+
+        suffix = pSuffix;
+        redoText();
     }
 }

@@ -39,7 +39,7 @@ class ChartingState extends MusicBeatState {
         [[240, 240, 200], [240, 240, 215]], // Yellow / White
         [[200, 255, 200], [215, 255, 215]], // Green
     ];
-    public static inline var gridSize:Int = 40;
+    public static var gridSize:Int = 40;
 
     public static var zooms:Array<Float> = [0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8];
     public var curZoom:Int = 2;
@@ -73,6 +73,7 @@ class ChartingState extends MusicBeatState {
         if(FlxG.sound.music.playing){
             FlxG.sound.music.pause();
             FlxG.sound.music.time = 0;
+
             FlxG.sound.music.onComplete = function(){
                 FlxG.sound.music.pause();
                 FlxG.sound.music.time = 0;
@@ -117,7 +118,8 @@ class ChartingState extends MusicBeatState {
         add(uiElements);
 
         tabButtons.push(new ChartUI_Button(400, uiBG.y    , 110, 30, createSongUI, 'SONG'));
-        tabButtons.push(new ChartUI_Button(400, uiBG.y+30 , 110, 30, createTestUI, 'TEST'));
+        tabButtons.push(new ChartUI_Button(400, uiBG.y+30 , 110, 30, createCharUI, 'PLAYERS'));
+        tabButtons.push(new ChartUI_Button(400, uiBG.y+60 , 110, 30, createTestUI, 'TEST'));
         tabButtons.push(new ChartUI_Button(400, uiBG.y+570, 110, 30, createInfoUI, 'HELP'));
 
         createSongUI();
@@ -330,6 +332,8 @@ class ChartingState extends MusicBeatState {
 
                     vocals.play();
                     vocals.time = FlxG.sound.music.time;
+
+                    Conductor.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
                 }
                 return;
             case 3, 4:
@@ -633,7 +637,7 @@ class ChartingState extends MusicBeatState {
     }
 
     private var tabButtons:Array<ChartUI_Button> = [];
-    private inline function secStart(area:Void->Void){
+    private inline function secStart(){
         activeUIElement = null;
         inputBlock = null;
         inSecUI = false;
@@ -645,34 +649,33 @@ class ChartingState extends MusicBeatState {
         for(i in 0...tabButtons.length) uiElements.add(tabButtons[i]);
     }
 
+    private static var infoText:String = '
+    About / Info / How to use:\n
+    Left Click - Add note
+    Left Click on note - Delete note
+    Right Click - Delete selected notes
+    Ctrl + Left Click - Select multiple notes
+    Q / E - Decrease / add length of selected notes
+    Z / X - Zoom in or zoom out grid
+    B / N - Change note types
+    SPACE - Pause / Play song\n
+    Ctrl \"Power Moves\" (on selected notes):\n
+    Ctrl + J / L - Moves notes left / right on the grid
+    Ctrl + I / K - Moves notes up / down on the grid
+    Ctrl + C - Makes of copy of selected notes
+    Ctrl + V mirrors selected notes
+    ';
     public function createInfoUI():Void
     {
-        secStart(createInfoUI);
+        secStart();
 
-        var text:String = '
-        About / Info / How to use:\n
-        Left Click - Add note
-        Left Click on note - Delete note
-        Right Click - Delete selected notes
-        Ctrl + Left Click - Select multiple notes
-        Q / E - Decrease / add length of selected notes
-        Z / X - Zoom in or zoom out grid
-        B / N - Change note types
-        SPACE - Pause / Play song\n
-        Ctrl \"Power Moves\" (on selected notes):\n
-        Ctrl + J / L - Moves notes left / right on the grid
-        Ctrl + I / K - Moves notes up / down on the grid
-        Ctrl + C - Makes of copy of selected notes
-        Ctrl + V mirrors selected notes
-        ';
-
-        var aboutText:ChartUI_Text = new ChartUI_Text(-40, -30, text);
+        var aboutText:ChartUI_Text = new ChartUI_Text(-40, -30, infoText);
         uiElements.add(aboutText);
     }
 
     public function createTestUI():Void
     {
-        secStart(createTestUI);
+        secStart();
 
         var coolButton   = new   ChartUI_Button(0 , 0, 120, function(){ trace('CoolBeans!'); }, 'Print!');
         var coolCheckBox = new ChartUI_CheckBox(0 , 35, 30, false, function(ch:Bool){ trace('T: $ch'); });
@@ -692,7 +695,7 @@ class ChartingState extends MusicBeatState {
 
     public function createSongUI():Void
     {
-        secStart(createSongUI);
+        secStart();
 
         // Top stuff
 
@@ -723,6 +726,7 @@ class ChartingState extends MusicBeatState {
 
         var voicesCheck:ChartUI_CheckBox = new ChartUI_CheckBox(0, 550, song.needsVoices, function(ch:Bool){
             song.needsVoices = ch;
+            pauseSong();
 
             vocals = new FlxSound();
             vocals.time = FlxG.sound.music.time;
@@ -732,8 +736,9 @@ class ChartingState extends MusicBeatState {
 
             vocals.loadEmbedded(Paths.playableSong(song.song, true));
         });
-
         var reloadButton:ChartUI_Button = new ChartUI_Button(260, 430, 130, 30, function(){
+            pauseSong();
+
             FlxG.sound.playMusic(Paths.playableSong(song.song, false));
 
             FlxG.sound.music.pause();
@@ -745,8 +750,7 @@ class ChartingState extends MusicBeatState {
             vocals.loadEmbedded(Paths.playableSong(song.song, true));
 
             FlxG.sound.list.add(vocals);
-        }, 'Reload Audio');
-
+        }, 'Apply Song');
         var selectButton:ChartUI_Button = new ChartUI_Button(260, 470, 130, 30, function(){
             selectedNotes = [];
 
@@ -756,17 +760,20 @@ class ChartingState extends MusicBeatState {
 
             reloadNotes();
         }, 'Select All');
-
         var resetButton:ChartUI_Button = new ChartUI_Button(260, 510, 130, 30, function(){
+            pauseSong();
+
+            FlxG.sound.music.time = vocals.time = 0;
+            Conductor.songPosition = -Settings.pr.audio_offset;
+
             song.notes = [];
             song.bpm = 120;
-            song.needsVoices = false;
+            song.needsVoices = true;
             song.speed = 1;
 
-            expandCheck();
+            changeSec(0);
             reloadNotes();
-        }, 'Reset Song');
-
+        }, 'Clear Song');
         var saveSong:ChartUI_Button = new ChartUI_Button(260, 550, 130, 30, function(){
             var path = 'assets/songs-data/${PlayState.curSong}/${PlayState.curSong}-edited.json';
             var saveString:String = 'You cannot save charts in web build.';
@@ -790,7 +797,6 @@ class ChartingState extends MusicBeatState {
             }});
         }, 'Save Song');
 
-
         uiElements.add(nameBox);
         uiElements.add(bpmBox);
         uiElements.add(playerBox);
@@ -811,9 +817,58 @@ class ChartingState extends MusicBeatState {
         genText(voicesCheck, 'Use Voices');
     }
 
-    private var inSecUi:Bool = false;
-    private var copyLastInt:Int = 2;
-    public static inline var textOffset:Int = -5;
+    private inline function charUIGenPlayerDrop(ind:Int)
+    {
+        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 40, 190, 30, CoolUtil.textFileLines('characterList'), song.characters[ind], function(index:Int, item:String){
+            song.characters[ind] = item; makeGrid(); }, uiElements);
+
+        uiElements.add(tmpDrop);
+        genText(tmpDrop, 'Player ${ind + 1}');
+    }
+    public function createCharUI(){
+        secStart();
+
+        var addButton:ChartUI_Button = new ChartUI_Button(360, 550, 30, 30, function(){
+            if(song.characters.length >= 13) return;
+
+            song.characters.push('bf');
+            charUIGenPlayerDrop(song.characters.length - 1);
+        }, '+');
+        var remButton:ChartUI_Button = new ChartUI_Button(320, 550, 30, 30, function(){
+            if(song.characters.length <= 1) return;
+
+            song.characters.splice(song.characters.length - 1, 1);
+            var nLen = uiElements.length - 1;
+
+            uiElements.remove(uiElements.members[nLen],     true);
+            uiElements.remove(uiElements.members[nLen - 1], true);
+
+            if(song.characters.length != 1) return;
+
+            song.playLength = 1;
+            makeGrid();
+        }, '-');
+        var playLenBox:ChartUI_InputBox = new ChartUI_InputBox(0, 550, 90, 30, Std.string(song.playLength), function(ch:String){
+            var val = CoolUtil.boundTo(Std.parseInt(ch), 1, CoolUtil.boundTo(song.characters.length, 1, 5));
+
+            song.playLength = val;
+            
+            changeSec(curSec);
+            makeGrid();
+        });
+
+        uiElements.add(addButton);
+        uiElements.add(remButton);
+        uiElements.add(playLenBox);
+        genText(playLenBox, 'Character Chart List');
+
+        for(i in 0...CoolUtil.boundTo(song.characters.length, 1, 13))
+            charUIGenPlayerDrop(i);
+
+    }
+
+    //private var copyLastInt:Int = 2;
+    //public static inline var textOffset:Int = -5;
     public function createSecUI():Void
     {
         /*uiElements.clear();
