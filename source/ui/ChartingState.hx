@@ -627,7 +627,6 @@ class ChartingState extends MusicBeatState {
             tmpText.y += (ref.height - tmpText.height) / 2;
             tmpText.y -= uiElements.y;
             tmpText.x -= uiElements.x;
-            tmpText.x -= 5;
         uiElements.add(tmpText);
 
         return tmpText;
@@ -667,7 +666,7 @@ class ChartingState extends MusicBeatState {
         Ctrl + V mirrors selected notes
         ';
 
-        var aboutText:ChartUI_Text = new ChartUI_Text(-35, -30, text);
+        var aboutText:ChartUI_Text = new ChartUI_Text(-40, -30, text);
         uiElements.add(aboutText);
     }
 

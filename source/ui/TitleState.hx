@@ -141,9 +141,8 @@ class TitleState extends MusicBeatState
 			titleText.animation.play('press');
 			leaving = true;
 			FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
-			postEvent(
-				(Conductor.crochet * 4) / 1000, 
-				() -> { MusicBeatState.changeState(new MainMenuState()); 
+			postEvent(1, () -> { 
+				MusicBeatState.changeState(new MainMenuState()); 
 			});
 		}
 		skipIntro();
