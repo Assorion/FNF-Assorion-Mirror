@@ -627,6 +627,7 @@ class ChartingState extends MusicBeatState {
             tmpText.y += (ref.height - tmpText.height) / 2;
             tmpText.y -= uiElements.y;
             tmpText.x -= uiElements.x;
+            tmpText.x -= 5;
         uiElements.add(tmpText);
 
         return tmpText;
