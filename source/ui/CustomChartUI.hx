@@ -46,9 +46,23 @@ class ChartUI_Generic extends FlxSprite {
         var col1:Int = indent ? 0 : 2;
         var col2:Int = indent ? 2 : 0;
 
-        canvas.fillRect(new Rectangle(dx,  dy,   w,   h)  , CoolUtil.cfArray(ChartingState.uiColours[col1 ]));
-        canvas.fillRect(new Rectangle(dx+3,dy+3, w-3, h-3), CoolUtil.cfArray(ChartingState.uiColours[col2 ]));
-        canvas.fillRect(new Rectangle(dx+3,dy+3, w-6, h-6), CoolUtil.cfArray(ChartingState.uiColours[1    ]));
+        canvas.fillRect(new Rectangle(dx+3,dy+3, w-6, h-6), CoolUtil.cfArray(ChartingState.uiColours[1]));
+
+        // Dark
+
+        canvas.fillRect(new Rectangle(dx+1,dy+h-3, w-1,   3), CoolUtil.cfArray(ChartingState.uiColours[col2]));
+        canvas.fillRect(new Rectangle(dx+w-3,  dy, 3,   h-3), CoolUtil.cfArray(ChartingState.uiColours[col2]));
+        
+
+        // Light
+        canvas.fillRect(new Rectangle(dx,      dy,   w-3,   3), CoolUtil.cfArray(ChartingState.uiColours[col1]));
+        canvas.fillRect(new Rectangle(dx+w-3,  dy,   1,     2), CoolUtil.cfArray(ChartingState.uiColours[col1]));
+        canvas.fillRect(new Rectangle(dx+w-2,  dy,   1,     1), CoolUtil.cfArray(ChartingState.uiColours[col1]));
+
+        canvas.fillRect(new Rectangle(dx,    dy+3,   3,   h-5), CoolUtil.cfArray(ChartingState.uiColours[col1]));
+        canvas.fillRect(new Rectangle(dx,  dy+h-2,   2,     1), CoolUtil.cfArray(ChartingState.uiColours[col1]));
+        canvas.fillRect(new Rectangle(dx,  dy+h-1,   1,     1), CoolUtil.cfArray(ChartingState.uiColours[col1]));
+
     }
     public inline function makeText(w:Int, h:Int, ?indent:Bool = false, ?txt:String = '', ?dx:Int = 0, ?dy:Int = 0){
         drawSquare(dx,dy, w,h, indent);
@@ -63,6 +77,7 @@ class ChartUI_Generic extends FlxSprite {
 
     public function mouseOverlaps(){}
     public function mouseClicked(){}
+    public function mouseOff(){}
 
     /////////////////////////////
 
@@ -122,9 +137,10 @@ class ChartUI_CheckBox extends ChartUI_Generic{
 }
 
 class ChartUI_Button extends ChartUI_Generic {
+    public var dropDownButton:Bool = false;
+
     public var clickFunc:Void->Void;
     public var txt:String = '';
-    public var dropDownButton:Bool = false;
 
     public var popupCounter:Float = 0;
     private static inline var clickTime:Float = 0.08;
@@ -141,37 +157,30 @@ class ChartUI_Button extends ChartUI_Generic {
         if(dropDownButton) return;
 
         makeText(Math.floor(width), Math.floor(height), true, txt);
-        popupCounter = 0;
     }
-    override public function update(elapsed:Float){
-        if(popupCounter < clickTime){
-            popupCounter += elapsed;
-            return;
-        }
-        if(popupCounter == 100) return;
-
-        popupCounter = 100;
-        makeText(Math.floor(width), Math.floor(height), false, txt);
-    }
+    override public function mouseOff()
+        if(!dropDownButton)
+            makeText(Math.floor(width), Math.floor(height), false, txt);
 }
 
 // # Persistent stuff
 
 class ChartUI_DropDown extends ChartUI_Persistent {
-    public var changeFunc:Int->String->Void;
-    public var buttonList:Array<ChartUI_Button> = [];
-    public var items:Array<String>;
-    public var expanded:Bool = false;
     public var parentGroup:FlxTypedSpriteGroup<ChartUI_Generic>;
+
+    public var buttonList:Array<ChartUI_Button> = [];
+    public var changeFunc:Int->String->Void;
+    public var expanded:Bool = false;
+    public var items:Array<String>;
     
     public var curText:String = '';
 
-    public inline function dotButton(){
+    public inline function dotButton(open:Bool){
         var w:Int = Math.floor(width) - 30;
         var h:Int = Math.floor(height);
 
-        makeText(w,  h, expanded, curText, 0, 0);
-        makeText(30, h, expanded, '.'    , w, 0);
+        makeText(w,  h, open, curText, 0, 0);
+        makeText(30, h, open, '.'    , w, 0);
     }
 
     public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, items:Array<String>, text:String = '', onChange:Int->String->Void, parent:FlxTypedSpriteGroup<ChartUI_Generic>){
@@ -182,14 +191,13 @@ class ChartUI_DropDown extends ChartUI_Persistent {
         this.items = items;
 
         curText = text;
-        dotButton();
+        dotButton(false);
     }
 
     override public function clickedOff(){
         super.clickedOff();
 
         expanded = false;
-        dotButton();
 
         for(i in 0...buttonList.length){
             parentGroup.remove(buttonList[i]);
@@ -199,13 +207,14 @@ class ChartUI_DropDown extends ChartUI_Persistent {
         }
     }
     public override function mouseClicked(){
+        dotButton(true);
+
         expanded = !expanded;
         if(!expanded){
             clickedOff();
             return;
         }
 
-        dotButton();
         super.mouseClicked();
 
         var w:Int = Math.floor(width);
@@ -217,11 +226,14 @@ class ChartUI_DropDown extends ChartUI_Persistent {
 
                 changeFunc(i, items[i]);
                 clickedOff();
+                dotButton(false);
             }, items[i]);
             buttonList[i].dropDownButton = true;
             parentGroup.add(buttonList[i]);
         }
     }
+    public override function mouseOff()
+        dotButton(false);
 }
 class ChartUI_InputBox extends ChartUI_Persistent {
     public var curText:String = '';

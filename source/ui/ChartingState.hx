@@ -62,7 +62,7 @@ class ChartingState extends MusicBeatState {
 
     public static var activeUIElement:ChartUI_Generic;
     public static var inputBlock:ChartUI_Persistent;
-    public var currentUI:Void->Void;
+    public static var clickedElement:ChartUI_Generic;
 
     var uiBG:ChartUI_Generic;
 
@@ -173,7 +173,8 @@ class ChartingState extends MusicBeatState {
         curSec = CoolUtil.boundTo(changeTo, 0, song.notes.length + 1);
         expandCheck();
         reloadNotes();
-        currentUI();
+        if(inSecUI)
+            createSecUI();
     }
 
     // for changing zoom level
@@ -316,8 +317,9 @@ class ChartingState extends MusicBeatState {
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP  , mouseUpEvent);
 
-                inputBlock = null;
+                inputBlock      = null;
                 activeUIElement = null; 
+                clickedElement  = null;
 
                 PlayState.SONG = song;
             case 2:
@@ -530,7 +532,10 @@ class ChartingState extends MusicBeatState {
         }
     }
     public function mouseDownEvent(ev:MouseEvent){
+        // # UI Mouse Events
+
         if(activeUIElement != null){
+            clickedElement = activeUIElement;
             activeUIElement.mouseClicked();
             return;
         }
@@ -549,6 +554,16 @@ class ChartingState extends MusicBeatState {
         blueSelectBox.y = mouseHookY = Math.floor(FlxG.mouse.y - camGR.y);
     }
     public function mouseUpEvent(ev:MouseEvent){
+        // # UI 
+
+        if(clickedElement != null){
+            clickedElement.mouseOff();
+            clickedElement = null;
+            return;
+        }
+
+        ///////////
+
         blueSelectBox.x = blueSelectBox.y = 
         mouseHookX = mouseHookY = -1;
         blueSelectBox.scale.set(0.1,0.1);
@@ -605,6 +620,7 @@ class ChartingState extends MusicBeatState {
 
     // # UI Tabs.
 
+    private var inSecUI:Bool = false;
     private inline function genText(ref:ChartUI_Generic, txt:String):ChartUI_Text
     {
         var tmpText:ChartUI_Text = new ChartUI_Text(ref.x + ref.width + 5, ref.y, txt);
@@ -618,9 +634,9 @@ class ChartingState extends MusicBeatState {
 
     private var tabButtons:Array<ChartUI_Button> = [];
     private inline function secStart(area:Void->Void){
-        currentUI = area;
         activeUIElement = null;
         inputBlock = null;
+        inSecUI = false;
 
         for(i in 0...tabButtons.length) uiElements.remove(tabButtons[i]);
 
