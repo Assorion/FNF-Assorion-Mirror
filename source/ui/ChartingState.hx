@@ -707,11 +707,7 @@ class ChartingState extends MusicBeatState {
             song.bpm = Std.parseInt(ch);
             Conductor.changeBPM(song.bpm);
         });
-
-        var playerBox:ChartUI_InputBox = new ChartUI_InputBox(0, 40, 90, 30, Std.string(song.activePlayer), function(ch:String){
-            song.activePlayer = Std.parseInt(ch);
-        });
-        var delayBox:ChartUI_InputBox = new ChartUI_InputBox(200, 40, 70, 30, Std.string(song.beginTime), function(ch:String){
+        var delayBox:ChartUI_InputBox = new ChartUI_InputBox(0, 40, 70, 30, Std.string(song.beginTime), function(ch:String){
             song.beginTime = Std.parseFloat(ch);
         });
 
@@ -799,7 +795,6 @@ class ChartingState extends MusicBeatState {
 
         uiElements.add(nameBox);
         uiElements.add(bpmBox);
-        uiElements.add(playerBox);
         uiElements.add(delayBox);
         uiElements.add(stageDrop);
         uiElements.add(speedBox);
@@ -810,9 +805,8 @@ class ChartingState extends MusicBeatState {
         uiElements.add(resetButton);
         uiElements.add(saveSong);
 
-        genText(playerBox, 'Main Player');
         genText(bpmBox,    'BPM');
-        genText(delayBox,  'Start Delay');
+        genText(delayBox,  'Seconds Before Song Starts');
         genText(speedBox,  'Scroll Speed');
         genText(voicesCheck, 'Use Voices');
     }
@@ -856,11 +850,17 @@ class ChartingState extends MusicBeatState {
             changeSec(curSec);
             makeGrid();
         });
+        var playerBox:ChartUI_InputBox = new ChartUI_InputBox(0, 515, 90, 30, Std.string(song.activePlayer), function(ch:String){
+            song.activePlayer = CoolUtil.boundTo(Std.parseInt(ch), 0, song.characters.length - 1, true);
+        });
 
         uiElements.add(addButton);
         uiElements.add(remButton);
         uiElements.add(playLenBox);
+        uiElements.add(playerBox);
+
         genText(playLenBox, 'Character Chart List');
+        genText(playerBox, 'Main Player');
 
         for(i in 0...CoolUtil.boundTo(song.characters.length, 1, 13))
             charUIGenPlayerDrop(i);

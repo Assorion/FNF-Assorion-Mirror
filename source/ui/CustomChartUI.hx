@@ -208,7 +208,7 @@ class ChartUI_DropDown extends ChartUI_Persistent {
         expanded = false;
 
         for(i in 0...buttonList.length){
-            parentGroup.remove(buttonList[i]);
+            parentGroup.remove(buttonList[i], true);
 
             buttonList[i].destroy();
             buttonList[i] = null;

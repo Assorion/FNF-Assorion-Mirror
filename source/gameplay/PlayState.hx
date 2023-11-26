@@ -428,7 +428,7 @@ class PlayState extends MusicBeatState
 			if (sec != null)
 				mustHitSection = cast(sec.mustHitSection, Bool);
 
-			var char = allCharacters[mustHitSection ? 1 : 0];
+			var char = allCharacters[mustHitSection ? CoolUtil.boundTo(1, 0, SONG.playLength - 1) : 0];
 			followPos.x = char.getMidpoint().x + char.camOffset[0];
 			followPos.y = char.getMidpoint().y + char.camOffset[1];
 		}
