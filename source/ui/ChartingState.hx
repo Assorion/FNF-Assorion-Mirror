@@ -819,7 +819,7 @@ class ChartingState extends MusicBeatState {
 
     private inline function charUIGenPlayerDrop(ind:Int)
     {
-        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 40, 190, 30, CoolUtil.textFileLines('characterList'), song.characters[ind], function(index:Int, item:String){
+        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 40, 160, 30, CoolUtil.textFileLines('characterList'), song.characters[ind], function(index:Int, item:String){
             song.characters[ind] = item; makeGrid(); }, uiElements);
 
         uiElements.add(tmpDrop);
