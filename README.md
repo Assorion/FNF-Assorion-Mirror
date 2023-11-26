@@ -112,8 +112,8 @@ Run `haxelib setup <library name>` replacing `<library name>` with these librari
 - Run `lime test linux` in your terminal
 
 #### **If you're confused:**  
-Follow a YouTube guide, or the base game instructions on compiling. Do NOT use Visual Studio's Clang-Compiler, please use MinGW-w64.  
-Remember to install the library versions listed above though.
+Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use **`MinGW-w64`**.  
+Remember to install the <a href="https://github.com/Assorion/FNF-Assorion-Engine#libraries">library versions</a> listed above.
 
 > [!WARNING] 
 > Assorion has been tested with the latest versions of Lime & Flixel. These recent versions cause issues with compiling, cameras, etc. I advise that you downgrade Flixel & Lime to the versions listed above to make sure Assorion works as intended.
@@ -125,7 +125,11 @@ Remember to install the library versions listed above though.
 
 The minimum essentials stated below are necessary to run this optimized engine on an operating system.
 
-- **OS**: Windows Vista 64-Bit or Higher
-- **Processor**: Core 2 Solo or Higher
-- **Memory**: 512MB - 1GB of Ram. 256mb or Higher of VRAM
-- **Storage**: 36MB - 70MB Available Space
+> [!NOTE]
+>- **OS**: Windows Vista 64-Bit or Higher
+> 
+>- **Processor**: Core 2 Solo or Higher
+> 
+>- **Memory**: 512MB - 1GB of Ram. 256mb or Higher of VRAM
+> 
+>- **Storage**: 36MB - 70MB Available Space
