@@ -132,11 +132,11 @@ The minimum essentials stated below are necessary to run this optimized engine o
 
 <details>
 <summary>OS - Details</summary>
-Modern versions of both Haxe, and HXCPP do not compile to anything older than Windows Vista. There are no 32-bit builds (yet), as such the lowest requirement is Windows Vista 64-bit.
+Modern versions of both Haxe, and HXCPP do not compile to anything older than Windows Vista. There are no 32-bit builds (yet), as such the lowest requirement is Windows Vista 64-bit.  
 
 > [!WARNING]
 > This can actually be false. I have tried 32-bit Funkin' on 32-bit Vista, however I have not tested 64-bit versions. I do not own a legal copy of Vista x64.
-> Therefore I can not actually confirm if this is true.
+> Therefore I can not actually confirm if this is true.  
 
 > Tested with: Windows XP x64 and x86, Windows Vista x86, Windows 7 x64
 </details>
@@ -144,9 +144,9 @@ Modern versions of both Haxe, and HXCPP do not compile to anything older than Wi
 <details>
 <summary>CPU - Details</summary>
 The Core 2 series of chips (or higher) are the only ones that can run this build of Assorion. Most Pentium 4s and Celerons are not 64-bit compatible. Even with a 32-bit build though, Lime.ndll causes issues with those
-processors as it relies on special instructions such as `sse3`, `sse4`. This causes the game to error out with illegal instructions.
+processors as it relies on special instructions such as ```sse3```, ```sse4```. This causes the game to error out with illegal instructions.
 
-Once again, I cannot confirm if a 64-bit Pentium 4 would work. However I doubt it would since the lack of `sse4`.
+Once again, I cannot confirm if a 64-bit Pentium 4 would work. However I doubt it would since the lack of `sse4`.  
 
 > Tested with: Socket 478 Pentium 4 @ 2.26ghz
 </details>
@@ -154,14 +154,14 @@ Once again, I cannot confirm if a 64-bit Pentium 4 would work. However I doubt i
 <details>
 <summary>RAM - Details</summary>
 The game averages from 360mb - 400mb (and a little higher) of RAM. You technically only need 512mb of spare ram to run the game. However running with caching options enabled will put it over this threshold.  
-Without caching, the game does not need anything higher.
+Without caching, the game does not need anything higher.  
 
 > Tested with: 2 sticks of 1gb RAM (2gb total)
 </details>
 
 <details>
 <summary>VRAM - Details</summary>
-Simple. Any less and most sprites will not be-able to get rendered, making them invisible.
+Simple. Any less and most sprites will not be-able to get rendered, making them invisible.  
 
 > Tested with: Nvidia FX-5200 with 128mb of VRAM, Nvidia GS-7300 with 256mb of VRAM
 </details>
@@ -170,7 +170,7 @@ Simple. Any less and most sprites will not be-able to get rendered, making them 
 <summary>Disk space - Details</summary>
 The `ZIP` file is only 36mb, while the `TAR.GZ` is around 40mb. These files expand up to ~70mb of space. 
 
-Almost all of the base game assets are removed, so the engine itself is tiny.
+Almost all of the base game assets are removed, so the engine itself is tiny.  
 
 > Tested with: Right-Click > Properties > Size
 </details>
