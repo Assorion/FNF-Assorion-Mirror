@@ -104,10 +104,13 @@ class ChartUI_Persistent extends ChartUI_Generic {
 
 class ChartUI_Text extends ChartUI_Generic {
     public function new(x:Float, y:Float, t:String){
-        super(x,y, 0, 0, false, '');
+        super(x+1280,y, 0, 0, false, '');
 
         var text:FlxText = new FlxText(0,0,0,t,12);
         loadGraphic(text.graphic);
+
+        // this is to make it so you can't highlight the text.
+        offset.x += 1280;
     }
 }
 

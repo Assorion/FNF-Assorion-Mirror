@@ -669,7 +669,7 @@ class ChartingState extends MusicBeatState {
     {
         secStart();
 
-        var aboutText:ChartUI_Text = new ChartUI_Text(-40, -30, infoText);
+        var aboutText:ChartUI_Text = new ChartUI_Text(-20, -30, infoText);
         uiElements.add(aboutText);
     }
 
@@ -822,13 +822,13 @@ class ChartingState extends MusicBeatState {
     public function createCharUI(){
         secStart();
 
-        var addButton:ChartUI_Button = new ChartUI_Button(360, 550, 30, 30, function(){
+        var addButton:ChartUI_Button = new ChartUI_Button(360, 0, 30, 30, function(){
             if(song.characters.length >= 13) return;
 
             song.characters.push('bf');
             charUIGenPlayerDrop(song.characters.length - 1);
         }, '+');
-        var remButton:ChartUI_Button = new ChartUI_Button(320, 550, 30, 30, function(){
+        var remButton:ChartUI_Button = new ChartUI_Button(320, 0, 30, 30, function(){
             if(song.characters.length <= 1) return;
 
             song.characters.splice(song.characters.length - 1, 1);
