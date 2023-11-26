@@ -282,6 +282,9 @@ class ChartUI_InputBox extends ChartUI_Persistent {
     }
 
     public override function mouseClicked(){
+        if(ChartingState.inputBlock != null && ChartingState.inputBlock != this)
+            ChartingState.inputBlock.clickedOff();
+
         super.mouseClicked();
 
         pSuffix = '';

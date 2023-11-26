@@ -843,7 +843,7 @@ class ChartingState extends MusicBeatState {
             makeGrid();
         }, '-');
         var playLenBox:ChartUI_InputBox = new ChartUI_InputBox(0, 550, 90, 30, Std.string(song.playLength), function(ch:String){
-            var val = CoolUtil.boundTo(Std.parseInt(ch), 1, CoolUtil.boundTo(song.characters.length, 1, 5));
+            var val = CoolUtil.boundTo(Std.parseInt(ch), 1, CoolUtil.boundTo(song.characters.length, 1, 6));
 
             song.playLength = val;
             
