@@ -119,7 +119,6 @@ class ChartingState extends MusicBeatState {
 
         tabButtons.push(new ChartUI_Button(400, uiBG.y    , 110, 30, createSongUI, 'SONG'));
         tabButtons.push(new ChartUI_Button(400, uiBG.y+30 , 110, 30, createCharUI, 'PLAYERS'));
-        tabButtons.push(new ChartUI_Button(400, uiBG.y+60 , 110, 30, createTestUI, 'TEST'));
         tabButtons.push(new ChartUI_Button(400, uiBG.y+570, 110, 30, createInfoUI, 'HELP'));
 
         createSongUI();
@@ -671,26 +670,6 @@ class ChartingState extends MusicBeatState {
 
         var aboutText:ChartUI_Text = new ChartUI_Text(-20, -30, infoText);
         uiElements.add(aboutText);
-    }
-
-    public function createTestUI():Void
-    {
-        secStart();
-
-        var coolButton   = new   ChartUI_Button(0 , 0, 120, function(){ trace('CoolBeans!'); }, 'Print!');
-        var coolCheckBox = new ChartUI_CheckBox(0 , 35, 30, false, function(ch:Bool){ trace('T: $ch'); });
-        var coolCh2ckBox = new ChartUI_CheckBox(35, 35, 30, true , function(ch:Bool){ trace('T: $ch'); });
-        var coolDropdown = new ChartUI_DropDown(0 , 70, 90, ['Cool1', 'COol2', 'Cool3'], 'pens', function(index:Int, item:String){
-            trace('I: $index O: $item');
-        }, uiElements);
-
-        var coolInputBox = new ChartUI_InputBox(0, 105, 120, 'test', function(ch:String){ trace(ch); });
-
-        uiElements.add(coolButton);
-        uiElements.add(coolCheckBox);
-        uiElements.add(coolCh2ckBox);
-        uiElements.add(coolDropdown);
-        uiElements.add(coolInputBox);
     }
 
     public function createSongUI():Void
