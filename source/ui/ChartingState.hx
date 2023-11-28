@@ -613,11 +613,9 @@ class ChartingState extends MusicBeatState {
 
     private inline function expandCheck()
         if(curSec >= song.notes.length){
-            trace('NEW SEC');
             song.notes.push({
                 sectionNotes: [],
-                mustHitSection: false,
-                bpmChange: 0
+                cameraFacing: 0
             });
         }
 

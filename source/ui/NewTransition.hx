@@ -32,7 +32,6 @@ class NewTransition extends FlxSubState {
             whiteSpr.graphic.destroyOnNoUse = false;
 
             existingGraphic = whiteSpr.graphic;
-            trace('made new');
         }
         whiteSpr.loadGraphic(existingGraphic);
 		whiteSpr.alpha = trIn ? 0 : 1;
@@ -51,8 +50,8 @@ class NewTransition extends FlxSubState {
     }
     public function skip(){
         skippedLast = true;
-
         whiteSpr.alpha = trIn ? 1 : 0;
+        
         update(0);
     }
 

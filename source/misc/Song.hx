@@ -9,8 +9,7 @@ using StringTools;
 typedef SwagSection =
 {
 	var sectionNotes:Array<Dynamic>;
-	var mustHitSection:Bool;
-	var bpmChange:Int;
+	var cameraFacing:Int;
 }
 
 typedef SwagSong =

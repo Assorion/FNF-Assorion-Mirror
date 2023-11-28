@@ -33,8 +33,7 @@ class PlayState extends MusicBeatState
 	public static var curDifficulty:Int = 1;
 	public static var totalScore:Int = 0;
 
-	public static var mustHitSection:Bool = false;
-	public static var seenCutscene:Bool   = false;
+	public static var seenCutscene:Bool = false;
 	public var vocals:FlxSound;
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
@@ -284,7 +283,7 @@ class PlayState extends MusicBeatState
 			var time:Float = fNote[0];
 			var noteData :Int = Std.int(fNote[1]);
 			var susLength:Int = Std.int(fNote[2]);
-			var player   :Int = Std.int(fNote[3]);
+			var player   :Int = CoolUtil.boundTo(Std.int(fNote[3]), 0, SONG.playLength - 1);
 			var ntype    :Int = Std.int(fNote[4]);
 
 			var newNote = new Note(time, noteData, ntype, false, false);
@@ -422,13 +421,12 @@ class PlayState extends MusicBeatState
 		
 		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
 
+		var sec:SwagSection = SONG.notes[Math.floor(curBeat / 4)];
 		if(curBeat % 4 == 0 && FlxG.sound.music.playing){
-			mustHitSection = false;
-			var sec:SwagSection = SONG.notes[Math.floor(curBeat / 4)];
-			if (sec != null)
-				mustHitSection = cast(sec.mustHitSection, Bool);
+			// prevent the Int from being null, if it is it will just be 0.
+			var tFace:Int = sec != null ? cast(sec.cameraFacing, Int) : 0;
 
-			var char = allCharacters[mustHitSection ? CoolUtil.boundTo(1, 0, SONG.playLength - 1) : 0];
+			var char = allCharacters[CoolUtil.boundTo(tFace, 0, SONG.playLength - 1)];
 			followPos.x = char.getMidpoint().x + char.camOffset[0];
 			followPos.y = char.getMidpoint().y + char.camOffset[1];
 		}

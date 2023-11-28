@@ -7,19 +7,19 @@
 		"notes": [
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -36,7 +36,7 @@
 						0
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [
@@ -53,7 +53,7 @@
 						0
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [
@@ -70,7 +70,7 @@
 						1
 					]
 				],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -87,7 +87,7 @@
 						1
 					]
 				],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -104,7 +104,7 @@
 						0
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [
@@ -121,7 +121,7 @@
 						0
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [
@@ -138,7 +138,7 @@
 						1
 					]
 				],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -155,7 +155,7 @@
 						1
 					]
 				],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -172,7 +172,7 @@
 						0
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [
@@ -189,7 +189,7 @@
 						0
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [
@@ -206,7 +206,7 @@
 						1
 					]
 				],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -223,7 +223,7 @@
 						1
 					]
 				],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -246,7 +246,7 @@
 						0
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [
@@ -269,7 +269,7 @@
 						0
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [
@@ -292,7 +292,7 @@
 						1
 					]
 				],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -315,7 +315,7 @@
 						1
 					]
 				],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -350,7 +350,7 @@
 						0
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [
@@ -385,7 +385,7 @@
 						1
 					]
 				],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -414,7 +414,7 @@
 						1
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [
@@ -443,7 +443,7 @@
 						1
 					]
 				],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -454,11 +454,11 @@
 						1
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [
@@ -559,115 +559,115 @@
 						1
 					]
 				],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": true
+				"cameraFacing": 1
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			},
 			{
 				"sectionNotes": [],
-				"mustHitSection": false
+				"cameraFacing": 0
 			}
 		],
 		"bpm": 100,
