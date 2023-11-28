@@ -1,6 +1,6 @@
 # Friday Night Funkin' Assorion Engine!
 
-![LOGO](art/assorione.png)
+![LOGO](assorione.png)
 
 -------------------------------------------------------------
  <div align="center">
