@@ -1,6 +1,7 @@
 # Friday Night Funking Assorion Engine
 
  <div align="center">
+  
  <a href="#"><img src="https://img.shields.io/github/repo-size/Assorion/FNF-Assorion-Engine?style=social&color=06b59c"/></a>
 
  <a href="https://github.com/Assorion/FNF-Assorion-Engine/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/Assorion/FNF-Assorion-Engine?style=social&color=06b59c"/></a> 
@@ -17,17 +18,19 @@
 <details close>
   
 **<summary>Table of contents</summary>**
-**1.** assorion engine
+**1.** <a href="#">assorion engine</a> 
 
-**2.** progressive philosophy
+**2.** <a href="#">progressive philosophy</a>  
 
-**3.** target user groups
--  <a href="#">salgay</a> 
-- <a href="#">wagma</a> 
-- <a href="#">muzafar</a>
+**3.** <a href="#">target user groups</a>
+-  <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/.github/shit.md#-salgay-jalali">salgay</a> 
+- <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/.github/shit.md#-wagma-hashmi">wagma</a> 
+- <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/.github/shit.md#-muzafar-udin">muzafar</a>
 
-**4.** notes   
+**4.** <a href="#">notes</a>  
 </details>
+
+-------------------------------------------------------------
 
 ## assorion Engine:
 assorion engine is a very great engine that helps modders understand code more and makes it a lot easier handling code for friday night funking! this is also one of the few engines that decided to waste time in rewriting the entire games code! for more information go to the wiki.
