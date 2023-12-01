@@ -119,6 +119,7 @@ class ChartingState extends MusicBeatState {
 
         tabButtons.push(new ChartUI_Button(400, uiBG.y    , 110, 30, createSongUI, 'SONG'));
         tabButtons.push(new ChartUI_Button(400, uiBG.y+30 , 110, 30, createCharUI, 'PLAYERS'));
+        tabButtons.push(new ChartUI_Button(400, uiBG.y+60 , 110, 30, createSecUI , 'SECTION'));
         tabButtons.push(new ChartUI_Button(400, uiBG.y+570, 110, 30, createInfoUI, 'HELP'));
 
         createSongUI();
@@ -622,6 +623,7 @@ class ChartingState extends MusicBeatState {
     // # UI Tabs.
 
     private var inSecUI:Bool = false;
+    private var tabButtons:Array<ChartUI_Button> = [];
     private inline function genText(ref:ChartUI_Generic, txt:String):ChartUI_Text
     {
         var tmpText:ChartUI_Text = new ChartUI_Text(ref.x + ref.width + 5, ref.y, txt);
@@ -632,9 +634,7 @@ class ChartingState extends MusicBeatState {
 
         return tmpText;
     }
-
-    private var tabButtons:Array<ChartUI_Button> = [];
-    private inline function secStart(){
+    private inline function uiStart(){
         activeUIElement = null;
         inputBlock = null;
         inSecUI = false;
@@ -664,7 +664,7 @@ class ChartingState extends MusicBeatState {
     ';
     public function createInfoUI():Void
     {
-        secStart();
+        uiStart();
 
         var aboutText:ChartUI_Text = new ChartUI_Text(-20, -30, infoText);
         uiElements.add(aboutText);
@@ -672,7 +672,7 @@ class ChartingState extends MusicBeatState {
 
     public function createSongUI():Void
     {
-        secStart();
+        uiStart();
 
         // Top stuff
 
@@ -797,7 +797,7 @@ class ChartingState extends MusicBeatState {
         genText(tmpDrop, 'Player ${ind + 1}');
     }
     public function createCharUI(){
-        secStart();
+        uiStart();
 
         var addButton:ChartUI_Button = new ChartUI_Button(360, 0, 30, 30, function(){
             if(song.characters.length >= 13) return;
@@ -845,9 +845,31 @@ class ChartingState extends MusicBeatState {
     }
 
     //private var copyLastInt:Int = 2;
-    //public static inline var textOffset:Int = -5;
     public function createSecUI():Void
     {
+        uiStart();
+        inSecUI = true;
+
+        var cameraBox:ChartUI_InputBox = new ChartUI_InputBox(0, 0, 90, 30, Std.string(song.notes[curSec].cameraFacing), function(ch:String){
+            song.notes[curSec].cameraFacing = CoolUtil.boundTo(Std.parseInt(ch), 0, song.playLength - 1);
+        });
+
+        //var clearButton:ChartUI_Button = new ChartUI_Button()
+
+        var snButton:ChartUI_Button = new ChartUI_Button(0, 550, 120, 30, function(){
+            selectedNotes = [];
+            for(nt in song.notes[curSec].sectionNotes)
+                selectedNotes.push(nt);
+
+            reloadNotes();
+        }, 'Select');
+
+        uiElements.add(snButton);
+        //genText(snButton, 'Camera Facing');
+
+
+
+
         /*uiElements.clear();
         inSecUi = true;
         blockInput = false;
