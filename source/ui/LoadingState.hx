@@ -14,11 +14,9 @@ import sys.FileSystem;
 
 using StringTools;
 
-// YAY IT NO LONGER SUCKS!!!
-
 #if !debug @:noDebug #end
 #if desktop
-class CachingState extends flixel.addons.ui.FlxUIState {
+class LoadingState extends flixel.addons.ui.FlxUIState {
     public static inline var barWidth:Int = 1150;
     public static inline var barTopLn:Int = 150; 
     public static inline var inBarWidth:Int = 1120;
@@ -122,7 +120,7 @@ class CachingState extends flixel.addons.ui.FlxUIState {
     override function update(elapsed:Float){
         if(index == objects.length - 1){
             objects = null;
-            FlxG.switchState(new ui.TitleState());
+            FlxG.switchState(new TitleState());
 
             Settings.pr.framerate = prevFramerate;
             // failsafe if somehow this ends up being hudge

@@ -409,12 +409,8 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	override function stepHit(){
-		super.stepHit();
-
-		if(!FlxG.sound.music.playing) return;
-		songTime = ((Conductor.songPosition * Conductor.songDiv) + songTime) * 0.5;
-	}
+	// so characters don't idle too fast.
+	private inline static var beatHalfingTime:Int = 190;
 	override function beatHit()
 	{
 		super.beatHit();
@@ -434,8 +430,15 @@ class PlayState extends MusicBeatState
 		iconP1.scale.set(1.2,1.2);
 		iconP2.scale.set(1.2,1.2);
 
-		for(pc in allCharacters)
-			pc.dance();
+		if(curBeat % (Math.floor(SONG.bpm / beatHalfingTime) + 1) == 0)
+			for(pc in allCharacters)
+				pc.dance();
+	}
+	override function stepHit(){
+		super.stepHit();
+
+		if(!FlxG.sound.music.playing) return;
+		songTime = ((Conductor.songPosition * Conductor.songDiv) + songTime) * 0.5;
 	}
 
 	// # Update stats
@@ -444,7 +447,7 @@ class PlayState extends MusicBeatState
 	private static inline var iconSpacing:Int = 52;
 	public function updateHealth(change:Int){
 		var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC', 'SDCB', 'Clear'][fcValue];
-		var accuracyCount:Float = fcValue != 0 ? Math.floor(songScore / ((hitCount + missCount) * 3.5)) : 0;
+		var accuracyCount:Float = CoolUtil.boundTo(Math.floor(songScore / ((hitCount + missCount) * 3.5)), 0, 100);
 
 		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Accuracy: $accuracyCount% - $fcText | Score: $songScore';
 		scoreTxt.screenCenter(X);
@@ -453,15 +456,11 @@ class PlayState extends MusicBeatState
 		healthBar.percent = health;
 
 		var calc = (0 - ((health - 50) * 0.01)) * healthBar.width;
-		iconP1.screenCenter(X); 
-		iconP2.screenCenter(X); 
-		iconP1.x += calc + iconSpacing;
-		iconP2.x += calc - iconSpacing;
+		iconP1.x = 565 + (calc + iconSpacing); 
+		iconP2.x = 565 + (calc - iconSpacing);
 
-		var animStr = health < 20 ? 'losing' : 'neutral';
-		iconP1.animation.play(animStr);
-			animStr = health > 80 ? 'losing' : 'neutral';
-		iconP2.animation.play(animStr);
+		iconP1.changeState(health < 20);
+		iconP2.changeState(health > 80);
 
 		if(health > 0) return; 
 
@@ -615,14 +614,13 @@ class PlayState extends MusicBeatState
 		}
 
 		// sustain note input.
-		if(daNote.isSustainNote && Math.abs(nDiff) < 0.8 && keysPressed[daNote.noteData]){
-			goodNoteHit(daNote);
-			return;
-		}
+		if(!daNote.isSustainNote || Math.abs(nDiff) >= 0.8 || !keysPressed[daNote.noteData]) return;
+
+		goodNoteHit(daNote);
 	}
 
 	// you can add your own scores too.
-	public static var possibleScores:Array<RatingThing> = [
+	public static var possibleScores:Array<RatingData> = [
 		{
 			score: 350,
 			threshold: 0,
@@ -658,7 +656,7 @@ class PlayState extends MusicBeatState
 		var noteDiff:Float = Math.abs(strumtime - (songTime - (Settings.pr.input_offset * Conductor.songDiv)));
 		combo++;
 
-		var pscore:RatingThing = null;
+		var pscore:RatingData = null;
 		for(i in 0...possibleScores.length)
 			if(noteDiff >= possibleScores[i].threshold){
 				pscore   = possibleScores[i];
@@ -670,6 +668,7 @@ class PlayState extends MusicBeatState
 			fcValue = pscore.value;
 		if(pscore.score < 50 || combo > 999)
 			combo = 0;
+
 		if(scoreTweens[0] != null)
 			for(i in 0...4) scoreTweens[i].cancel();
 
@@ -769,7 +768,8 @@ class PlayState extends MusicBeatState
 		pauseGame(new PauseSubState(camHUD, this));
 	}
 }
-typedef RatingThing = {
+
+typedef RatingData = {
 	var score:Int;
 	var threshold:Float;
 	var name:String;

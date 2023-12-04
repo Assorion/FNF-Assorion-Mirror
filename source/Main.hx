@@ -19,9 +19,9 @@ class Main extends Sprite
 {
 	public static var fpsC:FPSCounter;
 	public static var memC:MemCounter;
-	public static var initState:Class<FlxState> = ui.TitleState;
 
 	// inlined. Which means these variables cannot be changed later.
+	public static inline var initState:Class<FlxState> = ui.TitleState;
 	public static inline var gameWidth:Int  = 1280;
 	public static inline var gameHeight:Int = 720;
 	public static inline var initFPS:Int = 60;
@@ -41,14 +41,13 @@ class Main extends Sprite
 
 		// # add the game
 
+		var ldState:Class<FlxState> = initState;
 		if(Settings.pr.launch_sprites)
-			#if desktop initState = ui.CachingState;
-			#else trace('CACHING DOES NOT WORK IN BROWSER!');
-			#end
+			#if desktop ldState = ui.LoadingState; #else trace('CACHING DOES NOT WORK IN BROWSER!'); #end
 
 		fpsC = new FPSCounter(10, 3, 0xFFFFFF);
 		memC = new MemCounter(10, 18, 0xFFFFFF);
-		addChild(new FlxGame(gameWidth, gameHeight, initState, 
+		addChild(new FlxGame(gameWidth, gameHeight, ldState, 
 			#if (flixel < "5.0.0") zoom, #end 
 			initFPS, initFPS, Settings.pr.skip_logo, Settings.pr.start_fullscreen));
 

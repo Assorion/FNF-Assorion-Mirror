@@ -124,11 +124,11 @@ class MenuTemplate extends MusicBeatState {
     }
 
     private inline function skipCheck():Bool
-    if(MusicBeatState.activeTransition != null){
-        skipTrans();
-        return true;
-    } else 
-        return false;
+        if(MusicBeatState.activeTransition != null){
+            skipTrans();
+            return true;
+        } else 
+            return false;
 
     // Will mostly likely not need changing for a lot of states.
     public function exitFunc(){

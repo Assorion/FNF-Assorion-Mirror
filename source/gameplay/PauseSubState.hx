@@ -34,10 +34,7 @@ class PauseSubState extends MusicBeatSubstate
 	// quick helper function.
 	public static function exitToProperMenu(){
 		PlayState.seenCutscene = false;
-		if(PlayState.storyWeek >= 0){
-			MusicBeatState.changeState(new ui.StoryMenuState());
-		} else
-			MusicBeatState.changeState(new ui.FreeplayState());
+		MusicBeatState.changeState(PlayState.storyWeek >= 0 ? new ui.StoryMenuState() : new ui.FreeplayState());
 	}
 	
 	// # create new empty background sprite

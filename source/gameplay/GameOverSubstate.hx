@@ -65,7 +65,12 @@ class GameOverSubstate extends MusicBeatSubstate
 	override function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		if(leaving) return;
+		if(leaving) {
+			for(i in 0...events.length)
+				events[i].exeFunc();
+			
+			return;
+		}
 
 		if(key.hardCheck(Binds.UI_BACK)){
 			leaving = true;

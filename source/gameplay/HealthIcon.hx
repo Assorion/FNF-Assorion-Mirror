@@ -35,4 +35,7 @@ class HealthIcon extends StaticSprite
 
 		curChar = char;
 	}
+
+	public inline function changeState(losing:Bool)
+		animation.play(losing ? 'losing' : 'neutral');
 }
