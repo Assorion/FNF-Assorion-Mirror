@@ -40,6 +40,7 @@ class MusicBeatState extends FlxUIState
 		Conductor.songPosition = -Settings.pr.audio_offset;
 
 		FlxG.camera.bgColor.alpha = 0;
+
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHit);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP  , keyRel);
 
