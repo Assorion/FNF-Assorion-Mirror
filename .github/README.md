@@ -113,7 +113,7 @@ Run `haxelib setup <library name>` replacing `<library name>` with these librari
 
 #### **If you're confused:**  
 Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use **`MinGW-w64`**.  
-Remember to install the <a href="https://github.com/Assorion/FNF-Assorion-Engine#libraries">library versions</a> listed above.
+Remember to install the [library versions](#libraries) listed above.
 
 > [!WARNING] 
 > Assorion has been tested with the latest versions of Lime & Flixel. These recent versions cause issues with compiling, cameras, etc. I advise that you downgrade Flixel & Lime to the versions listed above to make sure Assorion works as intended.
