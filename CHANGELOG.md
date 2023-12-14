@@ -83,7 +83,7 @@ Chart editor fix (again).
 ## V - 1.3.0
 
 1. Defaulted camera BG alpha to 0. Might be faster.
-2. Overhauled cachingstate. Added a progress bar for it.
+2. Overhauled cachingstate. Added a progress bar for it
 3. Changed a bit of web build stuff.
 4. Allow for XML caching. Super cool!
 5. Added CHANGELOG.md parser (HistoryState.hx). Now you can view history in game.
@@ -91,4 +91,9 @@ Chart editor fix (again).
 7. Fixed minor bugs (pause during dialogue, framerate issue on cachingstate)
 8. Overhauled chartingstate. New 3D ui!
 9. Now can skip all transitions!
-10. Fixed older crashing issue with cache_misc (option dissolved).
+10. Fixed older crashing issue with cache_misc (option dissolved)
+11. Added Flixel camera optimizations (not too much faster lol)
+12. New transitions
+13. Legacy Windows XP compatibility branch (W.I.P)
+14. Fixed "Line-Feed" problem in txt files, should fix Freeplay icons bug.
+15. Refactored the README.md file. Fixed types, and minor grammatical errors.

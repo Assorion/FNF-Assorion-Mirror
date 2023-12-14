@@ -15,7 +15,7 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup C:/haxelib
-          haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
+          haxelib install hxcpp
           haxelib install lime 7.9.0
           haxelib install openfl 9.2.1
           haxelib install flixel 5.2.2 
