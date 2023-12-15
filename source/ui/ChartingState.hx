@@ -844,17 +844,21 @@ class ChartingState extends MusicBeatState {
 
     }
 
-    //private var copyLastInt:Int = 2;
+    private var copyLastInt:Int = 2;
     public function createSecUI():Void
     {
         uiStart();
         inSecUI = true;
 
-        var cameraBox:ChartUI_InputBox = new ChartUI_InputBox(0, 0, 90, 30, Std.string(song.notes[curSec].cameraFacing), function(ch:String){
-            song.notes[curSec].cameraFacing = CoolUtil.boundTo(Std.parseInt(ch), 0, song.playLength - 1);
+        var cameraBox:ChartUI_InputBox = new ChartUI_InputBox(0, 0, 120, 30, Std.string(song.notes[curSec].cameraFacing), function(ch:String){
+            song.notes[curSec].cameraFacing = CoolUtil.boundTo(Std.parseInt(ch), 0, song.characters.length - 1);
+        });
+        var clBox:ChartUI_InputBox = new ChartUI_InputBox(0, 40, 120, 30, Std.string(copyLastInt), function(ch:String){
+            copyLastInt = Std.parseInt(ch);
         });
 
-        //var clearButton:ChartUI_Button = new ChartUI_Button()
+        //////////////////////////////////////
+
 
         var snButton:ChartUI_Button = new ChartUI_Button(0, 550, 120, 30, function(){
             selectedNotes = [];
@@ -863,62 +867,39 @@ class ChartingState extends MusicBeatState {
 
             reloadNotes();
         }, 'Select');
+        var swapButton:ChartUI_Button = new ChartUI_Button(0, 510, 120, 30, function(){
+            for(nt in song.notes[curSec].sectionNotes)
+                nt[3] = (nt[3] + 1) % song.playLength;
 
-        uiElements.add(snButton);
-        //genText(snButton, 'Camera Facing');
-
-
-
-
-        /*uiElements.clear();
-        inSecUi = true;
-        blockInput = false;
-        //activeUIElement = null;
-
-        var mustHitSection:CharFlxG.mouse.visible = false;
-            MusicBeatState.changeState(new PlayState());tUI_CheckBox = new ChartUI_CheckBox(uiBG.x + 10, uiBG.y + 10, PlayState.SONG.notes[curSec].mustHitSection, (c:Bool)->{
-            PlayState.SONG.notes[curSec].mustHitSection = c;
-        });
-
-        var clearButton:ChartUI_Button = new ChartUI_Button(uiBG.x + 10, uiBG.height+uiBG.y - 40, true, ()->{
-            PlayState.SONG.notes[curSec].sectionNotes = [];
             selectedNotes = [];
-            loadNotes();
-        }, 'Clear', 110);
-        var copyLast:ChartUI_InputBox = new ChartUI_InputBox(uiBG.x + 10, clearButton.y - 80, 110, Std.string(copyLastInt), (str:String)->{
-            copyLastInt = Std.parseInt(str);
-        });
-        var copyButton:ChartUI_Button = new ChartUI_Button(uiBG.x + 10, clearButton.y - 40, true, ()->{
+            reloadNotes();
+        }, 'Swap');
+        var copyButton:ChartUI_Button = new ChartUI_Button(0, 470, 120, 30, function(){
             if(curSec - copyLastInt < 0) return;
 
-            for(nt in PlayState.SONG.notes[curSec-copyLastInt].sectionNotes)
-                PlayState.SONG.notes[curSec].sectionNotes.push([nt[0]+(copyLastInt*16), nt[1], nt[2], nt[3]]);
-            loadNotes();
-        }, 'Copy Last', 110);
-        var swapButton:ChartUI_Button = new ChartUI_Button(uiBG.x + 10, copyLast.y - 40, true, ()->{
-            for(nt in PlayState.SONG.notes[curSec].sectionNotes)
-                // % 2 or how ever many characters you want
-                nt[3] = (nt[3] + 1) % 2;
+            for(nt in song.notes[curSec-copyLastInt].sectionNotes)
+                song.notes[curSec].sectionNotes.push([nt[0]+(copyLastInt*16), nt[1], nt[2], nt[3]]);
+            
+            reloadNotes();
+        }, 'Copy Last');
+        var clearButton:ChartUI_Button = new ChartUI_Button(0, 430, 120, 30, function(){
+            song.notes[curSec].sectionNotes = [];
             selectedNotes = [];
-            loadNotes();
-        }, 'Swap', 110);
-        var snButton:ChartUI_Button = new ChartUI_Button(uiBG.x + 10, swapButton.y - 40, true, ()->{
-            selectedNotes = [];
-            for(nt in PlayState.SONG.notes[curSec].sectionNotes)
-                selectedNotes.push(nt);
 
-            loadNotes();
-        }, 'Select', 110);
-        var mhText:FlxText = new FlxText(mustHitSection.x+mustHitSection.width + 5, mustHitSection.y + 10 + textOffset, 0, 'Move Camera to BF', 16);
-        var clText:FlxText = new FlxText(copyLast.x + copyLast.width + 5, copyLast.y + 10 + textOffset, 0, 'Copy Last sections back', 16);
-        
-        uiElements.add(clText);
-        uiElements.add(mhText);
-        uiElements.add(mustHitSection);
-        uiElements.add(clearButton);
-        uiElements.add(copyLast);
-        uiElements.add(copyButton);
+            reloadNotes();
+        }, 'Clear');
+
+        var secText:ChartUI_Text = new ChartUI_Text(0, 85, 'Current Section: $curSec');
+
+        uiElements.add(snButton);
         uiElements.add(swapButton);
-        uiElements.add(snButton);*/
+        uiElements.add(copyButton);
+        uiElements.add(clearButton);
+        uiElements.add(cameraBox);
+        uiElements.add(clBox);
+        uiElements.add(secText);
+
+        genText(cameraBox, 'Camera Facing');
+        genText(clBox,     'Copy Last Sections Back');
     }
 }
