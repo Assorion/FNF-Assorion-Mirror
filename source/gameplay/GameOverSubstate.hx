@@ -39,7 +39,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		Conductor.songPosition = 0;
 		Conductor.changeBPM(100);
 
-		postEvent(2.5, () -> {
+		postEvent(2.5, function() {
 			if(!leaving)
 				FlxG.sound.playMusic(Paths.lMusic('gameOver'));
 		});
@@ -86,8 +86,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		FlxG.sound.music.stop();
 		FlxG.sound.play(Paths.lSound('gameplay/gameOverEnd'));
 		
-		postEvent(0.7, ()->{ FlxG.camera.fade(FlxColor.BLACK, 2, false); });
-		postEvent(2.7, ()->{
+		postEvent(0.7, function(){ FlxG.camera.fade(FlxColor.BLACK, 2, false); });
+		postEvent(2.7, function(){
 			FlxG.resetState();
 		});
 	}

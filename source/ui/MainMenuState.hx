@@ -135,11 +135,11 @@ class MainMenuState extends MusicBeatState
 			if(i != curSelected)
 				twns.push(FlxTween.tween(menuItems.members[i], {alpha:0}, 0.8));
 		for(i in 0...8)
-			postEvent(i / 8, ()->{
+			postEvent(i / 8, function(){
 				menuItems.members[curSelected].alpha = (i % 2 == 0 ? 0 : 1);
 			});
 
-		postEvent(1, () -> {
+		postEvent(1, function() {
 			switch (curSelected){
 				case 0:
 					MusicBeatState.changeState(new StoryMenuState());

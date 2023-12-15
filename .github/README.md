@@ -121,14 +121,4 @@ Remember to install the [library versions](#libraries) listed above.
 > 
 > Every version of the libraries listed before are the versions that Assorion has been tested / built with, so using those versions will gurantee that Assorion will compile and behave correctly. Fixes for these issues will hopefully be implemented soon.
 
-## 💻 | Minimum Requirements
-
-The minimum essentials stated below are necessary to run this optimized engine on an operating system.
->[!note]
->- **OS**: Windows Vista 64-Bit or Higher
->
->- **Processor**: Intel Celeron (SSE, SSE2, SSE4, MMX) or Higher
->  
->- **Memory**: 512MB - 1GB of Ram. 256mb or Higher of VRAM
->
->- **Storage**: 36MB - 70MB Available Space
+.github/logo2.png

@@ -52,7 +52,7 @@ class MenuTemplate extends MusicBeatState {
         FlxG.camera.follow(camFollow, null, 0.06);
 
         super.create();
-        postEvent(0, ()->{
+        postEvent(0, function(){
             changeSelection(0);
         });
     }

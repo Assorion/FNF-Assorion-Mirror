@@ -124,7 +124,7 @@ class DialogueSubstate extends MusicBeatSubstate {
             slides.push(tmp);
         }
 
-        postEvent(1.8, ()->{ textSlide(); });
+        postEvent(1.8, function(){ textSlide(); });
     }
 
     private var leaving:Bool = false;
@@ -132,7 +132,7 @@ class DialogueSubstate extends MusicBeatSubstate {
         if(leaving) return;
 
         leaving = true;
-        postEvent(1, ()->{
+        postEvent(1, function(){
             PlayState.seenCutscene = true;
             pState.paused          = false;
             pState.persistentDraw  = true;
@@ -162,7 +162,7 @@ class DialogueSubstate extends MusicBeatSubstate {
         charSpr.alpha = 1;
 
         // if this isn't here the dialouge will skip the first character
-        postEvent(0.2, ()->{trace('huh');});
+        postEvent(0.2, function(){trace('huh');});
 
         var prevTime:Float = 0;
 
@@ -173,7 +173,7 @@ class DialogueSubstate extends MusicBeatSubstate {
                 continue;
             }
 
-            postEvent(prevTime, ()->{
+            postEvent(prevTime, function(){
                 voicesText.text += chars[i];
                 FlxG.sound.play(Paths.lSound('menu/pixelText'));
             });

@@ -228,7 +228,7 @@ class PlayState extends MusicBeatState
 
 		events.splice(events.length - 1, 1);
 
-		postEvent(0.8, ()->{
+		postEvent(0.8, function(){
 			pauseGame(stateHolder[0]);
 		});
 	}

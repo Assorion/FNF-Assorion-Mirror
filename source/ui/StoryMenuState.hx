@@ -125,11 +125,11 @@ class StoryMenuState extends MenuTemplate
 		var tP:PlayState = new PlayState(nSongs, curDif, curSel);
 
 		for(i in 0...8)
-			postEvent(i / 8, ()->{
+			postEvent(i / 8, function(){
 				objGroup.members[curSel].color = i % 2 == 0 ? whiteColour : selectColour;
 			});
 		// SWITCH!
-		postEvent(1, ()->{
+		postEvent(1, function(){
 			MusicBeatState.changeState(tP);
 			if (FlxG.sound.music.playing)
 				FlxG.sound.music.stop();
@@ -154,7 +154,7 @@ class StoryMenuState extends MenuTemplate
 		var arrow = [arrowSpr2, arrowSpr1][to >= 0 ? 1 : 0];
 		arrow.color = selectColour;
 		arrow.scale.set(0.6, 0.6);
-		postEvent(0.08, ()->{
+		postEvent(0.08, function(){
 			arrow.color = whiteColour;
 			arrow.scale.set(0.7, 0.7);
 		});
@@ -185,7 +185,7 @@ class StoryMenuState extends MenuTemplate
 
 		weekBG.alpha = 0;
 		FlxTween.tween(weekBG, {alpha: 1}, 0.2);
-		postEvent(0.21, ()->{
+		postEvent(0.21, function(){
 			if(oldRef == null) return;
 
 			oldRef.destroy();
