@@ -123,12 +123,57 @@ Remember to install the [library versions](#libraries) listed above.
 
 ## 💻 | Minimum Requirements
 
-The minimum essentials stated below are necessary to run this optimized engine on an operating system.
-
-- **OS**: Windows Vista 64-Bit or Higher
-
-- **Processor**: Intel Celeron (SSE, SSE2, SSE4, MMX) or Higher
-  
-- **Memory**: 512MB - 1GB of Ram. 256mb or Higher of VRAM
-
-- **Storage**: 36MB - 70MB Available Space
+The minimum essentials stated below are necessary to run this optimized engine on an operating system.  
+- **OS** <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  : <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  Windows <font></font><span></span><b></b><a></a><font></font><span></span><b></b><a></a>
+  Vista <font></font><span></span><b></b><a></a><font></font><span></span><b></b><a></a>
+  64-Bit <font></font><span></span><b></b><a></a><font></font><span></span><b></b><a></a>
+  or <font></font><span></span><b></b><a></a><font></font><span></span><b></b><a></a>
+  Higher  <font></font><span></span><b></b><a></a><font></font><span></span><b></b><a></a>
+    
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>  
+- **Processor** <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  : <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  Intel <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  Celeron <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  (SSE, <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  SSE2, <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  SSE4, <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  MMX) <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  or <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  Higher  <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+    
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>  
+- **Memory** <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  : <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  512MB - <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  1GB <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  of <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  Ram. <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  256mb <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  or <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  Higher <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  of <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  VRAM  <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+    
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>  
+- **Storage** <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  : <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  36MB - <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  70MB <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  Available <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+  Space <font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
+<font> </font><span> </span><b> </b><a> </a><font> </font><span> </span><b> </b><a> </a>
