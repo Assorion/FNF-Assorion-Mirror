@@ -121,4 +121,4 @@ Remember to install the [library versions](#libraries) listed above.
 > 
 > Every version of the libraries listed before are the versions that Assorion has been tested / built with, so using those versions will gurantee that Assorion will compile and behave correctly. Fixes for these issues will hopefully be implemented soon.
 
-.github/logo2.md
+logo2.md
