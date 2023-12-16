@@ -125,7 +125,7 @@ Remember to install the [library versions](#libraries) listed above.
 ## 💻 | Minimum Requirements
 
 Assorion is a very lightweight engine, to confirm this Assorion has been tested on a variety of hardware.
-Hardware in question ranges from an **Intel Pentium 4 @ 2.26ghz** to an **AMD Ryzen 5 3600**, **Windows 2000 32-bit** to **Windows 11**, **Nvidia Geforce Fx5200**
+Hardware in question ranges from an **Intel Pentium 4 @ 2.26ghz** to an **AMD Ryzen 5 3600**, **Windows 2000 32-bit** to **Windows 11 64-bit**, **Nvidia Geforce Fx5200**
 to **Nvidia GTX 1660**.
 
 > [!tip]
