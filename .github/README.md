@@ -137,7 +137,7 @@ to **Nvidia GTX 1660**.
 The engine *should* be able to run smoothly (max framerate) on at least an **Intel Core2 Duo E6850** with an **AMD Radeon R5 240**. 
 The engine runs *perfectly* on an **Intel i7-2600**, and an **Nvidia GT1030**.
 
-For the MinGW 64-bit build, Assorion will only run on Windows 7 or higher (tested on **Windows Vista 64-bit** and **Windows 7 64-bit**).  
+For the MinGW 64-bit build, Assorion will only run on Windows 7 or higher (tested on **Windows Vista 64-bit** and **Windows 7 64-bit**).
 Several libraries of inside of `Lime.ndll` use **SSE** to **SSE4**. 32-bit builds may work on on **Windows Vista 32-bit**.
 
 These should be the lowest minimum requirements to run the engine:
