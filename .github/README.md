@@ -21,7 +21,7 @@
 </div>
 <div align="center">
  
-┃ [**`• What is Assorion?`**](#--what-is-assorion-engine) ┃ [**`• Important Notes`**](#%EF%B8%8F--important-notesroadmap) ┃ [**`• Compiling`**](#--compiling) ┃ <a href="https://assorion.github.io/wiki/">**`• Wiki`**</a> ┃ 
+┃ [**`• What is Assorion?`**](#--what-is-assorion-engine) ┃ [**`• Important Notes`**](#%EF%B8%8F--important-notesroadmap) ┃ [**`• Compiling`**](#--compiling) ┃ [**`• Min Reqs`**](#--minimum-requirements) ┃ <a href="https://assorion.github.io/wiki/">**`• Wiki`**</a> ┃ 
 </div>
 
 -------------------------------------------------------------
@@ -120,3 +120,32 @@ Remember to install the [library versions](#libraries) listed above.
 >
 > 
 > Every version of the libraries listed before are the versions that Assorion has been tested / built with, so using those versions will gurantee that Assorion will compile and behave correctly. Fixes for these issues will hopefully be implemented soon.
+
+
+## 💻 | Minimum Requirements
+
+Assorion is a very lightweight engine, to confirm this Assorion has been tested on a variety of hardware.
+Hardware in question ranges from **Intel Pentium 4 @ 2.26ghz** to **AMD Ryzen 5 3600**, **Windows 2000** to **Windows 11**, **Nvidia Geforce Fx5200**
+to **Nvidia GTX 1660**.
+
+> [!tip]
+> Remember!  
+> Any games performance will decrease with higher resolutions.  
+> Keep this in mind!
+
+
+The engine *should* be able to run smoothly (max framerate) on at least a **Intel Core2 Duo E6850** with an **AMD Radeon R5 240**. 
+The engine runs *perfectly* on an **Intel i7-2600**, and an **Nvidia GT1030**.
+
+For the MinGW 64-bit build, Assorion will only run on Windows 7 or higher (tested on **Windows Vista 64-bit**).  
+Several libraries of inside of `Lime.ndll` use **SSE** to **SSE4**.
+
+These should be the lowest minimum requirements to run the engine:
+
+- **OS**: Windows 7 64-Bit or Higher
+
+- **Processor**: Intel Celeron (SSE to SSE4, MMX) or Higher
+
+- **Memory**: 512MB - 1GB of Ram. 256mb or Higher of VRAM
+
+- **Storage**: ~70MB Available Space
