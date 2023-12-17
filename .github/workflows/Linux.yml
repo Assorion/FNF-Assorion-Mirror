@@ -1,4 +1,4 @@
-name: Linux
+name: Linux CD
 
 on:
   workflow_dispatch:
