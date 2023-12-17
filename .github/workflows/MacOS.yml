@@ -1,0 +1,44 @@
+name: MacOS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  MacOS-Build:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.3.2
+          
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
+          haxelib install lime 7.9.0
+          haxelib install openfl 9.2.1
+          haxelib install flixel 5.2.2 
+          haxelib install flixel-ui 2.5.0
+          haxelib install flixel-addons 3.0.2
+      - name: Version Tag
+        run: echo "${{github.run_id}}" > VERSION
+
+      - name: Compilation
+        run:  haxelib run lime build mac -release --app-version="4.0.0-${{ github.run_id}}"
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: MacOS-Build
+          path: 'export/release/macos/bin'
+
+  Build-Download: 
+    name: Build-Download
+    runs-on: macOS-latest
+    needs: MacOS-Build
+    steps:
+    - name: Download Artifact 
+      uses: actions/download-artifact@main
+      with: 
+        name: MacOS-Build
