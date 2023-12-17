@@ -1,4 +1,4 @@
-name: MacOS
+name: MacOS CD
 
 on:
   workflow_dispatch:
