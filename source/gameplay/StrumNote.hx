@@ -22,8 +22,8 @@ class StrumNote extends FlxSprite {
         animation.addByPrefix('confirm', Note.colArr[data] + ' confirm', 24, false);
 
         // hopefully caches the animation.
-        playAnim(1);
         playAnim(2);
+        playAnim(1);
         playAnim(0);
 
         // 98 so it is screen centered.
@@ -54,6 +54,7 @@ class StrumNote extends FlxSprite {
         animation.play(str, true);
 		centerOffsets();
 		centerOrigin ();
+        
         curState = state;
     }  
 }

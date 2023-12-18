@@ -38,8 +38,6 @@ class Note extends StaticSprite
 	public var strumTime:Float = 0;
 	public var isSustainNote:Bool = false;
 
-	//public var chartRef:Array<Dynamic> = [];
-
 	public function new(strumTime:Float, data:Int, type:Int, ?sustainNote:Bool = false, ?isEnd:Bool = false)
 	{
 		super(0,-100);
@@ -61,7 +59,7 @@ class Note extends StaticSprite
 
 		setGraphicSize(Std.int(width * 0.7));
 		antialiasing = Settings.pr.antialiasing;
-
+		
 		animation.play('scroll');
 		centerOffsets();
 		updateHitbox ();

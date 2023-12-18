@@ -96,4 +96,5 @@ Chart editor fix (again).
 12. New transitions
 13. Legacy Windows XP compatibility branch (W.I.P)
 14. Fixed "Line-Feed" problem in txt files, should fix Freeplay icons bug.
-15. Refactored the README.md file. Fixed types, and minor grammatical errors.
+15. Refactored the README.md file. Fixed typos, and minor grammatical errors.
+16. Fixed typo where I said "types" instead of "typos" in changelog.

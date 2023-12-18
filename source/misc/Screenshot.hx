@@ -26,21 +26,12 @@ class Screenshot {
         byteArray.position = 0;
 
         var haxeBytes:Bytes = Bytes.alloc(byteArray.length);
-        for(i in 0...byteArray.length){
+        // convert openfl byte array to haxe bytes.
+        for(i in 0...byteArray.length)
             haxeBytes.set(i, byteArray.readUnsignedByte());
-            byteArray.position--;
-
-            // error checking
-            var b1:Int = haxeBytes.get(i);
-            var b2:Int = byteArray.readUnsignedByte();
-            if(b1 != b2){
-                trace('ERROR');
-                trace('$b1 != $b2');
-            }
-        }
 
         var nDate:Date = Date.now();
-        var dateStr:String = ''+ nDate.getFullYear();
+        var dateStr:String = '' + nDate.getFullYear();
         var formatLoop:Array<Int> = [
             nDate.getMonth(),
             nDate.getDay(),
