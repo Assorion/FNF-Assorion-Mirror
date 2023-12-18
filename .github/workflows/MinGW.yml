@@ -1,12 +1,25 @@
-name: Linux 
+name: MinGW
 
 on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
   workflow_dispatch:
 
 jobs:
-  Linux-Build:
-    runs-on: ubuntu-latest
+  Windows-Build:
+    runs-on: windows-latest
     steps:
+      # Use the workflow in-built version.
+      - name: Setup MinGW
+        run: |
+          cd /c/
+          ls
+          cp -r /c/mingw64 /c/MinGW
+        shell: bash
+
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
         with:
@@ -14,32 +27,34 @@ jobs:
           
       - name: Install Haxelib
         run: |
-          haxelib setup ~/haxelib
+          haxelib setup C:/haxelib
           haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
           haxelib install lime 7.9.0
           haxelib install openfl 9.2.1
           haxelib install flixel 5.2.2 
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
-          
+        shell: cmd
+
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
-
+        
+      # Tell HXCPP to compile with proper crap
       - name: Compilation
-        run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
-
+        run: haxelib run lime build windows -D HXCPP_MINGW -release --app-version="4.0.0-${{ github.run_id}}"
+        
       - name: Publish Artifact
         uses: actions/upload-artifact@main
         with:
-          name: Linux-Build
-          path: 'export/release/linux/bin'
+          name: MinGW-Win32-x64-Build
+          path: export/release/windows/bin
 
   Build-Download: 
     name: Build-Download
-    runs-on: ubuntu-latest
-    needs: Linux-Build
+    runs-on: windows-latest
+    needs: MinGW-Win32-x64-Build
     steps:
     - name: Download Artifact 
       uses: actions/download-artifact@main
       with: 
-        name: Linux-Build
+        name: MinGW-Win32-x64-Build
