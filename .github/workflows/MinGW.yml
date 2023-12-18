@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Windows-Build:
+  MinGW-Win32-x64-Build:
     runs-on: windows-latest
     steps:
       # Use the workflow in-built version.
