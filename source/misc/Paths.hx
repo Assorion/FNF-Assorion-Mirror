@@ -6,6 +6,8 @@ import lime.utils.Assets;
 
 // HECK YEA WE RE-DOIN THIS
 
+using StringTools;
+
 #if !debug @:noDebug #end
 class Paths {
     public static inline var sndExt:String = #if desktop 'ogg' #else 'mp3' #end;
@@ -69,7 +71,7 @@ class Paths {
 
         if(tmp != null) return tmp[0];
 
-        tmp = [Assets.getText(prePath + path)];
+        tmp = [Assets.getText(prePath + path).replace('\r', '')];
         CoolUtil.cachedLines.set(path, tmp);
 
         return tmp[0];
@@ -79,5 +81,5 @@ class Paths {
         return FlxAtlasFrames.fromSparrow('$prePath$path.png', '$prePath$path.xml');
 
     public static function ncLT(path:String, ?prePath:String = 'assets/songs-data/'):String
-        return Assets.getText(prePath + path);
+        return Assets.getText(prePath + path).replace('\r', '');
 }

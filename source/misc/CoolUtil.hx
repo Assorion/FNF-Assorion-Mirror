@@ -79,11 +79,11 @@ class CoolUtil
 
 		if(tmp != null) return tmp;
 
-		tmp = Paths.lText('$path.$ext').split('\n');
+		tmp = Paths.lText('$path.$ext').replace('\r', '').split('\n');
 		cachedLines.set(path, tmp);
 
 		return tmp;
 	}
 	public static function ncTFL(path:String, ?ext:String = 'txt'):Array<String>
-		return Paths.lText('$path.$ext').split('\n');
+		return Paths.lText('$path.$ext').replace('\r', '').split('\n');
 }
