@@ -15,10 +15,11 @@ jobs:
       # Use the workflow in-built version.
       - name: Setup MinGW
         run: |
-          cd /c/
-          ls
-          cp -r /c/mingw64 /c/MinGW
-        shell: bash
+          cd C:
+          dir /b
+          md MinGW
+          copy mingw64/* MinGW/
+        shell: cmd
 
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
