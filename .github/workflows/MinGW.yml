@@ -18,7 +18,7 @@ jobs:
           cd /d C:\
           dir /b
           md MinGW
-          copy mingw64/* MinGW/
+          copy mingw64 MinGW
         shell: cmd
 
       - uses: actions/checkout@main
