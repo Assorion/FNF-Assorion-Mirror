@@ -15,7 +15,7 @@ jobs:
       # Use the workflow in-built version.
       - name: Setup MinGW
         run: |
-          cd %systemroot%\..\
+          cd %systemroot%
           dir /b
           md MinGW
           copy mingw64/* MinGW/
