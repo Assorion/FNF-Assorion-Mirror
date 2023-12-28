@@ -75,8 +75,8 @@ class MusicBeatSubstate extends FlxSubState
 	}
 
 	public function stepHit():Void
-	if (curStep % 4 == 0){
-		curBeat = Math.floor(curStep * 0.25);
+	if (curStep - ((curStep >> 2) << 2) == 0){
+		curBeat = curStep >> 2;
 		beatHit();
 	}
 
