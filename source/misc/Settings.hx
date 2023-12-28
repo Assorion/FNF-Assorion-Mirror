@@ -27,7 +27,7 @@ typedef Options = {
     var antialiasing:Bool;
     var show_hud:Bool;
     var framerate:Int;
-    var light_bot_strums:Bool;
+    var strum_glow:Bool;
 
     // controls
     var note_left :Array<Int>;

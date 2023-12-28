@@ -585,7 +585,7 @@ class PlayState extends MusicBeatState
 			notes.remove(daNote, true);
 			daNote.destroy();
 			
-			if(!Settings.pr.light_bot_strums) return;
+			if(!Settings.pr.strum_glow) return;
 
 			strumRef.playAnim(2);
 			strumRef.pressTime = Conductor.stepCrochet * 0.001;

@@ -19,14 +19,12 @@ class HistoryState extends MenuTemplate {
 
     override function create()
     {
+        config(CoolUtil.cfArray([145, 113, 255]), 1);
         super.create();
-        background.color = CoolUtil.cfArray([145, 113, 255]);
-        //adds = [0];
-        splitNumb = 2;
 
         var currentContent:Int = -1;
 
-        // coolutil textfile lines would've worked if I could use "../../" in the path.
+        // Coolutil textfile lines would've worked if I could use "../../" in the path.
         for(item in Paths.lText('CHANGELOG.md', '').split('\n')){
             if(item.startsWith("# ")) continue;
             if(item == "" || item == " ") continue;
@@ -42,9 +40,6 @@ class HistoryState extends MenuTemplate {
             item = item.replace(" - ", "");
             item = item.replace(".", " ");
 
-            var tmpSpr:StaticSprite = new StaticSprite(0,0).makeGraphic(1,1,0x00000000);
-
-            pushObject(tmpSpr);
             pushObject(new Alphabet(0, (60 * 1) + 30, item, true));
         }
 
@@ -81,9 +76,9 @@ class HistoryState extends MenuTemplate {
             super.update(elapsed);
 }
 class HistorySubstate extends MusicBeatSubstate {
-    var bgSpr:FlxSprite;
-    var awesomeText:FlxText;
-    var parent:HistoryState;
+    private var bgSpr:FlxSprite;
+    private var awesomeText:FlxText;
+    private var parent:HistoryState;
 
     public function new(text:String, parent:HistoryState){
         parent.dontUpdate = true;
@@ -108,7 +103,20 @@ class HistorySubstate extends MusicBeatSubstate {
         add(bgSpr);
         add(awesomeText);
     }
+
+    public var leaving:Bool = false;
     override public function update(elapsed:Float){
+        if(leaving){
+            bgSpr.alpha -= elapsed * 4;
+            awesomeText.alpha -= elapsed * 3;
+
+            if(bgSpr.alpha + awesomeText.alpha <= 0){
+                parent.dontUpdate = false;
+                close();
+            }
+            return;
+        }
+
         super.update(elapsed);
 
         if(bgSpr.alpha < 0.7)
@@ -123,7 +131,6 @@ class HistorySubstate extends MusicBeatSubstate {
 
         if(!key.hardCheck(Binds.UI_BACK)) return;
 
-        parent.dontUpdate = false;
-        close();
+        leaving = true;
     }
 }

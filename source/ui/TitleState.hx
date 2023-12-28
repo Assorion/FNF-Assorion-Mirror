@@ -26,7 +26,7 @@ class TitleState extends MusicBeatState
 {
 	public static var initialized:Bool = false;
 
-	// the game engine will handle this for you.
+	// The game engine will handle this for you.
 	public static var textSequence:Array<Array<String>> = [
 		['hi'],
 		['Original game by','ninjamuffin'],
@@ -39,7 +39,6 @@ class TitleState extends MusicBeatState
 	override public function create():Void
 	{
 		// # Set the random text
-		// yes this means you can have multiple random text too.
 
 		for(i in 0...textSequence.length) 
 			if(textSequence[i][0] == '%') 
@@ -148,6 +147,14 @@ class TitleState extends MusicBeatState
 		skipIntro();
 	}
 
+	override function update(elapsed:Float){
+		FlxG.camera.zoom = CoolUtil.boundTo(FlxG.camera.zoom - elapsed, 1, 2);
+		super.update(elapsed);
+	}
+
+	private var textStep:Int = 0;
+	private var tsubStep:Int = 0;
+
 	function createCoolText(pos:Int, amount:Int, text:String){
 		var txt:Alphabet = new Alphabet(0,0, text, true);
 		txt.screenCenter();
@@ -155,14 +162,6 @@ class TitleState extends MusicBeatState
 
 		textGroup.add(txt);
 	}
-
-	override function update(elapsed:Float){
-		FlxG.camera.zoom = CoolUtil.boundTo(FlxG.camera.zoom - elapsed, 1, 2);
-		super.update(elapsed);
-	}
-
-	var textStep:Int = 0;
-	var tsubStep:Int = 0;
 
 	override function beatHit()
 	{
@@ -172,6 +171,8 @@ class TitleState extends MusicBeatState
 
 		danceLeft = !danceLeft;
 		gfDance.animation.play('dance' + (danceLeft ? 'Left' : 'Right'));
+
+		/////////////////////////////////////////
 
 		if(curBeat <= 0 || skippedIntro) return;
 

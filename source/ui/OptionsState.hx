@@ -32,7 +32,7 @@ class OptionsState extends MenuTemplate
 		['basic', 'gameplay', 'visuals', 'controls', 'changelog'],
 		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist', #if desktop 'launch_sprites' #end ],
 		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay', 'miss_health'],
-		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info', 'light_bot_strums']
+		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info', 'strum_glow']
 	];
 
 	static var descriptions:Array<Array<String>> = [
@@ -229,8 +229,8 @@ class OptionsState extends MenuTemplate
 				Settings.pr.antialiasing = !Settings.pr.antialiasing;
 			case 'show_hud':
 				Settings.pr.show_hud = !Settings.pr.show_hud;
-			case 'light_bot_strums':
-				Settings.pr.light_bot_strums = !Settings.pr.light_bot_strums;
+			case 'strum_glow':
+				Settings.pr.strum_glow = !Settings.pr.strum_glow;
 			
 		}
 		createNewList(true);

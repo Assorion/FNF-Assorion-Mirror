@@ -17,7 +17,7 @@
     "antialiasing": true,
     "show_hud": true,
     "framerate": 120,
-    "light_bot_strums": true,
+    "strum_glow": true,
 
     "note_left":  [65, 37],
     "note_right": [68, 39],
