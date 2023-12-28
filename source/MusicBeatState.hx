@@ -20,9 +20,6 @@ class MusicBeatState extends FlxUIState
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
 
-	//private var correctMusic:Bool = true;
-	//private var alignCamera:Bool = false;
-
 	public static inline function curTime()
 		#if desktop
 		return Sys.time();
@@ -51,11 +48,6 @@ class MusicBeatState extends FlxUIState
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP  , keyRel);
 
 		super.create();
-
-		/*if((FlxG.sound.music != null && FlxG.sound.music.playing) || !correctMusic) return;
-
-		Conductor.changeBPM(Paths.menuTempo);
-		FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));*/
 	}
 
 	// # new input thing.
@@ -110,15 +102,10 @@ class MusicBeatState extends FlxUIState
 	}
 
 	public function stepHit():Void
-	//{
-		//if(alignCamera)
-		//	FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
-
-		if (curStep % 4 == 0){
-			curBeat = Math.floor(curStep * 0.25);
-			beatHit();
-		}
-	//}
+	if (curStep % 4 == 0){
+		curBeat = Math.floor(curStep * 0.25);
+		beatHit();
+	}
 	public function beatHit():Void {}
 
 	private inline function skipTrans(){
