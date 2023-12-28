@@ -125,20 +125,20 @@ Remember to install the [library versions](#libraries) listed above.
 ## 💻 | Minimum Requirements
 
 Assorion is a very lightweight engine, to confirm this Assorion has been tested on a variety of hardware.
-Hardware in question ranges from an **Intel Pentium 4 @ 2.26ghz** to an **AMD Ryzen 5 3600**, **Windows 2000 32-bit** to **Windows 11 64-bit**, **Nvidia Geforce Fx5200**
-to **Nvidia GTX 1660**.
+Hardware in question ranges from an **`Intel Pentium 4 @ 2.26ghz`** to an **`AMD Ryzen 5 3600`**, **`Windows 2000 32-bit`** to **`Windows 11 64-bit`**, **`Nvidia Geforce Fx5200`**
+to **`Nvidia GTX 1660`**.
 
 > [!tip]
 > Remember!  
 > Any games performance will decrease with higher resolutions.  
-> Keep this in mind!
+> Lower the resolution if encountering performance issues.
 
 
-The engine *should* be able to run smoothly (max framerate) on at least an **Intel Core2 Duo E6850** with an **AMD Radeon R5 240**. 
-The engine runs *perfectly* on an **Intel i7-2600**, and an **Nvidia GT1030**.
+The engine *should* be able to run smoothly (max framerate) on at least an **`Intel Core2 Duo E6850`** with an **`AMD Radeon R5 240`**. 
+The engine runs *perfectly* on an **`Intel i7-2600`**, and an **`Nvidia GT 1030`**.
 
-For the MinGW 64-bit build, Assorion will only run on Windows 7 or higher (tested on **Windows Vista 64-bit** and **Windows 7 64-bit**).
-Several libraries of inside of `Lime.ndll` use **SSE** to **SSE4**. 32-bit builds may work on on **Windows Vista 32-bit**.
+For the MinGW 64-bit build, Assorion will only run on Windows 7 or higher (tested on **`Windows Vista 64-bit`** and **`Windows 7 64-bit`**).
+Several libraries of inside of `Lime.ndll` use **SSE** to **SSE4**. 32-bit builds may work on on **`Windows Vista 32-bit`**.
 
 These should be the lowest minimum requirements to run the engine:
 
