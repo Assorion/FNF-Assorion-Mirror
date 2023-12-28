@@ -101,10 +101,10 @@ class MusicBeatState extends FlxUIState
 		}
 	}
 
+	// GREAT! Now this has no chance of working with odd time signatures...
 	public function stepHit():Void
-	//if (curStep % 4 == 0){
-	if(curStep - ((curStep >> 2) << 2) == 0){
-		curBeat = Math.floor(curStep * 0.25);
+	if (curStep - ((curStep >> 2) << 2) == 0){
+		curBeat = curStep >> 2;
 		beatHit();
 	}
 	public function beatHit():Void {}
