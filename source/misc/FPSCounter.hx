@@ -37,6 +37,6 @@ class FPSCounter extends TextField {
         text = 'FPS: ${framerate * 2}';
 
         framerate = 0;
-        currentTime %= 500;
+        currentTime -= 500;
     }
 }

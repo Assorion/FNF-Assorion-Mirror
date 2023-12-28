@@ -102,7 +102,8 @@ class MusicBeatState extends FlxUIState
 	}
 
 	public function stepHit():Void
-	if (curStep % 4 == 0){
+	//if (curStep % 4 == 0){
+	if(curStep - ((curStep >> 2) << 2) == 0){
 		curBeat = Math.floor(curStep * 0.25);
 		beatHit();
 	}
