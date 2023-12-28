@@ -21,7 +21,7 @@ class HistoryState extends MenuTemplate {
     {
         super.create();
         background.color = CoolUtil.cfArray([145, 113, 255]);
-        adds = [0];
+        //adds = [0];
         splitNumb = 2;
 
         var currentContent:Int = -1;
@@ -88,7 +88,7 @@ class HistorySubstate extends MusicBeatSubstate {
     public function new(text:String, parent:HistoryState){
         parent.dontUpdate = true;
         this.parent = parent;
-        super(false);
+        super();
 
         var tmpBg:BitmapData = new BitmapData(1180, 620, true);
         tmpBg.fillRect(new Rectangle(0,0, 1180, 620), 0xFFFFFFFF);

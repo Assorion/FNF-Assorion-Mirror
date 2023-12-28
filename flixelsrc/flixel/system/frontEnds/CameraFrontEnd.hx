@@ -54,8 +54,6 @@ class CameraFrontEnd
 		list.push(NewCamera);
 		cameraAdded.dispatch(NewCamera);
 
-		trace('Cam added');
-
 		return NewCamera;
 	}
 

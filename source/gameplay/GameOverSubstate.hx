@@ -17,7 +17,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public function new(deadChar:Character, fadeOutCam:FlxCamera, pState:PlayState)
 	{
-		super(true);
+		super();
 
 		var z:Float = 1 / FlxG.camera.zoom;
 		blackFadeIn = new StaticSprite(0,0).makeGraphic(Math.round(FlxG.width * z), Math.round(FlxG.height * z), FlxColor.BLACK);
@@ -90,5 +90,10 @@ class GameOverSubstate extends MusicBeatSubstate
 		postEvent(2.7, function(){
 			FlxG.resetState();
 		});
+	}
+
+	override function stepHit(){
+		super.stepHit();
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
 	}
 }

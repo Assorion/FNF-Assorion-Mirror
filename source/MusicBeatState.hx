@@ -9,7 +9,6 @@ import openfl.events.KeyboardEvent;
 import ui.NewTransition;
 
 typedef DelayedEvent = {
-	var curTime:Float;
 	var endTime:Float;
 	var exeFunc:Void->Void;
 }
@@ -17,39 +16,46 @@ typedef DelayedEvent = {
 #if !debug @:noDebug #end
 class MusicBeatState extends FlxUIState
 {
-	public static var activeTransition:NewTransition;
-
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
 
-	private var correctMusic:Bool = true;
-	private var alignCamera:Bool = false;
+	//private var correctMusic:Bool = true;
+	//private var alignCamera:Bool = false;
+
+	public static inline function curTime()
+		#if desktop
+		return Sys.time();
+		#else
+		return Date.now().getTicks();
+		#end
+
+	public static inline function correctMusic()
+	if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
+		Conductor.changeBPM(Paths.menuTempo);
+		FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
+	}
 
 	override function create()
 	{
 		// Don't worry the skipping is handled in the transition itself.
 		openSubState(new NewTransition(null, false));
-		activeTransition = null;
 
 		Paths.clearCache();
-		
-		// please put persistent update on for ui states.
-		// because it will make the navigation faster.
-		persistentUpdate = true;
-		Conductor.songPosition = -Settings.pr.audio_offset;
 
+		persistentUpdate = true;
 		FlxG.camera.bgColor.alpha = 0;
+		Conductor.songPosition = -Settings.pr.audio_offset;
 
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHit);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP  , keyRel);
 
 		super.create();
 
-		if((FlxG.sound.music != null && FlxG.sound.music.playing) || !correctMusic) return;
+		/*if((FlxG.sound.music != null && FlxG.sound.music.playing) || !correctMusic) return;
 
 		Conductor.changeBPM(Paths.menuTempo);
-		FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
+		FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));*/
 	}
 
 	// # new input thing.
@@ -71,67 +77,64 @@ class MusicBeatState extends FlxUIState
 
 	private inline function postEvent(forward:Float, func:Void->Void){
 		events.push({
-			curTime: 0,
-			endTime: forward,
+			endTime: curTime() + forward,
 			exeFunc: func
 		});
-	}
-	private inline function handleEvents(el:Float){
-		if(events.length == 0) return;
-
-		var i = 0;
-		while(i < events.length){
-			var e = events[i];
-			e.curTime += el;
-			if(e.curTime >= e.endTime){
-				e.exeFunc();
-				events.splice(i, 1);
-				i--;
-			}
-
-			i++;
-		}
 	}
 
 	//////////////////////////////////////
 
+	private var oldStep:Int = 0;
 	override function update(elapsed:Float)
 	{
 		Conductor.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
 
-		var oldStep:Int = curStep;
 		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
 		
-		if(oldStep != curStep && curStep >= 0)
+		if(oldStep != curStep && curStep >= 0){
+			oldStep = curStep;
 			stepHit();
+		}
 
-		handleEvents(elapsed);
 		super.update(elapsed);
+
+		var i = -1;
+		while(++i < events.length){
+			var e = events[i];
+
+			if(curTime() < e.endTime) continue;
+
+			e.exeFunc();
+			events.splice(i--, 1);
+		}
 	}
 
 	public function stepHit():Void
-	{
-		if(alignCamera)
-			FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
+	//{
+		//if(alignCamera)
+		//	FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
 
 		if (curStep % 4 == 0){
 			curBeat = Math.floor(curStep * 0.25);
 			beatHit();
 		}
-	}
+	//}
 	public function beatHit():Void {}
 
 	private inline function skipTrans(){
 		for(i in 0...events.length)
 			events[i].exeFunc();
 
-		if(activeTransition != null)
-			activeTransition.skip();
+		if (NewTransition.activeTransition != null)
+			NewTransition.activeTransition.skip();
 	}
-	public static function changeState(target:FlxState){
-		activeTransition = new NewTransition(target, true);
 
-		FlxG.state.openSubState(activeTransition);
+	// # Meant to handle transitions.
+
+	public static function changeState(target:FlxState){
+		new NewTransition(target, true);
+
+		FlxG.state.openSubState(NewTransition.activeTransition);
 		FlxG.state.persistentUpdate = false;
 	}
 }

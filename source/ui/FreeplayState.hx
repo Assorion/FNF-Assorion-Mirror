@@ -34,6 +34,7 @@ class FreeplayState extends MenuTemplate
 		var lines:Array<String> = CoolUtil.textFileLines('freeplaySonglist');
 
 		super.create();
+		MusicBeatState.correctMusic();
 		background.color = FlxColor.fromRGB(145, 113, 255);
 
 		for(i in 0...lines.length)

@@ -158,8 +158,6 @@ class ChartingState extends MusicBeatState {
         blueSelectBox.cameras = [camGR];
 		add(blueSelectBox);
 
-        correctMusic = false;
-
         FlxG.stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEvent);
         FlxG.stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
         FlxG.stage.addEventListener(MouseEvent.MOUSE_UP  , mouseUpEvent);

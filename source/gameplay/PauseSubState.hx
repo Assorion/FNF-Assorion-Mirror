@@ -45,7 +45,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	public function new(camera:FlxCamera, ps:PlayState)
 	{
-		super(false);
+		super();
 
 		// music
 		pauseMusic = new FlxSound().loadEmbedded(Paths.lMusic('breakfast'), true, true);

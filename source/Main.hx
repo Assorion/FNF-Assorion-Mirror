@@ -27,7 +27,7 @@ class Main extends Sprite
 	public static inline var initFPS:Int = 60;
 
 	public static function changeUsefulInfo(yes:Bool){
-		fpsC.visible = yes;
+		fpsC.visible =
 		memC.visible = yes;
 	}
 
@@ -43,7 +43,11 @@ class Main extends Sprite
 
 		var ldState:Class<FlxState> = initState;
 		if(Settings.pr.launch_sprites)
-			#if desktop ldState = ui.LoadingState; #else trace('CACHING DOES NOT WORK IN BROWSER!'); #end
+			#if desktop 
+			ldState = ui.LoadingState; 
+			#else 
+			trace('CACHING DOES NOT WORK IN BROWSER!'); 
+			#end
 
 		fpsC = new FPSCounter(10, 3, 0xFFFFFF);
 		memC = new MemCounter(10, 18, 0xFFFFFF);
@@ -55,6 +59,7 @@ class Main extends Sprite
 		addChild(memC);
 
 		#if (!desktop)
+		// web browser keyboard fix. Keys like the spacebar won't work in a browser without this.
 		FlxG.keys.preventDefaultKeys = [];
 		Settings.pr.framerate = 60;
 		#end

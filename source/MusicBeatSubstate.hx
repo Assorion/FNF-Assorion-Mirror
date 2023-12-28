@@ -7,16 +7,12 @@ import MusicBeatState.DelayedEvent;
 #if !debug @:noDebug #end
 class MusicBeatSubstate extends FlxSubState
 {
-	public function new(alignCamera:Bool)
-	{
-		this.alignCamera = alignCamera;
+	public function new()
 		super();
-	}
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
-	private var alignCamera:Bool = false;
 
 	override function create()
 	{
@@ -28,8 +24,7 @@ class MusicBeatSubstate extends FlxSubState
 
 	private inline function postEvent(forward:Float, func:Void->Void){
 		events.push({
-			curTime: 0,
-			endTime: forward,
+			endTime: MusicBeatState.curTime() + forward,
 			exeFunc: func
 		});
 	}
@@ -53,47 +48,40 @@ class MusicBeatSubstate extends FlxSubState
 
 	//////////////////////////////////////
 
+	private var oldStep:Int = 0;
 	override function update(elapsed:Float)
 	{
 		Conductor.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
 
-		var oldStep:Int = curStep;
-		updateCurStep();
+		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
 		
-		if(oldStep != curStep && curStep > 0)
+		if(oldStep != curStep && curStep > 0){
+			oldStep = curStep;
 			stepHit();
+		}
 
 		super.update(elapsed);
 
-		if(events.length == 0) return;
-
-		var i = 0;
-		while(i < events.length){
+		var i = -1;
+		while(++i < events.length){
 			var e = events[i];
-			e.curTime += elapsed;
-			if(e.curTime >= e.endTime){
-				e.exeFunc();
-				events.splice(i, 1);
-				i--;
-			}
 
-			i++;
+			if(MusicBeatState.curTime() < e.endTime)
+				return;
+
+			e.exeFunc();
+			events.splice(i--, 1);
 		}
 	}
 
-	private inline function updateCurStep():Void
-		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
-
 	public function stepHit():Void
-	{
-		if (curStep % 4 == 0){
-			curBeat = Math.floor(curStep * 0.25);
-			beatHit();
-		}
+	if (curStep % 4 == 0){
+		curBeat = Math.floor(curStep * 0.25);
+		beatHit();
 	}
 
 	public function beatHit():Void {
-		if(alignCamera)
-			FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
+		//if(alignCamera)
+		//	FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
 	}
 }

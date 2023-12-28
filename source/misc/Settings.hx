@@ -78,6 +78,8 @@ class Settings {
         Binds.updateControls();
     }
     public static function apply(){
+        FlxG.mouse.visible = false;
+
         FlxGraphic.defaultPersist = Settings.pr.default_persist;
         FlxG.updateFramerate      = Settings.pr.framerate;
 		FlxG.drawFramerate        = Settings.pr.framerate;

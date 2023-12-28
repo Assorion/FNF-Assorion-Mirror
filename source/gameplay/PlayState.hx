@@ -133,7 +133,6 @@ class PlayState extends MusicBeatState
 		FlxG.sound.playMusic(Paths.playableSong(curSong), 1, false);
 		FlxG.sound.music.onComplete = endSong;
 		FlxG.sound.music.stop();
-		correctMusic = false;
 
 		generateSong();
 		for(i in 0...SONG.playLength)

@@ -32,11 +32,8 @@ class ControlsState extends MenuTemplate {
 
 	override function create()
 	{
-		splitNumb = 3;
+        config(FlxColor.fromRGB(0,255,110), 3);
 		super.create();
-
-		background.color = FlxColor.fromRGB(0,255,110);
-		adds = [150, 450];
 
 		createNewList();
 	}
@@ -108,7 +105,7 @@ class ControlsState extends MenuTemplate {
 		if(controlList[curSel] == '')
 			return;
 
-		for(i in 0...objGroup.length)
+		for(i in 0...arrGroup.length)
 			if(Math.floor(i / splitNumb) != curSel)
 				arrGroup[i].targetA = 0;
 

@@ -76,9 +76,14 @@ class MainMenuState extends MusicBeatState
 		curSelected = 0;
 		changeItem(o);
 
-		alignCamera = true;
-
 		super.create();
+	}
+
+	// # Camera fix
+
+	override public function stepHit(){
+		super.stepHit();
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
 	}
 	
 	// # Input code

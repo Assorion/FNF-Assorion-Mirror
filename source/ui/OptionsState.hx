@@ -77,15 +77,14 @@ class OptionsState extends MenuTemplate
 
 	override function create()
 	{
+		config(0xFFea71fd, 1);
 		super.create();
-		background.color = 0xFFea71fd;
 
 		bottomBlack = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
 		bottomBlack.alpha = 0.6;
 
 		descText = new FlxText(5, FlxG.height - 25, 0, "", 20);
 		descText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
-		adds = [400];
 		
 		sAdd(bottomBlack);
 		sAdd(descText);
@@ -145,7 +144,7 @@ class OptionsState extends MenuTemplate
 
 	// this is where you add your integer or slidable(?) options
 	override function altChange(ch:Int = 0){
-		var atg:Alphabet = cast objGroup.members[(curSel * 2) + 1];
+		var atg:Alphabet = cast arrGroup[(curSel * 2) + 1].obj;
 		switch(optionSub[curSub][curSel]){
 			case 'start_volume':
 				Settings.pr.start_volume = CoolUtil.boundTo(Settings.pr.start_volume + (ch * 10), 0, 100, true);

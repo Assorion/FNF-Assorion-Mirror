@@ -51,8 +51,8 @@ class StoryMenuState extends MenuTemplate
 
 	override function create(){
 		super.create();
+		MusicBeatState.correctMusic();
 		background.color = 0xFF000000;
-		alignCamera = false;
 
 		remove(background);
 
@@ -126,7 +126,7 @@ class StoryMenuState extends MenuTemplate
 
 		for(i in 0...8)
 			postEvent(i / 8, function(){
-				objGroup.members[curSel].color = i % 2 == 0 ? whiteColour : selectColour;
+				arrGroup[curSel].obj.color = i % 2 == 0 ? whiteColour : selectColour;
 			});
 		// SWITCH!
 		postEvent(1, function(){
@@ -160,12 +160,12 @@ class StoryMenuState extends MenuTemplate
 		});
 	}
 	override function changeSelection(to:Int = 0){
-		objGroup.members[curSel].color = whiteColour;
+		arrGroup[curSel].obj.color = whiteColour;
 
 		super.changeSelection(to);
 		changeDiff(0, false);
 
-		objGroup.members[curSel].color = selectColour;
+		arrGroup[curSel].obj.color = selectColour;
 
 		trackList.text = 'Tracks:\n';
 		for(i in 0...weekData[curSel].songs.length)

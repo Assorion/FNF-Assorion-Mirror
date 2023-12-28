@@ -27,12 +27,12 @@ class TitleState extends MusicBeatState
 	public static var initialized:Bool = false;
 
 	// the game engine will handle this for you.
-	static var textSequence:Array<Array<String>> = [
+	public static var textSequence:Array<Array<String>> = [
 		['hi'],
 		['Original game by','ninjamuffin'],
 		['assorion engine by', 'candice joe'],
 		['This took ages', 'but it payed off', 'probably'],
-		['RANDOM'],
+		['%'],
 		['Well any way', 'have fun']
 	];
 
@@ -42,23 +42,32 @@ class TitleState extends MusicBeatState
 		// yes this means you can have multiple random text too.
 
 		for(i in 0...textSequence.length) 
-			if(textSequence[i][0] == 'RANDOM') 
+			if(textSequence[i][0] == '%') 
 				textSequence[i] = getIntroText();
 
 		super.create();
-
-		persistentUpdate = false;
-		persistentDraw   = true;
-		FlxG.mouse.visible = false;
+		MusicBeatState.correctMusic();
 
 		startIntro();
+	}
+
+	// # Pick random intro text
+
+	public inline function getIntroText():Array<String>
+	{
+		var textLines:Array<String> = CoolUtil.textFileLines('introText');
+		var bruh:Int = Math.round(Math.random() * (textLines.length - 1));
+
+		return textLines[bruh].trim().split('--');
 	}
 
 	public var logoBl:FlxSprite;
 	public var gfDance:FlxSprite;
 	public var danceLeft:Bool = false;
 	public var titleText:FlxSprite;
-	public var textGroup:FlxGroup;
+
+	var textGroup:FlxGroup;
+	var afterFlash:FlxTypedGroup<FlxSprite>;
 
 	var sndTween:FlxTween;
 
@@ -70,11 +79,6 @@ class TitleState extends MusicBeatState
 			FlxG.sound.music.volume = 0;
 			sndTween = FlxTween.tween(FlxG.sound.music, {volume: 1}, 3);
 		}
-
-		// # load all sprites
-
-		var bg:StaticSprite = new StaticSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		add(bg);
 
 		// # create logo
 
@@ -97,6 +101,13 @@ class TitleState extends MusicBeatState
 		titleText.antialiasing = Settings.pr.antialiasing;
 		titleText.updateHitbox();
 
+		// # for the ending card
+
+		afterFlash = new FlxTypedGroup<FlxSprite>();
+		afterFlash.add(logoBl);
+		afterFlash.add(gfDance);
+		afterFlash.add(titleText);
+
 		// # alphabet text.
 
 		textGroup = new FlxGroup();
@@ -106,17 +117,6 @@ class TitleState extends MusicBeatState
 			skipIntro();
 
 		initialized = true;
-	}
-
-	// # get text
-	// now supports multiple lines.
-
-	public function getIntroText():Array<String>
-	{
-		var textLines:Array<String> = CoolUtil.textFileLines('introText');
-		var bruh:Int = Math.round(Math.random() * (textLines.length - 1));
-
-		return textLines[bruh].trim().split('--');
 	}
 
 	// # Input code
@@ -161,8 +161,7 @@ class TitleState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	var beatLeft:Int = 1;
-	var textStep:Int = -1;
+	var textStep:Int = 0;
 	var tsubStep:Int = 0;
 
 	override function beatHit()
@@ -177,30 +176,27 @@ class TitleState extends MusicBeatState
 		if(curBeat <= 0 || skippedIntro) return;
 
 		FlxG.camera.zoom = 1.1;
-		beatLeft--;
+		
+		if (tsubStep < 0){
+			tsubStep = 0;
 
-		// reset crap
-		if(beatLeft == 0) {
-			textStep++;
-			
-			if(textStep == textSequence.length){
+			if(++textStep == textSequence.length){
 				skipIntro();
 				return;
 			}
-
-			tsubStep = 0;
-			beatLeft = textSequence[textStep].length * 2;
 		}
 
-		// add more crap.
-		if(beatLeft % 2 == 0){
-			createCoolText(tsubStep, textSequence[textStep].length, textSequence[textStep][tsubStep]);
-			tsubStep++;
-
+		if(tsubStep == textSequence[textStep].length){
+			textGroup.clear();
+			tsubStep = -1;
+			
 			return;
 		}
 
-		if(beatLeft == 1) textGroup.clear();
+		// Using fancy bit crap to figure out if the number is odd or not. Modulo exists but y'know, this is better.
+		// TODO: Figure out which platforms use 64-bit integers so I don't break this crap.
+		if((curBeat << 31) >>> 31 == 0)
+			createCoolText(tsubStep, textSequence[textStep].length, textSequence[textStep][tsubStep++]);
 	}
 
 	// # show enter screen code.
@@ -213,13 +209,9 @@ class TitleState extends MusicBeatState
 
 		FlxG.camera.flash(FlxColor.WHITE, 4);
 
-		remove(textGroup);
 		textGroup.clear();
-		textGroup = null;
-
-		add(logoBl);
-		add(gfDance);
-		add(titleText);
+		remove(textGroup);
+		add(afterFlash);
 
 		titleText.animation.play('idle');
 		skippedIntro = true;
