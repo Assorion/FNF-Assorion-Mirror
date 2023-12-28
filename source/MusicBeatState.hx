@@ -24,7 +24,7 @@ class MusicBeatState extends FlxUIState
 		#if desktop
 		return Sys.time();
 		#else
-		return Date.now().getTicks();
+		return Date.now().getTime() * 1000;
 		#end
 
 	public static inline function correctMusic()
