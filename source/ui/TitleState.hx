@@ -195,7 +195,7 @@ class TitleState extends MusicBeatState
 		}
 
 		// Using fancy bit crap to figure out if the number is odd or not. Modulo exists but y'know, this is better.
-		if(((curBeat & 0xFFFFFFFF) << 31) >>> 31 == 0)
+		if(((curBeat << 31) & 0xFFFFFFFF) >>> 31 == 0)
 			createCoolText(tsubStep, textSequence[textStep].length, textSequence[textStep][tsubStep++]);
 	}
 
