@@ -24,7 +24,7 @@ class MusicBeatState extends FlxUIState
 		#if desktop
 		return Sys.time();
 		#else
-		return Date.now().getTime() * 1000;
+		return Date.now().getTime() * 0.001;
 		#end
 
 	public static inline function correctMusic()
@@ -37,8 +37,6 @@ class MusicBeatState extends FlxUIState
 	{
 		// Don't worry the skipping is handled in the transition itself.
 		openSubState(new NewTransition(null, false));
-
-		Paths.clearCache();
 
 		persistentUpdate = true;
 		FlxG.camera.bgColor.alpha = 0;
@@ -113,16 +111,11 @@ class MusicBeatState extends FlxUIState
 		for(i in 0...events.length)
 			events[i].exeFunc();
 
-		if (NewTransition.activeTransition != null)
-			NewTransition.activeTransition.skip();
+		NewTransition.skip();
 	}
 
 	// # Meant to handle transitions.
+	// TODO: Re-write stuff so it doesn't rely on a depricated function (lol)
 
-	public static function changeState(target:FlxState){
-		new NewTransition(target, true);
-
-		FlxG.state.openSubState(NewTransition.activeTransition);
-		FlxG.state.persistentUpdate = false;
-	}
+	public static var changeState:FlxState->Void = NewTransition.switchState;
 }

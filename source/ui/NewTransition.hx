@@ -14,7 +14,6 @@ class NewTransition extends FlxSubState {
     private static var existingGraphic:FlxGraphic;
 
     public var whiteSpr:FlxSprite;
-    //public var mainCamera:FlxCamera;
     public var trIn:Bool;
 
     var pState:FlxState;
@@ -45,31 +44,48 @@ class NewTransition extends FlxSubState {
         whiteSpr.scrollFactor.set();
 		add(whiteSpr);
 
-        if(!skippedLast) return;
-
-        skip();
-        whiteSpr.alpha = 0;
-        skippedLast = false;
-    }
-    public function skip(){
-        if(activeTransition == null) 
+        if(!skippedLast) 
             return;
 
-        skippedLast = true;
-        whiteSpr.alpha = trIn ? 1 : 0;
-        
-        update(0);
+        transOutComplete();
+    }
+
+    // # Two helper functions, you can change these if needed.
+
+    public inline function transInComplete(){
+        close();
+        activeTransition = null;
+        FlxG.switchState(pState);
+    }
+    public inline function transOutComplete(){
+        close();
+        skippedLast = false;
     }
 
     override function update(elapsed:Float){
         whiteSpr.alpha += elapsed * (trIn ? 4 : -2);
 
-        if(whiteSpr.alpha != (trIn ? 1 : 0)) return;
+        if(whiteSpr.alpha != (trIn ? 1 : 0)) 
+            return;
 
-        close();
-        activeTransition = null;
+        trIn ? transInComplete() : transOutComplete();
+    }
 
-        if(trIn)
-            FlxG.switchState(pState);
+    /////////////////////////////////
+
+    public static function skip(){
+        if(activeTransition == null) 
+            return;
+
+        skippedLast = true;
+        activeTransition.transInComplete();
+        
+    }
+
+    public static function switchState(target:FlxState){
+        activeTransition = new NewTransition(target, true);
+
+        FlxG.state.openSubState(activeTransition);
+		FlxG.state.persistentUpdate = false;
     }
 }

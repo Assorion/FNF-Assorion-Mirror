@@ -31,6 +31,9 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
+		// Since mainmenustate is so common, might-as-well put this here.
+		Paths.clearCache();
+
 		// # bg stuff.
 
 		var bg:StaticSprite = new StaticSprite(-80).loadGraphic('assets/images/ui/menuDesat.png');
