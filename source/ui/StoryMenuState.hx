@@ -126,7 +126,7 @@ class StoryMenuState extends MenuTemplate
 
 		for(i in 0...8)
 			postEvent(i / 8, function(){
-				arrGroup[curSel].obj.color = i % 2 == 0 ? whiteColour : selectColour;
+				arrGroup[curSel].obj.color = (i & 0x01 == 0 ? whiteColour : selectColour);
 			});
 		// SWITCH!
 		postEvent(1, function(){

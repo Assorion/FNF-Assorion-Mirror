@@ -62,7 +62,7 @@ class MainMenuState extends MusicBeatState
 
 			menuItem.screenCenter();
 			menuItem.scrollFactor.set();
-			menuItem.y += (i - Math.floor(optionList.length / 2) + (optionList.length % 2 == 0 ? 0.5 : 0)) * 160;
+			menuItem.y += (i - Math.floor(optionList.length / 2) + (optionList.length & 0x01 == 0 ? 0.5 : 0)) * 160;
 			menuItem.antialiasing = Settings.pr.antialiasing;
 
 			menuItems.add(menuItem);
@@ -144,7 +144,7 @@ class MainMenuState extends MusicBeatState
 				twns.push(FlxTween.tween(menuItems.members[i], {alpha:0}, 0.8));
 		for(i in 0...8)
 			postEvent(i / 8, function(){
-				menuItems.members[curSelected].alpha = (i % 2 == 0 ? 0 : 1);
+				menuItems.members[curSelected].alpha = (i & 0x01 == 0 ? 0 : 1);
 			});
 
 		postEvent(1, function() {

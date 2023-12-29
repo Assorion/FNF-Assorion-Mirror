@@ -104,7 +104,7 @@ class OptionsState extends MenuTemplate
 
 				if(ican.curChar == 'face')
 					continue;
-				if(i % 2 == 1) 
+				if(i & 0x01 == 1) 
 					ican.animation.play('losing');
 
 				pushIcon(ican);

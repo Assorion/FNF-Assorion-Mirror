@@ -47,7 +47,8 @@ class NewTransition extends FlxSubState {
         if(!skippedLast) 
             return;
 
-        transOutComplete();
+        skippedLast = false;
+        whiteSpr.alpha = 0;
     }
 
     // # Two helper functions, you can change these if needed.
@@ -57,10 +58,8 @@ class NewTransition extends FlxSubState {
         activeTransition = null;
         FlxG.switchState(pState);
     }
-    public inline function transOutComplete(){
+    public inline function transOutComplete()
         close();
-        skippedLast = false;
-    }
 
     override function update(elapsed:Float){
         whiteSpr.alpha += elapsed * (trIn ? 4 : -2);

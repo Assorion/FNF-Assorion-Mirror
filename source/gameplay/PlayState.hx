@@ -417,7 +417,7 @@ class PlayState extends MusicBeatState
 		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
 
 		var sec:SwagSection = SONG.notes[Math.floor(curBeat / 4)];
-		if(curBeat % 4 == 0 && FlxG.sound.music.playing){
+		if(curStep - ((curStep >> 2) << 2) == 0 && FlxG.sound.music.playing){
 			// prevent the Int from being null, if it is it will just be 0.
 			var tFace:Int = sec != null ? cast(sec.cameraFacing, Int) : 0;
 

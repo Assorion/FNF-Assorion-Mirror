@@ -158,7 +158,7 @@ class TitleState extends MusicBeatState
 	function createCoolText(pos:Int, amount:Int, text:String){
 		var txt:Alphabet = new Alphabet(0,0, text, true);
 		txt.screenCenter();
-		txt.y += (pos - Math.floor(amount / 2) + (amount % 2 == 0 ? 0.5 : 0)) * 75;
+		txt.y += (pos - Math.floor(amount / 2) + (amount & 0x01 == 0 ? 0.5 : 0)) * 75;
 
 		textGroup.add(txt);
 	}
@@ -194,8 +194,7 @@ class TitleState extends MusicBeatState
 			return;
 		}
 
-		// Using fancy bit crap to figure out if the number is odd or not. Modulo exists but y'know, this is better.
-		if(((curBeat << 31) & 0xFFFFFFFF) >>> 31 == 0)
+		if(curBeat & 0x01 == 0)
 			createCoolText(tsubStep, textSequence[textStep].length, textSequence[textStep][tsubStep++]);
 	}
 

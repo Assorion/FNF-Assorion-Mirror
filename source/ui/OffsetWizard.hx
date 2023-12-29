@@ -64,13 +64,13 @@ class OffsetWizard extends MusicBeatState{
         var pfb:Int = fakeBeat;
         fakeBeat = Math.floor((FlxG.sound.music.time - curOffset - 10) / Conductor.crochet);
 
-        if(fakeBeat > pfb && fakeBeat % 2 == 0)
+        if(fakeBeat > pfb && fakeBeat & 0x01 == 0)
             beatText.alpha = 1;
 
         super.update(elapsed);
     }
     override public function beatHit(){
-        if(curBeat % 2 == 0)
+        if(curBeat & 0x01 == 0)
             songTime = curStep;
 
         rootBeat = Math.round(curBeat / 2);
