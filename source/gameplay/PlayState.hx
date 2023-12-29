@@ -302,15 +302,15 @@ class PlayState extends MusicBeatState
 	}
 
 	private function generateStaticArrows(player:Int, playable:Bool):Void
-		for (i in 0...Note.keyCount)
-		{
-			var babyArrow:StrumNote = new StrumNote(0, strumLine.y - 10, i, player);
-			babyArrow.alpha = 0;
+	for (i in 0...Note.keyCount)
+	{
+		var babyArrow:StrumNote = new StrumNote(0, strumLine.y - 10, i, player);
+		babyArrow.alpha = 0;
 
-			strumLineNotes.add(babyArrow);
-			if(playable)
-				playerStrums.add(babyArrow);
-		}
+		strumLineNotes.add(babyArrow);
+		if(playable)
+			playerStrums.add(babyArrow);
+	}
 
 	var countTickFunc:Void->Void;
 	function startCountdown():Void
@@ -403,7 +403,7 @@ class PlayState extends MusicBeatState
 			notes.add(uNote);
 			noteCount++;
 		}
-		notes.forEachAlive(handleNotes);
+		notes.forEachAlive(scrollNotes);
 
 		super.update(elapsed);
 	}
@@ -436,8 +436,8 @@ class PlayState extends MusicBeatState
 	override function stepHit(){
 		super.stepHit();
 
-		if(!FlxG.sound.music.playing) return;
-		songTime = ((Conductor.songPosition * Conductor.songDiv) + songTime) * 0.5;
+		if(FlxG.sound.music.playing)
+			songTime = ((Conductor.songPosition * Conductor.songDiv) + songTime) * 0.5;
 	}
 
 	// # Update stats
@@ -486,6 +486,7 @@ class PlayState extends MusicBeatState
 			hitCount++;
 			popUpScore(note.strumTime);
 		}
+		
 		updateHealth(5);
 	}
 
@@ -567,14 +568,14 @@ class PlayState extends MusicBeatState
 
 	// # handle notes. Note scrolling etc
 
-	private inline function handleNotes(daNote:Note){
+	private inline function scrollNotes(daNote:Note){
 		var dir = Settings.pr.downscroll ? 45 : -45;
 		var nDiff:Float = songTime - daNote.strumTime;
 		daNote.y = dir * nDiff * SONG.speed;
 		daNote.y += strumLine.y;
 
 		// 1.5 because we need room for the player to miss.
-		daNote.visible = (daNote.height > -daNote.height * SONG.speed * 1.5) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.5));
+		daNote.visible = (daNote.height > -daNote.height * SONG.speed * 1.25) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.25));
 		if(!daNote.visible) return;
 		
 		var strumRef = strumLineNotes.members[daNote.noteData + (Note.keyCount * daNote.player)];

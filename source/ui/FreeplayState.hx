@@ -19,9 +19,8 @@ using StringTools;
 #if !debug @:noDebug #end
 class FreeplayState extends MenuTemplate
 {
-	var songs:Array<String> = [];
-
 	public static var curDifficulty:Int = 1;
+	public var songs:Array<String> = [];
 
 	var scoreText:FlxText;
 	var diffText:FlxText;
@@ -29,22 +28,25 @@ class FreeplayState extends MenuTemplate
 
 	private var vocals:FlxSound;
 
-	override function create()
-	{
+	private inline function readAndParseTextFile(){
 		var lines:Array<String> = CoolUtil.textFileLines('freeplaySonglist');
 
-		super.create();
-		MusicBeatState.correctMusic();
-		background.color = FlxColor.fromRGB(145, 113, 255);
+		for(i in 0...lines.length){
+			var strArr = lines[i].split(':');
+			songs.push(strArr[0]);
 
-		for(i in 0...lines.length)
-			songs.push(lines[i].split(':')[0]);
-
-		for (i in 0...songs.length)
-		{
-			pushObject(new Alphabet(0, (60 * i) + 30, songs[i], true));
-			pushIcon(new gameplay.HealthIcon(lines[i].split(':')[1], false));
+			pushObject(new Alphabet(0, (60 * i) + 30, strArr[0], true));
+			pushIcon(new gameplay.HealthIcon(strArr[1], false));
 		}
+	}
+
+	override function create()
+	{
+		config(FlxColor.fromRGB(145, 113, 255), 1);
+		MusicBeatState.correctMusic();
+		super.create();
+
+		readAndParseTextFile();
 
 		var scoreBG:StaticSprite = new StaticSprite((FlxG.width * 0.7) - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
@@ -77,33 +79,32 @@ class FreeplayState extends MenuTemplate
 		curDifficulty += change + CoolUtil.diffNumb;
 		curDifficulty %= CoolUtil.diffNumb;
 
-		diffText.text = '< ' + CoolUtil.diffString(curDifficulty, 1).toUpperCase() + ' >';
-		intendedScore = Highscore.getScore(songs[curSel], curDifficulty);
-		scoreText.text = 'PERSONAL BEST:$intendedScore';
+		diffText.text = '< ${CoolUtil.diffString(curDifficulty, 1).toUpperCase()} >';
+		scoreText.text = 'PERSONAL BEST: ${Highscore.getScore(songs[curSel], curDifficulty)}';
 	}
 	override function changeSelection(chng:Int = 0){
 		super.changeSelection(chng);
-
-		intendedScore = Highscore.getScore(songs[curSel], curDifficulty);
-		scoreText.text = 'PERSONAL BEST:$intendedScore';
+		scoreText.text = 'PERSONAL BEST: ${Highscore.getScore(songs[curSel], curDifficulty)}';
 	}
-	
-	private var prevTime:Float = 0;
-	private var playing:Bool = true;
 
 	// # input code.
 
+	private var prevTime:Float = 0;
+	private var playing:Bool = true;
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
 		var k = key.deepCheck([Binds.UI_ACCEPT, [FlxKey.SPACE]]);
 		switch(k){
 			case 0: // Enter
-				if(skipCheck()) return;
+				if(skipCheck()) 
+					return;
 
 				MusicBeatState.changeState(new PlayState([ songs[curSel] ], curDifficulty, -1));
-				if( FlxG.sound.music.playing)
-					FlxG.sound.music.stop();
+				FlxG.sound.music.stop();
+
+				if (vocals.playing)
+					vocals.stop();
 
 				return;
 			case 1: // SpaceUK
@@ -113,7 +114,8 @@ class FreeplayState extends MenuTemplate
 					FlxG.sound.playMusic(Paths.lMusic('freakyMenu'));
 					FlxG.sound.music.time = prevTime;
 
-					if(vocals == null) return;
+					if(vocals == null) 
+						return;
 					
 					vocals.stop();
 					vocals.destroy();
@@ -123,6 +125,7 @@ class FreeplayState extends MenuTemplate
 				}
 
 				prevTime = FlxG.sound.music.time;
+				
 				vocals.loadEmbedded (Paths.playableSong(songs[curSel], true));
 				FlxG.sound.playMusic(Paths.playableSong(songs[curSel]));
 				vocals.play();

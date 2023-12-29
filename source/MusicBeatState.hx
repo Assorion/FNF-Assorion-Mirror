@@ -81,7 +81,7 @@ class MusicBeatState extends FlxUIState
 
 		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
 		
-		if(oldStep != curStep && curStep >= 0){
+		if(oldStep != curStep && curStep >= -1){
 			oldStep = curStep;
 			stepHit();
 		}

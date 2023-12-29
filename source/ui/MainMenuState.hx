@@ -43,10 +43,10 @@ class MainMenuState extends MusicBeatState
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.antialiasing = Settings.pr.antialiasing;
-		bg.color = FlxColor.fromRGB(255, 232, 110);
+		bg.color  = FlxColor.fromRGB(255, 232, 110);
+		menuItems = new FlxTypedGroup<FlxSprite>();
 
 		camFollow = new FlxObject(0, 0, 1, 1);
-		menuItems = new FlxTypedGroup<FlxSprite>();
 
 		add(bg);
 		add(menuItems);
@@ -75,6 +75,7 @@ class MainMenuState extends MusicBeatState
 			versionNumber.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionNumber);
 
+		// so everything updates right!
 		var o:Int = curSelected;
 		curSelected = 0;
 		changeItem(o);
@@ -136,6 +137,7 @@ class MainMenuState extends MusicBeatState
 			skipTrans();
 			return;
 		}
+		
 		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
 		selectedSomethin = true;
 
