@@ -170,7 +170,7 @@ class ChartingState extends MusicBeatState {
         vocals.pause();
     }
     public inline function changeSec(changeTo:Int){
-        curSec = CoolUtil.boundTo(changeTo, 0, song.notes.length + 1);
+        curSec = CoolUtil.intBoundTo(changeTo, 0, song.notes.length + 1);
         expandCheck();
         reloadNotes();
         if(inSecUI)
@@ -295,7 +295,7 @@ class ChartingState extends MusicBeatState {
 
         var T:Int = key.deepCheck([ 
             Binds.UI_BACK, 
-            Binds.UI_ACCEPT, 
+            [FlxKey.ESCAPE, FlxKey.ENTER], 
             [FlxKey.SPACE],
             Binds.UI_L, 
             Binds.UI_R, 
@@ -353,7 +353,7 @@ class ChartingState extends MusicBeatState {
                 return;
             case 5, 6:
                 curNoteType += ((T - 5) * 2) - 1;
-                curNoteType = CoolUtil.boundTo(curNoteType, 0, Note.possibleTypes.length - 1);
+                curNoteType = CoolUtil.intBoundTo(curNoteType, 0, Note.possibleTypes.length - 1);
 
                 for(nt in selectedNotes)
                     nt[4] = curNoteType;
@@ -362,13 +362,13 @@ class ChartingState extends MusicBeatState {
                 return;
             case 7, 8:
                 for(nt in selectedNotes)
-                    nt[2] = CoolUtil.boundTo(nt[2] + ((T - 7) * 2 - 1), 0, 1000);
+                    nt[2] = CoolUtil.intBoundTo(nt[2] + ((T - 7) * 2 - 1), 0, 1000);
     
                 reloadNotes();
                 return;
             case 9, 10:
                 curZoom += ((T - 9) * 2) - 1;
-                curZoom = CoolUtil.boundTo(curZoom, 0, 8);
+                curZoom = CoolUtil.intBoundTo(curZoom, 0, 8);
 
                 makeGrid();
                 reloadNotes();
@@ -818,7 +818,7 @@ class ChartingState extends MusicBeatState {
             makeGrid();
         }, '-');
         var playLenBox:ChartUI_InputBox = new ChartUI_InputBox(0, 550, 90, 30, Std.string(song.playLength), function(ch:String){
-            var val = CoolUtil.boundTo(Std.parseInt(ch), 1, CoolUtil.boundTo(song.characters.length, 1, 6));
+            var val = CoolUtil.intBoundTo(Std.parseInt(ch), 1, CoolUtil.intBoundTo(song.characters.length, 1, 6));
 
             song.playLength = val;
             
@@ -826,7 +826,7 @@ class ChartingState extends MusicBeatState {
             makeGrid();
         });
         var playerBox:ChartUI_InputBox = new ChartUI_InputBox(0, 515, 90, 30, Std.string(song.activePlayer), function(ch:String){
-            song.activePlayer = CoolUtil.boundTo(Std.parseInt(ch), 0, song.characters.length - 1, true);
+            song.activePlayer = CoolUtil.intBoundTo(Std.parseInt(ch), 0, song.characters.length - 1);
         });
 
         uiElements.add(addButton);
@@ -837,7 +837,7 @@ class ChartingState extends MusicBeatState {
         genText(playLenBox, 'Character Chart List');
         genText(playerBox, 'Main Player');
 
-        for(i in 0...CoolUtil.boundTo(song.characters.length, 1, 13))
+        for(i in 0...CoolUtil.intBoundTo(song.characters.length, 1, 13))
             charUIGenPlayerDrop(i);
 
     }
@@ -849,7 +849,7 @@ class ChartingState extends MusicBeatState {
         inSecUI = true;
 
         var cameraBox:ChartUI_InputBox = new ChartUI_InputBox(0, 0, 120, 30, Std.string(song.notes[curSec].cameraFacing), function(ch:String){
-            song.notes[curSec].cameraFacing = CoolUtil.boundTo(Std.parseInt(ch), 0, song.characters.length - 1);
+            song.notes[curSec].cameraFacing = CoolUtil.intBoundTo(Std.parseInt(ch), 0, song.characters.length - 1);
         });
         var clBox:ChartUI_InputBox = new ChartUI_InputBox(0, 40, 120, 30, Std.string(copyLastInt), function(ch:String){
             copyLastInt = Std.parseInt(ch);

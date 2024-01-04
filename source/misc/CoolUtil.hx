@@ -37,14 +37,20 @@ class CoolUtil
 	}
 	public static var textFileLines:String->?String->Array<String> = ncTFL;
 
-	public static function boundTo(val:Float, min:Float, max:Float, retInt:Bool = false):Dynamic
+	// Not clean, but it's faster.
+	public static function boundTo(val:Float, min:Float, max:Float):Float
 	{
-		if(val < min) val = min;
-		if(val > max) val = max;
-		if(retInt) return Math.round(val);
+		if(val < min) 
+			return min;
+		
+		if(val > max) 
+			return max;
 
 		return val;
 	}
+	public static inline function intBoundTo(val:Float, min:Float, max:Float):Int
+		return Math.round(boundTo(val, min, max));
+
 	public inline static function cfArray(array:Array<Int>):Int
         return FlxColor.fromRGB(array[0], array[1], array[2]);
 

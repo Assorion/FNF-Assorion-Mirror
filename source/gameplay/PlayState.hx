@@ -282,7 +282,7 @@ class PlayState extends MusicBeatState
 			var time:Float = fNote[0];
 			var noteData :Int = Std.int(fNote[1]);
 			var susLength:Int = Std.int(fNote[2]);
-			var player   :Int = CoolUtil.boundTo(Std.int(fNote[3]), 0, SONG.playLength - 1);
+			var player   :Int = CoolUtil.intBoundTo(Std.int(fNote[3]), 0, SONG.playLength - 1);
 			var ntype    :Int = Std.int(fNote[4]);
 
 			var newNote = new Note(time, noteData, ntype, false, false);
@@ -421,7 +421,7 @@ class PlayState extends MusicBeatState
 			// prevent the Int from being null, if it is it will just be 0.
 			var tFace:Int = sec != null ? cast(sec.cameraFacing, Int) : 0;
 
-			var char = allCharacters[CoolUtil.boundTo(tFace, 0, SONG.playLength - 1)];
+			var char = allCharacters[CoolUtil.intBoundTo(tFace, 0, SONG.playLength - 1)];
 			followPos.x = char.getMidpoint().x + char.camOffset[0];
 			followPos.y = char.getMidpoint().y + char.camOffset[1];
 		}
@@ -437,7 +437,7 @@ class PlayState extends MusicBeatState
 		super.stepHit();
 
 		if(FlxG.sound.music.playing)
-			songTime = ((Conductor.songPosition * Conductor.songDiv) + songTime) * 0.5;
+			songTime = ((Conductor.songPosition * 3 * Conductor.songDiv) + songTime) * 0.25;
 	}
 
 	// # Update stats
@@ -446,12 +446,12 @@ class PlayState extends MusicBeatState
 	private static inline var iconSpacing:Int = 52;
 	public function updateHealth(change:Int){
 		var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC', 'SDCB', 'Clear'][fcValue];
-		var accuracyCount:Float = CoolUtil.boundTo(Math.floor(songScore / ((hitCount + missCount) * 3.5)), 0, 100);
+		var accuracyCount:Float = CoolUtil.boundTo(Math.floor((songScore * 100) / ((hitCount + missCount) * 3.5)) * 0.01, 0, 100);
 
 		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Accuracy: $accuracyCount% - $fcText | Score: $songScore';
 		scoreTxt.screenCenter(X);
 
-		health = CoolUtil.boundTo(health + change, 0, 100, true);
+		health = CoolUtil.intBoundTo(health + change, 0, 100);
 		healthBar.percent = health;
 
 		var calc = (0 - ((health - 50) * 0.01)) * healthBar.width;

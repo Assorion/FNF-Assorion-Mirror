@@ -38,9 +38,9 @@ class StoryMenuState extends MenuTemplate
 		}
 	];
 
-	var trackList:FlxText;
 	public var weekBG:FlxSprite;
 	public var topText:FlxText;
+	public var trackList:FlxText;
 
 	var arrowSpr1:StaticSprite;
 	var arrowSpr2:StaticSprite;
@@ -50,9 +50,10 @@ class StoryMenuState extends MenuTemplate
 	public static inline var whiteColour:Int  = 0xFFFFFFFF;
 
 	override function create(){
+		config(0xFF000000, 1);
 		super.create();
 		MusicBeatState.correctMusic();
-		background.color = 0xFF000000;
+		//background.color = 0xFF000000;
 
 		remove(background);
 
@@ -107,12 +108,14 @@ class StoryMenuState extends MenuTemplate
 	override function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		if(!key.hardCheck(Binds.UI_ACCEPT)) return;
+		if(!key.hardCheck(Binds.UI_ACCEPT)) 
+			return;
 
 		if(leaving){
 			skipTrans();
 			return;
 		}
+
 		leaving = true;
 
 		// can't just use the songs array outright.
@@ -128,9 +131,11 @@ class StoryMenuState extends MenuTemplate
 			postEvent(i / 8, function(){
 				arrGroup[curSel].obj.color = (i & 0x01 == 0 ? whiteColour : selectColour);
 			});
+
 		// SWITCH!
 		postEvent(1, function(){
 			MusicBeatState.changeState(tP);
+			
 			if (FlxG.sound.music.playing)
 				FlxG.sound.music.stop();
 		});

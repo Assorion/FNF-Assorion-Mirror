@@ -105,8 +105,7 @@ class FreeplayState extends MenuTemplate
 
 				if (vocals.playing)
 					vocals.stop();
-
-				return;
+				
 			case 1: // SpaceUK
 				playing = !playing;
 
@@ -130,7 +129,6 @@ class FreeplayState extends MenuTemplate
 				FlxG.sound.playMusic(Paths.playableSong(songs[curSel]));
 				vocals.play();
 				FlxG.sound.list.add(vocals);
-				return;
 		}
 	}
 }

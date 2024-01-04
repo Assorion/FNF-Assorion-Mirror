@@ -55,21 +55,18 @@ class HistoryState extends MenuTemplate {
 		sAdd(descText);
     }
     override function keyHit(ev:KeyboardEvent){
-        if(dontUpdate) return;
+        if(dontUpdate) 
+            return;
 
         super.keyHit(ev);
 
-        if(!key.hardCheck(Binds.UI_ACCEPT)) return;
-
-        openSubState(new HistorySubstate(contents[curSel], this));
+        if(key.hardCheck(Binds.UI_ACCEPT))
+            openSubState(new HistorySubstate(contents[curSel], this));
     }
 
-    override public function exitFunc(){
-		if(skipCheck()) 
-            return;
-
-        MusicBeatState.changeState(new OptionsState());
-	}
+    override public function exitFunc()
+        if(!skipCheck())
+            MusicBeatState.changeState(new OptionsState());
 
     override public function update(elapsed:Float)
         if(!dontUpdate)

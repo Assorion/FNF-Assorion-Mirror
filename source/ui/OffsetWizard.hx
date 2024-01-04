@@ -5,16 +5,15 @@ import flixel.util.FlxColor;
 import flixel.text.FlxText;
 
 class OffsetWizard extends MusicBeatState{
+    public var curOffset:Float = 0;
+    public var prevOffset:Int = 0;
+    public var offsetsArray:Array<Float> = [];
+
     var beatText:FlxText;
     var offsetText:FlxText;
 
     var songTime:Float = 0;
     var rootBeat:Int = 0;
-
-    var offsetsArray:Array<Float> = [];
-    
-    public var curOffset:Float = 0;
-    public var prevOffset:Int = 0;
 
     override public function create(){
         prevOffset = Settings.pr.audio_offset;
@@ -59,7 +58,7 @@ class OffsetWizard extends MusicBeatState{
         if(beatText.alpha > 0)
             beatText.alpha -= elapsed * 2;
 
-        songTime += (elapsed * 1000) * Conductor.songDiv;
+        songTime += elapsed * 1000 * Conductor.songDiv;
 
         var pfb:Int = fakeBeat;
         fakeBeat = Math.floor((FlxG.sound.music.time - curOffset - 10) / Conductor.crochet);

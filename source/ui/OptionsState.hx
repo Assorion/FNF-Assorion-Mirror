@@ -147,23 +147,23 @@ class OptionsState extends MenuTemplate
 		var atg:Alphabet = cast arrGroup[(curSel * 2) + 1].obj;
 		switch(optionSub[curSub][curSel]){
 			case 'start_volume':
-				Settings.pr.start_volume = CoolUtil.boundTo(Settings.pr.start_volume + (ch * 10), 0, 100, true);
+				Settings.pr.start_volume = CoolUtil.intBoundTo(Settings.pr.start_volume + (ch * 10), 0, 100);
 				atg.text = Std.string(Settings.pr.start_volume);
 
 			// gameplay.
 			case 'audio_offset':
-				Settings.pr.audio_offset = CoolUtil.boundTo(Settings.pr.audio_offset + ch, 0, 300, true);
+				Settings.pr.audio_offset = CoolUtil.intBoundTo(Settings.pr.audio_offset + ch, 0, 300);
 				atg.text = Std.string(Settings.pr.audio_offset);
 			case 'input_offset':
-				Settings.pr.input_offset = CoolUtil.boundTo(Settings.pr.input_offset + ch, 0, 300, true);
+				Settings.pr.input_offset = CoolUtil.intBoundTo(Settings.pr.input_offset + ch, 0, 300);
 				atg.text = Std.string(Settings.pr.input_offset);
 			case 'miss_health':
-				Settings.pr.miss_health = CoolUtil.boundTo(Settings.pr.miss_health + ch, 10, 50, true);
+				Settings.pr.miss_health = CoolUtil.intBoundTo(Settings.pr.miss_health + ch, 10, 50);
 				atg.text = Std.string(Settings.pr.miss_health);
 
 			// visuals
 			case 'framerate':
-				Settings.pr.framerate = CoolUtil.boundTo(Settings.pr.framerate + (ch * 10), 10, 500, true);
+				Settings.pr.framerate = CoolUtil.intBoundTo(Settings.pr.framerate + (ch * 10), 10, 500);
 				atg.text = Std.string(Settings.pr.framerate);
 				Settings.apply();
 		}

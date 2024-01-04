@@ -101,10 +101,8 @@ class MainMenuState extends MusicBeatState
 		switch(k){
 			case 0, 1:
 				changeItem((k * 2) - 1);
-				return;
 			case 2:
 				changeState();
-				return;
 			case 3:
 				if(selectedSomethin){
 					for(i in 0...optionList.length){
@@ -125,8 +123,6 @@ class MainMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
 				MusicBeatState.changeState(new TitleState());
 				leaving = true;
-	
-				return;
 		}
 	}
 

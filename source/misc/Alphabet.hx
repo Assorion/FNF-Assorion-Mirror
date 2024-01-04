@@ -24,24 +24,25 @@ class Alphabet extends FlxSpriteGroup
 	}
 
 	public function addText()
-		for (character in text.split(''))
-		{
-			if(' -_'.contains(character)) {
-				fWidth += 40;
-				continue;
-			}
-
-			if (!AlphaCharacter.completeList.contains(character)) continue;
-
-			// # add text
-
-			var letter:AlphaCharacter = new AlphaCharacter(fWidth, 0, character);
-
-			isBold ? letter.createBold() : letter.createLetter();
-			add(letter);
-
-			fWidth += letter.width;
+	for (character in text.split(''))
+	{
+		if(' -_'.contains(character)) {
+			fWidth += 40;
+			continue;
 		}
+
+		if (!AlphaCharacter.completeList.contains(character)) 
+			continue;
+
+		// # add text
+
+		var letter:AlphaCharacter = new AlphaCharacter(fWidth, 0, character);
+
+		isBold ? letter.createBold() : letter.createLetter();
+		add(letter);
+
+		fWidth += letter.width;
+	}
 
 	private function set_text(value:String){
 		text = value.toLowerCase();
