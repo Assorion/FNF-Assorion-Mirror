@@ -39,23 +39,27 @@ jobs:
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
         
-      # Tell HXCPP to compile with MinGW. Then to rename bin to bin32
+      # Tell HXCPP to compile with MinGW.
       - name: Compile 64-Bit Version
-        run: | 
-          haxelib run lime build windows -D HXCPP_MINGW -release --app-version="4.0.0-${{ github.run_id}}"
-          mv export/release/windows/bin export/release/windows/bin64
-        shell: bash
+        run: haxelib run lime build windows -D HXCPP_MINGW -release --app-version="4.0.0-${{ github.run_id}}"
 
-      # Make a 32-Bit build.
-      - name: Compile 32-Bit Version
-        run: haxelib run lime build windows -D HXCPP_MINGW -32 -release --app-version="4.0.0-${{ github.run_id}}"
-      
-      # Provide the file for download
+      # Provide the 64-Bit file for download
       - name: Publish x64 Artifact
         uses: actions/upload-artifact@main
         with:
           name: MinGW-Win32-x64-Build
-          path: export/release/windows/bin64
+          path: export/release/windows/bin
+
+      # Replace MinGW with 32-bit version, and compile 32-Bit version.
+      - name: Replace MinGW
+        run: |
+          cd /d C:\
+          rd /s /q MinGW
+          copy mingw32 MinGW
+        shell: cmd
+
+      - name: Compile 32-Bit Version
+        run: haxelib run lime build windows -D HXCPP_MINGW -32 -D HXCPP_M32 -release --app-version="4.0.0-${{ github.run_id}}"
         
       # Provide 32-bit version for download.
       - name: Publish x86 Artifact
