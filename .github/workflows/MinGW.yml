@@ -1,5 +1,7 @@
 name: MinGW
 
+# You can setup workflows to run automatically on specific branches.
+# Read the HTML workflow to understand that.
 on:
   workflow_dispatch:
 
@@ -11,7 +13,6 @@ jobs:
       - name: Setup MinGW
         run: |
           cd /d C:\
-          dir /b
           md MinGW
           copy mingw64 MinGW
         shell: cmd
@@ -38,23 +39,37 @@ jobs:
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
         
-      # Tell HXCPP to compile with MinGW.
-      - name: Compilation
-        run: haxelib run lime build windows -D HXCPP_MINGW -release --app-version="4.0.0-${{ github.run_id}}"
+      # Tell HXCPP to compile with MinGW. Then to rename bin to bin32
+      - name: Compile 64-Bit Version
+        run: | 
+          haxelib run lime build windows -D HXCPP_MINGW -release --app-version="4.0.0-${{ github.run_id}}"
+          mv export/release/windows/bin export/release/windows/bin64
+        shell: bash
+
+      # Make a 32-Bit build.
+      - name: Compile 32-Bit Version
+        run: haxelib run lime build windows -D HXCPP_MINGW -32 -release --app-version="4.0.0-${{ github.run_id}}"
       
       # Provide the file for download
-      - name: Publish Artifact
+      - name: Publish x64 Artifact
         uses: actions/upload-artifact@main
         with:
           name: MinGW-Win32-x64-Build
+          path: export/release/windows/bin64
+        
+      # Provide 32-bit version for download.
+      - name: Publish x86 Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: MinGW-Win32-x86-Build
           path: export/release/windows/bin
 
-  Build-Download: 
-    name: Build-Download
-    runs-on: windows-latest
-    needs: MinGW-Win32-x64-Build
-    steps:
-    - name: Download Artifact 
-      uses: actions/download-artifact@main
-      with: 
-        name: MinGW-Win32-x64-Build
+  #Build-64-Download: 
+  #  name: Build-Download
+  #  runs-on: windows-latest
+  #  needs: MinGW-Win32-x64-Build
+  #  steps:
+  #  - name: Download Artifact 
+  #    uses: actions/download-artifact@main
+  #    with: 
+  #      name: MinGW-Win32-x64-Build
