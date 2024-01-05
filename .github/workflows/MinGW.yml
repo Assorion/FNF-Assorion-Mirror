@@ -17,7 +17,7 @@ jobs:
           copy mingw64 MinGW
         shell: cmd
 
-      # Install Haxe
+      # Install Haxe. 4.1.5 since 4.3.2 breaks MinGW
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
         with:
@@ -49,31 +49,3 @@ jobs:
         with:
           name: MinGW-Win32-x64-Build
           path: export/release/windows/bin
-
-      # Replace MinGW with 32-bit version, and compile 32-Bit version.
-      - name: Replace MinGW
-        run: |
-          cd /d C:\
-          rd /s /q MinGW
-          copy mingw32 MinGW
-        shell: cmd
-
-      - name: Compile 32-Bit Version
-        run: haxelib run lime build windows -D HXCPP_MINGW -32 -D HXCPP_M32 -release --app-version="4.0.0-${{ github.run_id}}"
-        
-      # Provide 32-bit version for download.
-      - name: Publish x86 Artifact
-        uses: actions/upload-artifact@main
-        with:
-          name: MinGW-Win32-x86-Build
-          path: export/release/windows/bin
-
-  #Build-64-Download: 
-  #  name: Build-Download
-  #  runs-on: windows-latest
-  #  needs: MinGW-Win32-x64-Build
-  #  steps:
-  #  - name: Download Artifact 
-  #    uses: actions/download-artifact@main
-  #    with: 
-  #      name: MinGW-Win32-x64-Build
