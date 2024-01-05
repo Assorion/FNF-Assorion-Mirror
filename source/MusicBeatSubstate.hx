@@ -62,11 +62,12 @@ class MusicBeatSubstate extends FlxSubState
 
 		super.update(elapsed);
 
+		var cTime = MusicBeatState.curTime();
 		var i = -1;
 		while(++i < events.length){
 			var e = events[i];
 
-			if(MusicBeatState.curTime() < e.endTime)
+			if(cTime < e.endTime)
 				return;
 
 			e.exeFunc();
@@ -75,13 +76,14 @@ class MusicBeatSubstate extends FlxSubState
 	}
 
 	public function stepHit():Void
-	if (curStep - ((curStep >> 2) << 2) == 0){
-		curBeat = curStep >> 2;
-		beatHit();
+	{
+		var tBeat:Int = curStep >> 2;
+
+		if (curStep - (tBeat << 2) == 0){
+			curBeat = tBeat;
+			beatHit();
+		}
 	}
 
-	public function beatHit():Void {
-		//if(alignCamera)
-		//	FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
-	}
+	public function beatHit():Void {}
 }

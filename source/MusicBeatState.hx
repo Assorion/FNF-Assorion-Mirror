@@ -88,11 +88,12 @@ class MusicBeatState extends FlxUIState
 
 		super.update(elapsed);
 
+		var cTime = curTime();
 		var i = -1;
 		while(++i < events.length){
 			var e = events[i];
 
-			if(curTime() < e.endTime) continue;
+			if(cTime < e.endTime) continue;
 
 			e.exeFunc();
 			events.splice(i--, 1);
@@ -101,9 +102,13 @@ class MusicBeatState extends FlxUIState
 
 	// GREAT! Now this has no chance of working with odd time signatures...
 	public function stepHit():Void
-	if (curStep - ((curStep >> 2) << 2) == 0){
-		curBeat = curStep >> 2;
-		beatHit();
+	{
+		var tBeat:Int = curStep >> 2;
+
+		if (curStep - (tBeat << 2) == 0){
+			curBeat = tBeat;
+			beatHit();
+		}
 	}
 	public function beatHit():Void {}
 
