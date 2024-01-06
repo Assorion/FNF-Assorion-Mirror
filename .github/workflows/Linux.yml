@@ -1,17 +1,22 @@
 name: Linux 
 
+# You can setup workflows to run automatically on specific branches.
+# Read the HTML workflow to understand that.
 on:
   workflow_dispatch:
 
 jobs:
-  Linux-Build:
+  Linux-x64-Build:
     runs-on: ubuntu-latest
     steps:
+    # Installing Haxe.
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.2
-          
+
+    # Obtaining Haxe Libraries for compilation.
+    # This uses a custom version of HXCPP with some optimizations.
       - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
@@ -21,25 +26,18 @@ jobs:
           haxelib install flixel 5.2.2 
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
-          
+
+    # Random Github BS as always, just keep this here.   
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
 
+    # Compilation of the source code.
       - name: Compilation
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
 
+    # Provides the 64-Bit file for download.
       - name: Publish Artifact
         uses: actions/upload-artifact@main
         with:
-          name: Linux-Build
+          name: Linux-x64-Build
           path: 'export/release/linux/bin'
-
-  Build-Download: 
-    name: Build-Download
-    runs-on: ubuntu-latest
-    needs: Linux-Build
-    steps:
-    - name: Download Artifact 
-      uses: actions/download-artifact@main
-      with: 
-        name: Linux-Build
