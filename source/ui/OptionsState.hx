@@ -78,6 +78,7 @@ class OptionsState extends MenuTemplate
 	override function create()
 	{
 		config(0xFFea71fd, 1);
+		MusicBeatState.correctMusic();
 		super.create();
 
 		bottomBlack = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
