@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Linux-x64-Build:
+  Linux-Build:
     runs-on: ubuntu-latest
     steps:
     # Installing Haxe.
@@ -31,8 +31,8 @@ jobs:
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
 
-    # Compilation of the source code.
-      - name: Compilation
+    # Compilation of the source code. x64
+      - name: Compilation 64-Bit
         run: haxelib run lime build Project.xml linux -release --app-version="4.0.0-${{ github.run_id}}"
 
     # Provides the 64-Bit file for download.
@@ -40,4 +40,15 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: Linux-x64-Build
+          path: 'export/release/linux/bin'
+      
+    # Compilation of the source code. x86
+      - name: Compilation 32-Bit
+        run: haxelib run lime build Project.xml linux -32 -release --app-version="4.0.0-${{ github.run_id}}"
+
+    # Provides the 32-Bit file for download.
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: Linux-x86-Build
           path: 'export/release/linux/bin'
