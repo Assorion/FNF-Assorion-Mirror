@@ -1,5 +1,7 @@
 name: MacOS 
 
+# You can setup workflows to run automatically on specific branches.
+# Read the HTML workflow to understand that.
 on:
   workflow_dispatch:
 
@@ -7,11 +9,13 @@ jobs:
   MacOS-Build:
     runs-on: macOS-latest
     steps:
+    # Installing Haxe.
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.2
-          
+      
+    # Obtaining Haxe Libraries for compilation.       
       - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
@@ -21,24 +25,18 @@ jobs:
           haxelib install flixel 5.2.2 
           haxelib install flixel-ui 2.5.0
           haxelib install flixel-addons 3.0.2
+
+     # Random Github BS as always, just keep this here.
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
 
+     # Compilation of the source code.
       - name: Compilation
         run:  haxelib run lime build mac -release --app-version="4.0.0-${{ github.run_id}}"
 
+     # Provide the Build file for download.
       - name: Publish Artifact
         uses: actions/upload-artifact@main
         with:
           name: MacOS-Build
           path: 'export/release/macos/bin'
-
-  Build-Download: 
-    name: Build-Download
-    runs-on: macOS-latest
-    needs: MacOS-Build
-    steps:
-    - name: Download Artifact 
-      uses: actions/download-artifact@main
-      with: 
-        name: MacOS-Build
