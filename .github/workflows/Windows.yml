@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Win32-MinGW-x64-Build:
+  Windows-Build:
     runs-on: windows-latest
     steps:
     # Use the workflow in-built MinGW version.
@@ -30,6 +30,8 @@ jobs:
         run: |
           haxelib setup C:/haxelib
           haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
+          haxelib install hxcpp 4.3.2
+          haxelib set hxcpp git
           haxelib install lime 7.9.0
           haxelib install openfl 9.2.2
           haxelib install flixel 4.9.0 
@@ -49,5 +51,19 @@ jobs:
       - name: Publish x64 Artifact
         uses: actions/upload-artifact@main
         with:
-          name: Win32-MinGW-x64-Build
+          name: Windows-x64
           path: export/release/windows/bin
+      
+    # Compilation of the game using Clang for 32-bit version. (MinGW doesn't seem to work.)
+      - name: Compile 32-Bit Version
+        run: |
+          haxelib set hxcpp 4.3.2
+          haxelib run lime build windows -32 -release --app-version="4.0.0-${{ github.run_id}}"
+
+    # Provides the 32-Bit file for download.
+      - name: Publish x86 Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: Windows-x86
+          path: export/release/windows/bin
+
