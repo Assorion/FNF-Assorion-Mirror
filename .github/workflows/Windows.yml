@@ -9,7 +9,7 @@ jobs:
   Win32-MinGW-x64-Build:
     runs-on: windows-latest
     steps:
-      # Use the workflow in-built MinGW version.
+    # Use the workflow in-built MinGW version.
       - name: Setup MinGW
         run: |
           cd /d C:\
@@ -17,13 +17,15 @@ jobs:
           copy mingw64 MinGW
         shell: cmd
 
-      # Install Haxe. 4.1.5 since 4.3.2 breaks MinGW
+    # Install Haxe. 
+    # Uses 4.1.5 since 4.3.2 breaks MinGW
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.1.5
       
-      # Get Haxe libraries. We are using a custom version of HXCPP with some optimizations.
+    # Obtaining Haxe Libraries for compilation.
+    # This uses a custom version of HXCPP with some optimizations.
       - name: Install Haxelib
         run: |
           haxelib setup C:/haxelib
@@ -35,15 +37,15 @@ jobs:
           haxelib install flixel-addons 2.7.0
         shell: cmd
 
-      # Random Github BS as always, just keep this here.
+    # Random Github BS as always, just keep this here.
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
         
-      # Tell HXCPP to compile with MinGW.
+    # Compilation of the source code with HXCPP & MinGW.
       - name: Compile 64-Bit Version
         run: haxelib run lime build windows -D HXCPP_MINGW -release --app-version="4.0.0-${{ github.run_id}}"
 
-      # Provide the 64-Bit file for download
+    # Provides the 64-Bit file for download.
       - name: Publish x64 Artifact
         uses: actions/upload-artifact@main
         with:
