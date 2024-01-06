@@ -2,8 +2,8 @@ package misc;
 
 #if !debug @:noDebug #end
 class Binds {
-    // to be clear this is just for storing binds.
-    // the checks HAVE to be implemented in the state itself.
+    // To be clear this is just for storing binds.
+    // The checks HAVE to be implemented by the state itself.
 
     public static var NOTE_LEFT :Array<Int> = [];
     public static var NOTE_DOWN :Array<Int> = [];
