@@ -1,4 +1,4 @@
-name: MinGW
+name: Windows
 
 # You can setup workflows to run automatically on specific branches.
 # Read the HTML workflow to understand that.
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  MinGW-Win32-x64-Build:
+  Win32-MinGW-x64-Build:
     runs-on: windows-latest
     steps:
       # Use the workflow in-built MinGW version.
@@ -47,5 +47,5 @@ jobs:
       - name: Publish x64 Artifact
         uses: actions/upload-artifact@main
         with:
-          name: MinGW-Win32-x64-Build
+          name: Win32-MinGW-x64-Build
           path: export/release/windows/bin
