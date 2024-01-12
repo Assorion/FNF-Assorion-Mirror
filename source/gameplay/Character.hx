@@ -38,7 +38,7 @@ class Character extends FlxSprite
 	}
 
 	public function addAnimationTextFile(){
-		var lines:Array<String> = CoolUtil.textFileLines('characterLoader');
+		var lines:Array<String> = Paths.lLines('characterLoader');
 
 		for(i in 0...lines.length){
 			if(lines[i].trim().startsWith('#')) continue;

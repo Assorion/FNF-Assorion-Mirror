@@ -72,13 +72,14 @@ class NewTransition extends FlxSubState {
 
     /////////////////////////////////
 
-    public static function skip(){
+    public static function skip():Bool
+    {
         if(activeTransition == null) 
-            return;
+            return false;
 
         skippedLast = true;
         activeTransition.transInComplete();
-        
+        return true;
     }
 
     public static function switchState(target:FlxState){

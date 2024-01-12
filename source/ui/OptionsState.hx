@@ -77,8 +77,9 @@ class OptionsState extends MenuTemplate
 
 	override function create()
 	{
-		config(0xFFea71fd, 1);
-		MusicBeatState.correctMusic();
+		columns = 1;
+		addBG(0xFFea71fd);
+		correctMusic();
 		super.create();
 
 		bottomBlack = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
@@ -95,8 +96,7 @@ class OptionsState extends MenuTemplate
 	
 	public function createNewList(?appendOption:Bool = false){
 		clearEverything();
-
-		splitNumb = appendOption ? 2 : 1;
+		columns = appendOption ? 2 : 1;
 
 		for(i in 0...optionSub[curSub].length){
 			pushObject(new Alphabet(0, (60 * i), optionSub[curSub][i], true));
@@ -122,6 +122,7 @@ class OptionsState extends MenuTemplate
 
 			pushObject(new Alphabet(0, (60 * i), optionStr, true));
 		}
+
 		changeSelection();
 	}
 
@@ -173,9 +174,7 @@ class OptionsState extends MenuTemplate
 
 	// this is where you add your boolean or toggleable options
 	override public function keyHit(ev:KeyboardEvent){
-		super.keyHit(ev);
-
-		if(!key.hardCheck(Binds.UI_ACCEPT)) return;
+		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) return;
 
 		switch(optionSub[curSub][curSel]){
 			case 'basic':
@@ -188,11 +187,11 @@ class OptionsState extends MenuTemplate
 				curSel = 0;
 				curSub = 3;
 			case 'controls':
-				if(skipCheck()) return;
+				if(NewTransition.skip()) return;
 				MusicBeatState.changeState(new ControlsState());
 				return;
 			case 'changelog':
-				if(skipCheck()) return;
+				if(NewTransition.skip()) return;
 				MusicBeatState.changeState(new HistoryState());
 				return;
 
@@ -212,7 +211,7 @@ class OptionsState extends MenuTemplate
 
 			// gameplay
 			case 'audio_offset':
-				if(skipCheck()) return;
+				if(NewTransition.skip()) return;
 				MusicBeatState.changeState(new OffsetWizard());
 				return;
 			case 'downscroll':

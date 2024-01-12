@@ -1,5 +1,6 @@
 package ui;
 
+import flixel.util.FlxColor;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.FlxG;
@@ -19,7 +20,7 @@ class HistoryState extends MenuTemplate {
 
     override function create()
     {
-        config(CoolUtil.cfArray([145, 113, 255]), 1);
+        addBG(FlxColor.fromRGB(145, 113, 255));
         super.create();
 
         var currentContent:Int = -1;
@@ -58,14 +59,12 @@ class HistoryState extends MenuTemplate {
         if(dontUpdate) 
             return;
 
-        super.keyHit(ev);
-
-        if(key.hardCheck(Binds.UI_ACCEPT))
+        if(ev.keyCode.hardCheck(Binds.UI_ACCEPT))
             openSubState(new HistorySubstate(contents[curSel], this));
     }
 
     override public function exitFunc()
-        if(!skipCheck())
+        if(!NewTransition.skip())
             MusicBeatState.changeState(new OptionsState());
 
     override public function update(elapsed:Float)
@@ -124,9 +123,7 @@ class HistorySubstate extends MusicBeatSubstate {
     }
 
     override public function keyHit(ev:KeyboardEvent){
-        super.keyHit(ev);
-
-        if(!key.hardCheck(Binds.UI_BACK)) return;
+        if(!ev.keyCode.hardCheck(Binds.UI_BACK)) return;
 
         leaving = true;
     }

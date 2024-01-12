@@ -1,5 +1,6 @@
 package gameplay;
 
+import MusicBeatState.MusicProperties;
 import flixel.util.FlxColor;
 
 typedef NoteType = {
@@ -38,7 +39,7 @@ class Note extends StaticSprite
 	public var strumTime:Float = 0;
 	public var isSustainNote:Bool = false;
 
-	public function new(strumTime:Float, data:Int, type:Int, ?sustainNote:Bool = false, ?isEnd:Bool = false)
+	public function new(strumTime:Float, data:Int, type:Int, ?sustainNote:Bool = false, ?isEnd:Bool = false, Conductor:MusicProperties)
 	{
 		super(0,-100);
 

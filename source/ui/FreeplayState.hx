@@ -29,7 +29,7 @@ class FreeplayState extends MenuTemplate
 	private var vocals:FlxSound;
 
 	private inline function readAndParseTextFile(){
-		var lines:Array<String> = CoolUtil.textFileLines('freeplaySonglist');
+		var lines:Array<String> = Paths.lLines('freeplaySonglist');
 
 		for(i in 0...lines.length){
 			var strArr = lines[i].split(':');
@@ -42,8 +42,8 @@ class FreeplayState extends MenuTemplate
 
 	override function create()
 	{
-		config(FlxColor.fromRGB(145, 113, 255), 1);
-		MusicBeatState.correctMusic();
+		addBG(FlxColor.fromRGB(145, 113, 255));
+		correctMusic();
 		super.create();
 
 		readAndParseTextFile();
@@ -92,12 +92,10 @@ class FreeplayState extends MenuTemplate
 	private var prevTime:Float = 0;
 	private var playing:Bool = true;
 	override public function keyHit(ev:KeyboardEvent){
-		super.keyHit(ev);
-
-		var k = key.deepCheck([Binds.UI_ACCEPT, [FlxKey.SPACE]]);
+		var k = ev.keyCode.deepCheck([Binds.UI_ACCEPT, [FlxKey.SPACE]]);
 		switch(k){
 			case 0: // Enter
-				if(skipCheck()) 
+				if(NewTransition.skip()) 
 					return;
 
 				MusicBeatState.changeState(new PlayState([ songs[curSel] ], curDifficulty, -1));

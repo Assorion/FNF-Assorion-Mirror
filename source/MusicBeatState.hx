@@ -1,5 +1,6 @@
 package;
 
+import ui.CustomChartUI.ChartUI_Generic;
 import flixel.FlxG;
 import flixel.FlxSubState;
 import flixel.FlxState;
@@ -13,12 +14,36 @@ typedef DelayedEvent = {
 	var exeFunc:Void->Void;
 }
 
+typedef MusicProperties = {
+	var bpm         :Float; // How fast the music is.
+	var crochet     :Float; // BPM but in miliseconds.
+	var stepCrochet :Float; // BPM Divided in 4
+	var songPosition:Float; // Milisecond point in the song.
+	var songDiv     :Float; // A multiplier from stepCrochet.
+}
+
 #if !debug @:noDebug #end
 class MusicBeatState extends FlxUIState
 {
+	// Moved conductor away from being a Class to a struct. The conductor did not deserve it's own class.
+	public static var music:MusicProperties;
+
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
+
+	public static function musicSet(BPM:Float)
+	{
+		var nsCrochet = (60 / BPM) * 250;
+
+		music = {
+			bpm: BPM,
+			crochet:     nsCrochet * 4,
+			stepCrochet: nsCrochet,
+			songPosition: -Settings.pr.audio_offset,
+			songDiv: 1 / nsCrochet
+		};
+	}
 
 	public static inline function curTime()
 		#if desktop
@@ -27,9 +52,9 @@ class MusicBeatState extends FlxUIState
 		return Date.now().getTime() * 0.001;
 		#end
 
-	public static inline function correctMusic()
+	public function correctMusic()
 	if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
-		Conductor.changeBPM(Paths.menuTempo);
+		musicSet(Paths.menuTempo);
 		FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
 	}
 
@@ -40,7 +65,6 @@ class MusicBeatState extends FlxUIState
 
 		persistentUpdate = true;
 		FlxG.camera.bgColor.alpha = 0;
-		Conductor.songPosition = -Settings.pr.audio_offset;
 
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHit);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP  , keyRel);
@@ -50,11 +74,8 @@ class MusicBeatState extends FlxUIState
 
 	// # new input thing.
 
-	public var key = 0;
-	public function keyHit(ev:KeyboardEvent)
-		key = ev.keyCode;
-	public function keyRel(ev:KeyboardEvent)
-		key = ev.keyCode;
+	public function keyHit(ev:KeyboardEvent){}
+	public function keyRel(ev:KeyboardEvent){}
 
 	override function destroy(){
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHit);
@@ -65,21 +86,20 @@ class MusicBeatState extends FlxUIState
 
 	// # handle a delayed event system.
 
-	private inline function postEvent(forward:Float, func:Void->Void){
-		events.push({
-			endTime: curTime() + forward,
-			exeFunc: func
-		});
-	}
+	private inline function postEvent(forward:Float, func:Void->Void)
+	events.push({
+		endTime: curTime() + forward,
+		exeFunc: func
+	});
 
 	//////////////////////////////////////
 
 	private var oldStep:Int = 0;
 	override function update(elapsed:Float)
 	{
-		Conductor.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
+		music.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
 
-		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
+		curStep = Math.floor(music.songPosition * music.songDiv);
 		
 		if(oldStep != curStep && curStep >= -1){
 			oldStep = curStep;
@@ -101,26 +121,22 @@ class MusicBeatState extends FlxUIState
 	}
 
 	// GREAT! Now this has no chance of working with odd time signatures...
+	// This should be documented in the Wiki. That will happen eventually.
 	public function stepHit():Void
 	{
 		var tBeat:Int = curStep >> 2;
 
 		if (curStep - (tBeat << 2) == 0){
-			curBeat = tBeat;
+			curBeat =  tBeat;
 			beatHit();
 		}
 	}
 	public function beatHit():Void {}
 
-	private inline function skipTrans(){
-		for(i in 0...events.length)
-			events[i].exeFunc();
+	private inline function execEvents()
+	for(i in 0...events.length)
+		events[i].exeFunc();
 
-		NewTransition.skip();
-	}
-
-	// # Meant to handle transitions.
-	// TODO: Re-write stuff so it doesn't rely on a depricated function (lol)
-
+	// Too much stuff relies on this function. Thus it must be separated out here.
 	public static var changeState:FlxState->Void = NewTransition.switchState;
 }

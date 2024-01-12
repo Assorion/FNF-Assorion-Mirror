@@ -18,18 +18,18 @@ import ui.MenuTemplate.MenuObject;
 #if !debug @:noDebug #end
 class PauseSubState extends MusicBeatSubstate
 {
-	public static var bdat:BitmapData;
+	public static var canvas:BitmapData;
 	public static var optionList:Array<String> = ['Resume Game', 'Restart Song', 'Toggle Botplay', 'Exit To Menu'];
 	
 	public var curSelected:Int = 0;
 	public var pauseText:FlxText;
-	var colour:Float = 255;
+	public var alphaTexts:Array<MenuObject> = [];
+
 	var gameSpr:StaticSprite;
 	var pauseMusic:FlxSound;
-	var ps:PlayState;
+	var pState:PlayState;
 
-	var alphaTexts:FlxTypedGroup<Alphabet>;
-	var trackThings:Array<MenuObject> = [];
+	public var activeTweens:Array<FlxTween> = [];
 
 	// quick helper function.
 	public static function exitToProperMenu(){
@@ -38,14 +38,17 @@ class PauseSubState extends MusicBeatSubstate
 	}
 	
 	// # create new empty background sprite
-	public static function newCanvas(f:Bool = false){
-		if(bdat == null || !Settings.pr.default_persist || f)
-			bdat = new BitmapData(1280, 720, true, 0);
+	public static function newCanvas(force:Bool = false){
+		if (canvas == null || !Settings.pr.default_persist || force)
+			canvas = new BitmapData(1280, 720, true, 0);
 	}
 
 	public function new(camera:FlxCamera, ps:PlayState)
 	{
 		super();
+
+		pState = ps;
+		pState.persistentDraw = false;
 
 		// music
 		pauseMusic = new FlxSound().loadEmbedded(Paths.lMusic('breakfast'), true, true);
@@ -60,35 +63,33 @@ class PauseSubState extends MusicBeatSubstate
 
 		newCanvas();
 		for(gcam in FlxG.cameras.list)
-			CoolUtil.copyCameraToData(bdat, gcam);
+			CoolUtil.copyCameraToData(canvas, gcam);
 
-		gameSpr = new StaticSprite(0,0).loadGraphic(bdat);
+		gameSpr = new StaticSprite(0,0).loadGraphic(canvas);
 		gameSpr.scrollFactor.set();
 		gameSpr.antialiasing = Settings.pr.antialiasing;
-
-		this.ps = ps;
-		ps.persistentDraw = false;
-
-		// text stuff
-		alphaTexts = new FlxTypedGroup<Alphabet>();
 		add(gameSpr);
-		add(alphaTexts);
+
+		// option stuff
 
 		for (i in 0...optionList.length)
 		{
 			var option:Alphabet = new Alphabet(0, (60 * i) + 30, optionList[i], true);
 			option.alpha = 0;
-			alphaTexts.add(option);
 
-			trackThings.push({
+			alphaTexts.push({
 				obj: null,
 				targetX: 0,
 				targetY: 0,
 				targetA: 1
 			});
 		}
+
+		////////////////////////////
+	
 		var bottomBlack:StaticSprite = new StaticSprite(0, camera.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
-		bottomBlack.alpha = 0.6;
+		bottomBlack.alpha = 0;
+
 		pauseText = new FlxText(5, camera.height - 25, 0, '', 20);
 		pauseText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
 		pauseText.alpha = 0;
@@ -98,6 +99,13 @@ class PauseSubState extends MusicBeatSubstate
 		changeSelection(0);
 		cameras = [camera];
 		updatePauseText();
+
+		// Tweens
+
+		activeTweens.push(FlxTween.tween( bottomBlack, {alpha: 0.6  }, 0.3));
+		activeTweens.push(FlxTween.tween( pauseText  , {alpha: 1    }, 0.3));
+		activeTweens.push(FlxTween.tween( pauseMusic , {volume: 0.5 },  4 ));
+		activeTweens.push(FlxTween.tween( this       , {colour: 120 }, 0.6));
 	}
 	private inline function updatePauseText(){
 		var coolString:String = 
@@ -109,80 +117,92 @@ class PauseSubState extends MusicBeatSubstate
 		pauseText.text = '$coolString$coolString$coolString';
 	}
 
+	private var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
-		super.keyHit(ev);
-
 		// ui movements.
-		var t:Int = key.deepCheck([Binds.UI_U, Binds.UI_D]);
+		var t:Int = ev.keyCode.deepCheck([Binds.UI_U, Binds.UI_D]);
 		if (t != -1){
 			changeSelection((t * 2) - 1);
 			return;
 		}
 
-		if(!key.hardCheck(Binds.UI_ACCEPT)) return;
+		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT) || leaving) 
+			return;
 
-		ps.persistentDraw = true;
 		switch(curSelected){
 			case 0:
-				pauseMusic.stop();
-				pauseMusic.destroy();
-				close();
+				leaving = true;
+
+				// Cancel active tweens if there are any.
+				for(i in 0...activeTweens.length)
+					if (activeTweens[i] != null)
+						activeTweens[i].cancel();
+				
+				// Animations.
+				for(i in 0...alphaTexts.length)
+					alphaTexts[i].targetA = 0;
+
+				FlxTween.tween(pauseText,  { alpha:  0   }, 0.15);
+				FlxTween.tween(pauseMusic, { volume: 0   }, 0.15);
+				FlxTween.tween(this,       { colour: 255 }, 0.15, {onComplete: 
+				// Closing
+				function(t:FlxTween){
+					pState.persistentDraw = true;
+					pauseMusic.stop();
+					pauseMusic.destroy();
+					close();
+				}});
+
 			case 1:
 				FlxG.resetState();
 			case 2:
-				ps.persistentDraw = false;
-
 				Settings.pr.botplay = !Settings.pr.botplay;
-				alphaTexts.members[curSelected].alpha = 0;
-				pauseText.alpha = 0;
+				alphaTexts[curSelected].obj.alpha = 0;
 				updatePauseText();
+
+				pauseText.alpha = 0;
+				activeTweens.push(FlxTween.tween(pauseText, {alpha: 1}, 0.3));
 			case 3:
 				exitToProperMenu();
 		}
 	}
 
+	var colour:Float = 255;
 	override function update(elapsed:Float){
 		super.update(elapsed);
 
-		// yeah sorry
+		// Move options.
 
 		var lerpVal = 1 - Math.pow(0.5, elapsed * 15);
         for(i in 0...alphaTexts.length){
-			var alT = alphaTexts.members[i];
-			var pos = trackThings[i];
-			alT.alpha = FlxMath.lerp(alT.alpha, pos.targetA, lerpVal);
-			alT.y     = FlxMath.lerp(alT.y    , pos.targetY, lerpVal);
-			alT.x     = FlxMath.lerp(alT.x    , pos.targetX, lerpVal);
+			var alT = alphaTexts[i];
+			alT.obj.alpha = FlxMath.lerp(alT.obj.alpha, alT.targetA, lerpVal);
+			alT.obj.y     = FlxMath.lerp(alT.obj.y    , alT.targetY, lerpVal);
+			alT.obj.x     = FlxMath.lerp(alT.obj.x    , alT.targetX, lerpVal);
         }
 
+		// Move text
+
 		pauseText.x += elapsed * 70;
-		if(pauseText.x >= 5) 
+		if (pauseText.x >= 5) 
 			pauseText.x = pauseText.x - (pauseText.width / 3);
 
-		/* shouldn't be needed but if you leave the pause menu
-		   while the music is fading in (using the fadeIn function) -
-		   then the game will crash */
+		// Colour animation.
 
-		if(pauseText.alpha < 1)
-			pauseText.alpha += elapsed * 2;
-		if(pauseMusic.volume < 0.5) 
-			pauseMusic.volume += elapsed * 0.01;
-		if(colour > 120){
-			colour -= elapsed * 250;
-
-			var tCol:Int = Math.floor(colour);
-			gameSpr.color = FlxColor.fromRGB(tCol, tCol, tCol);
-		}
+		var tCol:Int = CoolUtil.intBoundTo(colour, 120, 255);
+		gameSpr.color = FlxColor.fromRGB(tCol, tCol, tCol);
 	}
 
 	function changeSelection(change:Int = 0)
 	{
-		FlxG.sound.play(Paths.lSound('menu/scrollMenu'), 0.4);
+		if(leaving)
+			return;
 
+		FlxG.sound.play(Paths.lSound('menu/scrollMenu'), 0.4);
 		curSelected = (curSelected + change + optionList.length) % optionList.length;
 
-		for(i in 0...trackThings.length){
-			var item = trackThings[i];
+		for(i in 0...alphaTexts.length){
+			var item = alphaTexts[i];
 			item.targetA = i != curSelected ? 0.4 : 1;
 
 			item.targetY = (i - curSelected) * 110;

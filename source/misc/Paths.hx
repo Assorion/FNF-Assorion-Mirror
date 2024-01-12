@@ -11,14 +11,17 @@ using StringTools;
 #if !debug @:noDebug #end
 class Paths {
     public static inline var sndExt:String = #if desktop 'ogg' #else 'mp3' #end;
-
     public static inline var menuMusic:String = 'freakyMenu';
 	public static inline var menuTempo:Int = 102;
 
-    // btw the 'l' in every single function was meant to stand for "load".
+    public static var cachedLines:Map<String, Array<String>>        = new Map<String, Array<String>>();
+	public static var cachedFrames:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
 
+    // btw the 'l' in every single function was meant to stand for "load".
+    
     public static var lSparrow:String->?String->FlxFramesCollection = ncLS;
-    public static var lText:String->?String->String = ncLT;
+    public static var lText   :String->?String->String              = ncLT;
+    public static var lLines  :String->?String->Array<String>       = ncLL;
 
     public static inline function lImage(path:String):String
     {
@@ -48,34 +51,67 @@ class Paths {
 
 		Assets.cache.clear();
         openfl.utils.Assets.cache.clear();
-        CoolUtil.cachedFrames.clear();
-        CoolUtil.cachedLines.clear();
+        cachedFrames.clear();
+        cachedLines.clear();
     }
+
+    public static function switchCacheOptions(on:Bool){
+        lSparrow = cLS;
+        lText    = cLT;
+        lLines   = cLL;
+        if(on)
+            return;
+
+        lSparrow = ncLS;
+        lText    = ncLT;
+        lLines   = ncLL;
+    }
+
+    //////////////////////////
 
     public static function cLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
     {
-        var tmp:FlxFramesCollection = CoolUtil.cachedFrames.get(path);
+        var tmp:FlxFramesCollection = cachedFrames.get(path);
 
-        if(tmp != null) return tmp;
+        if(tmp != null) 
+            return tmp;
 
         var fStr = '$prePath$path';
 
         tmp = FlxAtlasFrames.fromSparrow('$fStr.png', '$fStr.xml');
-        CoolUtil.cachedFrames.set(path, tmp);
+        cachedFrames.set(path, tmp);
 
         return tmp;
     }
     public static function cLT(path:String, ?prePath:String = 'assets/songs-data/'):String
     {
-        var tmp:Array<String> = CoolUtil.cachedLines.get(path);
+        var tmp:Array<String> = cachedLines.get(path);
 
-        if(tmp != null) return tmp[0];
+        if(tmp != null) 
+            return tmp[0];
 
         tmp = [Assets.getText(prePath + path).replace('\r', '')];
-        CoolUtil.cachedLines.set(path, tmp);
+        cachedLines.set(path, tmp);
 
         return tmp[0];
     }
+    public static function cLL(path:String, ?ext:String = 'txt'):Array<String>
+    {
+        var tmp:Array<String> = cachedLines.get(path);
+
+        if(tmp != null) 
+            return tmp;
+
+        tmp = Paths.lText('$path.$ext').replace('\r', '').split('\n');
+        cachedLines.set(path, tmp);
+
+        return tmp;
+    }
+
+    ///////////////////////
+
+    public static function ncLL(path:String, ?ext:String = 'txt'):Array<String>
+        return Paths.lText('$path.$ext').replace('\r', '').split('\n');
 
     public static function ncLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
         return FlxAtlasFrames.fromSparrow('$prePath$path.png', '$prePath$path.xml');

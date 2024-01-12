@@ -13,23 +13,34 @@ import haxe.io.Bytes;
 import flixel.FlxG;
 import gameplay.PauseSubState;
 
+/*
+    TODO:
+    Rework this a little to work in a Web-Browser.
+    Why?
+    No idea, nobody is really gonna come across this but it's a neat little feature.
+*/
+
 #if !debug @:noDebug #end
 class Screenshot {
     public static inline function takeScreenshot(){
         #if desktop
+
+        // Capture Gameplay.
         PauseSubState.newCanvas();
 		for(gcam in FlxG.cameras.list)
 		    CoolUtil.copyCameraToData(PauseSubState.bdat, gcam);
 
+        // Encode it to raw bytes.
         var byteArray:ByteArray = new ByteArray();
         PauseSubState.bdat.encode(new Rectangle(0,0,1280,720), new openfl.display.PNGEncoderOptions(false), byteArray);
         byteArray.position = 0;
 
+        // Convert OpenFLs byte array to Haxe's version which we can save.
         var haxeBytes:Bytes = Bytes.alloc(byteArray.length);
-        // convert openfl byte array to haxe bytes.
         for(i in 0...byteArray.length)
             haxeBytes.set(i, byteArray.readUnsignedByte());
 
+        // Get the date, down to the second.
         var nDate:Date = Date.now();
         var dateStr:String = '' + nDate.getFullYear();
         var formatLoop:Array<Int> = [
@@ -40,11 +51,14 @@ class Screenshot {
             nDate.getSeconds()
         ];
 
+        // Format date.
         for(thing in formatLoop)
             dateStr += '-' + (thing < 10 ? '0$thing' : '$thing');
 
+        // Save it.
         FileSystem.createDirectory("screenshots");
         File.saveBytes('screenshots/$dateStr.png', haxeBytes);
+
         #end
     }
 }

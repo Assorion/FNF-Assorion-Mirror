@@ -32,7 +32,7 @@ class ControlsState extends MenuTemplate {
 
 	override function create()
 	{
-        config(FlxColor.fromRGB(0,255,110), 3);
+        addBG(FlxColor.fromRGB(0,255,110));
 		super.create();
 
 		createNewList();
@@ -81,7 +81,7 @@ class ControlsState extends MenuTemplate {
     }
 
 	override public function exitFunc(){
-		if(skipCheck())
+		if(NewTransition.skip())
             return;
 
         MusicBeatState.changeState(new OptionsState());
@@ -96,17 +96,17 @@ class ControlsState extends MenuTemplate {
 	}
 
 	override public function keyHit(ev:KeyboardEvent){
-		if(rebinding) return;
-		
-		super.keyHit(ev);
+		if(rebinding) 
+            return;
 
-		if(!key.hardCheck(Binds.UI_ACCEPT)) return;
+		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) 
+            return;
 
 		if(controlList[curSel] == '')
 			return;
 
 		for(i in 0...arrGroup.length)
-			if(Math.floor(i / splitNumb) != curSel)
+			if(Math.floor(i / columns) != curSel)
 				arrGroup[i].targetA = 0;
 
 		dontCancel = true;

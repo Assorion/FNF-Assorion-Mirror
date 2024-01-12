@@ -7,7 +7,7 @@ import openfl.text.TextFormat;
 import openfl.Lib;
 import openfl.system.System;
 
-// this is a modified FPS class for SPEED!
+// This is a modified FPS class for SPEED!
 
 #if !debug @:noDebug #end
 class FPSCounter extends TextField {
@@ -29,6 +29,9 @@ class FPSCounter extends TextField {
 
     private override function __enterFrame(deltaTime:Float):Void
     {
+        if(!visible)
+            return;
+
         currentTime += deltaTime;
         framerate++;
 

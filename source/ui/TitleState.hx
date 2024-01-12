@@ -45,8 +45,7 @@ class TitleState extends MusicBeatState
 				textSequence[i] = getIntroText();
 
 		super.create();
-		MusicBeatState.correctMusic();
-
+		correctMusic();
 		startIntro();
 	}
 
@@ -54,7 +53,7 @@ class TitleState extends MusicBeatState
 
 	public inline function getIntroText():Array<String>
 	{
-		var textLines:Array<String> = CoolUtil.textFileLines('introText');
+		var textLines:Array<String> = Paths.lLines('introText');
 		var bruh:Int = Math.round(Math.random() * (textLines.length - 1));
 
 		return textLines[bruh].trim().split('--');
@@ -122,12 +121,12 @@ class TitleState extends MusicBeatState
 
 	private var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
-		super.keyHit(ev);
-
-		if(!key.hardCheck(Binds.UI_ACCEPT)) return;
+		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) return;
 
 		if(leaving) {
-			skipTrans();
+			execEvents();
+			NewTransition.skip();
+
 			if(sndTween == null) return;
 
 			sndTween.cancel();

@@ -29,7 +29,7 @@ typedef Options = {
     var framerate:Int;
     var strum_glow:Bool;
 
-    // controls
+    // controls :(
     var note_left :Array<Int>;
     var note_right:Array<Int>;
     var note_up   :Array<Int>;
@@ -60,41 +60,30 @@ class Settings {
         gSave = new FlxSave();
         gSave.bind('funkin', 'candicejoe');
 
+        if(gSave.data.fSettings != null){
+
+            // Make sure every value exists and isn't null
+            var tmpPr:Options = cast gSave.data.fSettings;
+            var items:Array<String> = Reflect.fields(pr);
+
+            for(i in 0...items.length)
+                if (Reflect.field   (tmpPr, items[i]) == null)
+                    Reflect.setField(tmpPr, items[i], 
+                    Reflect.field   (pr   , items[i]));
+
+            pr = tmpPr;
+        }
+
         Binds.updateControls();
-        Highscore.songScores = gSave.data.songScores != null ? gSave.data.songScores : new Map<String, Int>();
-
-        if(gSave.data.fSettings == null) return;
-
-        // Make sure every value exists and isn't null
-        var tmpPr:Options = cast gSave.data.fSettings;
-        var items:Array<String> = Reflect.fields(pr);
-
-        for(i in 0...items.length)
-            if (Reflect.field   (tmpPr, items[i]) == null)
-                Reflect.setField(tmpPr, items[i], 
-                Reflect.field   (pr   , items[i]));
-
-        pr = tmpPr;
-        Binds.updateControls();
+        Highscore.loadScores();
     }
     public static function apply(){
-        FlxG.mouse.visible = false;
-
         FlxGraphic.defaultPersist = Settings.pr.default_persist;
         FlxG.updateFramerate      = Settings.pr.framerate;
 		FlxG.drawFramerate        = Settings.pr.framerate;
 
         Main.changeUsefulInfo(Settings.pr.useful_info);
-        
-        CoolUtil.textFileLines = CoolUtil.cTFL;
-        Paths.lSparrow         = Paths.cLS;
-        Paths.lText            = Paths.cLT;
-        if(Settings.pr.default_persist) 
-            return;
-
-        CoolUtil.textFileLines = CoolUtil.ncTFL;
-        Paths.lSparrow         = Paths.ncLS;
-        Paths.lText            = Paths.ncLT;
+        Paths.switchCacheOptions(Settings.pr.default_persist);
     }
 
     public inline static function flush(){
@@ -325,6 +314,6 @@ class InputString {
         }
 
         trace('Couldn\'t find the character');
-        return 'FAILED';
+        return 'UNKNOWN';
     }
 }

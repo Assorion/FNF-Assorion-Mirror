@@ -95,9 +95,8 @@ class MainMenuState extends MusicBeatState
 	var twns:Array<FlxTween> = [];
 	var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
-		super.keyHit(ev);
+		var k = ev.keyCode.deepCheck([Binds.UI_U, Binds.UI_D, Binds.UI_ACCEPT, Binds.UI_BACK ]);
 
-		var k = key.deepCheck([Binds.UI_U, Binds.UI_D, Binds.UI_ACCEPT, Binds.UI_BACK ]);
 		switch(k){
 			case 0, 1:
 				changeItem((k * 2) - 1);
@@ -116,7 +115,7 @@ class MainMenuState extends MusicBeatState
 					return;
 				}
 				if(leaving){
-					skipTrans();
+					NewTransition.skip();
 					return;
 				}
 
@@ -130,7 +129,8 @@ class MainMenuState extends MusicBeatState
 
 	private inline function changeState(){
 		if(selectedSomethin){
-			skipTrans();
+			execEvents();
+			NewTransition.skip();
 			return;
 		}
 		

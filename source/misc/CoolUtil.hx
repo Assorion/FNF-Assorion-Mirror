@@ -14,11 +14,7 @@ using StringTools;
 #if !debug @:noDebug #end
 class CoolUtil
 {
-	public static var cachedLines:Map<String, Array<String>> = new Map<String, Array<String>>();
-	public static var cachedFrames:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
-
-	// should be the diffArray divided by 2.
-	// don't change this unless you're adding a custom difficulty. (or removing.)
+	// Change if adding a custom difficulty.
 	public static inline var diffNumb:Int = 3;
 	public static var diffArr:Array<String> = [
 		// file names
@@ -32,19 +28,13 @@ class CoolUtil
 	];
 
 	public static function diffString(diff:Int, mode:Int):String
-	{
 		return diffArr[diff + (diffNumb * mode)];
-	}
-	public static var textFileLines:String->?String->Array<String> = ncTFL;
 
 	// Not clean, but it's faster.
 	public static function boundTo(val:Float, min:Float, max:Float):Float
 	{
-		if(val < min) 
-			return min;
-		
-		if(val > max) 
-			return max;
+		if(val < min) return min;
+		if(val > max) return max;
 
 		return val;
 	}
@@ -55,6 +45,8 @@ class CoolUtil
         return FlxColor.fromRGB(array[0], array[1], array[2]);
 
 	// # Copy camera to bitmap data keeping rotation and zoom.
+	// TODO: Increase accuracy. Some things are still not 1 to 1.
+
 	public static function copyCameraToData(bitmapDat:BitmapData, camera:FlxCamera){
 		var matr:Matrix = new Matrix(camera.zoom, 0, 0, camera.zoom, 0, 0);
 			matr.translate(-(camera.width * 0.5), -(camera.height * 0.5));
@@ -65,31 +57,12 @@ class CoolUtil
 		bitmapDat.draw(camera.canvas, matr, null, null, null, true);
 	}
 
-	public inline static function browserLoad(site:String) {
-		// Does this work on KDE? I don't use it so I have no idea.
-
+	// Might remove this since it's used once.
+	public inline static function browserLoad(site:String){
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);
 		#else
 		FlxG.openURL(site);
 		#end
 	}
-
-	/*
-		CACHE SWITCHING FUNCTIONS!!!
-		YES THIS IS A HACK, BUT I FEEL OVERALL IT'S BETTER!
-	*/
-	public static function cTFL(path:String, ?ext:String = 'txt'):Array<String>
-	{
-		var tmp:Array<String> = cachedLines.get(path);
-
-		if(tmp != null) return tmp;
-
-		tmp = Paths.lText('$path.$ext').replace('\r', '').split('\n');
-		cachedLines.set(path, tmp);
-
-		return tmp;
-	}
-	public static function ncTFL(path:String, ?ext:String = 'txt'):Array<String>
-		return Paths.lText('$path.$ext').replace('\r', '').split('\n');
 }

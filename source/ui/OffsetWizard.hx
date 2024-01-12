@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.text.FlxText;
 
-class OffsetWizard extends MusicBeatState{
+class OffsetWizard extends MusicBeatState {
     public var curOffset:Float = 0;
     public var prevOffset:Int = 0;
     public var offsetsArray:Array<Float> = [];
@@ -20,7 +20,7 @@ class OffsetWizard extends MusicBeatState{
         Settings.pr.audio_offset = 0;
 
         FlxG.sound.playMusic('assets/sounds/offset.${Paths.sndExt}');
-        Conductor.changeBPM(100);
+        MusicBeatState.musicSet(100);
 
         var bg:StaticSprite = new StaticSprite(0,0).loadGraphic('assets/images/ui/menuDesat.png');
 		bg.scrollFactor.set(0,0);
@@ -58,10 +58,10 @@ class OffsetWizard extends MusicBeatState{
         if(beatText.alpha > 0)
             beatText.alpha -= elapsed * 2;
 
-        songTime += elapsed * 1000 * Conductor.songDiv;
+        songTime += elapsed * 1000 * MusicBeatState.music.songDiv;
 
         var pfb:Int = fakeBeat;
-        fakeBeat = Math.floor((FlxG.sound.music.time - curOffset - 10) / Conductor.crochet);
+        fakeBeat = Math.floor((FlxG.sound.music.time - curOffset - 10) / MusicBeatState.music.crochet);
 
         if(fakeBeat > pfb && fakeBeat & 0x01 == 0)
             beatText.alpha = 1;
@@ -76,14 +76,12 @@ class OffsetWizard extends MusicBeatState{
     }
 
     override public function keyHit(ev:KeyboardEvent){
-        super.keyHit(ev);
-
-        if(key.deepCheck([ Binds.UI_ACCEPT, Binds.UI_BACK ]) != -1){
+        if(ev.keyCode.deepCheck([ Binds.UI_ACCEPT, Binds.UI_BACK ]) != -1){
             FlxG.sound.music.stop();
             MusicBeatState.changeState(new OptionsState());
 
             Settings.pr.audio_offset = prevOffset;
-            if(!key.hardCheck(Binds.UI_ACCEPT)) return;
+            if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) return;
 
             Settings.pr.audio_offset = Math.round(curOffset);
             Settings.flush();
@@ -91,7 +89,7 @@ class OffsetWizard extends MusicBeatState{
             return;
         }
 
-        offsetsArray.push(((songTime / 8) - rootBeat) * Conductor.crochet * 2);
+        offsetsArray.push(((songTime / 8) - rootBeat) * MusicBeatState.music.crochet * 2);
         curOffset = 0;
         for(i in 0...offsetsArray.length)
             curOffset += offsetsArray[i];

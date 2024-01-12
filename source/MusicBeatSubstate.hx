@@ -1,5 +1,6 @@
 package;
 
+import MusicBeatState.MusicProperties;
 import flixel.FlxG;
 import flixel.FlxSubState;
 import MusicBeatState.DelayedEvent;
@@ -22,22 +23,16 @@ class MusicBeatSubstate extends FlxSubState
 		super.create();
 	}
 
-	private inline function postEvent(forward:Float, func:Void->Void){
-		events.push({
-			endTime: MusicBeatState.curTime() + forward,
-			exeFunc: func
-		});
-	}
+	private inline function postEvent(forward:Float, func:Void->Void)
+	events.push({
+		endTime: MusicBeatState.curTime() + forward,
+		exeFunc: func
+	});
 
 	// # new input thing.
 
-	public var key = 0;
-	public function keyHit(ev:KeyboardEvent){
-		key = ev.keyCode;
-	}
-	public function keyRel(ev:KeyboardEvent){
-		key = ev.keyCode;
-	}
+	public function keyHit(ev:KeyboardEvent){}
+	public function keyRel(ev:KeyboardEvent){}
 
 	override function destroy(){
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyHit);
@@ -48,18 +43,8 @@ class MusicBeatSubstate extends FlxSubState
 
 	//////////////////////////////////////
 
-	private var oldStep:Int = 0;
 	override function update(elapsed:Float)
 	{
-		Conductor.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
-
-		curStep = Math.floor(Conductor.songPosition * Conductor.songDiv);
-		
-		if(oldStep != curStep && curStep > 0){
-			oldStep = curStep;
-			stepHit();
-		}
-
 		super.update(elapsed);
 
 		var cTime = MusicBeatState.curTime();
@@ -74,16 +59,4 @@ class MusicBeatSubstate extends FlxSubState
 			events.splice(i--, 1);
 		}
 	}
-
-	public function stepHit():Void
-	{
-		var tBeat:Int = curStep >> 2;
-
-		if (curStep - (tBeat << 2) == 0){
-			curBeat = tBeat;
-			beatHit();
-		}
-	}
-
-	public function beatHit():Void {}
 }

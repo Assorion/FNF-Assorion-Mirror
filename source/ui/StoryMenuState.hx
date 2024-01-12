@@ -50,12 +50,8 @@ class StoryMenuState extends MenuTemplate
 	public static inline var whiteColour:Int  = 0xFFFFFFFF;
 
 	override function create(){
-		config(0xFF000000, 1);
 		super.create();
-		MusicBeatState.correctMusic();
-		//background.color = 0xFF000000;
-
-		remove(background);
+		correctMusic();
 
 		for(i in 0...weekData.length){
 			var weekGraphic:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('storymenu/week-' + weekData[i].week));
@@ -106,13 +102,12 @@ class StoryMenuState extends MenuTemplate
 
 	var leaving:Bool = false;
 	override function keyHit(ev:KeyboardEvent){
-		super.keyHit(ev);
-
-		if(!key.hardCheck(Binds.UI_ACCEPT)) 
+		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) 
 			return;
 
 		if(leaving){
-			skipTrans();
+			execEvents();
+			NewTransition.skip();
 			return;
 		}
 
