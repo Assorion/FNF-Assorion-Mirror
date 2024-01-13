@@ -39,7 +39,7 @@ class ChartingState extends MusicBeatState {
         [[240, 240, 200], [240, 240, 215]], // Yellow / White
         [[200, 255, 200], [215, 255, 215]], // Green
     ];
-    public static var gridSize:Int = 40;
+    public static inline var gridSize:Int = 40;
 
     public static var zooms:Array<Float> = [0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8];
     public var curZoom:Int = 2;
@@ -61,8 +61,8 @@ class ChartingState extends MusicBeatState {
     public var camGR:FlxCamera;
 
     public static var activeUIElement:ChartUI_Generic;
-    public static var inputBlock:ChartUI_Persistent;
-    public static var clickedElement:ChartUI_Generic;
+    public static var inputBlock     :ChartUI_Persistent;
+    public static var clickedElement :ChartUI_Generic;
 
     var uiBG:ChartUI_Generic;
 

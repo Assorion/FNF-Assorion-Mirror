@@ -121,7 +121,7 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
                     sound.play();
                     sound.stop();
             case 'txt', 'json':
-                Paths.cLT(objectPath, '');
+                Paths.lText(objectPath, '');
         }
 
     var index:Int = 0;

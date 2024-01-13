@@ -13,8 +13,8 @@ import misc.MemCounter;
 #end
 class Main extends Sprite
 {
-	public static var fpsC:FPSCounter;
-	public static var memC:MemCounter;
+	private static var fpsC:FPSCounter;
+	private static var memC:MemCounter;
 
 	public static inline var initState:Class<FlxState> = ui.TitleState;
 	public static inline var gameWidth:Int  = 1280;

@@ -28,6 +28,7 @@ typedef Options = {
     var show_hud:Bool;
     var framerate:Int;
     var strum_glow:Bool;
+    var transitions:Bool;
 
     // controls :(
     var note_left :Array<Int>;
@@ -74,22 +75,27 @@ class Settings {
             pr = tmpPr;
         }
 
+        pr.framerate = framerateClamp(pr.framerate);
         Binds.updateControls();
         Highscore.loadScores();
     }
+    
     public static function apply(){
-        FlxGraphic.defaultPersist = Settings.pr.default_persist;
-        FlxG.updateFramerate      = Settings.pr.framerate;
-		FlxG.drawFramerate        = Settings.pr.framerate;
+        FlxGraphic.defaultPersist = pr.default_persist;
+        FlxG.updateFramerate = FlxG.drawFramerate = framerateClamp(pr.framerate);
 
-        Main.changeUsefulInfo(Settings.pr.useful_info);
-        Paths.switchCacheOptions(Settings.pr.default_persist);
+        Main.changeUsefulInfo(pr.useful_info);
+        Paths.switchCacheOptions(pr.default_persist);
     }
 
     public inline static function flush(){
         gSave.data.fSettings = pr;
         gSave.flush();
     }
+
+    // To prevent Barzil from soft-locking the game at -10 fps.
+    public static inline function framerateClamp(ch:Int):Int
+        return CoolUtil.intBoundTo(ch, 10, 500);
 }
 
 // dunno why haxe doesn't haxe something like this included.

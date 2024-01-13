@@ -1,5 +1,6 @@
 package misc;
 
+import sys.ssl.Certificate;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
@@ -11,18 +12,17 @@ using StringTools;
 class Alphabet extends FlxSpriteGroup
 {
 	public var text(default, set):String = "";
-
-	public var fWidth:Float = 0;
 	public var isBold:Bool = false;
 
-	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false)
+	public function new(x:Float, y:Float, str:String = "", ?bold:Bool = true)
 	{
 		super(x, y);
 
 		isBold = bold;
-		this.text = text.toLowerCase();
+		text = str.toLowerCase();
 	}
 
+	public var fWidth:Float = 0;
 	public function addText()
 	for (character in text.split(''))
 	{
@@ -36,7 +36,7 @@ class Alphabet extends FlxSpriteGroup
 
 		// # add text
 
-		var letter:AlphaCharacter = new AlphaCharacter(fWidth, 0, character);
+		var letter:AlphaCharacter = new AlphaCharacter(fWidth, 0, character, isBold);
 
 		isBold ? letter.createBold() : letter.createLetter();
 		add(letter);
@@ -63,7 +63,7 @@ class AlphaCharacter extends FlxSprite
 	public static inline var completeList:String = "abcdefghijklmnopqrstuvwxyz1234567890|~#$%()*+-:;<=>@[]^.,'!?";
 	public var letter:String;
 
-	public function new(x:Float, y:Float, char:String)
+	public function new(x:Float, y:Float, char:String, bolded:Bool)
 	{
 		super(x, y);
 		var tex = Paths.lSparrow('ui/alphabet');
@@ -71,6 +71,7 @@ class AlphaCharacter extends FlxSprite
 		letter = char;
 
 		antialiasing = Settings.pr.antialiasing;
+		bolded ? createBold() : createLetter();
 	}
 
 	public function createBold()
@@ -82,9 +83,8 @@ class AlphaCharacter extends FlxSprite
 
 	public function createLetter():Void
 	{
-		var suffix = ' capital';
+		var suffix = numbers.contains(letter) ? '' : ' capital';
 
-		if(numbers.contains(letter)) suffix = '';
 		if(symbols.contains(letter)) {
 			replaceWithSymbol();
 			return;
@@ -103,7 +103,7 @@ class AlphaCharacter extends FlxSprite
 		50, -5, 0, 0
 	];
 
-	// # handle symbols.
+	// # Handle symbols.
 
 	public function replaceWithSymbol()
 	{

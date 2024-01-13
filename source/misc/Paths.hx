@@ -14,8 +14,8 @@ class Paths {
     public static inline var menuMusic:String = 'freakyMenu';
 	public static inline var menuTempo:Int = 102;
 
-    public static var cachedLines:Map<String, Array<String>>        = new Map<String, Array<String>>();
-	public static var cachedFrames:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
+    private static var cachedLines:Map<String, Array<String>>        = new Map<String, Array<String>>();
+	private static var cachedFrames:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
 
     // btw the 'l' in every single function was meant to stand for "load".
     
@@ -69,7 +69,7 @@ class Paths {
 
     //////////////////////////
 
-    public static function cLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
+    private static function cLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
     {
         var tmp:FlxFramesCollection = cachedFrames.get(path);
 
@@ -83,7 +83,7 @@ class Paths {
 
         return tmp;
     }
-    public static function cLT(path:String, ?prePath:String = 'assets/songs-data/'):String
+    private static function cLT(path:String, ?prePath:String = 'assets/songs-data/'):String
     {
         var tmp:Array<String> = cachedLines.get(path);
 
@@ -95,7 +95,7 @@ class Paths {
 
         return tmp[0];
     }
-    public static function cLL(path:String, ?ext:String = 'txt'):Array<String>
+    private static function cLL(path:String, ?ext:String = 'txt'):Array<String>
     {
         var tmp:Array<String> = cachedLines.get(path);
 
@@ -110,12 +110,12 @@ class Paths {
 
     ///////////////////////
 
-    public static function ncLL(path:String, ?ext:String = 'txt'):Array<String>
+    private static function ncLL(path:String, ?ext:String = 'txt'):Array<String>
         return Paths.lText('$path.$ext').replace('\r', '').split('\n');
 
-    public static function ncLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
+    private static function ncLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
         return FlxAtlasFrames.fromSparrow('$prePath$path.png', '$prePath$path.xml');
 
-    public static function ncLT(path:String, ?prePath:String = 'assets/songs-data/'):String
+    private static function ncLT(path:String, ?prePath:String = 'assets/songs-data/'):String
         return Assets.getText(prePath + path).replace('\r', '');
 }

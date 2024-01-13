@@ -19,12 +19,12 @@ using StringTools;
 #if !debug @:noDebug #end
 class FreeplayState extends MenuTemplate
 {
-	public static var curDifficulty:Int = 1;
+	private static var curDifficulty:Int = 1;
 	public var songs:Array<String> = [];
 
-	var scoreText:FlxText;
-	var diffText:FlxText;
-	var intendedScore:Int = 0;
+	private var scoreText:FlxText;
+	private var diffText:FlxText;
+	private var intendedScore:Int = 0;
 
 	private var vocals:FlxSound;
 

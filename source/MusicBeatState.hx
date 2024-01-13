@@ -25,19 +25,19 @@ typedef MusicProperties = {
 #if !debug @:noDebug #end
 class MusicBeatState extends FlxUIState
 {
-	// Moved conductor away from being a Class to a struct. The conductor did not deserve it's own class.
-	public static var music:MusicProperties;
-
-	private var curStep:Int = 0;
-	private var curBeat:Int = 0;
-	private var events:Array<DelayedEvent> = [];
-
 	public static inline function curTime()
 		#if desktop
 		return Sys.time();
 		#else
 		return Date.now().getTime() * 0.001;
 		#end
+
+	// Moved conductor away from being a Class to a struct. The conductor did not deserve it's own class.
+	public static var music:MusicProperties;
+
+	private var curStep:Int = 0;
+	private var curBeat:Int = 0;
+	private var events:Array<DelayedEvent> = [];
 
 	public function correctMusic()
 	if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
@@ -109,6 +109,7 @@ class MusicBeatState extends FlxUIState
 
 	// GREAT! Now this has no chance of working with odd time signatures...
 	// This should be documented in the Wiki. That will happen eventually.
+	public function beatHit():Void {}
 	public function stepHit():Void
 	{
 		var tBeat:Int = curStep >> 2;
@@ -118,16 +119,14 @@ class MusicBeatState extends FlxUIState
 			beatHit();
 		}
 	}
-	public function beatHit():Void {}
 
 	private inline function execEvents()
 	for(i in 0...events.length)
 		events[i].exeFunc();
 
-	// Too much stuff relies on this function. Thus it must be separated out here.
 	public static var changeState:FlxState->Void = NewTransition.switchState;
 
-	// # New music system, a direct replacement for Conductor.
+	// # New music system, a direct replacement for Conductor. (Stands for MusicGet)
 	// Basically a local alias. This is simply so I don't keep having to type "MusicBeatState.music"
 	private inline function musg():MusicProperties
 		return MusicBeatState.music;

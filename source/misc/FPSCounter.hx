@@ -11,8 +11,8 @@ import openfl.system.System;
 
 #if !debug @:noDebug #end
 class FPSCounter extends TextField {
-    public var currentTime:Float = 0;
-    public var framerate:Int = 0;
+    private var currentTime:Float = 0;
+    private var framerate:Int = 0;
 
     public function new(x:Float = 10, y:Float = 10, color:Int = 0xFFFFFF){
         super();

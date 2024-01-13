@@ -27,10 +27,11 @@ class CoolUtil
 		'Hard'
 	];
 
+	// Used for getting a difficulty value out of the array above.
 	public static function diffString(diff:Int, mode:Int):String
 		return diffArr[diff + (diffNumb * mode)];
 
-	// Not clean, but it's faster.
+	// Clamps a value to be between to other values.
 	public static function boundTo(val:Float, min:Float, max:Float):Float
 	{
 		if(val < min) return min;
@@ -41,10 +42,11 @@ class CoolUtil
 	public static inline function intBoundTo(val:Float, min:Float, max:Float):Int
 		return Math.round(boundTo(val, min, max));
 
+	// Used for converting arrays of integers to colours.
 	public inline static function cfArray(array:Array<Int>):Int
         return FlxColor.fromRGB(array[0], array[1], array[2]);
 
-	// # Copy camera to bitmap data keeping rotation and zoom.
+	// Copy camera to bitmap data keeping rotation and zoom.
 	// TODO: Increase accuracy. Some things are still not 1 to 1.
 
 	public static function copyCameraToData(bitmapDat:BitmapData, camera:FlxCamera){
@@ -57,7 +59,7 @@ class CoolUtil
 		bitmapDat.draw(camera.canvas, matr, null, null, null, true);
 	}
 
-	// Might remove this since it's used once.
+	// Might remove this since it's used once. Going against the "philosophy" of Assorion.
 	public inline static function browserLoad(site:String){
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);

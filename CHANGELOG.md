@@ -98,3 +98,7 @@ Chart editor fix (again).
 14. Fixed "Line-Feed" problem in txt files, should fix Freeplay icons bug.
 15. Refactored the README.md file. Fixed typos, and minor grammatical errors.
 16. Fixed typo where I said "types" instead of "typos" in changelog.
+17. Added code consistency principles.
+18. Fixed -10 FPS issue.
+19. Added option to disable transitions all-together.
+20. Removed Conductor.hx, now merged into MusicBeatState.

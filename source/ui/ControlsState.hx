@@ -1,5 +1,6 @@
 package ui;
 
+import haxe.macro.Compiler.CompilerConfiguration;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -33,6 +34,7 @@ class ControlsState extends MenuTemplate {
 	override function create()
 	{
         addBG(FlxColor.fromRGB(0,255,110));
+        columns = 3;
 		super.create();
 
 		createNewList();

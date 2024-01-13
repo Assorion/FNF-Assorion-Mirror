@@ -24,6 +24,7 @@ class PauseSubState extends MusicBeatSubstate
 	public var curSelected:Int = 0;
 	public var pauseText:FlxText;
 	public var alphaTexts:Array<MenuObject> = [];
+	public var bottomBlack:StaticSprite;
 
 	var gameSpr:StaticSprite;
 	var pauseMusic:FlxSound;
@@ -76,6 +77,7 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			var option:Alphabet = new Alphabet(0, (60 * i) + 30, optionList[i], true);
 			option.alpha = 0;
+			add(option);
 
 			alphaTexts.push({
 				obj: cast option,
@@ -87,7 +89,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		////////////////////////////
 	
-		var bottomBlack:StaticSprite = new StaticSprite(0, camera.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
+		bottomBlack = new StaticSprite(0, camera.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
 		bottomBlack.alpha = 0;
 
 		pauseText = new FlxText(5, camera.height - 25, 0, '', 20);
@@ -102,10 +104,10 @@ class PauseSubState extends MusicBeatSubstate
 
 		// Tweens
 
-		activeTweens.push(FlxTween.tween( bottomBlack, {alpha: 0.6  }, 0.3));
-		activeTweens.push(FlxTween.tween( pauseText  , {alpha: 1    }, 0.3));
+		activeTweens.push(FlxTween.tween( bottomBlack, {alpha: 0.6  }, 0.2));
+		activeTweens.push(FlxTween.tween( pauseText  , {alpha: 1    }, 0.2));
 		activeTweens.push(FlxTween.tween( pauseMusic , {volume: 0.5 },  4 ));
-		activeTweens.push(FlxTween.tween( this       , {colour: 120 }, 0.6));
+		activeTweens.push(FlxTween.tween( this       , {colour: 120 }, 0.45));
 	}
 	private inline function updatePauseText(){
 		var coolString:String = 
@@ -142,9 +144,10 @@ class PauseSubState extends MusicBeatSubstate
 				for(i in 0...alphaTexts.length)
 					alphaTexts[i].targetA = 0;
 
-				FlxTween.tween(pauseText,  { alpha:  0   }, 0.15);
-				FlxTween.tween(pauseMusic, { volume: 0   }, 0.15);
-				FlxTween.tween(this,       { colour: 255 }, 0.15, {onComplete: 
+				FlxTween.tween(pauseText,  { alpha:  0   }, 0.1);
+				FlxTween.tween(bottomBlack,{ alpha:  0   }, 0.1);
+				FlxTween.tween(pauseMusic, { volume: 0   }, 0.1);
+				FlxTween.tween(this,       { colour: 255 }, 0.1, {onComplete: 
 				// Closing
 				function(t:FlxTween){
 					pState.persistentDraw = true;

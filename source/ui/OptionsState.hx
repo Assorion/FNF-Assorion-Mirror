@@ -1,5 +1,6 @@
 package ui;
 
+import haxe.Serializer;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -32,7 +33,7 @@ class OptionsState extends MenuTemplate
 		['basic', 'gameplay', 'visuals', 'controls', 'changelog'],
 		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist', #if desktop 'launch_sprites' #end ],
 		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay', 'miss_health'],
-		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info', 'strum_glow']
+		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info', 'strum_glow', 'transitions']
 	];
 
 	static var descriptions:Array<Array<String>> = [
@@ -67,7 +68,8 @@ class OptionsState extends MenuTemplate
 			#end
 			'Shows your health, stats, and other stuff in gameplay',
 			'Shows FPS and memory counter',
-			'Enemy notes glow like the players'
+			'Enemy notes glow like the players',
+			'View white fading transistion. If disabled loading times will decrease.'
 		]
 	];
 
@@ -165,7 +167,7 @@ class OptionsState extends MenuTemplate
 
 			// visuals
 			case 'framerate':
-				Settings.pr.framerate = CoolUtil.intBoundTo(Settings.pr.framerate + (ch * 10), 10, 500);
+				Settings.pr.framerate = Settings.framerateClamp(Settings.pr.framerate + (ch * 10));
 				atg.text = Std.string(Settings.pr.framerate);
 				Settings.apply();
 		}
@@ -234,7 +236,8 @@ class OptionsState extends MenuTemplate
 				Settings.pr.show_hud = !Settings.pr.show_hud;
 			case 'strum_glow':
 				Settings.pr.strum_glow = !Settings.pr.strum_glow;
-			
+			case 'transitions':
+				Settings.pr.transitions = !Settings.pr.transitions;			
 		}
 		createNewList(true);
 	}

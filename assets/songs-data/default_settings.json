@@ -18,6 +18,7 @@
     "show_hud": true,
     "framerate": 120,
     "strum_glow": true,
+    "transitions": true,
 
     "note_left":  [65, 37],
     "note_right": [68, 39],
