@@ -33,13 +33,8 @@ class Main extends Sprite
 
 		// # add the game
 
-		var ldState:Class<FlxState> = Settings.pr.launch_sprites ? ui.LoadingState : initState;
-		#if (!desktop)
-		// web browser keyboard fix. Keys like the spacebar won't work in a browser without this.
-		FlxG.keys.preventDefaultKeys = [];
-		Settings.pr.framerate = 60;
-		ldState = initState;
-		#end
+		var ldState:Class<FlxState> = #if desktop Settings.pr.launch_sprites ? ui.LoadingState : initState 
+		#else initState #end;
 
 		fpsC = new FPSCounter(10, 3, 0xFFFFFF);
 		memC = new MemCounter(10, 18, 0xFFFFFF);
@@ -49,6 +44,12 @@ class Main extends Sprite
 
 		addChild(fpsC);
 		addChild(memC);
+
+		#if (!desktop)
+		// web browser keyboard fix. Keys like the spacebar won't work in a browser without this.
+		FlxG.keys.preventDefaultKeys = [];
+		Settings.pr.framerate = 60;
+		#end
 		
 		// have to give credit for psych engine here.
 		// Wouldn't have cared enough to fix this on my own.
