@@ -36,8 +36,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		FlxG.sound.play(Paths.lSound('gameplay/fnf_loss_sfx'));
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 
-		Conductor.songPosition = 0;
-		Conductor.changeBPM(100);
+		MusicBeatState.musicSet(100);
 
 		postEvent(2.5, function() {
 			if(!leaving)
@@ -58,13 +57,13 @@ class GameOverSubstate extends MusicBeatSubstate
 			fadeCam.alpha     -= elapsed * 0.5;
 		}
 
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
+
 		super.update(elapsed);
 	}
 
 	private var leaving:Bool = false;
 	override function keyHit(ev:KeyboardEvent){
-		super.keyHit(ev);
-
 		if(leaving) {
 			for(i in 0...events.length)
 				events[i].exeFunc();
@@ -72,14 +71,14 @@ class GameOverSubstate extends MusicBeatSubstate
 			return;
 		}
 
-		if(key.hardCheck(Binds.UI_BACK)){
+		if(ev.keyCode.hardCheck(Binds.UI_BACK)){
 			leaving = true;
 			FlxG.sound.music.stop();
 			PauseSubState.exitToProperMenu();
 			return;
 		}
 
-		if(!key.hardCheck(Binds.UI_ACCEPT)) return;
+		if(!ev.keyCode .hardCheck(Binds.UI_ACCEPT)) return;
 
 		leaving = true;
 		charRef.playAnim('deathConfirm');
@@ -90,10 +89,5 @@ class GameOverSubstate extends MusicBeatSubstate
 		postEvent(2.7, function(){
 			FlxG.resetState();
 		});
-	}
-
-	override function stepHit(){
-		super.stepHit();
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
 	}
 }

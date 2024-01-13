@@ -59,6 +59,8 @@ class HistoryState extends MenuTemplate {
         if(dontUpdate) 
             return;
 
+        super.keyHit(ev);
+
         if(ev.keyCode.hardCheck(Binds.UI_ACCEPT))
             openSubState(new HistorySubstate(contents[curSel], this));
     }

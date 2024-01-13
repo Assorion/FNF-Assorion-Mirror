@@ -208,7 +208,7 @@ class ChartingState extends MusicBeatState {
     private var holdingControl:Bool = false;
     private var holdingShift:Bool   = false;
     override function keyHit(ev:KeyboardEvent){
-        super.keyHit(ev);
+        var key = ev.keyCode;
 
         if(inputBlock != null) {
             if(key == FlxKey.ENTER){
@@ -331,22 +331,22 @@ class ChartingState extends MusicBeatState {
                     vocals.play();
                     vocals.time = FlxG.sound.music.time;
 
-                    Conductor.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
+                    musg().songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
                 }
                 return;
             case 3, 4:
                 pauseSong();
                 changeSec(curSec + (((T - 3) * 2) - 1));
 
-                var offTime = curSec * Conductor.crochet * 4;
+                var offTime = curSec * musg().crochet * 4;
                     offTime += Settings.pr.audio_offset;
 
                 // this is to make sure there are no trashy rounding errors.
-                while(Math.floor((offTime + Settings.pr.audio_offset) / (Conductor.crochet * 4)) < curSec)
+                while(Math.floor((offTime + Settings.pr.audio_offset) / (musg().crochet * 4)) < curSec)
                     offTime += 0.01;
 
-                Conductor.songPosition = vocals.time = FlxG.sound.music.time = offTime;
-                Conductor.songPosition -= Settings.pr.audio_offset;
+                musg().songPosition = vocals.time = FlxG.sound.music.time = offTime;
+                musg().songPosition -= Settings.pr.audio_offset;
 
                 expandCheck();
                 reloadNotes();
@@ -379,12 +379,10 @@ class ChartingState extends MusicBeatState {
         }
     }
     override public function keyRel(ev:KeyboardEvent){
-        super.keyRel(ev);
-
-        if(key == FlxKey.CONTROL)
+        if(ev.keyCode == FlxKey.CONTROL)
             holdingControl = false;
 
-        if(key == FlxKey.SHIFT)
+        if(ev.keyCode == FlxKey.SHIFT)
             holdingShift = false;
     }
 
@@ -574,7 +572,7 @@ class ChartingState extends MusicBeatState {
     /////////////////////////////////////////////////
 
     override public function update(elapsed:Float){
-        var secRef:Float = CoolUtil.boundTo(Conductor.songPosition / (Conductor.crochet * 4), 0, FlxG.sound.music.length);
+        var secRef:Float = CoolUtil.boundTo(musg().songPosition / (musg().crochet * 4), 0, FlxG.sound.music.length);
 
         // # Right click
 
@@ -679,14 +677,14 @@ class ChartingState extends MusicBeatState {
             PlayState.curSong = ch.toLowerCase();
         });
         var bpmBox:ChartUI_InputBox = new ChartUI_InputBox(200, 0, 90, 30, Std.string(song.bpm), function(ch:String){
-            song.bpm = Std.parseInt(ch);
-            Conductor.changeBPM(song.bpm);
+            song.bpm = Std.parseFloat(ch);
+            MusicBeatState.musicSet(song.bpm);
         });
         var delayBox:ChartUI_InputBox = new ChartUI_InputBox(0, 40, 70, 30, Std.string(song.beginTime), function(ch:String){
             song.beginTime = Std.parseFloat(ch);
         });
 
-        var stageDrop:ChartUI_DropDown = new ChartUI_DropDown(0, 80, 160, 30, CoolUtil.textFileLines('stageList'), song.stage, function(index:Int, ch:String){
+        var stageDrop:ChartUI_DropDown = new ChartUI_DropDown(0, 80, 160, 30, Paths.lLines('stageList'), song.stage, function(index:Int, ch:String){
             song.stage = ch;
         }, uiElements);
         var speedBox:ChartUI_InputBox = new ChartUI_InputBox(200, 80, 90, 30, Std.string(song.speed), function(ch:String){
@@ -735,13 +733,13 @@ class ChartingState extends MusicBeatState {
             pauseSong();
 
             FlxG.sound.music.time = vocals.time = 0;
-            Conductor.songPosition = -Settings.pr.audio_offset;
 
             song.notes = [];
             song.bpm = 120;
             song.needsVoices = true;
             song.speed = 1;
 
+            MusicBeatState.musicSet(song.bpm);
             changeSec(0);
             reloadNotes();
         }, 'Clear Song');
@@ -788,7 +786,7 @@ class ChartingState extends MusicBeatState {
 
     private inline function charUIGenPlayerDrop(ind:Int)
     {
-        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 40, 160, 30, CoolUtil.textFileLines('characterList'), song.characters[ind], function(index:Int, item:String){
+        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 40, 160, 30, Paths.lLines('characterList'), song.characters[ind], function(index:Int, item:String){
             song.characters[ind] = item; makeGrid(); }, uiElements);
 
         uiElements.add(tmpDrop);

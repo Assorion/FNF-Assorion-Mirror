@@ -28,11 +28,11 @@ class Screenshot {
         // Capture Gameplay.
         PauseSubState.newCanvas();
 		for(gcam in FlxG.cameras.list)
-		    CoolUtil.copyCameraToData(PauseSubState.bdat, gcam);
+		    CoolUtil.copyCameraToData(PauseSubState.canvas, gcam);
 
         // Encode it to raw bytes.
         var byteArray:ByteArray = new ByteArray();
-        PauseSubState.bdat.encode(new Rectangle(0,0,1280,720), new openfl.display.PNGEncoderOptions(false), byteArray);
+        PauseSubState.canvas.encode(new Rectangle(0,0,1280,720), new openfl.display.PNGEncoderOptions(false), byteArray);
         byteArray.position = 0;
 
         // Convert OpenFLs byte array to Haxe's version which we can save.

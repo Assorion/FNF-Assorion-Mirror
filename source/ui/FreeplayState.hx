@@ -28,7 +28,14 @@ class FreeplayState extends MenuTemplate
 
 	private var vocals:FlxSound;
 
-	private inline function readAndParseTextFile(){
+	override function create()
+	{
+		addBG(FlxColor.fromRGB(145, 113, 255));
+		correctMusic();
+		super.create();
+		
+		/// Parsing
+
 		var lines:Array<String> = Paths.lLines('freeplaySonglist');
 
 		for(i in 0...lines.length){
@@ -38,15 +45,8 @@ class FreeplayState extends MenuTemplate
 			pushObject(new Alphabet(0, (60 * i) + 30, strArr[0], true));
 			pushIcon(new gameplay.HealthIcon(strArr[1], false));
 		}
-	}
 
-	override function create()
-	{
-		addBG(FlxColor.fromRGB(145, 113, 255));
-		correctMusic();
-		super.create();
-
-		readAndParseTextFile();
+		////////////
 
 		var scoreBG:StaticSprite = new StaticSprite((FlxG.width * 0.7) - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
@@ -92,6 +92,8 @@ class FreeplayState extends MenuTemplate
 	private var prevTime:Float = 0;
 	private var playing:Bool = true;
 	override public function keyHit(ev:KeyboardEvent){
+		super.keyHit(ev);
+
 		var k = ev.keyCode.deepCheck([Binds.UI_ACCEPT, [FlxKey.SPACE]]);
 		switch(k){
 			case 0: // Enter

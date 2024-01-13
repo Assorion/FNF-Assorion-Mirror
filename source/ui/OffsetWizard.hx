@@ -58,10 +58,10 @@ class OffsetWizard extends MusicBeatState {
         if(beatText.alpha > 0)
             beatText.alpha -= elapsed * 2;
 
-        songTime += elapsed * 1000 * MusicBeatState.music.songDiv;
+        songTime += elapsed * 1000 * musg().songDiv;
 
         var pfb:Int = fakeBeat;
-        fakeBeat = Math.floor((FlxG.sound.music.time - curOffset - 10) / MusicBeatState.music.crochet);
+        fakeBeat = Math.floor((FlxG.sound.music.time - curOffset - 10) / musg().crochet);
 
         if(fakeBeat > pfb && fakeBeat & 0x01 == 0)
             beatText.alpha = 1;
@@ -89,7 +89,7 @@ class OffsetWizard extends MusicBeatState {
             return;
         }
 
-        offsetsArray.push(((songTime / 8) - rootBeat) * MusicBeatState.music.crochet * 2);
+        offsetsArray.push(((songTime / 8) - rootBeat) * musg().crochet * 2);
         curOffset = 0;
         for(i in 0...offsetsArray.length)
             curOffset += offsetsArray[i];

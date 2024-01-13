@@ -1,6 +1,5 @@
 package;
 
-import MusicBeatState.MusicProperties;
 import flixel.FlxG;
 import flixel.FlxSubState;
 import MusicBeatState.DelayedEvent;

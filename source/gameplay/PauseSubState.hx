@@ -78,7 +78,7 @@ class PauseSubState extends MusicBeatSubstate
 			option.alpha = 0;
 
 			alphaTexts.push({
-				obj: null,
+				obj: cast option,
 				targetX: 0,
 				targetY: 0,
 				targetA: 1
@@ -173,12 +173,12 @@ class PauseSubState extends MusicBeatSubstate
 
 		// Move options.
 
-		var lerpVal = 1 - Math.pow(0.5, elapsed * 15);
+		var lerpVal = Math.pow(0.5, elapsed * 15);
         for(i in 0...alphaTexts.length){
 			var alT = alphaTexts[i];
-			alT.obj.alpha = FlxMath.lerp(alT.obj.alpha, alT.targetA, lerpVal);
-			alT.obj.y     = FlxMath.lerp(alT.obj.y    , alT.targetY, lerpVal);
-			alT.obj.x     = FlxMath.lerp(alT.obj.x    , alT.targetX, lerpVal);
+			alT.obj.alpha = FlxMath.lerp(alT.targetA, alT.obj.alpha, lerpVal);
+			alT.obj.y     = FlxMath.lerp(alT.targetY, alT.obj.y    , lerpVal);
+			alT.obj.x     = FlxMath.lerp(alT.targetX, alT.obj.x    , lerpVal);
         }
 
 		// Move text

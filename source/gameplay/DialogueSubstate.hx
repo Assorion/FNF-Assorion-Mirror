@@ -49,9 +49,10 @@ class DialogueSubstate extends MusicBeatSubstate {
         retState[0] = new DialogueSubstate(cam, close, dPath, ps);
         retState[0].openCallback = function(){
             // take a look at pausesubstate pls
-            CoolUtil.copyCameraToData(PauseSubState.bdat, FlxG.camera);
+            CoolUtil.copyCameraToData(PauseSubState.canvas, FlxG.camera);
             retState[0].pState.persistentDraw = false;
         };
+
         return false;
     }
 
@@ -60,7 +61,7 @@ class DialogueSubstate extends MusicBeatSubstate {
 
         PauseSubState.newCanvas();
 
-        var gspr:StaticSprite = new StaticSprite(0,0).loadGraphic(PauseSubState.bdat);
+        var gspr:StaticSprite = new StaticSprite(0,0).loadGraphic(PauseSubState.canvas);
         gspr.antialiasing = Settings.pr.antialiasing;
         gspr.screenCenter();
         gspr.scrollFactor.set();
@@ -201,17 +202,17 @@ class DialogueSubstate extends MusicBeatSubstate {
             boxSpr.alpha = CoolUtil.boundTo(boxSpr.alpha + (elapsed * 2), 0, 1);
     }
     override function keyHit(ev:KeyboardEvent){
-        super.keyHit(ev);
+        if(leaving) 
+            return;
 
-        if(leaving) return;
-
-        if(key.hardCheck(Binds.UI_ACCEPT) && boxSpr.alpha == 1){
+        if(ev.keyCode.hardCheck(Binds.UI_ACCEPT) && boxSpr.alpha == 1){
             textSlide();
             FlxG.sound.play(Paths.lSound('menu/clickText'));
             return;
         }
 
-        if(!key.hardCheck(Binds.UI_BACK)) return;
+        if(!ev.keyCode.hardCheck(Binds.UI_BACK)) 
+            return;
 
         exit();
     }

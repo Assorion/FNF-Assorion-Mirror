@@ -99,11 +99,10 @@ class ControlsState extends MenuTemplate {
 		if(rebinding) 
             return;
 
-		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) 
-            return;
+        super.keyHit(ev);
 
-		if(controlList[curSel] == '')
-			return;
+		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT) || controlList[curSel] == '') 
+            return;
 
 		for(i in 0...arrGroup.length)
 			if(Math.floor(i / columns) != curSel)

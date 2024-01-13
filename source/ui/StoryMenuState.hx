@@ -1,5 +1,6 @@
 package ui;
 
+import haxe.display.Display.Keyword;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -102,6 +103,8 @@ class StoryMenuState extends MenuTemplate
 
 	var leaving:Bool = false;
 	override function keyHit(ev:KeyboardEvent){
+		super.keyHit(ev);
+
 		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) 
 			return;
 

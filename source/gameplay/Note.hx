@@ -39,7 +39,7 @@ class Note extends StaticSprite
 	public var strumTime:Float = 0;
 	public var isSustainNote:Bool = false;
 
-	public function new(strumTime:Float, data:Int, type:Int, ?sustainNote:Bool = false, ?isEnd:Bool = false, Conductor:MusicProperties)
+	public function new(strumTime:Float, data:Int, type:Int, ?sustainNote:Bool = false, ?isEnd:Bool = false)
 	{
 		super(0,-100);
 
@@ -75,7 +75,7 @@ class Note extends StaticSprite
 		animation.play('holdend');
 		animation.remove('scroll');
 
-		var calc:Float = Conductor.stepCrochet / 100 * ((Conductor.bpm / 100) * (44 / 140)) * PlayState.SONG.speed;
+		var calc:Float = MusicBeatState.music.stepCrochet / 100 * ((MusicBeatState.music.bpm / 100) * (44 / 140)) * PlayState.SONG.speed;
 		scale.y = (scale.y * calc);
 
 		if(flipY)

@@ -23,7 +23,7 @@ typedef MenuObject = {
 class MenuTemplate extends MusicBeatState {
     public var curSel:Int  = 0;
     public var curAlt:Int  = 0;
-    public var columns:Int = 0;
+    public var columns:Int = 1;
 
     private var arrGroup:Array<MenuObject> = [];
     private var arrIcons:FlxTypedGroup<HealthIcon>;

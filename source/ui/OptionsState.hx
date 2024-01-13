@@ -174,7 +174,10 @@ class OptionsState extends MenuTemplate
 
 	// this is where you add your boolean or toggleable options
 	override public function keyHit(ev:KeyboardEvent){
-		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) return;
+		super.keyHit(ev);
+
+		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) 
+			return;
 
 		switch(optionSub[curSub][curSel]){
 			case 'basic':

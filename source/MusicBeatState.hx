@@ -32,19 +32,6 @@ class MusicBeatState extends FlxUIState
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
 
-	public static function musicSet(BPM:Float)
-	{
-		var nsCrochet = (60 / BPM) * 250;
-
-		music = {
-			bpm: BPM,
-			crochet:     nsCrochet * 4,
-			stepCrochet: nsCrochet,
-			songPosition: -Settings.pr.audio_offset,
-			songDiv: 1 / nsCrochet
-		};
-	}
-
 	public static inline function curTime()
 		#if desktop
 		return Sys.time();
@@ -139,4 +126,22 @@ class MusicBeatState extends FlxUIState
 
 	// Too much stuff relies on this function. Thus it must be separated out here.
 	public static var changeState:FlxState->Void = NewTransition.switchState;
+
+	// # New music system, a direct replacement for Conductor.
+	// Basically a local alias. This is simply so I don't keep having to type "MusicBeatState.music"
+	private inline function musg():MusicProperties
+		return MusicBeatState.music;
+
+	public static function musicSet(BPM:Float)
+	{
+		var nsCrochet = (60 / BPM) * 250;
+
+		music = {
+			bpm: BPM,
+			crochet:     nsCrochet * 4,
+			stepCrochet: nsCrochet,
+			songPosition: -Settings.pr.audio_offset,
+			songDiv: 1 / nsCrochet
+		};
+	}
 }
