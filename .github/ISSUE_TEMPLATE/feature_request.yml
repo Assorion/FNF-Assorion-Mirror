@@ -1,0 +1,19 @@
+name: Feature Request
+description: Suggestion of ideas that you believe would be excellent additions to Assorion Engine.
+labels: ["Feature's"]
+body:
+  - type: textarea
+    id: feature
+    attributes:
+      label: "Which feature would you desire to see implemented?" 
+      placeholder: "Information about the requested feature and how it would happen."
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "Addition Info" 
+      placeholder: "Feature Concepts, Images/Screenshots, References, etc."
+    validations:
+      required: true
