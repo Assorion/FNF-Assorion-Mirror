@@ -9,8 +9,6 @@ Body:
       label: "**Important**:"
       description: "Provide the information listed below"
       placeholder: "Version Of Engine:"
-      placeholder: "Operating System:"
-      placeholder: "Build Target:"
     validations:
       required: true
       
