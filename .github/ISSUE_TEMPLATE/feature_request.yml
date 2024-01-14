@@ -4,8 +4,7 @@ labels: ["Feature's"]
 body:
   - type: markdown
     id: statement
-    value: |
-        Your Feature Request Must Comply with Assorion Engine's guiding principles and foundation.
+    value: "Your Feature Request Must Comply with Assorion Engines guiding principles and foundation."
 
   - type: textarea
     id: feature
