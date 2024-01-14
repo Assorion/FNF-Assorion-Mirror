@@ -6,8 +6,8 @@ body:
     id: Important
     attributes:
       label: "**Important**:"
-      description: "Provide the information listed below"
-      placeholder: "Version Of Engine, Operating System, Build Target"
+      description: "**Provide the information listed below**"
+      placeholder: "**Version Of Engine, Operating System, Build Target**"
     validations:
       required: true
       
