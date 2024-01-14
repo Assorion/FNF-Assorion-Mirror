@@ -7,7 +7,10 @@ body:
     attributes:
       label: "**Important**:"
       description: "**Provide the information listed below**"
-      placeholder: "**Version Of Engine, Operating System, Build Target**"
+      value: |
+        **Version Of Assorion**:
+        **Operating System**:
+        **Build Target**:
     validations:
       required: true
       
@@ -15,7 +18,7 @@ body:
     id: description
     attributes:
       label: "Describe the Bug:"
-      placeholder: "**A clear and brief explanation of the bug and its cause. Provide screenshots demonstrating the bug in addition.**"
+      value: "**A clear and brief explanation of the bug and its cause. Provide screenshots demonstrating the bug in addition:**"
     validations:
       required: true
 
@@ -23,7 +26,7 @@ body:
     id: replication
     attributes:
       label: "Steps to replicate Bug:" 
-      placeholder: "**Provide instructions regarding how to reproduce the Bug.**"
+      value: "**Provide instructions regarding how to reproduce the Bug.**"
     validations:
       required: true
 
@@ -31,6 +34,6 @@ body:
     id: context
     attributes:
       label: "Addition Context"
-      placeholder: "**Give more background information regarding the problem.**"
+      value: "**Give more background information regarding the problem.**"
     validations:
       required: false
