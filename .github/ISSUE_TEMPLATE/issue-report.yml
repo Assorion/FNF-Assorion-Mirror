@@ -2,8 +2,6 @@ name: Bug Report
 description: Report bugs found within the game/code to improve Assorion Engine.
 title: "[Bug]: "
 labels: ["bug"]
-assignees: ''
-
 Body:
   - type: textarea
     id: Important
