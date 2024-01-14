@@ -15,7 +15,7 @@ body:
     id: description
     attributes:
       label: "Describe the Bug:"
-      description: "A clear and brief explanation of the bug and its cause. Provide screenshots demonstrating the bug in addition."
+      description: "**A clear and brief explanation of the bug and its cause. Provide screenshots demonstrating the bug in addition.**"
     validations:
       required: true
 
@@ -23,7 +23,7 @@ body:
     id: replication
     attributes:
       label: "Steps to replicate Bug:" 
-      description: "Provide instructions regarding how to reproduce the Bug."
+      description: "**Provide instructions regarding how to reproduce the Bug.**"
     validations:
       required: true
 
@@ -31,6 +31,6 @@ body:
     id: context
     attributes:
       label: "Addition Context"
-      description: "Give more background information regarding the problem."
+      description: "**Give more background information regarding the problem.**"
     validations:
       required: false
