@@ -34,6 +34,6 @@ body:
     id: context
     attributes:
       label: "Addition Context"
-      value: "**Give more background information regarding the problem:**"
+      value: "Give more background information regarding the problem:"
     validations:
       required: false
