@@ -62,8 +62,6 @@ class Settings {
         gSave.bind('funkin', 'candicejoe');
 
         if(gSave.data.fSettings != null){
-
-            // Make sure every value exists and isn't null
             var tmpPr:Options = cast gSave.data.fSettings;
             var items:Array<String> = Reflect.fields(pr);
 
@@ -98,10 +96,8 @@ class Settings {
         return CoolUtil.intBoundTo(ch, 10, 500);
 }
 
-// dunno why haxe doesn't haxe something like this included.
-// but this is terrible. And for some reason I thought it would be a -
-// great idea to include shifted characters!!!!!
-// WHEN THIS IS ONLY GONNA BE USED IN 2 PLACES!!! :(
+// Maps a key code to a string. Includes shifting.
+// TODO: Add more characters.
 class InputString {
     public static function getKeyNameFromString(code:Int, literal:Bool = false, shiftable:Bool = true):String{
         var shifted:Bool = false;

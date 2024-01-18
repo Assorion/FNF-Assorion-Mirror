@@ -33,8 +33,12 @@ class Main extends Sprite
 
 		// # add the game
 
-		var ldState:Class<FlxState> = #if desktop Settings.pr.launch_sprites ? ui.LoadingState : initState 
-		#else initState #end;
+		var ldState:Class<FlxState> = 
+		#if desktop 
+		Settings.pr.launch_sprites ? ui.LoadingState : initState 
+		#else 
+		initState 
+		#end;
 
 		fpsC = new FPSCounter(10, 3, 0xFFFFFF);
 		memC = new MemCounter(10, 18, 0xFFFFFF);

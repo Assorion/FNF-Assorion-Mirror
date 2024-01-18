@@ -1,5 +1,6 @@
 package gameplay;
 
+import haxe.MainLoop;
 import flixel.FlxG;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -39,10 +40,9 @@ class PauseSubState extends MusicBeatSubstate
 	}
 	
 	// # create new empty background sprite
-	public static function newCanvas(force:Bool = false){
-		if (canvas == null || !Settings.pr.default_persist || force)
-			canvas = new BitmapData(1280, 720, true, 0);
-	}
+	public static function newCanvas(force:Bool = false)
+	if (canvas == null || !Settings.pr.default_persist || force)
+		canvas = new BitmapData(1280, 720, true, 0);
 
 	public function new(camera:FlxCamera, ps:PlayState)
 	{
@@ -51,7 +51,7 @@ class PauseSubState extends MusicBeatSubstate
 		pState = ps;
 		pState.persistentDraw = false;
 
-		// music
+		// Music
 		pauseMusic = new FlxSound().loadEmbedded(Paths.lMusic('breakfast'), true, true);
 		pauseMusic.volume = 0;
 		pauseMusic.play();
@@ -63,6 +63,7 @@ class PauseSubState extends MusicBeatSubstate
 		*/
 
 		newCanvas();
+		
 		for(gcam in FlxG.cameras.list)
 			CoolUtil.copyCameraToData(canvas, gcam);
 
@@ -71,7 +72,7 @@ class PauseSubState extends MusicBeatSubstate
 		gameSpr.antialiasing = Settings.pr.antialiasing;
 		add(gameSpr);
 
-		// option stuff
+		// Option Text
 
 		for (i in 0...optionList.length)
 		{
@@ -95,6 +96,7 @@ class PauseSubState extends MusicBeatSubstate
 		pauseText = new FlxText(5, camera.height - 25, 0, '', 20);
 		pauseText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
 		pauseText.alpha = 0;
+
 		add(bottomBlack);
 		add(pauseText);
 
@@ -104,9 +106,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		// Tweens
 
-		activeTweens.push(FlxTween.tween( bottomBlack, {alpha: 0.6  }, 0.2));
-		activeTweens.push(FlxTween.tween( pauseText  , {alpha: 1    }, 0.2));
-		activeTweens.push(FlxTween.tween( pauseMusic , {volume: 0.5 },  4 ));
+		activeTweens.push(FlxTween.tween( bottomBlack, {alpha: 0.6  }, 0.2 ));
+		activeTweens.push(FlxTween.tween( pauseText  , {alpha: 1    }, 0.2 ));
+		activeTweens.push(FlxTween.tween( pauseMusic , {volume: 0.5 },  4  ));
 		activeTweens.push(FlxTween.tween( this       , {colour: 120 }, 0.45));
 	}
 	private inline function updatePauseText(){
@@ -135,22 +137,23 @@ class PauseSubState extends MusicBeatSubstate
 			case 0:
 				leaving = true;
 
-				// Cancel active tweens if there are any.
 				for(i in 0...activeTweens.length)
 					if (activeTweens[i] != null)
 						activeTweens[i].cancel();
 				
-				// Animations.
+				// Fade out text seperately
 				for(i in 0...alphaTexts.length)
 					alphaTexts[i].targetA = 0;
 
-				FlxTween.tween(pauseText,  { alpha:  0   }, 0.1);
-				FlxTween.tween(bottomBlack,{ alpha:  0   }, 0.1);
-				FlxTween.tween(pauseMusic, { volume: 0   }, 0.1);
-				FlxTween.tween(this,       { colour: 255 }, 0.1, {onComplete: 
+				pState.persistentDraw = true;
+
+				FlxTween.tween(pauseText,  { alpha:  0 }, 0.1);
+				FlxTween.tween(bottomBlack,{ alpha:  0 }, 0.1);
+				FlxTween.tween(pauseMusic, { volume: 0 }, 0.1);
+				FlxTween.tween(gameSpr,    { alpha:  0 }, 0.1, {onComplete: 
+
 				// Closing
 				function(t:FlxTween){
-					pState.persistentDraw = true;
 					pauseMusic.stop();
 					pauseMusic.destroy();
 					close();
@@ -158,6 +161,7 @@ class PauseSubState extends MusicBeatSubstate
 
 			case 1:
 				FlxG.resetState();
+
 			case 2:
 				Settings.pr.botplay = !Settings.pr.botplay;
 				alphaTexts[curSelected].obj.alpha = 0;
@@ -165,6 +169,7 @@ class PauseSubState extends MusicBeatSubstate
 
 				pauseText.alpha = 0;
 				activeTweens.push(FlxTween.tween(pauseText, {alpha: 1}, 0.3));
+
 			case 3:
 				exitToProperMenu();
 		}

@@ -1,6 +1,5 @@
 package gameplay;
 
-import MusicBeatState.MusicProperties;
 import flixel.util.FlxColor;
 
 typedef NoteType = {
@@ -75,7 +74,7 @@ class Note extends StaticSprite
 		animation.play('holdend');
 		animation.remove('scroll');
 
-		var calc:Float = MusicBeatState.music.stepCrochet / 100 * ((MusicBeatState.music.bpm / 100) * (44 / 140)) * PlayState.SONG.speed;
+		var calc:Float = Song.curMus.stepCrochet / 100 * ((Song.curMus.bpm / 100) * (44 / 140)) * PlayState.SONG.speed;
 		scale.y = (scale.y * calc);
 
 		if(flipY)

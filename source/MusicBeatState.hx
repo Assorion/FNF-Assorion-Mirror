@@ -14,14 +14,6 @@ typedef DelayedEvent = {
 	var exeFunc:Void->Void;
 }
 
-typedef MusicProperties = {
-	var bpm         :Float; // How fast the music is.
-	var crochet     :Float; // BPM but in miliseconds.
-	var stepCrochet :Float; // BPM Divided in 4
-	var songPosition:Float; // Milisecond point in the song.
-	var songDiv     :Float; // A multiplier from stepCrochet.
-}
-
 #if !debug @:noDebug #end
 class MusicBeatState extends FlxUIState
 {
@@ -32,16 +24,13 @@ class MusicBeatState extends FlxUIState
 		return Date.now().getTime() * 0.001;
 		#end
 
-	// Moved conductor away from being a Class to a struct. The conductor did not deserve it's own class.
-	public static var music:MusicProperties;
-
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
 
 	public function correctMusic()
 	if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
-		musicSet(Paths.menuTempo);
+		Song.musicSet(Paths.menuTempo);
 		FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
 	}
 
@@ -84,11 +73,11 @@ class MusicBeatState extends FlxUIState
 	private var oldStep:Int = 0;
 	override function update(elapsed:Float)
 	{
-		music.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
+		Song.curMus.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
 
-		curStep = Math.floor(music.songPosition * music.songDiv);
+		curStep = Math.floor(Song.curMus.songPosition * Song.curMus.songDiv);
 		
-		if(oldStep != curStep && curStep >= -1){
+		if (oldStep != curStep && curStep >= -1){
 			oldStep = curStep;
 			stepHit();
 		}
@@ -107,7 +96,6 @@ class MusicBeatState extends FlxUIState
 		}
 	}
 
-	// GREAT! Now this has no chance of working with odd time signatures...
 	// This should be documented in the Wiki. That will happen eventually.
 	public function beatHit():Void {}
 	public function stepHit():Void
@@ -125,22 +113,4 @@ class MusicBeatState extends FlxUIState
 		events[i].exeFunc();
 
 	public static var changeState:FlxState->Void = NewTransition.switchState;
-
-	// # New music system, a direct replacement for Conductor. (Stands for MusicGet)
-	// Basically a local alias. This is simply so I don't keep having to type "MusicBeatState.music"
-	private inline function musg():MusicProperties
-		return MusicBeatState.music;
-
-	public static function musicSet(BPM:Float)
-	{
-		var nsCrochet = (60 / BPM) * 250;
-
-		music = {
-			bpm: BPM,
-			crochet:     nsCrochet * 4,
-			stepCrochet: nsCrochet,
-			songPosition: -Settings.pr.audio_offset,
-			songDiv: 1 / nsCrochet
-		};
-	}
 }

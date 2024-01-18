@@ -7,6 +7,8 @@ import misc.CoolUtil;
 
 using StringTools;
 
+// Song now also acts as a Conductor Replacement.
+
 typedef SwagSection =
 {
 	var sectionNotes:Array<Dynamic>;
@@ -28,9 +30,32 @@ typedef SwagSong =
 	var beginTime:Float;
 }
 
+typedef MusicProperties = {
+	var bpm         :Float; // How fast the music is.
+	var crochet     :Float; // BPM but in miliseconds.
+	var stepCrochet :Float; // BPM Divided in 4
+	var songPosition:Float; // Milisecond point in the song.
+	var songDiv     :Float; // A multiplier from stepCrochet.
+}
+
 #if !debug @:noDebug #end
 class Song
 {
+	public static var curMus:MusicProperties;
+
+	public static function musicSet(BPM:Float)
+	{
+		var nsCrochet = (60 / BPM) * 250;
+
+		curMus = {
+			bpm: BPM,
+			crochet:     nsCrochet * 4,
+			stepCrochet: nsCrochet,
+			songPosition: -Settings.pr.audio_offset,
+			songDiv: 1 / nsCrochet
+		};
+	}
+
 	public static function loadFromJson(songStr:String, diff:Int):SwagSong
 	{
 		songStr = songStr.toLowerCase();

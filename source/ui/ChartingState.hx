@@ -331,22 +331,22 @@ class ChartingState extends MusicBeatState {
                     vocals.play();
                     vocals.time = FlxG.sound.music.time;
 
-                    musg().songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
+                    Song.curMus.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
                 }
                 return;
             case 3, 4:
                 pauseSong();
                 changeSec(curSec + (((T - 3) * 2) - 1));
 
-                var offTime = curSec * musg().crochet * 4;
+                var offTime = curSec * Song.curMus.crochet * 4;
                     offTime += Settings.pr.audio_offset;
 
                 // this is to make sure there are no trashy rounding errors.
-                while(Math.floor((offTime + Settings.pr.audio_offset) / (musg().crochet * 4)) < curSec)
+                while(Math.floor((offTime + Settings.pr.audio_offset) / (Song.curMus.crochet * 4)) < curSec)
                     offTime += 0.01;
 
-                musg().songPosition = vocals.time = FlxG.sound.music.time = offTime;
-                musg().songPosition -= Settings.pr.audio_offset;
+                Song.curMus.songPosition = vocals.time = FlxG.sound.music.time = offTime;
+                Song.curMus.songPosition -= Settings.pr.audio_offset;
 
                 expandCheck();
                 reloadNotes();
@@ -572,7 +572,7 @@ class ChartingState extends MusicBeatState {
     /////////////////////////////////////////////////
 
     override public function update(elapsed:Float){
-        var secRef:Float = CoolUtil.boundTo(musg().songPosition / (musg().crochet * 4), 0, FlxG.sound.music.length);
+        var secRef:Float = CoolUtil.boundTo(Song.curMus.songPosition / (Song.curMus.crochet * 4), 0, FlxG.sound.music.length);
 
         // # Right click
 
@@ -678,7 +678,7 @@ class ChartingState extends MusicBeatState {
         });
         var bpmBox:ChartUI_InputBox = new ChartUI_InputBox(200, 0, 90, 30, Std.string(song.bpm), function(ch:String){
             song.bpm = Std.parseFloat(ch);
-            MusicBeatState.musicSet(song.bpm);
+            Song.musicSet(song.bpm);
         });
         var delayBox:ChartUI_InputBox = new ChartUI_InputBox(0, 40, 70, 30, Std.string(song.beginTime), function(ch:String){
             song.beginTime = Std.parseFloat(ch);
@@ -739,7 +739,7 @@ class ChartingState extends MusicBeatState {
             song.needsVoices = true;
             song.speed = 1;
 
-            MusicBeatState.musicSet(song.bpm);
+            Song.musicSet(song.bpm);
             changeSec(0);
             reloadNotes();
         }, 'Clear Song');

@@ -36,7 +36,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		FlxG.sound.play(Paths.lSound('gameplay/fnf_loss_sfx'));
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 
-		MusicBeatState.musicSet(100);
+		Song.musicSet(100);
 
 		postEvent(2.5, function() {
 			if(!leaving)

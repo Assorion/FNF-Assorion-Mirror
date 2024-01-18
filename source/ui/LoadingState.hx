@@ -114,7 +114,7 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
                 add(tmpImg);
                 remove(tmpImg);
             
-            // since web browser doesn't work, we can just use this
+            // Since web browser doesn't work, we can just use this
             case 'ogg':
                 var sound:FlxSound = new FlxSound().loadEmbedded(objectPath);
                     sound.volume = 0;
@@ -131,10 +131,6 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
             FlxG.switchState(new TitleState());
 
             Settings.pr.framerate = prevFramerate;
-            // failsafe if somehow this ends up being hudge
-            if(prevFramerate > 500)
-                Settings.openSettings();
-
             Settings.apply();
 
             return;
@@ -146,14 +142,14 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
         assetText.text = obj;
         assetText.screenCenter(X);
 
-        // in case somehow it has multiple dots
         var tmp = obj.split('.');
         var ending:String = tmp[tmp.length - 1];
 
         addAsset(obj, ending);
         index++;
 
-        // asthetic stuff. Please ignore
+        // Bar and text.
+
         var percent:Float = index / (objects.length - 1);
 
         var selColour:Int = FlxColor.fromRGB(

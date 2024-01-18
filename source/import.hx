@@ -1,4 +1,4 @@
-import MusicBeatState.MusicProperties;
+import misc.Song;
 import misc.Paths;
 import misc.Binds;
 import misc.Settings;

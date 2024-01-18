@@ -101,7 +101,7 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camHUD);
 		FlxCamera.defaultCameras = [camGame];
 
-		MusicBeatState.musicSet(SONG.bpm);
+		Song.musicSet(SONG.bpm);
 		handleStage();
 
 		///////////////////////////////////
@@ -203,7 +203,7 @@ class PlayState extends MusicBeatState
 			scoreTxt.cameras       = [camHUD];
 		}
 
-		songTime = -16 - (Settings.pr.audio_offset * musg().songDiv);
+		songTime = -16 - (Settings.pr.audio_offset * Song.curMus.songDiv);
 		updateHealth(0);
 
 		super.create();
@@ -359,22 +359,22 @@ class PlayState extends MusicBeatState
 				pc.dance();
 
 			songTime = (swagCounter - 4) * 4;
-			songTime -= Settings.pr.audio_offset * musg().songDiv;
+			songTime -= Settings.pr.audio_offset * Song.curMus.songDiv;
 
 			introSounds[swagCounter].play();
 			if(introSprites[swagCounter] != null)
-				introSpriteTween(introSprites[swagCounter], 3, musg().stepCrochet, true);
+				introSpriteTween(introSprites[swagCounter], 3, Song.curMus.stepCrochet, true);
 
 			swagCounter++;
 		}
 		for(i in 0...5)
-			postEvent(((musg().crochet * (i + 1)) - Settings.pr.audio_offset) * 0.001, countTickFunc);
+			postEvent(((Song.curMus.crochet * (i + 1)) - Settings.pr.audio_offset) * 0.001, countTickFunc);
 	}
 
 	override function closeSubState()
-	{
-		if(!seenCutscene) return;
+	if(seenCutscene) {
 		super.closeSubState();
+
 		if(!paused) return;
 
 		paused = false;
@@ -397,7 +397,7 @@ class PlayState extends MusicBeatState
 		iconP2.scale.set(scaleVal, scaleVal);
 
 		if(seenCutscene)
-			songTime += (elapsed * 1000) * musg().songDiv;
+			songTime += (elapsed * 1000) * Song.curMus.songDiv;
 
 		// note spawning
 		var uNote = unspawnNotes[noteCount];
@@ -440,7 +440,7 @@ class PlayState extends MusicBeatState
 		super.stepHit();
 
 		if(FlxG.sound.music.playing)
-			songTime = ((musg().songPosition * 3 * musg().songDiv) + songTime) * 0.25;
+			songTime = ((Song.curMus.songPosition * 3 * Song.curMus.songDiv) + songTime) * 0.25;
 	}
 
 	// # Update stats
@@ -547,7 +547,7 @@ class PlayState extends MusicBeatState
 		var nRef = hittableNotes[nkey];
 		if(nRef != null){
 			goodNoteHit(nRef);
-			sRef.pressTime = musg().stepCrochet * 0.00075;
+			sRef.pressTime = Song.curMus.stepCrochet * 0.00075;
 			
 			return;
 		}
@@ -588,7 +588,7 @@ class PlayState extends MusicBeatState
 			if(!Settings.pr.strum_glow) return;
 
 			strumRef.playAnim(2);
-			strumRef.pressTime = musg().stepCrochet * 0.001;
+			strumRef.pressTime = Song.curMus.stepCrochet * 0.001;
 
 			return;
 		}
@@ -652,7 +652,7 @@ class PlayState extends MusicBeatState
 	private var scoreTweens:Array<FlxTween> = [];
 	private inline function popUpScore(strumtime:Float):Void
 	{
-		var noteDiff:Float = Math.abs(strumtime - (songTime - (Settings.pr.input_offset * musg().songDiv)));
+		var noteDiff:Float = Math.abs(strumtime - (songTime - (Settings.pr.input_offset * Song.curMus.songDiv)));
 		combo++;
 
 		var pscore:RatingData = null;
@@ -689,9 +689,9 @@ class PlayState extends MusicBeatState
 			sRef.animation.play(char);
 			sRef.screenCenter(Y);
 			sRef.y += 120;
-			scoreTweens[i+1] = introSpriteTween(sRef, 3, musg().stepCrochet * 0.5, false);
+			scoreTweens[i+1] = introSpriteTween(sRef, 3, Song.curMus.stepCrochet * 0.5, false);
 		}
-		scoreTweens[0] = introSpriteTween(ratingSpr, 3,  musg().stepCrochet * 0.5, false);
+		scoreTweens[0] = introSpriteTween(ratingSpr, 3,  Song.curMus.stepCrochet * 0.5, false);
 	}
 
 	function endSong():Void
@@ -724,12 +724,12 @@ class PlayState extends MusicBeatState
 
 	// Smaller helper functions
 	function syncEverything(forceTime:Float){
-		var roundedTime:Float = (forceTime == -1 ? musg().songPosition + Settings.pr.audio_offset : forceTime);
+		var roundedTime:Float = (forceTime == -1 ? Song.curMus.songPosition + Settings.pr.audio_offset : forceTime);
 
 		FlxG.sound.music.time  = roundedTime;
 		vocals.time            = roundedTime;
-		musg().songPosition    = roundedTime - Settings.pr.audio_offset;
-		songTime = musg().songPosition * musg().songDiv;
+		Song.curMus.songPosition    = roundedTime - Settings.pr.audio_offset;
+		songTime = Song.curMus.songPosition * Song.curMus.songDiv;
 	}
 	function pauseGame(state:MusicBeatSubstate){
 		paused = true;
@@ -752,7 +752,7 @@ class PlayState extends MusicBeatState
 	private inline function introSpriteTween(spr:StaticSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
 	{
 		spr.alpha = 1;
-		return FlxTween.tween(spr, {y: spr.y + 10, alpha: 0}, (steps * musg().stepCrochet) / 1000, { ease: FlxEase.cubeInOut, startDelay: delay * 0.001,
+		return FlxTween.tween(spr, {y: spr.y + 10, alpha: 0}, (steps * Song.curMus.stepCrochet) / 1000, { ease: FlxEase.cubeInOut, startDelay: delay * 0.001,
 			onComplete: function(twn:FlxTween)
 			{
 				if(destroy)

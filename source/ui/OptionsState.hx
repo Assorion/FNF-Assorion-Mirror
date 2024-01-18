@@ -146,7 +146,7 @@ class OptionsState extends MenuTemplate
 		descText.text = descriptions[curSub][curSel];
 	}
 
-	// this is where you add your integer or slidable(?) options
+	// Add integer options here.
 	override function altChange(ch:Int = 0){
 		var atg:Alphabet = cast arrGroup[(curSel * 2) + 1].obj;
 		switch(optionSub[curSub][curSel]){
@@ -174,7 +174,7 @@ class OptionsState extends MenuTemplate
 		changeSelection(0);
 	}
 
-	// this is where you add your boolean or toggleable options
+	// Add togglable options here.
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 

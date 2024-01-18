@@ -8,7 +8,7 @@ import flixel.tweens.FlxTween;
 import misc.Alphabet;
 
 /*
-    Just a modified
+    Just a modified -
     Optionstate for controls
 */
 
@@ -89,7 +89,7 @@ class ControlsState extends MenuTemplate {
         MusicBeatState.changeState(new OptionsState());
 	}
 
-    // skip blank space
+    // Skip blank space
 	override public function changeSelection(to:Int = 0){
 		if(curSel + to >= 0 && controlList[curSel + to] == '')
 			to *= 2;
