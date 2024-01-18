@@ -1,0 +1,39 @@
+name: Bug Report
+description: Report bugs found within the game/code to improve Assorion Engine.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: Important
+    attributes:
+      label: "Important:"
+      description: "**Provide the information listed below**"
+      value: |
+        Version Of Assorion:
+        Operating System:
+        Build Target:
+    validations:
+      required: true
+      
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe the Bug:"
+      value: "A clear and brief explanation of the bug and its cause. Provide screenshots demonstrating the bug in addition:"
+    validations:
+      required: true
+
+  - type: textarea
+    id: replication
+    attributes:
+      label: "Steps to replicate Bug:" 
+      value: "Provide instructions/Steps regarding how to reproduce the Bug:"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "Addition Context"
+      value: "Give more background information regarding the problem:"
+    validations:
+      required: false
