@@ -1,7 +1,5 @@
 [![Typing SVG](https://readme-typing-svg.demolab.com/?font=Rock+Salt&size=39&duration=2000&pause=1000&repeat=false&random=false&width=435&lines=Ass+Engine+read+me)](https://git.io/typing-svg)
 
-# Friday Night Funking Assorion Engine
-
  <div align="center">
  <a href="#"><img src="https://img.shields.io/github/repo-size/Assorion/FNF-Assorion-Engine?style=social&color=06b59c"/></a>
 
