@@ -88,7 +88,7 @@ Though, Assorion Engine does have several <a href="https://github.com/Assorion/F
 ></tr>
 ></table>
 ></details>
-**Until the primary Assorion Engine repository is finalized**, the following branches listed above will be **deprecated**.
+Until the **primary Assorion Engine repository** is finalized, the following branches listed above will be **deprecated**.
 
 ## 🖼️ | Screenshots
 
@@ -125,7 +125,7 @@ Run `haxelib setup <library name>` replacing `<library name>` with these librari
 - Run `lime test linux` in your terminal
 
 #### **If you're confused:**  
-Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#ewbuild-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use **`MinGW-w64`**.  
+Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use **`MinGW-w64`**.  
 Remember to install the [library versions](#libraries) listed above.
 
 > [!WARNING] 
