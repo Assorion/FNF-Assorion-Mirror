@@ -21,7 +21,7 @@
 </div>
 <div align="center">
  
-┃ [**`• What is Assorion?`**](#--what-is-assorion-engine) ┃ [**`• Important Notes`**](#%EF%B8%8F--important-notesroadmap) ┃ [**`• Compiling`**](#--compiling) ┃ [**`• Min Reqs`**](#--minimum-requirements) ┃ <a href="https://assorion.github.io/wiki/">**`• Wiki`**</a> ┃ 
+┃ [**`• What is Assorion?`**](#--what-is-assorion-engine) ┃ [**`• Important Notes`**](#%EF%B8%8F--important-notesroadmap) ┃ [**`• Compiling`**](#--compiling) ┃ [**`• Min Reqs`**](#--minimum-requirements) ┃ <a href="https://assorion.github.io/wiki/">**`• Wiki (Incomplete)`**</a> ┃ 
 </div>
 
 -------------------------------------------------------------
@@ -67,15 +67,28 @@ Though, Assorion Engine does have several <a href="https://github.com/Assorion/F
 * [ ]	Events System
 * [ ]	Portuguese translation
 * [ ]	Fixes for newer Flixel
-
+ 
 #### **Branches**
-| `Assorion Branch's`                                | `Windows` | `Linux` | `HTML5 (WEB)`     |
-|--------------------------------------------------|---------|-------|-----------------|
-| <a href="#">Assorion-Main</a>                                    | ✓       | ✓     | ⍻              |
-| <a href="#">Assorion-Plus</a>                                    | ☓       | ☓     | ☓              |
-| <a href="#">Assorion-Minimun</a>                                 | ☓       | ☓     | ☓              |
-| <a href="#">Assorion-Base</a>                                    | ☓       | ☓     | ☓              |
-| <a href="#">Assorion-3D</a>                                      | ☓       | ☓     | ☓              |
+
+> <details>
+> <summary>Deprecated List</summary>
+> <br>
+> <table>
+> <tr>
+> <td>
+>
+>   | `Assorion Branch's`                                | `Windows` | `Linux` | `HTML5 (WEB)`     |
+>   |--------------------------------------------------|---------|-------|-----------------|
+>   | <a href="#">Assorion-Main</a>                                    | ✓       | ✓     | ⍻              |
+>   | <a href="#">Assorion-Plus</a>                                    | ☓       | ☓     | ☓              |
+>   | <a href="#">Assorion-Minimun</a>                                 | ☓       | ☓     | ☓              |
+>   | <a href="#">Assorion-Base</a>                                    | ☓       | ☓     | ☓              |
+>   | <a href="#">Assorion-3D</a>                                      | ☓       | ☓     | ☓              |
+></td>
+></tr>
+></table>
+></details>
+**Until the primary Assorion Engine repository is finalized**, the following branches listed above will be **deprecated**.
 
 ## 🖼️ | Screenshots
 
@@ -112,7 +125,7 @@ Run `haxelib setup <library name>` replacing `<library name>` with these librari
 - Run `lime test linux` in your terminal
 
 #### **If you're confused:**  
-Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use **`MinGW-w64`**.  
+Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#ewbuild-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use **`MinGW-w64`**.  
 Remember to install the [library versions](#libraries) listed above.
 
 > [!WARNING] 
@@ -149,3 +162,11 @@ These should be the lowest minimum requirements to run the engine:
 - **Memory**: 512MB - 1GB of Ram. 256mb or Higher of VRAM
 
 - **Storage**: ~70MB Available Space
+
+
+# ⚠️ | License
+**<a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/LICENSE">GPL-3.0 Public License</a>, Version 3, 29 June 2007**
+
+Under the terms of the <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/LICENSE">GPL-3.0 Public License</a>, Assorion Engine will be free and open source and anyone using this project thereafter acknowledges being bound under the <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/LICENSE">GPL-3.0 Public License's</a> conditions, and making their variant of the project open source.
+
+Project authored and maintained by <a href="https://github.com/Legendary-Candice-Joe">***Legendary Candice Joe***</a>.
