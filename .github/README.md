@@ -70,9 +70,8 @@ Though, Assorion Engine does have several <a href="https://github.com/Assorion/F
  
 #### **Branches**
 
-> <details>
+> <details open>
 > <summary>Deprecated List</summary>
-> <br>
 > <table>
 > <tr>
 > <td>
