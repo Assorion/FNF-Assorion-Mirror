@@ -7,7 +7,7 @@
 2. After the Archive is downloaded in the `C:`, Extract the file and a new folder `c:\mingw64` should exist. **Rename the folder to `MinGW`**
 3. In settings or search menu type `Edit environment variables for your account`.
 4. Choose the **`Path`** Variable and press **`edit`**
-![screenshot2](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/8d1954e6-1031-446b-a50e-ba7711389acf)
+![antidox](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/ea043d3c-8c04-45a8-a8b7-8006d48b724e)
 
 5. Select **New** and add the **Mingw-w64 folder path(bin folder)** **`C:\MinGW\bin`**
 6. Select OK to save updated path. to make sure type both the `gcc` and `g++` commands work in CMD and if they work MinGW-64 is installed
