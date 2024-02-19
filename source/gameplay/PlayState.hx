@@ -16,8 +16,8 @@ import gameplay.HealthIcon;
 import misc.Highscore;
 import ui.FreeplayState;
 import ui.ChartingState;
-import misc.Song.SwagSong;
-import misc.Song.SwagSection;
+import misc.Song.SongData;
+import misc.Song.SectionData;
 
 using StringTools;
 
@@ -27,7 +27,7 @@ class PlayState extends MusicBeatState
 	public static inline var inputRange:Float = 1.25; // 1 = step. 1.5 = 1 + 1/4 step range.
 
 	public static var curSong:String = '';
-	public static var SONG:SwagSong;
+	public static var SONG:SongData;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var curDifficulty:Int = 1;
@@ -203,7 +203,7 @@ class PlayState extends MusicBeatState
 			scoreTxt.cameras       = [camHUD];
 		}
 
-		songTime = -16 - (Settings.pr.audio_offset * Song.curMus.songDiv);
+		songTime = -16 - (Settings.pr.audio_offset * Song.Division);
 		updateHealth(0);
 
 		super.create();
@@ -359,16 +359,16 @@ class PlayState extends MusicBeatState
 				pc.dance();
 
 			songTime = (swagCounter - 4) * 4;
-			songTime -= Settings.pr.audio_offset * Song.curMus.songDiv;
+			songTime -= Settings.pr.audio_offset * Song.Division;
 
 			introSounds[swagCounter].play();
 			if(introSprites[swagCounter] != null)
-				introSpriteTween(introSprites[swagCounter], 3, Song.curMus.stepCrochet, true);
+				introSpriteTween(introSprites[swagCounter], 3, Song.StepCrochet, true);
 
 			swagCounter++;
 		}
 		for(i in 0...5)
-			postEvent(((Song.curMus.crochet * (i + 1)) - Settings.pr.audio_offset) * 0.001, countTickFunc);
+			postEvent(((Song.Crochet * (i + 1)) - Settings.pr.audio_offset) * 0.001, countTickFunc);
 	}
 
 	override function closeSubState()
@@ -397,7 +397,7 @@ class PlayState extends MusicBeatState
 		iconP2.scale.set(scaleVal, scaleVal);
 
 		if(seenCutscene)
-			songTime += (elapsed * 1000) * Song.curMus.songDiv;
+			songTime += (elapsed * 1000) * Song.Division;
 
 		// note spawning
 		var uNote = unspawnNotes[noteCount];
@@ -419,7 +419,7 @@ class PlayState extends MusicBeatState
 		
 		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
 
-		var sec:SwagSection = SONG.notes[Math.floor(curBeat / 4)];
+		var sec:SectionData = SONG.notes[Math.floor(curBeat / 4)];
 		if(curStep - ((curStep >> 2) << 2) == 0 && FlxG.sound.music.playing){
 			// prevent the Int from being null, if it is it will just be 0.
 			var tFace:Int = sec != null ? cast(sec.cameraFacing, Int) : 0;
@@ -440,7 +440,7 @@ class PlayState extends MusicBeatState
 		super.stepHit();
 
 		if(FlxG.sound.music.playing)
-			songTime = ((Song.curMus.songPosition * 3 * Song.curMus.songDiv) + songTime) * 0.25;
+			songTime = ((Song.Position * 3 * Song.Division) + songTime) * 0.25;
 	}
 
 	// # Update stats
@@ -547,7 +547,7 @@ class PlayState extends MusicBeatState
 		var nRef = hittableNotes[nkey];
 		if(nRef != null){
 			goodNoteHit(nRef);
-			sRef.pressTime = Song.curMus.stepCrochet * 0.00075;
+			sRef.pressTime = Song.StepCrochet * 0.00075;
 			
 			return;
 		}
@@ -588,7 +588,7 @@ class PlayState extends MusicBeatState
 			if(!Settings.pr.strum_glow) return;
 
 			strumRef.playAnim(2);
-			strumRef.pressTime = Song.curMus.stepCrochet * 0.001;
+			strumRef.pressTime = Song.StepCrochet * 0.001;
 
 			return;
 		}
@@ -652,7 +652,7 @@ class PlayState extends MusicBeatState
 	private var scoreTweens:Array<FlxTween> = [];
 	private inline function popUpScore(strumtime:Float):Void
 	{
-		var noteDiff:Float = Math.abs(strumtime - (songTime - (Settings.pr.input_offset * Song.curMus.songDiv)));
+		var noteDiff:Float = Math.abs(strumtime - (songTime - (Settings.pr.input_offset * Song.Division)));
 		combo++;
 
 		var pscore:RatingData = null;
@@ -689,9 +689,9 @@ class PlayState extends MusicBeatState
 			sRef.animation.play(char);
 			sRef.screenCenter(Y);
 			sRef.y += 120;
-			scoreTweens[i+1] = introSpriteTween(sRef, 3, Song.curMus.stepCrochet * 0.5, false);
+			scoreTweens[i+1] = introSpriteTween(sRef, 3, Song.StepCrochet * 0.5, false);
 		}
-		scoreTweens[0] = introSpriteTween(ratingSpr, 3,  Song.curMus.stepCrochet * 0.5, false);
+		scoreTweens[0] = introSpriteTween(ratingSpr, 3,  Song.StepCrochet * 0.5, false);
 	}
 
 	function endSong():Void
@@ -724,12 +724,12 @@ class PlayState extends MusicBeatState
 
 	// Smaller helper functions
 	function syncEverything(forceTime:Float){
-		var roundedTime:Float = (forceTime == -1 ? Song.curMus.songPosition + Settings.pr.audio_offset : forceTime);
+		var roundedTime:Float = (forceTime == -1 ? Song.Position + Settings.pr.audio_offset : forceTime);
 
 		FlxG.sound.music.time  = roundedTime;
 		vocals.time            = roundedTime;
-		Song.curMus.songPosition    = roundedTime - Settings.pr.audio_offset;
-		songTime = Song.curMus.songPosition * Song.curMus.songDiv;
+		Song.Position    = roundedTime - Settings.pr.audio_offset;
+		songTime = Song.Position * Song.Division;
 	}
 	function pauseGame(state:MusicBeatSubstate){
 		paused = true;
@@ -752,7 +752,7 @@ class PlayState extends MusicBeatState
 	private inline function introSpriteTween(spr:StaticSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
 	{
 		spr.alpha = 1;
-		return FlxTween.tween(spr, {y: spr.y + 10, alpha: 0}, (steps * Song.curMus.stepCrochet) / 1000, { ease: FlxEase.cubeInOut, startDelay: delay * 0.001,
+		return FlxTween.tween(spr, {y: spr.y + 10, alpha: 0}, (steps * Song.StepCrochet) / 1000, { ease: FlxEase.cubeInOut, startDelay: delay * 0.001,
 			onComplete: function(twn:FlxTween)
 			{
 				if(destroy)

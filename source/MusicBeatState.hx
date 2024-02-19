@@ -28,7 +28,7 @@ class MusicBeatState extends FlxUIState
 	private var curBeat:Int = 0;
 	private var events:Array<DelayedEvent> = [];
 
-	public function correctMusic()
+	public function menuMusicCheck()
 	if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
 		Song.musicSet(Paths.menuTempo);
 		FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
@@ -41,7 +41,6 @@ class MusicBeatState extends FlxUIState
 
 		persistentUpdate = true;
 		FlxG.camera.bgColor.alpha = 0;
-
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHit);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP  , keyRel);
 
@@ -68,21 +67,19 @@ class MusicBeatState extends FlxUIState
 		exeFunc: func
 	});
 
-	//////////////////////////////////////
-
-	private var oldStep:Int = 0;
 	override function update(elapsed:Float)
 	{
-		Song.curMus.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
+		Song.Position = FlxG.sound.music.time - Settings.pr.audio_offset;
 
-		curStep = Math.floor(Song.curMus.songPosition * Song.curMus.songDiv);
+		var oldStep = curStep;
+		curStep = Math.floor(Song.Position * Song.Division);
 		
 		if (oldStep != curStep && curStep >= -1){
 			oldStep = curStep;
 			stepHit();
 		}
 
-		super.update(elapsed);
+		// # Check if event needs to be executed.
 
 		var cTime = curTime();
 		var i = -1;
@@ -94,9 +91,13 @@ class MusicBeatState extends FlxUIState
 			e.exeFunc();
 			events.splice(i--, 1);
 		}
+
+		///////////////////////
+
+		super.update(elapsed);
 	}
 
-	// This should be documented in the Wiki. That will happen eventually.
+	// This does the equivilant of (curStep % 4 == 0), but faster using bitwise shifts.
 	public function beatHit():Void {}
 	public function stepHit():Void
 	{

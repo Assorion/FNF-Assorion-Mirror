@@ -31,7 +31,7 @@ class FreeplayState extends MenuTemplate
 	override function create()
 	{
 		addBG(FlxColor.fromRGB(145, 113, 255));
-		correctMusic();
+		menuMusicCheck();
 		super.create();
 		
 		/// Parsing

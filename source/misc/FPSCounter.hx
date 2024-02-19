@@ -28,14 +28,12 @@ class FPSCounter extends TextField {
     }
 
     private override function __enterFrame(deltaTime:Float):Void
-    {
-        if(!visible)
-            return;
-
+    if(visible){
         currentTime += deltaTime;
         framerate++;
 
-        if(currentTime < 500) return;
+        if(currentTime < 500) 
+            return;
 
         text = 'FPS: ${framerate * 2}';
 

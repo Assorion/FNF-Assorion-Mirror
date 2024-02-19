@@ -1,6 +1,5 @@
 package ui;
 
-import haxe.macro.Compiler.CompilerConfiguration;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;

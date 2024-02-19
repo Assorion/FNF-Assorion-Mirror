@@ -67,7 +67,7 @@ class ChartingState extends MusicBeatState {
     var uiBG:ChartUI_Generic;
 
     private var vocals:FlxSound;
-    private var song:SwagSong;
+    private var song:SongData;
 
     override public function create(){
         if(FlxG.sound.music.playing){
@@ -331,22 +331,22 @@ class ChartingState extends MusicBeatState {
                     vocals.play();
                     vocals.time = FlxG.sound.music.time;
 
-                    Song.curMus.songPosition = FlxG.sound.music.time - Settings.pr.audio_offset;
+                    Song.Position = FlxG.sound.music.time - Settings.pr.audio_offset;
                 }
                 return;
             case 3, 4:
                 pauseSong();
                 changeSec(curSec + (((T - 3) * 2) - 1));
 
-                var offTime = curSec * Song.curMus.crochet * 4;
+                var offTime = curSec * Song.Crochet * 4;
                     offTime += Settings.pr.audio_offset;
 
                 // this is to make sure there are no trashy rounding errors.
-                while(Math.floor((offTime + Settings.pr.audio_offset) / (Song.curMus.crochet * 4)) < curSec)
+                while(Math.floor((offTime + Settings.pr.audio_offset) / (Song.Crochet * 4)) < curSec)
                     offTime += 0.01;
 
-                Song.curMus.songPosition = vocals.time = FlxG.sound.music.time = offTime;
-                Song.curMus.songPosition -= Settings.pr.audio_offset;
+                Song.Position = vocals.time = FlxG.sound.music.time = offTime;
+                Song.Position -= Settings.pr.audio_offset;
 
                 expandCheck();
                 reloadNotes();
@@ -572,7 +572,7 @@ class ChartingState extends MusicBeatState {
     /////////////////////////////////////////////////
 
     override public function update(elapsed:Float){
-        var secRef:Float = CoolUtil.boundTo(Song.curMus.songPosition / (Song.curMus.crochet * 4), 0, FlxG.sound.music.length);
+        var secRef:Float = CoolUtil.boundTo(Song.Position / (Song.Crochet * 4), 0, FlxG.sound.music.length);
 
         // # Right click
 

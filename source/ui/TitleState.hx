@@ -28,12 +28,12 @@ class TitleState extends MusicBeatState
 
 	// The game engine will handle this for you.
 	public static var textSequence:Array<Array<String>> = [
-		['hi'],
+		['hi', 'hello'],
 		['Original game by','ninjamuffin'],
 		['assorion engine by', 'candice joe'],
-		['This took ages', 'but it payed off', 'probably'],
+		['High Action', 'High Octane', 'Great Gameplay'],
 		['%'],
-		['Well any way', 'have fun']
+		['Read the instructions', 'on the back of the product']
 	];
 
 	override public function create():Void
@@ -45,7 +45,7 @@ class TitleState extends MusicBeatState
 				textSequence[i] = getIntroText();
 
 		super.create();
-		correctMusic();
+		menuMusicCheck();
 		startIntro();
 	}
 
@@ -147,7 +147,7 @@ class TitleState extends MusicBeatState
 	}
 
 	override function update(elapsed:Float){
-		FlxG.camera.zoom = CoolUtil.boundTo(FlxG.camera.zoom - elapsed, 1, 2);
+		FlxG.camera.zoom = CoolUtil.boundTo(FlxG.camera.zoom - (elapsed * 0.75), 1, 2);
 		super.update(elapsed);
 	}
 

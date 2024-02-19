@@ -74,7 +74,7 @@ class Note extends StaticSprite
 		animation.play('holdend');
 		animation.remove('scroll');
 
-		var calc:Float = Song.curMus.stepCrochet / 100 * ((Song.curMus.bpm / 100) * (44 / 140)) * PlayState.SONG.speed;
+		var calc:Float = Song.StepCrochet / 100 * ((Song.BPM / 100) * (44 / 140)) * PlayState.SONG.speed;
 		scale.y = (scale.y * calc);
 
 		if(flipY)

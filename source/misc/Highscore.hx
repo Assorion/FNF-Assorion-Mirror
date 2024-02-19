@@ -20,7 +20,8 @@ class Highscore
 	public static function saveScore(song:String, score:Int, diff:Int){
 		var songNaem:String = song.toLowerCase().trim() + CoolUtil.diffString(diff, 0);
 
-		if(scoreExists(songNaem) >= score) return;
+		if(scoreExists(songNaem) >= score) 
+			return;
 
 		songScores.set(songNaem, score);
 		Settings.gSave.data.songScores = songScores;

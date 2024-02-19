@@ -52,7 +52,7 @@ class StoryMenuState extends MenuTemplate
 
 	override function create(){
 		super.create();
-		correctMusic();
+		menuMusicCheck();
 
 		for(i in 0...weekData.length){
 			var weekGraphic:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('storymenu/week-' + weekData[i].week));

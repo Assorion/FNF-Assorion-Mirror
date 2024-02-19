@@ -47,10 +47,9 @@ class Binds {
 
     public static function deepCheck(key:Int, array:Array<Array<Int>>):Int
     {
-        for(i in 0...array.length){
+        for(i in 0...array.length)
             if(key == array[i][0] || key == array[i][1])
                 return i;
-        }
 
         return -1;
     }

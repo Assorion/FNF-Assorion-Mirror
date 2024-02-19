@@ -58,13 +58,4 @@ class CoolUtil
 
 		bitmapDat.draw(camera.canvas, matr, null, null, null, true);
 	}
-
-	// Might remove this since it's used once. Going against the "philosophy" of Assorion.
-	public inline static function browserLoad(site:String){
-		#if linux
-		Sys.command('/usr/bin/xdg-open', [site]);
-		#else
-		FlxG.openURL(site);
-		#end
-	}
 }

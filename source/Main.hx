@@ -1,10 +1,10 @@
 package;
 
+import openfl.Lib;
+import openfl.display.Sprite;
 import flixel.FlxGame;
 import flixel.FlxState;
 import flixel.FlxG;
-import openfl.Lib;
-import openfl.display.Sprite;
 import misc.FPSCounter;
 import misc.MemCounter;
 
@@ -35,16 +35,24 @@ class Main extends Sprite
 
 		var ldState:Class<FlxState> = 
 		#if desktop 
-		Settings.pr.launch_sprites ? ui.LoadingState : initState 
+		Settings.pr.launch_sprites ? ui.LoadingState : initState;
 		#else 
-		initState 
-		#end;
+		initState;
+		#end
 
 		fpsC = new FPSCounter(10, 3, 0xFFFFFF);
 		memC = new MemCounter(10, 18, 0xFFFFFF);
-		addChild(new FlxGame(gameWidth, gameHeight, ldState, 
+
+		addChild(new FlxGame(
+			gameWidth, 
+			gameHeight, 
+			ldState, 
 			#if (flixel < "5.0.0") zoom, #end 
-			Settings.pr.framerate, Settings.pr.framerate, Settings.pr.skip_logo, Settings.pr.start_fullscreen));
+			Settings.pr.framerate, 
+			Settings.pr.framerate, 
+			Settings.pr.skip_logo, 
+			Settings.pr.start_fullscreen
+		));
 
 		addChild(fpsC);
 		addChild(memC);

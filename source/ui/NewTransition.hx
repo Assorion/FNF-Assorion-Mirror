@@ -83,16 +83,16 @@ class NewTransition extends FlxSubState {
     }
 
     public static function switchState(target:FlxState){
-        if(Settings.pr.transitions){
-            activeTransition = new NewTransition(target, true);
-
-            FlxG.state.openSubState(activeTransition);
-            FlxG.state.persistentUpdate = false;
+        if(!Settings.pr.transitions){
+            skippedLast = true;
+            FlxG.switchState(target);
 
             return;
         }
 
-        skippedLast = true;
-        FlxG.switchState(target);
+        activeTransition = new NewTransition(target, true);
+
+        FlxG.state.openSubState(activeTransition);
+        FlxG.state.persistentUpdate = false;
     }
 }

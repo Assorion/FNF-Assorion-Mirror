@@ -81,7 +81,7 @@ class OptionsState extends MenuTemplate
 	{
 		columns = 1;
 		addBG(0xFFea71fd);
-		correctMusic();
+		menuMusicCheck();
 		super.create();
 
 		bottomBlack = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);

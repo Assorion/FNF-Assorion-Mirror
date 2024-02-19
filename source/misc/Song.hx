@@ -9,16 +9,16 @@ using StringTools;
 
 // Song now also acts as a Conductor Replacement.
 
-typedef SwagSection =
+typedef SectionData =
 {
 	var sectionNotes:Array<Dynamic>;
 	var cameraFacing:Int;
 }
 
-typedef SwagSong =
+typedef SongData =
 {
 	var song:String;
-	var notes:Array<SwagSection>;
+	var notes:Array<SectionData>;
 	var bpm:Float;
 	var needsVoices:Bool;
 	var speed:Float;
@@ -30,37 +30,31 @@ typedef SwagSong =
 	var beginTime:Float;
 }
 
-typedef MusicProperties = {
-	var bpm         :Float; // How fast the music is.
-	var crochet     :Float; // BPM but in miliseconds.
-	var stepCrochet :Float; // BPM Divided in 4
-	var songPosition:Float; // Milisecond point in the song.
-	var songDiv     :Float; // A multiplier from stepCrochet.
-}
-
 #if !debug @:noDebug #end
 class Song
 {
-	public static var curMus:MusicProperties;
+	public static var BPM        :Float;
+	public static var Crochet    :Float;
+	public static var StepCrochet:Float;
+	public static var Position   :Float;
+	public static var Division   :Float;
 
-	public static function musicSet(BPM:Float)
+	public static function musicSet(tempo:Float)
 	{
-		var nsCrochet = (60 / BPM) * 250;
+		var newCrochet = (60 / tempo) * 250;
 
-		curMus = {
-			bpm: BPM,
-			crochet:     nsCrochet * 4,
-			stepCrochet: nsCrochet,
-			songPosition: -Settings.pr.audio_offset,
-			songDiv: 1 / nsCrochet
-		};
+		BPM         = tempo;
+		Crochet     = newCrochet * 4;
+		StepCrochet = newCrochet;
+		Position    = -Settings.pr.audio_offset;
+		Division    = 1 / newCrochet;
 	}
 
-	public static function loadFromJson(songStr:String, diff:Int):SwagSong
+	public static function loadFromJson(songStr:String, diff:Int):SongData
 	{
 		songStr = songStr.toLowerCase();
 		
-		var tmpCast:SwagSong = cast Json.parse(Paths.lText('$songStr/$songStr${CoolUtil.diffString(diff, 0)}.json')).song;
+		var tmpCast:SongData = cast Json.parse(Paths.lText('$songStr/$songStr${CoolUtil.diffString(diff, 0)}.json')).song;
 
 		if (cast(tmpCast.playLength, Int) <= 0) 
 			tmpCast.playLength = 2;
