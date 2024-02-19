@@ -99,7 +99,7 @@ Take a look at <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/mai
 #### **Libraries:**  
 Read ahead to your OS and read those instructions. Then come back here.
 
-Run `haxelib setup <library name>` replacing `<library name>` with these libraries below:
+Run `haxelib install <library name>` replacing `<library name>` with these libraries below:
 - `hxcpp`
 - `lime 7.9.0` or `lime 8.0.0`
 - `openfl 9.2.1`
@@ -110,22 +110,22 @@ Run `haxelib setup <library name>` replacing `<library name>` with these librari
 #### **For Windows:**
 - Install <a href="https://haxe.org/">`Haxe`</a>
 - Run `haxelib setup` in CMD. Using the defaults is fine
-- Install libraries above
+- Install [libraries](#libraries) above
 - Run `haxelib run lime setup`. It will install extra stuff, but you should be fine
-- Setup MinGW-w64 and make sure the PATH is set correctly
+- Setup <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/.github/MinGW-w64_Setup.md">MinGW-w64</a> and make sure the PATH is set correctly
 - Test to make sure both the `gcc` and `g++` commands work in CMD
 - Run `lime test windows -D HXCPP_MINGW` in CMD. Make sure it's in the project root folder, not the source folder
 
 #### **For Linux:**
 - Install Haxe using your package manager
 - Run `haxelib setup` in your terminal
-- Install libraries above
+- Install [libraries](#libraries) above
 - Run `haxelib run lime setup`.
 - Test to make sure both `gcc` and `g++` commands work. They should already be installed in your distro
-- Run `lime test linux` in your terminal
+- Run `lime test linux` in your terminal. Make sure it's in the project root folder, not the source folder.
 
 #### **If you're confused:**  
-Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use **`MinGW-w64`**.  
+Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/.github/MinGW-w64_Setup.md">**`MinGW-w64`**</a>.  
 Remember to install the [library versions](#libraries) listed above.
 
 > [!WARNING] 
