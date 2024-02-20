@@ -40,7 +40,7 @@ Though, Assorion Engine does have several <a href="https://github.com/Assorion/F
 1. Assorion Engine is incredibly fast and stable
 2. Assorion's Code is much better streamlined, and much easier to mod
 3. Assorion has an emphasis on simplicity, over bloat
-4. Assorion frequently is actively maintained, adding features and fixes
+4. Assorion is actively maintained, adding many features and fixes
 
 # 🗒️ | Important Notes/RoadMap
 
