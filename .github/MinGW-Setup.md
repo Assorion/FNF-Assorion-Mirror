@@ -9,7 +9,7 @@
 4. In settings or search menu type `Edit environment variables for your account`.
 5. Choose the **`Path`** Variable and press **`edit`**
    
-![GeoGuessor](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/7442ae10-ce53-4fdc-8b63-18b5f5cdc143)
+![Screenshot2](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/ea411063-cc61-4a18-b6d6-4d6e4d8929a1)
 
 6. Select **New** and add the **Mingw-w64 folder path(bin folder)** **`C:\MinGW\bin`**
 7. Select OK to save updated path. to make sure type both the `gcc` and `g++` commands work in CMD and if they work MinGW-64 is installed
