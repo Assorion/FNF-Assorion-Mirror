@@ -113,12 +113,36 @@ class PauseSubState extends MusicBeatSubstate
 	}
 	private inline function updatePauseText(){
 		var coolString:String = 
-		'SONG: ${PlayState.curSong.toUpperCase()}' +
+		'SONG: ${PlayState.songName.toUpperCase()}' +
 		' | WEEK: ${PlayState.storyWeek >= 0 ? Std.string(PlayState.storyWeek + 1) : "FREEPLAY"}' +
 		' | BOTPLAY: ${Settings.pr.botplay ? "YES" : "NO"}' +
 		' | DIFFICULTY: ${CoolUtil.diffString(PlayState.curDifficulty, 1).toUpperCase()}' +
 		' | ';
 		pauseText.text = '$coolString$coolString$coolString';
+	}
+
+	public inline function leave(){
+		for(i in 0...activeTweens.length)
+			if (activeTweens[i] != null)
+				activeTweens[i].cancel();
+		
+		// Fade out text seperately
+		for(i in 0...alphaTexts.length)
+			alphaTexts[i].targetA = 0;
+
+		pState.persistentDraw = true;
+
+		FlxTween.tween(pauseText,  { alpha:  0 }, 0.1);
+		FlxTween.tween(bottomBlack,{ alpha:  0 }, 0.1);
+		FlxTween.tween(pauseMusic, { volume: 0 }, 0.1);
+		FlxTween.tween(gameSpr,    { alpha:  0 }, 0.1, {onComplete: 
+
+		// Closing
+		function(t:FlxTween){
+			pauseMusic.stop();
+			pauseMusic.destroy();
+			close();
+		}});
 	}
 
 	private var leaving:Bool = false;
@@ -136,29 +160,7 @@ class PauseSubState extends MusicBeatSubstate
 		switch(curSelected){
 			case 0:
 				leaving = true;
-
-				for(i in 0...activeTweens.length)
-					if (activeTweens[i] != null)
-						activeTweens[i].cancel();
-				
-				// Fade out text seperately
-				for(i in 0...alphaTexts.length)
-					alphaTexts[i].targetA = 0;
-
-				pState.persistentDraw = true;
-
-				FlxTween.tween(pauseText,  { alpha:  0 }, 0.1);
-				FlxTween.tween(bottomBlack,{ alpha:  0 }, 0.1);
-				FlxTween.tween(pauseMusic, { volume: 0 }, 0.1);
-				FlxTween.tween(gameSpr,    { alpha:  0 }, 0.1, {onComplete: 
-
-				// Closing
-				function(t:FlxTween){
-					pauseMusic.stop();
-					pauseMusic.destroy();
-					close();
-				}});
-
+				leave();
 			case 1:
 				FlxG.resetState();
 

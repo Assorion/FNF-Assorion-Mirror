@@ -18,10 +18,8 @@ typedef DelayedEvent = {
 class MusicBeatState extends FlxUIState
 {
 	public static inline function curTime()
-		#if desktop
-		return Sys.time();
-		#else
-		return Date.now().getTime() * 0.001;
+		#if desktop return Sys.time();
+		#else       return Date.now().getTime() * 0.001;
 		#end
 
 	private var curStep:Int = 0;
@@ -103,7 +101,7 @@ class MusicBeatState extends FlxUIState
 	{
 		var tBeat:Int = curStep >> 2;
 
-		if (curStep - (tBeat << 2) == 0){
+		if (curStep == tBeat << 2){
 			curBeat =  tBeat;
 			beatHit();
 		}

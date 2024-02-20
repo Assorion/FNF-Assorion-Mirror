@@ -100,7 +100,8 @@ class FreeplayState extends MenuTemplate
 				if(NewTransition.skip()) 
 					return;
 
-				MusicBeatState.changeState(new PlayState([ songs[curSel] ], curDifficulty, -1));
+				PlayState.setData([songs[curSel]], curDifficulty, -1);
+				MusicBeatState.changeState(new PlayState());
 				FlxG.sound.music.stop();
 
 				if (vocals.playing)

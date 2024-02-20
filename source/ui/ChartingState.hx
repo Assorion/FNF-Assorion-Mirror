@@ -142,7 +142,7 @@ class ChartingState extends MusicBeatState {
 
         vocals = new FlxSound();
 		if (song.needsVoices)
-			vocals.loadEmbedded(Paths.playableSong(PlayState.curSong, true));
+			vocals.loadEmbedded(Paths.playableSong(PlayState.songName, true));
 
         vocals.time = 0;
 		FlxG.sound.list.add(vocals);
@@ -674,7 +674,7 @@ class ChartingState extends MusicBeatState {
 
         var nameBox:ChartUI_InputBox = new ChartUI_InputBox(0, 0, 190, 30, song.song, function(ch:String){
             song.song = ch;
-            PlayState.curSong = ch.toLowerCase();
+            PlayState.songName = ch.toLowerCase();
         });
         var bpmBox:ChartUI_InputBox = new ChartUI_InputBox(200, 0, 90, 30, Std.string(song.bpm), function(ch:String){
             song.bpm = Std.parseFloat(ch);
@@ -744,7 +744,7 @@ class ChartingState extends MusicBeatState {
             reloadNotes();
         }, 'Clear Song');
         var saveSong:ChartUI_Button = new ChartUI_Button(260, 550, 130, 30, function(){
-            var path = 'assets/songs-data/${PlayState.curSong}/${PlayState.curSong}-edited.json';
+            var path = 'assets/songs-data/${PlayState.songName}/${PlayState.songName}-edited.json';
             var saveString:String = 'You cannot save charts in web build.';
 
             #if desktop

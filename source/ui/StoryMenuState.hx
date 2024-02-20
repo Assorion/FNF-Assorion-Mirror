@@ -123,7 +123,7 @@ class StoryMenuState extends MenuTemplate
 			nSongs.push(s);
 
 		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
-		var tP:PlayState = new PlayState(nSongs, curDif, curSel);
+		PlayState.setData(nSongs, curDif, curSel);
 
 		for(i in 0...8)
 			postEvent(i / 8, function(){
@@ -132,7 +132,7 @@ class StoryMenuState extends MenuTemplate
 
 		// SWITCH!
 		postEvent(1, function(){
-			MusicBeatState.changeState(tP);
+			MusicBeatState.changeState(new PlayState());
 			
 			if (FlxG.sound.music.playing)
 				FlxG.sound.music.stop();
