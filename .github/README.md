@@ -39,8 +39,8 @@ Though, Assorion Engine does have several <a href="https://github.com/Assorion/F
 
 1. Assorion Engine is incredibly fast and stable
 2. Assorion's Code is much better streamlined, and much easier to mod
-3. Assorion takes up less than ~70mb
-4. Assorion frequently has many bug fixes and consistently gets improvements compared to the original game and many other engines
+3. Assorion has an emphasis on simplicity, over bloat
+4. Assorion frequently is actively maintained, adding features and fixes
 
 # 🗒️ | Important Notes/RoadMap
 
@@ -70,7 +70,7 @@ Though, Assorion Engine does have several <a href="https://github.com/Assorion/F
  
 #### **Branches**
 
-> <details open>
+> <details>
 > <summary>Deprecated List</summary>
 > <table>
 > <tr>
