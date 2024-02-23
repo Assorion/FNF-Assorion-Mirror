@@ -60,9 +60,8 @@ class ChartingState extends MusicBeatState {
     public var camUI:FlxCamera;
     public var camGR:FlxCamera;
 
-    public static var activeUIElement:ChartUI_Generic;
-    public static var inputBlock     :ChartUI_Persistent;
-    public static var clickedElement :ChartUI_Generic;
+    public var overlappingElement:ChartUI_Generic;
+    public static var currentElement:ChartUI_Generic;
 
     var uiBG:ChartUI_Generic;
 
@@ -210,13 +209,8 @@ class ChartingState extends MusicBeatState {
     override function keyHit(ev:KeyboardEvent){
         var key = ev.keyCode;
 
-        if(inputBlock != null) {
-            if(key == FlxKey.ENTER){
-                inputBlock.clickedOff();
-                return;
-            }
-
-            inputBlock.insertChar(key);
+        if (currentElement != null){
+            key == FlxKey.ENTER ? currentElement.forceExit() : currentElement.keyInsert(key);
             return;
         }
 
@@ -305,7 +299,12 @@ class ChartingState extends MusicBeatState {
             [FlxKey.E],
             [FlxKey.X],
             [FlxKey.Z],
-            [FlxKey.CONTROL]
+            [FlxKey.CONTROL],
+            // Numbers 1 - 4
+            [FlxKey.ONE], 
+            [FlxKey.TWO], 
+            [FlxKey.THREE], 
+            [FlxKey.FOUR]
         ]);
 
         switch(T){
@@ -317,9 +316,7 @@ class ChartingState extends MusicBeatState {
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownEvent);
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_UP  , mouseUpEvent);
 
-                inputBlock      = null;
-                activeUIElement = null; 
-                clickedElement  = null;
+                overlappingElement = currentElement = null;
 
                 PlayState.SONG = song;
             case 2:
@@ -376,6 +373,9 @@ class ChartingState extends MusicBeatState {
                 return;
             case 11:
                 holdingControl = true;
+
+            case 12, 13, 14, 15:
+                [createSongUI, createCharUI, createSecUI, createInfoUI][T - 12]();
         }
     }
     override public function keyRel(ev:KeyboardEvent){
@@ -479,15 +479,15 @@ class ChartingState extends MusicBeatState {
 
                 foundMember = true;
 
-                if (activeUIElement == member) 
+                if (overlappingElement == member) 
                     continue;
 
-                activeUIElement = member;
+                overlappingElement = member;
                 member.color = 0xFFE5E5E5;
                 member.mouseOverlaps();
             }
             if(!foundMember)
-                activeUIElement = null;
+                overlappingElement = null;
 
             return;
         }
@@ -534,16 +534,15 @@ class ChartingState extends MusicBeatState {
     public function mouseDownEvent(ev:MouseEvent){
         // # UI Mouse Events
 
-        if(activeUIElement != null){
-            clickedElement = activeUIElement;
-            activeUIElement.mouseClicked();
+        if (overlappingElement != currentElement && currentElement != null)
+            currentElement.forceExit();
+
+        if (overlappingElement != null){
+            overlappingElement.mouseDown();
             return;
         }
-        if (inputBlock != null){
-            inputBlock.clickedOff();
-            return;
-        }
-        ////////////////////
+
+        ////////////////////////////////////
 
         if(!holdingControl){
             addNote(Math.round(noteHighlight.x), Math.round(noteHighlight.y));
@@ -556,9 +555,8 @@ class ChartingState extends MusicBeatState {
     public function mouseUpEvent(ev:MouseEvent){
         // # UI 
 
-        if(clickedElement != null){
-            clickedElement.mouseOff();
-            clickedElement = null;
+        if (currentElement != null){
+            currentElement.mouseUp();
             return;
         }
 
@@ -587,7 +585,7 @@ class ChartingState extends MusicBeatState {
         // # Scrolling
 
         var wheel = FlxG.mouse.wheel * -50;
-        if(wheel != 0 && inputBlock == null){
+        if(wheel != 0 && currentElement == null){
             pauseSong();
 
             vocals.time = 
@@ -631,15 +629,24 @@ class ChartingState extends MusicBeatState {
         return tmpText;
     }
     private inline function uiStart(){
-        activeUIElement = null;
-        inputBlock = null;
+        overlappingElement = null;
         inSecUI = false;
 
-        for(i in 0...tabButtons.length) uiElements.remove(tabButtons[i]);
+        for(i in 0...tabButtons.length){
+            uiElements.remove(tabButtons[i]);
 
+            if(currentElement == tabButtons[i])
+                overlappingElement = tabButtons[i];
+        }
+
+        currentElement = null;
         uiElements.clear();
 
-        for(i in 0...tabButtons.length) uiElements.add(tabButtons[i]);
+        for(i in 0...tabButtons.length)
+            uiElements.add(tabButtons[i]);
+
+        if(overlappingElement != null)
+            currentElement = overlappingElement;
     }
 
     private static var infoText:String = '

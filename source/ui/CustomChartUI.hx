@@ -40,6 +40,7 @@ class ChartUI_Grid extends StaticSprite {
 // Extenders or whatever.
 
 class ChartUI_Generic extends FlxSprite {
+    public var blockInput:Bool = false;
     var canvas:BitmapData;
 
     // # drawing
@@ -74,11 +75,19 @@ class ChartUI_Generic extends FlxSprite {
         stamp(text, dx + Std.int((w - text.width) / 2), dy + Std.int((h - text.height) / 2));
     }
 
-    // # Mouse movements
+    // # Events
 
+    public function keyInsert(k:Int){}
     public function mouseOverlaps(){}
-    public function mouseClicked(){}
-    public function mouseOff(){}
+    public function mouseDown(){
+        ChartingState.currentElement = this;
+    }
+    public function mouseUp(){
+        ChartingState.currentElement = null;
+    }
+    public function forceExit(){
+        ChartingState.currentElement = null;
+    }
 
     /////////////////////////////
 
@@ -88,15 +97,6 @@ class ChartUI_Generic extends FlxSprite {
         canvas = new BitmapData(w, h, true);
         loadGraphic(canvas);
         makeText(w,h,i,t);
-    }
-}
-class ChartUI_Persistent extends ChartUI_Generic {
-    public function insertChar(k:Int):Void {}
-    public function clickedOff():Void {
-        ChartingState.inputBlock = null;
-    }
-    override public function mouseClicked(){
-        ChartingState.inputBlock = this;
     }
 }
 
@@ -126,7 +126,8 @@ class ChartUI_CheckBox extends ChartUI_Generic{
         if(checked)
             drawSquare(6,6, w - 12, h - 12, false);
     }
-    override public function mouseClicked(){
+    override public function mouseDown(){
+        super.mouseDown();
         checked = !checked;
 
         var w = Math.floor(width);
@@ -157,13 +158,18 @@ class ChartUI_Button extends ChartUI_Generic {
         txt = text;
     }
 
-    override public function mouseClicked(){
+    override public function mouseDown(){
+        super.mouseDown();
+
         makeText(Math.floor(width), Math.floor(height), true, txt);
-        if(dropDownButton) return;
+        if(dropDownButton) 
+            return;
 
         clickFunc();
     }
-    override public function mouseOff(){
+    override public function mouseUp(){
+        super.mouseUp();
+
         if(!dropDownButton){
             makeText(Math.floor(width), Math.floor(height), false, txt);
             return;
@@ -176,7 +182,7 @@ class ChartUI_Button extends ChartUI_Generic {
 
 // # Persistent stuff
 
-class ChartUI_DropDown extends ChartUI_Persistent {
+class ChartUI_DropDown extends ChartUI_Generic {
     public var parentGroup:FlxTypedSpriteGroup<ChartUI_Generic>;
 
     public var buttonList:Array<ChartUI_Button> = [];
@@ -205,28 +211,28 @@ class ChartUI_DropDown extends ChartUI_Persistent {
         dotButton(false);
     }
 
-    override public function clickedOff(){
-        super.clickedOff();
-
+    override public function forceExit()
+    {
+        super.forceExit();
         expanded = false;
-
+        
         for(i in 0...buttonList.length){
             parentGroup.remove(buttonList[i], true);
-
+    
             buttonList[i].destroy();
             buttonList[i] = null;
         }
     }
-    public override function mouseClicked(){
+    public override function mouseDown(){
         dotButton(true);
 
         expanded = !expanded;
         if(!expanded){
-            clickedOff();
+            forceExit();
             return;
         }
 
-        super.mouseClicked();
+        super.mouseDown();
 
         var w:Int = Math.floor(width);
         var h:Int = Math.floor(height);
@@ -234,9 +240,10 @@ class ChartUI_DropDown extends ChartUI_Persistent {
         for(i in 0...items.length){
             buttonList[i] = new ChartUI_Button(x - parentGroup.x,(y - parentGroup.y) + (h * (i + 1)), w, h, function(){
                 curText = items[i];
+                expanded = false;
 
                 changeFunc(i, items[i]);
-                clickedOff();
+                forceExit();
                 dotButton(false);
             }, items[i]);
 
@@ -244,10 +251,10 @@ class ChartUI_DropDown extends ChartUI_Persistent {
             parentGroup.add(buttonList[i]);
         }
     }
-    public override function mouseOff()
+    public override function mouseUp()
         dotButton(false);
 }
-class ChartUI_InputBox extends ChartUI_Persistent {
+class ChartUI_InputBox extends ChartUI_Generic {
     public var curText:String = '';
     public var changeFunc:String->Void;
     public var uneditedText:String = '';
@@ -258,7 +265,7 @@ class ChartUI_InputBox extends ChartUI_Persistent {
 
     public inline function redoText(){
         curText = uneditedText;
-        if(ChartingState.inputBlock == this)
+        if(ChartingState.currentElement == this)
             curText += suffix;
 
         makeText(Math.floor(width), Math.floor(height), true, curText, 0,0);
@@ -272,8 +279,8 @@ class ChartUI_InputBox extends ChartUI_Persistent {
     
     //////////////////////////////////
 
-    public override function clickedOff(){
-        super.clickedOff();
+    public override function forceExit(){
+        super.forceExit();
 
         changeFunc(uneditedText);
         redoText();
@@ -281,11 +288,8 @@ class ChartUI_InputBox extends ChartUI_Persistent {
         FlxG.sound.muteKeys = [FlxKey.ZERO];
     }
 
-    public override function mouseClicked(){
-        if(ChartingState.inputBlock != null && ChartingState.inputBlock != this)
-            ChartingState.inputBlock.clickedOff();
-
-        super.mouseClicked();
+    public override function mouseDown(){
+        super.mouseDown();
 
         pSuffix = '';
         suffix  = ' _';
@@ -295,7 +299,7 @@ class ChartUI_InputBox extends ChartUI_Persistent {
 
         FlxG.sound.muteKeys = [];
     }
-    public override function insertChar(char:Int){
+    public override function keyInsert(char:Int){
         if(char == FlxKey.BACKSPACE){
             uneditedText = uneditedText.substring(0, uneditedText.length - 1);
             redoText();
@@ -312,8 +316,8 @@ class ChartUI_InputBox extends ChartUI_Persistent {
     //////////////////////////////////
 
     private var pSuffix:String = '';
-    override function update(elapsed:Float){
-        if(ChartingState.inputBlock != this) return;
+    override function update(elapsed:Float)
+    if(ChartingState.currentElement == this){
 
         tickingCounter += elapsed;
         if(tickingCounter >= 1) 
@@ -321,9 +325,12 @@ class ChartUI_InputBox extends ChartUI_Persistent {
 
         pSuffix = tickingCounter < 0.5 ? ' _' : '   ';
 
-        if(pSuffix == suffix) return;
+        if(pSuffix == suffix) 
+            return;
 
         suffix = pSuffix;
         redoText();
     }
+
+    override public function mouseUp(){}
 }
