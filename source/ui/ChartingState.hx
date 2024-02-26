@@ -55,15 +55,14 @@ class ChartingState extends MusicBeatState {
     public var musicLine:StaticSprite;
 
     public var notes:FlxTypedGroup<Note>;
-    public var uiElements:FlxTypedSpriteGroup<ChartUI_Generic>;
 
     public var camUI:FlxCamera;
     public var camGR:FlxCamera;
 
-    public var overlappingElement:ChartUI_Generic;
-    public static var currentElement:ChartUI_Generic;
-
     var uiBG:ChartUI_Generic;
+    public var uiElements:FlxTypedSpriteGroup<ChartUI_Generic>;
+    public static var overlappingElement:ChartUI_Generic;
+    public static var currentElement:ChartUI_Generic;
 
     private var vocals:FlxSound;
     private var song:SongData;
@@ -803,21 +802,25 @@ class ChartingState extends MusicBeatState {
         uiStart();
 
         var addButton:ChartUI_Button = new ChartUI_Button(360, 0, 30, 30, function(){
-            if(song.characters.length >= 13) return;
+            if(song.characters.length >= 13) 
+                return;
 
             song.characters.push('bf');
             charUIGenPlayerDrop(song.characters.length - 1);
         }, '+');
         var remButton:ChartUI_Button = new ChartUI_Button(320, 0, 30, 30, function(){
-            if(song.characters.length <= 1) return;
+            if(song.characters.length <= 1) 
+                return;
 
             song.characters.splice(song.characters.length - 1, 1);
             var nLen = uiElements.length - 1;
 
+            uiElements.members[nLen].forceExit();
             uiElements.remove(uiElements.members[nLen],     true);
             uiElements.remove(uiElements.members[nLen - 1], true);
 
-            if(song.characters.length != 1) return;
+            if(song.characters.length != 1) 
+                return;
 
             song.playLength = 1;
             makeGrid();

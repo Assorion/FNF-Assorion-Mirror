@@ -184,12 +184,10 @@ class ChartUI_Button extends ChartUI_Generic {
 
 class ChartUI_DropDown extends ChartUI_Generic {
     public var parentGroup:FlxTypedSpriteGroup<ChartUI_Generic>;
-
     public var buttonList:Array<ChartUI_Button> = [];
     public var changeFunc:Int->String->Void;
     public var expanded:Bool = false;
     public var items:Array<String>;
-    
     public var curText:String = '';
 
     public inline function dotButton(open:Bool){
@@ -211,18 +209,21 @@ class ChartUI_DropDown extends ChartUI_Generic {
         dotButton(false);
     }
 
-    override public function forceExit()
-    {
-        super.forceExit();
-        expanded = false;
-        
-        for(i in 0...buttonList.length){
-            parentGroup.remove(buttonList[i], true);
-    
-            buttonList[i].destroy();
-            buttonList[i] = null;
-        }
+    public function removeButtons()
+    for(i in 0...buttonList.length){
+        parentGroup.remove(buttonList[i], true);
+
+        buttonList[i].destroy();
+        buttonList[i] = null;
     }
+    
+    override public function forceExit()
+    if(!buttonList.contains(cast(ChartingState.overlappingElement, ChartUI_Button))){
+        expanded = false;
+        removeButtons();
+    } else 
+        super.forceExit();
+
     public override function mouseDown(){
         dotButton(true);
 
@@ -243,7 +244,7 @@ class ChartUI_DropDown extends ChartUI_Generic {
                 expanded = false;
 
                 changeFunc(i, items[i]);
-                forceExit();
+                removeButtons();
                 dotButton(false);
             }, items[i]);
 
