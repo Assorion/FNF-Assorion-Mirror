@@ -126,6 +126,7 @@ class ChartUI_CheckBox extends ChartUI_Generic{
         if(checked)
             drawSquare(6,6, w - 12, h - 12, false);
     }
+
     override public function mouseDown(){
         super.mouseDown();
         checked = !checked;
@@ -167,94 +168,22 @@ class ChartUI_Button extends ChartUI_Generic {
 
         clickFunc();
     }
+
     override public function mouseUp(){
         super.mouseUp();
 
-        if(!dropDownButton){
-            makeText(Math.floor(width), Math.floor(height), false, txt);
+        if(dropDownButton){
+            clickFunc();
             return;
         }
 
-        clickFunc();
+        makeText(Math.floor(width), Math.floor(height), false, txt);
     }
 
 }
 
 // # Persistent stuff
 
-class ChartUI_DropDown extends ChartUI_Generic {
-    public var parentGroup:FlxTypedSpriteGroup<ChartUI_Generic>;
-    public var buttonList:Array<ChartUI_Button> = [];
-    public var changeFunc:Int->String->Void;
-    public var expanded:Bool = false;
-    public var items:Array<String>;
-    public var curText:String = '';
-
-    public inline function dotButton(open:Bool){
-        var w:Int = Math.floor(width) - 30;
-        var h:Int = Math.floor(height);
-
-        makeText(w,  h, open, curText, 0, 0);
-        makeText(30, h, open, '.'    , w, 0);
-    }
-
-    public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, items:Array<String>, text:String = '', onChange:Int->String->Void, parent:FlxTypedSpriteGroup<ChartUI_Generic>){
-        super(x,y,w + 30,h,false,'');
-
-        changeFunc  = onChange;
-        parentGroup = parent;
-        curText     = text;
-        this.items  = items;
-
-        dotButton(false);
-    }
-
-    public function removeButtons()
-    for(i in 0...buttonList.length){
-        parentGroup.remove(buttonList[i], true);
-
-        buttonList[i].destroy();
-        buttonList[i] = null;
-    }
-    
-    override public function forceExit()
-    if(!buttonList.contains(cast(ChartingState.overlappingElement, ChartUI_Button))){
-        expanded = false;
-        removeButtons();
-    } else 
-        super.forceExit();
-
-    public override function mouseDown(){
-        dotButton(true);
-
-        expanded = !expanded;
-        if(!expanded){
-            forceExit();
-            return;
-        }
-
-        super.mouseDown();
-
-        var w:Int = Math.floor(width);
-        var h:Int = Math.floor(height);
-
-        for(i in 0...items.length){
-            buttonList[i] = new ChartUI_Button(x - parentGroup.x,(y - parentGroup.y) + (h * (i + 1)), w, h, function(){
-                curText = items[i];
-                expanded = false;
-
-                changeFunc(i, items[i]);
-                removeButtons();
-                dotButton(false);
-            }, items[i]);
-
-            buttonList[i].dropDownButton = true;
-            parentGroup.add(buttonList[i]);
-        }
-    }
-    public override function mouseUp()
-        dotButton(false);
-}
 class ChartUI_InputBox extends ChartUI_Generic {
     public var curText:String = '';
     public var changeFunc:String->Void;
@@ -271,6 +200,7 @@ class ChartUI_InputBox extends ChartUI_Generic {
 
         makeText(Math.floor(width), Math.floor(height), true, curText, 0,0);
     }
+
     public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, startText:String = '', onChange:String->Void){
         super(x,y,w,h,true,startText);
 
@@ -334,4 +264,93 @@ class ChartUI_InputBox extends ChartUI_Generic {
     }
 
     override public function mouseUp(){}
+}
+
+// Sorry for bad code, the drop downs do not work well with the new charting state UI.
+
+class ChartUI_DropDown extends ChartUI_Generic {
+    public var parentGroup:FlxTypedSpriteGroup<ChartUI_Generic>;
+    public var buttonList:Array<ChartUI_Button> = [];
+    public var changeFunc:Int->String->Void;
+    public var expanded:Bool = false;
+    public var items:Array<String>;
+    public var curText:String = '';
+    public var prevDotButton:Bool = false;
+
+    public inline function dotButton(open:Bool){
+        var w:Int = Math.floor(width) - 30;
+        var h:Int = Math.floor(height);
+
+        makeText(w,  h, open, curText, 0, 0);
+        makeText(30, h, open, '.'    , w, 0);
+
+        prevDotButton = open;
+    }
+
+    public function new(x:Float, y:Float, ?w:Int = 90, ?h:Int = 30, items:Array<String>, text:String = '', onChange:Int->String->Void, parent:FlxTypedSpriteGroup<ChartUI_Generic>){
+        super(x,y,w + 30,h,false,'');
+
+        changeFunc  = onChange;
+        parentGroup = parent;
+        curText     = text;
+        this.items  = items;
+
+        dotButton(false);
+    }
+
+    public function removeButtons(){
+        for(i in 0...buttonList.length){
+            parentGroup.remove(buttonList[i], true);
+
+            buttonList[i].destroy();
+            buttonList[i] = null;
+        }
+
+        buttonList = [];
+    }
+    
+    override public function forceExit(){
+        if(!buttonList.contains(cast(ChartingState.overlappingElement, ChartUI_Button))){
+            expanded = false;
+            removeButtons();
+        } 
+        if(!prevDotButton)
+            super.forceExit();
+    }
+
+    public override function mouseDown(){
+        dotButton(true);
+
+        expanded = !expanded;
+        if(!expanded){
+            forceExit();
+            return;
+        }
+
+        super.mouseDown();
+
+        var w:Int = Math.floor(width);
+        var h:Int = Math.floor(height);
+
+        for(i in 0...items.length){
+            buttonList[i] = new ChartUI_Button(x - parentGroup.x,(y - parentGroup.y) + (h * (i + 1)), w, h, function(){
+                curText = items[i];
+                expanded = false;
+
+                changeFunc(i, items[i]);
+                removeButtons();
+                dotButton(false);
+
+                ChartingState.overlappingElement = ChartingState.currentElement = null;
+            }, items[i]);
+
+            buttonList[i].dropDownButton = true;
+            parentGroup.add(buttonList[i]);
+        }
+    }
+    public override function mouseUp(){
+        dotButton(false);
+        if(prevDotButton)
+            ChartingState.currentElement = null;
+    }
 }

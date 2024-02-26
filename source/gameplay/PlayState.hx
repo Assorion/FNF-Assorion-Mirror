@@ -380,9 +380,7 @@ class PlayState extends MusicBeatState
 
 	var noteCount:Int = 0;
 	override public function update(elapsed:Float)
-	{
-		if(paused) return;
-
+	if(!paused) {
 		var scaleVal = CoolUtil.boundTo(iconP1.scale.x - (elapsed * 2), 1, 1.2);
 		iconP1.scale.set(scaleVal, scaleVal);
 		iconP2.scale.set(scaleVal, scaleVal);
@@ -572,10 +570,11 @@ class PlayState extends MusicBeatState
 			notes.remove(daNote, true);
 			daNote.destroy();
 			
-			if(Settings.pr.strum_glow){
-				strumRef.playAnim(2);
-				strumRef.pressTime = Song.StepCrochet * 0.001;
-			}
+			if(Settings.pr.strum_glow)
+				return;
+
+			strumRef.playAnim(2);
+			strumRef.pressTime = Song.StepCrochet * 0.001;
 
 			return;
 		}

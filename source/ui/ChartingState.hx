@@ -628,24 +628,19 @@ class ChartingState extends MusicBeatState {
         return tmpText;
     }
     private inline function uiStart(){
-        overlappingElement = null;
+        var buttonHold = currentElement;
+        overlappingElement = currentElement = null;
         inSecUI = false;
 
-        for(i in 0...tabButtons.length){
+        for(i in 0...tabButtons.length)
             uiElements.remove(tabButtons[i]);
 
-            if(currentElement == tabButtons[i])
-                overlappingElement = tabButtons[i];
-        }
-
-        currentElement = null;
         uiElements.clear();
 
         for(i in 0...tabButtons.length)
             uiElements.add(tabButtons[i]);
 
-        if(overlappingElement != null)
-            currentElement = overlappingElement;
+        currentElement = buttonHold;
     }
 
     private static var infoText:String = '
@@ -815,7 +810,7 @@ class ChartingState extends MusicBeatState {
             song.characters.splice(song.characters.length - 1, 1);
             var nLen = uiElements.length - 1;
 
-            uiElements.members[nLen].forceExit();
+            //uiElements.members[nLen].forceExit();
             uiElements.remove(uiElements.members[nLen],     true);
             uiElements.remove(uiElements.members[nLen - 1], true);
 
