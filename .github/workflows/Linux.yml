@@ -44,7 +44,9 @@ jobs:
       
     # Compilation of the source code. x86
       - name: Compilation 32-Bit
-        run: haxelib run lime build Project.xml linux -32 -release --app-version="4.0.0-${{ github.run_id}}"
+        run: |
+          sudo apt-get install gcc-multilib g++-multilib
+          haxelib run lime build Project.xml linux -32 -release --app-version="4.0.0-${{ github.run_id}}"
 
     # Provides the 32-Bit file for download.
       - name: Publish Artifact
