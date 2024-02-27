@@ -67,6 +67,8 @@ class ChartingState extends MusicBeatState {
     private var vocals:FlxSound;
     private var song:SongData;
 
+    public var warningTxt:FlxText;
+
     override public function create(){
         if(FlxG.sound.music.playing){
             FlxG.sound.music.pause();
@@ -161,6 +163,10 @@ class ChartingState extends MusicBeatState {
         FlxG.stage.addEventListener(MouseEvent.MOUSE_UP  , mouseUpEvent);
 
         super.create();
+
+        warningTxt = new FlxText(uiBG.x, uiBG.y - 30, 0, '', 12);
+        warningTxt.alpha = 0;
+        add(warningTxt);
     }
 
     public inline function pauseSong(){
@@ -171,6 +177,7 @@ class ChartingState extends MusicBeatState {
         curSec = CoolUtil.intBoundTo(changeTo, 0, song.notes.length + 1);
         expandCheck();
         reloadNotes();
+
         if(inSecUI)
             createSecUI();
     }
@@ -308,6 +315,22 @@ class ChartingState extends MusicBeatState {
 
         switch(T){
             case 0, 1:
+                // # Safety Checks
+
+                if(song.song == '' || !lime.utils.Assets.exists(Paths.playableSong(song.song))){
+                    postWarning('Warning: The song name either is empty or asset doesn\'t exist. ${song.song} / ${Paths.playableSong(song.song)}', 0xFFFF00);
+                    return;
+                }
+                if(song.playLength > song.characters.length){
+                    postWarning('Warning: More playing characters, than total characters in song. ${song.playLength} > ${song.characters.length}', 0xFFFF00);
+                    return;
+                }
+                if(song.characters.length <= 0 || song.activePlayer > song.characters.length){ // This would probably cause the game to crash.
+                    postWarning('Error: Attempting to play as a character that doesn\'t exist. ${song.activePlayer} > ${song.characters.length}', 0xFF0000);
+                    return;
+                }
+
+                ///////////////////////////
                 FlxG.mouse.visible = false;
                 MusicBeatState.changeState(new PlayState());
 
@@ -339,7 +362,7 @@ class ChartingState extends MusicBeatState {
 
                 // this is to make sure there are no trashy rounding errors.
                 while(Math.floor((offTime + Settings.pr.audio_offset) / (Song.Crochet * 4)) < curSec)
-                    offTime += 0.01;
+                    offTime += 0.011;
 
                 Song.Position = vocals.time = FlxG.sound.music.time = offTime;
                 Song.Position -= Settings.pr.audio_offset;
@@ -613,6 +636,21 @@ class ChartingState extends MusicBeatState {
             });
         }
 
+    // # Text at top
+
+    private var textTween:FlxTween;
+    public inline function postWarning(text:String, colour:Int){
+        if(textTween != null)
+            textTween.cancel();
+
+        warningTxt.x = camGR.x + camGR.width + 10;
+        warningTxt.alpha = 1;
+        warningTxt.color = colour;
+        warningTxt.text  = text;
+
+        textTween = FlxTween.tween(warningTxt, {alpha: 0}, 1.5, {startDelay: 1});
+    }
+
     // # UI Tabs.
 
     private var inSecUI:Bool = false;
@@ -754,17 +792,8 @@ class ChartingState extends MusicBeatState {
             var stringedSong:String = haxe.Json.stringify({"song": song.song}, '\t');
             File.saveContent(path,stringedSong);
             #end
-            
-            var newText:FlxText = new FlxText(uiBG.x, uiBG.y - 30, 0, saveString, 16);
-            add(newText);
 
-            FlxTween.tween(newText, {alpha: 0}, 1, {onComplete: function(t:FlxTween){
-                if(newText == null) return;
-
-                remove(newText);
-                newText.destroy();
-                newText = null;
-            }});
+            postWarning(saveString, 0xFFFFFFFF);
         }, 'Save Song');
 
         uiElements.add(nameBox);
@@ -787,7 +816,7 @@ class ChartingState extends MusicBeatState {
 
     private inline function charUIGenPlayerDrop(ind:Int)
     {
-        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 40, 160, 30, Paths.lLines('characterList'), song.characters[ind], function(index:Int, item:String){
+        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 35, 160, 30, Paths.lLines('characterList'), song.characters[ind], function(index:Int, item:String){
             song.characters[ind] = item; makeGrid(); }, uiElements);
 
         uiElements.add(tmpDrop);
@@ -828,17 +857,22 @@ class ChartingState extends MusicBeatState {
             changeSec(curSec);
             makeGrid();
         });
-        var playerBox:ChartUI_InputBox = new ChartUI_InputBox(0, 515, 90, 30, Std.string(song.activePlayer), function(ch:String){
+        var playerBox:ChartUI_InputBox = new ChartUI_InputBox(0, 510, 90, 30, Std.string(song.activePlayer), function(ch:String){
             song.activePlayer = CoolUtil.intBoundTo(Std.parseInt(ch), 0, song.characters.length - 1);
+        });
+        var backwardsBox:ChartUI_CheckBox = new ChartUI_CheckBox(0, 470, 30, 30, song.renderBackwards, function(ch:Bool){
+            song.renderBackwards = !song.renderBackwards;
         });
 
         uiElements.add(addButton);
         uiElements.add(remButton);
         uiElements.add(playLenBox);
         uiElements.add(playerBox);
+        uiElements.add(backwardsBox);
 
-        genText(playLenBox, 'Character Chart List');
-        genText(playerBox, 'Main Player');
+        genText(playLenBox,   'Character Chart List');
+        genText(playerBox,    'Main Player');
+        genText(backwardsBox, 'Render characters backwards');
 
         for(i in 0...CoolUtil.intBoundTo(song.characters.length, 1, 13))
             charUIGenPlayerDrop(i);

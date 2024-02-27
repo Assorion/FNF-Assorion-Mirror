@@ -19,6 +19,7 @@ typedef SongData =
 {
 	var song:String;
 	var notes:Array<SectionData>;
+	var events:Array<Float>;
 	var bpm:Float;
 	var needsVoices:Bool;
 	var speed:Float;
@@ -26,6 +27,8 @@ typedef SongData =
 	var playLength:Int;
 	var characters:Array<String>;
 	var activePlayer:Int;
+	var renderBackwards:Bool;
+
 	var stage:String;
 	var beginTime:Float;
 }

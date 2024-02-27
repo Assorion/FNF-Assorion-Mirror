@@ -123,6 +123,7 @@ class ChartUI_CheckBox extends ChartUI_Generic{
 
         changeFunc = onChange;
         checked = startChecked;
+
         if(checked)
             drawSquare(6,6, w - 12, h - 12, false);
     }
@@ -131,15 +132,18 @@ class ChartUI_CheckBox extends ChartUI_Generic{
         super.mouseDown();
         checked = !checked;
 
+        drawSquare(6,6, Math.floor(width) - 12, Math.floor(height) - 12, true);
+    }
+
+    override public function mouseUp(){
         var w = Math.floor(width);
         var h = Math.floor(height);
 
         changeFunc(checked);
         drawSquare(0,0,w,h,true);
 
-        if(!checked) return;
-
-        drawSquare(6,6, w - 12, h - 12, false);
+        if(checked) 
+            drawSquare(6,6, w - 12, h - 12, false);
     }
 }
 
@@ -282,7 +286,7 @@ class ChartUI_DropDown extends ChartUI_Generic {
         var h:Int = Math.floor(height);
 
         makeText(w,  h, open, curText, 0, 0);
-        makeText(30, h, open, '.'    , w, 0);
+        makeText(30, h, open, expanded ? '^' : 'v', w, 0);
 
         prevDotButton = open;
     }
@@ -313,7 +317,11 @@ class ChartUI_DropDown extends ChartUI_Generic {
         if(!buttonList.contains(cast(ChartingState.overlappingElement, ChartUI_Button))){
             expanded = false;
             removeButtons();
-        } 
+
+            if(!prevDotButton)
+                dotButton(false);
+        }
+
         if(!prevDotButton)
             super.forceExit();
     }

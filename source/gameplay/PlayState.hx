@@ -224,7 +224,7 @@ class PlayState extends MusicBeatState
 
 		// this adds the characters in reverse.
 		for(i in 0...SONG.characters.length)
-			add(allCharacters[(SONG.characters.length - 1) - i]);
+			add(allCharacters[SONG.renderBackwards ? i : (SONG.characters.length - 1) - i]);
 
 		playerPos = SONG.activePlayer;
 	}
@@ -236,7 +236,6 @@ class PlayState extends MusicBeatState
 				if(SONG.song == 'tutorial')
 					characterPositions = [
 						70, 130,
-
 						780, 450
 					];
 				defaultCamZoom = 0.9;
