@@ -497,7 +497,7 @@ class PlayState extends MusicBeatState
 		allCharacters[playerPos].playAnim('sing' + sDir[direction] + 'miss');
 		fcValue = missCount >= 10 ? 6 : 5;
 
-		updateHealth(Math.round(-Settings.pr.miss_health * 0.5));
+		updateHealth(-10);
 	}
 
 	// # input code.
@@ -564,16 +564,13 @@ class PlayState extends MusicBeatState
 		var strumRef = strumLineNotes.members[daNote.noteData + (Note.keyCount * daNote.player)];
 		if((daNote.player != playerPos || Settings.pr.botplay) && daNote.curType.mustHit && songTime >= daNote.strumTime){
 			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData]);
-			vocals.volume = 1;
+			strumRef.playAnim(2);
+			strumRef.pressTime = Song.StepCrochet * 0.001;
 
 			notes.remove(daNote, true);
 			daNote.destroy();
 			
-			if(Settings.pr.strum_glow)
-				return;
-
-			strumRef.playAnim(2);
-			strumRef.pressTime = Song.StepCrochet * 0.001;
+			vocals.volume = 1;
 
 			return;
 		}

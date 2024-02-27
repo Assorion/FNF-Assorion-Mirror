@@ -136,6 +136,8 @@ class ChartUI_CheckBox extends ChartUI_Generic{
     }
 
     override public function mouseUp(){
+        super.mouseUp();
+
         var w = Math.floor(width);
         var h = Math.floor(height);
 

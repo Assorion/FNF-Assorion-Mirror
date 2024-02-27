@@ -32,8 +32,8 @@ class OptionsState extends MenuTemplate
 	static var optionSub:Array<Array<String>> = [
 		['basic', 'gameplay', 'visuals', 'controls', 'changelog'],
 		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist', #if desktop 'launch_sprites' #end ],
-		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay', 'miss_health'],
-		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info', 'strum_glow', 'transitions']
+		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay'],
+		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info']
 	];
 
 	static var descriptions:Array<Array<String>> = [
@@ -46,30 +46,27 @@ class OptionsState extends MenuTemplate
 		],
 		[
 			'Start the game in fullscreen mode',
-			'Change the games starting volume',
-			'Skip the haxeflixel intro logo',
-			'All Graphics & text files stay in ram. Will use way more ram but reload times decrease. DISABLE WHEN MODDING!',
+			'Change the game\'s starting volume',
+			'Skip the HaxeFlixel splash screen',
+			'All Graphics & text files stay in RAM. Will use more RAM but loading times decrease. DISABLE WHEN MODDING!',
 			#if desktop
-			'Load assets at startup. Uses even more RAM and increases startup time. Doesn\'t work in web browser'
+			'Load all assets at startup. Uses much more RAM, but loading times are basically instant'
 			#end
 		],
 		[
-			'Change your audio offset in MS. Press accept to enter the offset wizard',
-			'Change your keyboard offset in MS. This only changes ratings, not the actual timing window',
+			'Change your audio offset in milliseconds. Press accept to enter the offset wizard',
+			'Change your keyboard offset in milliseconds. Adjusts ratings',
 			'Change the scroll direction',
-			'Allows pressing notes if there is no notes to hit',
-			'Let the game handle your notes for you (does not count scores or health)',
-			'Changes the amount of health you lose from missing'
+			'Allows pressing a key when no note has been hit, without receiving a miss',
+			'Let the game press notes for you (does not count scores or health)'
 		],
 		[
-			'Makes the sprites look smoother. The game will look jagged without this option.',
+			'Makes the graphics look smoother, but can impact performance a little.',
 			#if desktop
-			'Changes how fast the game CAN run. I recommend setting it to 300, not the max',
+			'Changes how fast the game CAN run. I recommend setting it to 340, not the max',
 			#end
-			'Shows your health, stats, and other stuff in gameplay',
-			'Shows FPS and memory counter',
-			'Enemy notes glow like the players',
-			'View white fading transistion. If disabled loading times will decrease.'
+			'Shows your health, stats, etc in gameplay',
+			'Shows FPS and memory counter'
 		]
 	];
 
@@ -161,9 +158,6 @@ class OptionsState extends MenuTemplate
 			case 'input_offset':
 				Settings.pr.input_offset = CoolUtil.intBoundTo(Settings.pr.input_offset + ch, 0, 300);
 				atg.text = Std.string(Settings.pr.input_offset);
-			case 'miss_health':
-				Settings.pr.miss_health = CoolUtil.intBoundTo(Settings.pr.miss_health + ch, 10, 50);
-				atg.text = Std.string(Settings.pr.miss_health);
 
 			// visuals
 			case 'framerate':
@@ -234,10 +228,6 @@ class OptionsState extends MenuTemplate
 				Settings.pr.antialiasing = !Settings.pr.antialiasing;
 			case 'show_hud':
 				Settings.pr.show_hud = !Settings.pr.show_hud;
-			case 'strum_glow':
-				Settings.pr.strum_glow = !Settings.pr.strum_glow;
-			case 'transitions':
-				Settings.pr.transitions = !Settings.pr.transitions;			
 		}
 		createNewList(true);
 	}

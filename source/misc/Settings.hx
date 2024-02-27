@@ -21,14 +21,11 @@ typedef Options = {
     var input_offset:Int;
     var botplay:Bool;
     var ghost_tapping:Bool;
-    var miss_health:Int;
 
     var useful_info:Bool;
     var antialiasing:Bool;
     var show_hud:Bool;
     var framerate:Int;
-    var strum_glow:Bool;
-    var transitions:Bool;
 
     // controls :(
     var note_left :Array<Int>;

@@ -11,14 +11,11 @@
     "input_offset": 0,
     "botplay": false,
     "ghost_tapping": true,
-    "miss_health": 20,
 
     "useful_info": true,
     "antialiasing": true,
     "show_hud": true,
     "framerate": 120,
-    "strum_glow": true,
-    "transitions": true,
 
     "note_left":  [65, 37],
     "note_right": [68, 39],
