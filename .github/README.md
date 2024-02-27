@@ -29,7 +29,7 @@
 # ⚝ | What is Assorion Engine?
 
 Assorion Engine is effectively the Linux of <a href="https://ninja-muffin24.itch.io/funkin">Friday Night Funkin'</a> Engines. 
-Most original Friday Night Funkin' code has been replaced / revised with more efficient, optimized code, modular code.
+Most original Friday Night Funkin' code has been replaced / revised with more efficient, optimized code & modular code.
 
 Assorion Engine doesn't have mods folder capabilities planned nor will it be implemented. 
 In addition, things such as cutscenes, events, discordRPC, etc, will have to be added yourself. 
