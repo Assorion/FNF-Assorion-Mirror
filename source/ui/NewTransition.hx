@@ -9,8 +9,8 @@ import flixel.FlxG;
 
 #if !debug @:noDebug #end
 class NewTransition extends FlxSubState {
-    public  static var activeTransition:NewTransition = null;
-    private static var skippedLast:Bool;
+    public static var activeTransition:NewTransition = null;
+    public static var skippedLast:Bool;
     private static var existingGraphic:FlxGraphic;
 
     public var whiteSpr:FlxSprite;

@@ -1,7 +1,7 @@
 package gameplay;
 
-import haxe.MainLoop;
 import flixel.FlxG;
+import ui.NewTransition;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
@@ -162,8 +162,8 @@ class PauseSubState extends MusicBeatSubstate
 				leaving = true;
 				leave();
 			case 1:
+				NewTransition.skippedLast = true;
 				FlxG.resetState();
-
 			case 2:
 				Settings.pr.botplay = !Settings.pr.botplay;
 				alphaTexts[curSelected].obj.alpha = 0;
@@ -173,6 +173,7 @@ class PauseSubState extends MusicBeatSubstate
 				activeTweens.push(FlxTween.tween(pauseText, {alpha: 1}, 0.3));
 
 			case 3:
+				pState.persistentDraw = true;
 				exitToProperMenu();
 		}
 	}

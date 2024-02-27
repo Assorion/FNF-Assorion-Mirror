@@ -686,7 +686,7 @@ class ChartingState extends MusicBeatState {
     Left Click - Add note
     Left Click on note - Delete note
     Right Click - Delete selected notes
-    Ctrl + Left Click - Select multiple notes
+    Ctrl + Left Click + Drag - Select multiple notes
     Q / E - Decrease / add length of selected notes
     Z / X - Zoom in or zoom out grid
     B / N - Change note types
