@@ -29,7 +29,7 @@
 # ⚝ | What is Assorion Engine?
 
 Assorion Engine is effectively the Linux of <a href="https://ninja-muffin24.itch.io/funkin">Friday Night Funkin'</a> Engines. 
-All original base Friday Night Funkin' code has been replaced with more efficient, optimized code. 
+Most original Friday Night Funkin' code has been replaced / revised with more efficient, optimized code, modular code.
 
 Assorion Engine doesn't have mods folder capabilities planned nor will it be implemented. 
 In addition, things such as cutscenes, events, discordRPC, etc, will have to be added yourself. 
@@ -63,9 +63,9 @@ Though, Assorion Engine does have several <a href="https://github.com/Assorion/F
  **RoadMap**
 * [x]	Offset wizard
 * [X]	Web build
-* [ ]	Improvements to the chart editor
+* [X]	Improvements to the chart editor
 * [ ]	Events System
-* [ ]	Portuguese translation
+* [ ]	~~Portuguese translation~~
 * [ ]	Fixes for newer Flixel
  
 #### **Branches**
@@ -136,30 +136,23 @@ Remember to install the [library versions](#libraries) listed above.
 
 ## 💻 | Minimum Requirements
 
-Assorion is a very lightweight engine, to confirm this Assorion has been tested on a variety of hardware.
-Hardware in question ranges from an **`Intel Pentium 4 @ 2.26ghz`** to an **`AMD Ryzen 5 3600`**, **`Windows 2000 32-bit`** to **`Windows 11 64-bit`**, **`Nvidia Geforce Fx5200`**
-to **`Nvidia GTX 1660`**.
-
-> [!tip]
-> Remember!  
-> Any games performance will decrease with higher resolutions.  
-> Lower the resolution if encountering performance issues.
-
-
 The engine *should* be able to run smoothly (max framerate) on at least an **`Intel Core2 Duo E6850`** with an **`AMD Radeon R5 240`**. 
 The engine runs *perfectly* on an **`Intel i7-2600`**, and an **`Nvidia GT 1030`**.
 
-For the MinGW 64-bit build, Assorion will only run on Windows 7 or higher (tested on **`Windows Vista 64-bit`** and **`Windows 7 64-bit`**).
-Several libraries of inside of `Lime.ndll` use **SSE** to **SSE4**. 32-bit builds may work on on **`Windows Vista 32-bit`**.
+> [!tip]
+> Any games performance will decrease with higher resolutions.  
+> Un-fullscreen and resize the game if encountering performance issues.
 
 These should be the lowest minimum requirements to run the engine:
 
-- **OS**: Windows 7 64-Bit or Higher
-
-- **Processor**: Intel Celeron (SSE to SSE4, MMX) or Higher
-
-- **Memory**: 512MB - 1GB of Ram. 256mb or Higher of VRAM
-
+- **Windows**: Windows 7 64-Bit or Higher
+  
+- **Linux**: Any 64-Bit Distro With GLibC 2.36 or Equivilant
+  
+- **Processor**: Intel Celeron (SSE to SSE4 with MMX) or Higher
+  
+- **Memory**: 512MB - 1GB of Ram. 256mb VRam or Higher
+  
 - **Storage**: ~70MB Available Space
 
 
