@@ -43,7 +43,7 @@ class MenuTemplate extends MusicBeatState {
     override function create(){
         arrIcons = new FlxTypedGroup<HealthIcon>();
         camFollow = new FlxObject(0,0,1,1);
-        FlxG.camera.follow(camFollow, null, 0.06);
+        FlxG.camera.follow(camFollow, null, 0.023);
 
         add(arrIcons);
 
@@ -78,10 +78,12 @@ class MenuTemplate extends MusicBeatState {
 
     // # Camera fix
 
+    #if (flixel < "5.4.0")
     public override function stepHit(){
         super.stepHit();
-        FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
+        FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * Main.framerateDivision;
     }
+    #end
 
     // # Modified add function
 
@@ -129,7 +131,6 @@ class MenuTemplate extends MusicBeatState {
         camFollow.y += 320;
     }
 
-    // Will mostly likely not need changing for a lot of states.
     public function exitFunc(){
         if(NewTransition.skip()) 
             return;
@@ -138,7 +139,6 @@ class MenuTemplate extends MusicBeatState {
         FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
     }
 
-    // you can override this with something more useful.
     public function altChange(change:Int = 0){
         if(columns <= 2) return;
 

@@ -202,7 +202,7 @@ class OptionsState extends MenuTemplate
 			case 'default_persist':
 				Settings.pr.default_persist = !Settings.pr.default_persist;
 				if(Settings.pr.default_persist) 
-					gameplay.PauseSubState.newCanvas(true);
+					CoolUtil.newCanvas(true);
 
 				Settings.apply();
 			case 'launch_sprites':

@@ -81,6 +81,8 @@ class Settings {
 
         Main.changeUsefulInfo(pr.useful_info);
         Paths.switchCacheOptions(pr.default_persist);
+
+        Main.framerateDivision = 60 / FlxG.updateFramerate;
     }
 
     public inline static function flush(){

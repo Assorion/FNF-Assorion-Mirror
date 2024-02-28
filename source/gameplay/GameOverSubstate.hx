@@ -34,7 +34,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		FlxG.sound.music.time = 0;
 		FlxG.sound.play(Paths.lSound('gameplay/fnf_loss_sfx'));
-		FlxG.camera.follow(camFollow, LOCKON, 0.04);
+		FlxG.camera.follow(camFollow, LOCKON, 0.023);
 
 		Song.musicSet(100);
 
@@ -52,12 +52,15 @@ class GameOverSubstate extends MusicBeatSubstate
 			charRef.animation.play('deathLoop');
 			notLoop = false;
 		}
+
 		if(blackFadeIn.alpha < 1){
 			blackFadeIn.alpha += elapsed * 0.5;
 			fadeCam.alpha     -= elapsed * 0.5;
 		}
 
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
+		#if (flixel < "5.4.0")
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * Main.framerateDivision;
+		#end
 
 		super.update(elapsed);
 	}
@@ -74,11 +77,11 @@ class GameOverSubstate extends MusicBeatSubstate
 		if(ev.keyCode.hardCheck(Binds.UI_BACK)){
 			leaving = true;
 			FlxG.sound.music.stop();
-			PauseSubState.exitToProperMenu();
+			CoolUtil.exitPlaystate();
 			return;
 		}
 
-		if(!ev.keyCode .hardCheck(Binds.UI_ACCEPT)) return;
+		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) return;
 
 		leaving = true;
 		charRef.playAnim('deathConfirm');

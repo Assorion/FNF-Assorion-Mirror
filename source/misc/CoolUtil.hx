@@ -8,12 +8,15 @@ import openfl.geom.Rectangle;
 import openfl.geom.Matrix;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.util.FlxColor;
+import gameplay.PlayState;
 
 using StringTools;
 
 #if !debug @:noDebug #end
 class CoolUtil
 {
+	public static var canvas:BitmapData;
+
 	// Change if adding a custom difficulty.
 	public static inline var diffNumb:Int = 3;
 	public static var diffArr:Array<String> = [
@@ -58,4 +61,12 @@ class CoolUtil
 
 		bitmapDat.draw(camera.canvas, matr, null, null, null, true);
 	}
+
+	public static function exitPlaystate(){
+		PlayState.seenCutscene = false;
+		MusicBeatState.changeState(PlayState.storyWeek >= 0 ? new ui.StoryMenuState() : new ui.FreeplayState());
+	}
+	public static function newCanvas(force:Bool = false)
+	if (canvas == null || !Settings.pr.default_persist || force)
+		canvas = new BitmapData(1280, 720, true, 0);
 }

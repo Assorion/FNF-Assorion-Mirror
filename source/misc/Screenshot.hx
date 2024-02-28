@@ -16,8 +16,7 @@ import gameplay.PauseSubState;
 /*
     TODO:
     Rework this a little to work in a Web-Browser.
-    Why?
-    No idea, nobody is really gonna come across this but it's a neat little feature.
+    Also I need to fix colour and transparency.
 */
 
 #if !debug @:noDebug #end
@@ -26,13 +25,13 @@ class Screenshot {
         #if desktop
 
         // Capture Gameplay.
-        PauseSubState.newCanvas();
+        CoolUtil.newCanvas();
 		for(gcam in FlxG.cameras.list)
-		    CoolUtil.copyCameraToData(PauseSubState.canvas, gcam);
+		    CoolUtil.copyCameraToData(CoolUtil.canvas, gcam);
 
         // Encode it to raw bytes.
         var byteArray:ByteArray = new ByteArray();
-        PauseSubState.canvas.encode(new Rectangle(0,0,1280,720), new openfl.display.PNGEncoderOptions(false), byteArray);
+        CoolUtil.canvas.encode(new Rectangle(0,0,1280,720), new openfl.display.PNGEncoderOptions(false), byteArray);
         byteArray.position = 0;
 
         // Convert OpenFLs byte array to Haxe's version which we can save.

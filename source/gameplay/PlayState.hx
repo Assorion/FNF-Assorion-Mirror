@@ -24,12 +24,13 @@ using StringTools;
 #if !debug @:noDebug #end
 class PlayState extends MusicBeatState
 {
-	public static inline var inputRange:Float = 1.25; // 1 = step. 1.5 = 1 + 1/4 step range.
+	public static inline var beatHalfingTime:Int = 190;
+	public static inline var inputRange:Float = 1.25; // 1 and a quarter steps of input range.	
 	public static var sDir:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 
 	public static var songName:String = '';
 	public static var SONG:SongData;
-	public static var storyWeek:Int = 0; // If -1, it is freeplay
+	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var curDifficulty:Int = 1;
 	public static var totalScore:Int = 0;
@@ -38,7 +39,7 @@ class PlayState extends MusicBeatState
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
 
-	public var strumLine:FlxObject;
+	public var strumLineY:Int;
 	public var followPos:FlxObject;
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
@@ -85,7 +86,6 @@ class PlayState extends MusicBeatState
 		SONG = misc.Song.loadFromJson(storyPlaylist[0], curDifficulty);
 	}
 
-	// # Create (obvious) where game starts.
 	override public function create()
 	{
 		// # Camera Setup
@@ -99,7 +99,7 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
 		FlxCamera.defaultCameras = [camGame];
-		FlxG.camera.follow(followPos, LOCKON, 0.04);
+		FlxG.camera.follow(followPos, LOCKON, 0.067);
 		FlxG.camera.zoom = defaultCamZoom;
 
 		// # Song Setup
@@ -117,20 +117,19 @@ class PlayState extends MusicBeatState
 
 		// # BG & UI setup
 		handleStage();
-		strumLine = new FlxObject(0, Settings.pr.downscroll ? FlxG.height - 150 : 50, 1, 1);
 
+		strumLineY = Settings.pr.downscroll ? FlxG.height - 150 : 50;
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		playerStrums   = new FlxTypedGroup<StrumNote>();
 		notes          = new FlxTypedGroup<Note>();
 		add(strumLineNotes);
 		add(notes);
 
-		generateSong();
+		generateChart();
 		for(i in 0...SONG.playLength)
-			generateStaticArrows(i, SONG.activePlayer == i);
+			generateStrumArrows(i, SONG.activePlayer == i);
 
-		// popup score stuff
-		// I agree this is a mess.
+		///////////////////////////////////////////////
 		ratingSpr = new StaticSprite(0,0).loadGraphic(Paths.lImage('gameplay/sick'));
 		ratingSpr.graphic.persist = true;
 		ratingSpr.updateHitbox();
@@ -158,6 +157,7 @@ class PlayState extends MusicBeatState
 			add(sRef);
 		}
 		///////////////////////////////////////////////
+
 		var baseY:Int = Settings.pr.downscroll ? 80 : 650;
 
 		healthBarBG = new StaticSprite(0, baseY).loadGraphic(Paths.lImage('gameplay/healthBar'));
@@ -202,7 +202,6 @@ class PlayState extends MusicBeatState
 
 		super.create();
 
-		// force it to pass an instance by reference.
 		var stateHolder:Array<DialogueSubstate> = [];
 		var seenCut:Bool = DialogueSubstate.crDialogue(camHUD, startCountdown, '$songName/dialogue.txt', this, stateHolder);
 
@@ -212,17 +211,13 @@ class PlayState extends MusicBeatState
 		events.splice(events.length - 1, 1);
 
 		postEvent(0.8, function(){
-			pauseGame(stateHolder[0]);
+			pauseAndOpenState(stateHolder[0]);
 		});
 	}
-
-	// # stage code.
 
 	public inline function addCharacters(){
 		for(i in 0...SONG.characters.length)
 			allCharacters.push(new Character(characterPositions[i * 2], characterPositions[(i * 2) + 1], SONG.characters[i], i == 1));
-
-		// this adds the characters in reverse.
 		for(i in 0...SONG.characters.length)
 			add(allCharacters[SONG.renderBackwards ? i : (SONG.characters.length - 1) - i]);
 
@@ -269,8 +264,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	// # note spawning
-	private inline function generateSong():Void
+	private inline function generateChart():Void
 	{
 		for(section in SONG.notes)
 		for(fNote in section.sectionNotes){
@@ -296,10 +290,10 @@ class PlayState extends MusicBeatState
 		unspawnNotes.sort((A,B) -> Std.int(A.strumTime - B.strumTime));
 	}
 
-	private function generateStaticArrows(player:Int, playable:Bool):Void
+	private function generateStrumArrows(player:Int, playable:Bool):Void
 	for (i in 0...Note.keyCount)
 	{
-		var babyArrow:StrumNote = new StrumNote(0, strumLine.y - 10, i, player);
+		var babyArrow:StrumNote = new StrumNote(0, strumLineY - 10, i, player);
 		babyArrow.alpha = 0;
 
 		strumLineNotes.add(babyArrow);
@@ -375,8 +369,6 @@ class PlayState extends MusicBeatState
 		syncEverything(-1);
 	}
 
-	// # THE GRAND UPDATE FUNCTION!!!
-
 	var noteCount:Int = 0;
 	override public function update(elapsed:Float)
 	if(!paused) {
@@ -387,20 +379,18 @@ class PlayState extends MusicBeatState
 		if(seenCutscene)
 			songTime += (elapsed * 1000) * Song.Division;
 
-		// note spawning
 		var uNote = unspawnNotes[noteCount];
 		if (uNote != null && uNote.strumTime - songTime < 32)
 		{
 			notes.add(uNote);
 			noteCount++;
 		}
+
 		notes.forEachAlive(scrollNotes);
 
 		super.update(elapsed);
 	}
 
-	// so characters don't idle too fast.
-	private inline static var beatHalfingTime:Int = 190;
 	override function beatHit()
 	{
 		super.beatHit();
@@ -408,9 +398,11 @@ class PlayState extends MusicBeatState
 		iconP1.scale.set(1.2,1.2);
 		iconP2.scale.set(1.2,1.2);
 		
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * (60 / Settings.pr.framerate);
+		#if (flixel < "5.4.0")
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 6)) * Main.framerateDivision;
+		#end
 
-		var sec:SectionData = SONG.notes[curBeat >> 2];
+		var sec:SectionData = SONG.notes[curBeat >> 2]; // "curBeat >> 2" is the same as "Math.floor(curBeat / 4)", but faster
 		if(curBeat == ((curBeat >> 2) << 2) && FlxG.sound.music.playing){
 			// prevent the Int from being null, if it is it will just be 0.
 			var tFace:Int = sec != null ? cast(sec.cameraFacing, Int) : 0;
@@ -431,7 +423,6 @@ class PlayState extends MusicBeatState
 			songTime = ((Song.Position * 3 * Song.Division) + songTime) * 0.25;
 	}
 
-	// # Update stats
 	// THIS IS WHAT UPDATES YOUR SCORE AND HEALTH AND STUFF!
 
 	private static inline var iconSpacing:Int = 52;
@@ -455,17 +446,15 @@ class PlayState extends MusicBeatState
 			return; 
 
 		remove(allCharacters[playerPos]);
-		pauseGame(new GameOverSubstate(allCharacters[playerPos], camHUD, this));
+		pauseAndOpenState(new GameOverSubstate(allCharacters[playerPos], camHUD, this));
 	}
 
-	// # On note hit.
-
-	function goodNoteHit(note:Note):Void
+	function hitNote(note:Note):Void
 	{
 		destroyNote(note, 0);
 
 		if(!note.curType.mustHit){
-			noteMiss(note.noteData);
+			missNote(note.noteData);
 			return;
 		}
 
@@ -481,7 +470,7 @@ class PlayState extends MusicBeatState
 		updateHealth(5);
 	}
 
-	function noteMiss(direction:Int = 1):Void
+	function missNote(direction:Int = 1):Void
 	{
 		if (combo > 20)
 			for(i in 0...allCharacters.length)
@@ -500,8 +489,7 @@ class PlayState extends MusicBeatState
 		updateHealth(-10);
 	}
 
-	// # input code.
-	// please add any keys or stuff you want to add here.
+	// For anything that would require keyboard input, please put it here, not update.
 
 	public var hittableNotes:Array<Note> = [null, null, null, null];
 	public var keysPressed:Array<Bool>   = [false, false, false, false];
@@ -513,7 +501,7 @@ class PlayState extends MusicBeatState
 		switch(k){
 			case 0, 1:
 				if(seenCutscene)	
-					pauseGame(new PauseSubState(camHUD, this));
+					pauseAndOpenState(new PauseSubState(camHUD, this));
 				return;
 			case 2:
 				MusicBeatState.changeState(new ChartingState());
@@ -524,7 +512,7 @@ class PlayState extends MusicBeatState
 				return;
 		}
 
-		// actual input system
+		// Assorions "Fast" input system
 		var nkey = ev.keyCode.deepCheck(keysArray);
 		if(nkey == -1 || keysPressed[nkey] || Settings.pr.botplay) return;
 
@@ -533,12 +521,12 @@ class PlayState extends MusicBeatState
 		var strumRef = playerStrums.members[nkey];
 		var noteRef  = hittableNotes[nkey];
 		if(noteRef != null){
-			goodNoteHit(noteRef);
+			hitNote(noteRef);
 			strumRef.pressTime = Song.StepCrochet * 0.00075;
 		} else if(strumRef.pressTime <= 0){
 			strumRef.playAnim(1);
 			if(!Settings.pr.ghost_tapping)
-				noteMiss(nkey);
+				missNote(nkey);
 		}
 	}
 	override public function keyRel(ev:KeyboardEvent){
@@ -549,16 +537,12 @@ class PlayState extends MusicBeatState
 		playerStrums.members[nkey].playAnim();
 	}
 
-	// # handle notes. Note scrolling etc
-
 	private inline function scrollNotes(daNote:Note){
-		var dir = Settings.pr.downscroll ? 45 : -45;
 		var nDiff:Float = songTime - daNote.strumTime;
-		daNote.y = dir * nDiff * SONG.speed;
-		daNote.y += strumLine.y;
+		daNote.y = (Settings.pr.downscroll ? 45 : -45) * nDiff * SONG.speed;
+		daNote.y += strumLineY;
 
-		// 1.25 because we need room for the player to miss.
-		daNote.visible = (daNote.height > -daNote.height * SONG.speed * 1.25) && (daNote.y < FlxG.height + (daNote.height * SONG.speed * 1.25));
+		daNote.visible = Settings.pr.downscroll ? (daNote.y >= -daNote.height) : (daNote.y <= FlxG.height);
 		if(!daNote.visible) return;
 		
 		var strumRef = strumLineNotes.members[daNote.noteData + (Note.keyCount * daNote.player)];
@@ -584,11 +568,12 @@ class PlayState extends MusicBeatState
 
 		if(nDiff > inputRange){
 			if(daNote.curType.mustHit)
-				noteMiss(daNote.noteData);
+				missNote(daNote.noteData);
 			
 			destroyNote(daNote, 1);
 			return;
 		}
+
 		// Input stuff
 		if (!daNote.isSustainNote && hittableNotes[daNote.noteData] == null && Math.abs(nDiff) <= inputRange * daNote.curType.rangeMul){
 			hittableNotes[daNote.noteData] = daNote;
@@ -598,7 +583,7 @@ class PlayState extends MusicBeatState
 		if(!daNote.isSustainNote || Math.abs(nDiff) >= 0.8 || !keysPressed[daNote.noteData]) 
 			return;
 
-		goodNoteHit(daNote);
+		hitNote(daNote);
 	}
 
 	public static var possibleScores:Array<RatingData> = [
@@ -649,6 +634,7 @@ class PlayState extends MusicBeatState
 
 		if(pscore.score < 50 || combo > 999)
 			combo = 0;
+
 		//////////////////////////
 		if(scoreTweens[0] != null)
 			for(i in 0...4) scoreTweens[i].cancel();
@@ -684,24 +670,24 @@ class PlayState extends MusicBeatState
 
 		Highscore.saveScore(SONG.song, songScore, curDifficulty);
 
-		if (storyWeek >= 0){
-			totalScore += songScore;
-			storyPlaylist.splice(0,1);
-
-			if (storyPlaylist.length <= 0){
-				Highscore.saveScore('week-$storyWeek', totalScore, curDifficulty);
-				PauseSubState.exitToProperMenu();
-				return;
-			}
-
-			seenCutscene = false;
-			SONG = misc.Song.loadFromJson(storyPlaylist[0], curDifficulty);
-			FlxG.sound.music.stop();
-			FlxG.resetState();
-
+		if (storyWeek == -1){
+			CoolUtil.exitPlaystate();
 			return;
 		}
-		PauseSubState.exitToProperMenu();
+		
+		totalScore += songScore;
+		storyPlaylist.splice(0,1);
+
+		if (storyPlaylist.length <= 0){
+			Highscore.saveScore('week-$storyWeek', totalScore, curDifficulty);
+			CoolUtil.exitPlaystate();
+			return;
+		}
+
+		seenCutscene = false;
+		SONG = misc.Song.loadFromJson(storyPlaylist[0], curDifficulty);
+		FlxG.sound.music.stop();
+		FlxG.resetState();
 	}
 
 	// Smaller helper functions
@@ -713,13 +699,15 @@ class PlayState extends MusicBeatState
 		Song.Position          = roundedTime - Settings.pr.audio_offset;
 		songTime = Song.Position * Song.Division;
 	}
-	function pauseGame(state:MusicBeatSubstate){
+
+	function pauseAndOpenState(state:MusicBeatSubstate){
 		paused = true;
 		FlxG.sound.music.pause();
 		vocals.pause();
 
 		openSubState(state);
 	}
+
 	inline function destroyNote(note:Note, act:Int){
 		note.typeAction(act);
 		notes.remove(note, true);
@@ -728,6 +716,7 @@ class PlayState extends MusicBeatState
 		if (hittableNotes[note.noteData] == note)
 			hittableNotes[note.noteData] = null;
 	}
+
 	private inline function introSpriteTween(spr:StaticSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
 	{
 		spr.alpha = 1;
@@ -739,11 +728,12 @@ class PlayState extends MusicBeatState
 			}
 		});
 	}
+
 	override function onFocusLost(){
 		super.onFocusLost();
 		if(paused || !seenCutscene) return;
 		
-		pauseGame(new PauseSubState(camHUD, this));
+		pauseAndOpenState(new PauseSubState(camHUD, this));
 	}
 }
 

@@ -19,7 +19,7 @@ typedef SlideShowPoint = {
 
 /*
     This isn't written to well.
-    I might do a re-write myself soon.
+    I might do a re-write myself sometime.
 */
 
 #if !debug @:noDebug #end
@@ -49,7 +49,7 @@ class DialogueSubstate extends MusicBeatSubstate {
         retState[0] = new DialogueSubstate(cam, close, dPath, ps);
         retState[0].openCallback = function(){
             // take a look at pausesubstate pls
-            CoolUtil.copyCameraToData(PauseSubState.canvas, FlxG.camera);
+            CoolUtil.copyCameraToData(CoolUtil.canvas, FlxG.camera);
             retState[0].pState.persistentDraw = false;
         };
 
@@ -59,9 +59,9 @@ class DialogueSubstate extends MusicBeatSubstate {
     public function new(camera:FlxCamera, closeFunc:Void->Void, dPath:String, pState:PlayState){
         super();
 
-        PauseSubState.newCanvas();
+        CoolUtil.newCanvas();
 
-        var gspr:StaticSprite = new StaticSprite(0,0).loadGraphic(PauseSubState.canvas);
+        var gspr:StaticSprite = new StaticSprite(0,0).loadGraphic(CoolUtil.canvas);
         gspr.antialiasing = Settings.pr.antialiasing;
         gspr.screenCenter();
         gspr.scrollFactor.set();
@@ -106,7 +106,6 @@ class DialogueSubstate extends MusicBeatSubstate {
         clsFnc = closeFunc;
         this.pState = pState;
 
-        // parse text data. Yeah sorry this is not too good.
         var lines:Array<String> = Paths.lText(dPath).split(',');
         for(i in 0...lines.length){
             var splitL:Array<String> = lines[i].split(':');
@@ -149,7 +148,6 @@ class DialogueSubstate extends MusicBeatSubstate {
             return;
         }
         
-        // in case you spam.
         events = [];
         voicesText.text = '';
         chars = slides[curSlide].text.split('');

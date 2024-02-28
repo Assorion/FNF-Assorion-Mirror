@@ -35,12 +35,14 @@ Assorion Engine doesn't have mods folder capabilities planned nor will it be imp
 In addition, things such as cutscenes, events, discordRPC, etc, will have to be added yourself. 
 Though, Assorion Engine does have several <a href="https://github.com/Assorion/FNF-Assorion-Engine#branches">branches</a> planned with more features soon.
 
+Assorion is a very simple engine and thus, it may not receive many feature updates; Assorion will continue to have bug fixes and optimizations.
+
 ## ⚡ | Why choose Assorion Engine?
 
 1. Assorion Engine is incredibly fast and stable
 2. Assorion's Code is much better streamlined, and much easier to mod
 3. Assorion has an emphasis on simplicity, over bloat
-4. Assorion is actively maintained, adding many features and fixes
+4. Assorion is actively maintained, adding many fixes
 
 # 🗒️ | Important Notes/RoadMap
 
@@ -64,9 +66,9 @@ Though, Assorion Engine does have several <a href="https://github.com/Assorion/F
 * [x]	Offset wizard
 * [X]	Web build
 * [X]	Improvements to the chart editor
+* [X]	Fixes for newer Flixel
 * [ ]	Events System
 * [ ]	~~Portuguese translation~~
-* [ ]	Fixes for newer Flixel
  
 #### **Branches**
 
@@ -100,11 +102,11 @@ Read ahead to your OS and read those instructions. Then come back here.
 
 Run `haxelib install <library name>` replacing `<library name>` with these libraries below:
 - `hxcpp`
-- `lime 7.9.0` or `lime 8.0.0`
-- `openfl 9.2.1`
-- `flixel 4.9.0` or `flixel 5.2.2`
-- `flixel-addons 3.0.2`
-- `flixel-ui 2.5.0`
+- `lime`
+- `openfl`
+- `flixel`
+- `flixel-addons`
+- `flixel-ui`
 
 #### **For Windows:**
 - Install <a href="https://haxe.org/">`Haxe`</a>
@@ -126,13 +128,6 @@ Run `haxelib install <library name>` replacing `<library name>` with these libra
 #### **If you're confused:**  
 Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/.github/MinGW-Setup.md">**`MinGW-w64`**</a>.  
 Remember to install the [library versions](#libraries) listed above.
-
-> [!WARNING] 
-> Assorion has been tested with the latest versions of Lime & Flixel. These recent versions cause issues with compiling, cameras, etc. I advise that you downgrade Flixel & Lime to the versions listed above to make sure Assorion works as intended.
->
-> 
-> Every version of the libraries listed before are the versions that Assorion has been tested / built with, so using those versions will gurantee that Assorion will compile and behave correctly. Fixes for these issues will hopefully be implemented soon.
-
 
 ## 💻 | Minimum Requirements
 

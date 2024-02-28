@@ -13,6 +13,8 @@ import misc.MemCounter;
 #end
 class Main extends Sprite
 {
+	public static var framerateDivision:Float = 1;
+
 	private static var fpsC:FPSCounter;
 	private static var memC:MemCounter;
 
@@ -63,7 +65,7 @@ class Main extends Sprite
 		Settings.pr.framerate = 60;
 		#end
 		
-		// have to give credit for psych engine here.
+		// I have to give credit to Psych Engine here.
 		// Wouldn't have cared enough to fix this on my own.
 		#if linux
 		Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile("assets/images/icon.png"));

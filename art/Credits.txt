@@ -1,0 +1,14 @@
+=== Base Game ===
+
+Ar    - Evilsk8r & PhantomArcade
+Code  - Ninjamuffin99
+Songs - Kawaisprite
+
+=== Assorion ===
+
+Code & Music - Rapid / Antivirus
+Github & Art - Barzil
+
+=== Extra stuff ===
+
+Icon fix - Psych Engine source code

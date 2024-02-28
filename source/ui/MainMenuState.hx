@@ -11,7 +11,6 @@ import flixel.util.FlxColor;
 import lime.app.Application;
 import openfl.events.KeyboardEvent;
 import flixel.input.keyboard.FlxKey;
-//import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -31,10 +30,7 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		// Since mainmenustate is so common, might-as-well put this here.
 		Paths.clearCache();
-
-		// # bg stuff.
 
 		var bg:StaticSprite = new StaticSprite(-80).loadGraphic('assets/images/ui/menuDesat.png');
 		bg.scrollFactor.x = 0;
@@ -68,14 +64,13 @@ class MainMenuState extends MusicBeatState
 			menuItems.add(menuItem);
 		}
 
-		FlxG.camera.follow(camFollow, null, 0.06);
+		FlxG.camera.follow(camFollow, null, 0.023);
 
 		var versionNumber:FlxText = new FlxText(5, FlxG.height - 18, 0, "Assorion Engine v" + Application.current.meta.get('version'), 12);
 			versionNumber.scrollFactor.set();
 			versionNumber.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionNumber);
 
-		// so everything updates right!
 		var o:Int = curSelected;
 		curSelected = 0;
 		changeItem(o);
@@ -83,14 +78,14 @@ class MainMenuState extends MusicBeatState
 		super.create();
 	}
 
-	// # Camera fix
+	// Camera fix across framerates (Not needed for newer flixel versions!)
 
+	#if (flixel < "5.4.0")
 	override public function stepHit(){
 		super.stepHit();
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.pr.framerate);
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * Main.framerateDivision;
 	}
-	
-	// # Input code
+	#end
 
 	var twns:Array<FlxTween> = [];
 	var leaving:Bool = false;
@@ -124,8 +119,6 @@ class MainMenuState extends MusicBeatState
 				leaving = true;
 		}
 	}
-
-	// # switches states
 
 	private inline function changeState(){
 		if(selectedSomethin){

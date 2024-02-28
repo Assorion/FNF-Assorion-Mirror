@@ -34,7 +34,6 @@ class MusicBeatState extends FlxUIState
 
 	override function create()
 	{
-		// Don't worry the skipping is handled in the transition itself.
 		openSubState(new NewTransition(null, false));
 
 		persistentUpdate = true;
@@ -45,7 +44,7 @@ class MusicBeatState extends FlxUIState
 		super.create();
 	}
 
-	// # new input thing.
+	// # Input code
 
 	public function keyHit(ev:KeyboardEvent){}
 	public function keyRel(ev:KeyboardEvent){}
@@ -56,8 +55,6 @@ class MusicBeatState extends FlxUIState
 
 		super.destroy();
 	}
-
-	// # handle a delayed event system.
 
 	private inline function postEvent(forward:Float, func:Void->Void)
 	events.push({
