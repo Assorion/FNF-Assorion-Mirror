@@ -28,9 +28,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-
-		var zoom = ((Lib.current.stage.stageWidth / gameWidth) + (Lib.current.stage.stageHeight / gameHeight)) / 2;
-
+		
 		Settings.openSettings();
 
 		// # add the game
@@ -49,7 +47,7 @@ class Main extends Sprite
 			gameWidth, 
 			gameHeight, 
 			ldState, 
-			#if (flixel < "5.0.0") zoom, #end 
+			#if (flixel < "5.0.0") 1, #end 
 			Settings.pr.framerate, 
 			Settings.pr.framerate, 
 			Settings.pr.skip_logo, 

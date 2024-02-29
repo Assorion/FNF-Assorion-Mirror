@@ -513,6 +513,8 @@ class ChartingState extends MusicBeatState {
 
             return;
         }
+        
+        overlappingElement = null;
 
         // # Selecting
 

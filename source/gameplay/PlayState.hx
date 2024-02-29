@@ -61,7 +61,6 @@ class PlayState extends MusicBeatState
 
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
-	static var defaultCamZoom:Float = 1.05;
 
 	private var characterPositions:Array<Int> = [
 		// dad
@@ -100,7 +99,6 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camHUD);
 		FlxCamera.defaultCameras = [camGame];
 		FlxG.camera.follow(followPos, LOCKON, 0.067);
-		FlxG.camera.zoom = defaultCamZoom;
 
 		// # Song Setup
 		songName = SONG.song.toLowerCase();
@@ -233,7 +231,7 @@ class PlayState extends MusicBeatState
 						70, 130,
 						780, 450
 					];
-				defaultCamZoom = 0.9;
+				FlxG.camera.zoom = 0.9;
 
 				var bg:StaticSprite = new StaticSprite(-600, -200).loadGraphic(Paths.lImage('stages/stageback'));
 					bg.antialiasing = Settings.pr.antialiasing;
@@ -540,9 +538,9 @@ class PlayState extends MusicBeatState
 	private inline function scrollNotes(daNote:Note){
 		var nDiff:Float = songTime - daNote.strumTime;
 		daNote.y = (Settings.pr.downscroll ? 45 : -45) * nDiff * SONG.speed;
-		daNote.y += strumLineY;
+		daNote.y += strumLineY + daNote.offsetY;
 
-		daNote.visible = Settings.pr.downscroll ? (daNote.y >= -daNote.height) : (daNote.y <= FlxG.height);
+		daNote.visible = Settings.pr.downscroll ? (daNote.y >= -daNote.height * daNote.scale.y) : (daNote.y <= FlxG.height);
 		if(!daNote.visible) return;
 		
 		var strumRef = strumLineNotes.members[daNote.noteData + (Note.keyCount * daNote.player)];
@@ -559,9 +557,8 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		daNote.x     = strumRef.x + daNote.offsetX;
+		daNote.x = strumRef.x + daNote.offsetX;
 		daNote.angle = strumRef.angle;
-		daNote.y    += daNote.offsetY;
 
 		if(daNote.player != playerPos || Settings.pr.botplay) 
 			return;
