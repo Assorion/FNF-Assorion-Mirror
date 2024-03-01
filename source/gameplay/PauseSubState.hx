@@ -14,7 +14,7 @@ import misc.CoolUtil;
 import openfl.display.BitmapData;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
-import ui.MenuTemplate.MenuObject;
+import ui.MenuTemplate;
 
 #if !debug @:noDebug #end
 class PauseSubState extends MusicBeatSubstate
@@ -61,7 +61,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		for (i in 0...optionList.length)
 		{
-			var option:Alphabet = new Alphabet(0, (60 * i) + 30, optionList[i], true);
+			var option:Alphabet = new Alphabet(0, MenuTemplate.yDiffer * i, optionList[i], true);
 			option.alpha = 0;
 			add(option);
 
@@ -193,10 +193,10 @@ class PauseSubState extends MusicBeatSubstate
 			var item = alphaTexts[i];
 			item.targetA = i != curSelected ? 0.4 : 1;
 
-			item.targetY = (i - curSelected) * 110;
-			item.targetX = (i - curSelected) * 20;
-			item.targetY += 110;
-			item.targetX += 60;
+			item.targetY = (i - curSelected) * MenuTemplate.yDiffer;
+			item.targetX = (i - curSelected) * MenuTemplate.xDiffer;
+			item.targetY += MenuTemplate.yOffset;
+			item.targetX += MenuTemplate.xOffset;
 		}
 	}
 }

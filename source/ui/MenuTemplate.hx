@@ -21,6 +21,13 @@ typedef MenuObject = {
 }
 
 class MenuTemplate extends MusicBeatState {
+    /* Configure menu spacings, applies to Pause substate as well.
+       If you want the menus to have the base game positioning, replace the values with the comment values. */
+    public static inline var xOffset:Int = 60;  // 90
+    public static inline var xDiffer:Int = 20;
+    public static inline var yOffset:Int = 110; // 345
+    public static inline var yDiffer:Int = 110; // 156
+
     public var curSel:Int  = 0;
     public var curAlt:Int  = 0;
     public var columns:Int = 1;
@@ -54,13 +61,11 @@ class MenuTemplate extends MusicBeatState {
         });
     }
 
-    // # For adding objects to the menu list.
-
     public inline function pushObject(spr:FlxBasic){
         var cr:MenuObject = {
             obj: cast spr,
-            targetX: 60 + ((arrGroup.length + 1) * 30),
-            targetY: Math.round((110 + ((arrGroup.length + 1) * 110)) / columns),
+            targetX: xOffset + ((arrGroup.length + 1) * xDiffer),
+            targetY: yOffset + Math.round((arrGroup.length + 1) * yDiffer / columns),
             targetA: 0.4
         };
 
@@ -76,7 +81,7 @@ class MenuTemplate extends MusicBeatState {
         icn.scale.set(0.85, 0.85);
     }
 
-    // # Camera fix
+    // Camera fix
 
     #if (flixel < "5.4.0")
     public override function stepHit(){
@@ -85,7 +90,7 @@ class MenuTemplate extends MusicBeatState {
     }
     #end
 
-    // # Modified add function
+    // Modified add function
 
     public inline function sAdd(crap:FlxBasic){
         add(crap);
@@ -105,10 +110,10 @@ class MenuTemplate extends MusicBeatState {
         for(i in 0...loopNum){
             var item = arrGroup[i * columns];
 
-            item.targetX = (i - curSel) * 20;
-            item.targetX += 60;
-            item.targetY = (i - curSel) * 110;
-            item.targetY += 110;
+            item.targetX = (i - curSel) * xDiffer;
+            item.targetX += xOffset;
+            item.targetY = (i - curSel) * yDiffer;
+            item.targetY += yOffset;
             item.targetA = i == curSel ? 1 : 0.4;
 
             if(columns <= 1) 

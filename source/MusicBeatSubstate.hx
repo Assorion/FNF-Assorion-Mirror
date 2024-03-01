@@ -48,7 +48,7 @@ class MusicBeatSubstate extends FlxSubState
 			var e = events[i];
 
 			if(cTime < e.endTime)
-				return;
+				continue;
 
 			e.exeFunc();
 			events.splice(i--, 1);

@@ -81,7 +81,8 @@ class MusicBeatState extends FlxUIState
 		while(++i < events.length){
 			var e = events[i];
 
-			if(cTime < e.endTime) continue;
+			if(cTime < e.endTime) 
+				continue;
 
 			e.exeFunc();
 			events.splice(i--, 1);

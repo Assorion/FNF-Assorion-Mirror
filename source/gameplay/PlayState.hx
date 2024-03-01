@@ -216,6 +216,7 @@ class PlayState extends MusicBeatState
 	public inline function addCharacters(){
 		for(i in 0...SONG.characters.length)
 			allCharacters.push(new Character(characterPositions[i * 2], characterPositions[(i * 2) + 1], SONG.characters[i], i == 1));
+		
 		for(i in 0...SONG.characters.length)
 			add(allCharacters[SONG.renderBackwards ? i : (SONG.characters.length - 1) - i]);
 
@@ -360,6 +361,11 @@ class PlayState extends MusicBeatState
 		if(!paused) return;
 
 		paused = false;
+
+		for(i in 0...events.length)
+			events[i].endTime += MusicBeatState.curTime() - lastOpenTime;
+		lastOpenTime = 0;
+
 		if(FlxG.sound.music.time == 0) return;
 
 		FlxG.sound.music.play();
@@ -697,8 +703,10 @@ class PlayState extends MusicBeatState
 		songTime = Song.Position * Song.Division;
 	}
 
+	var lastOpenTime:Float;
 	function pauseAndOpenState(state:MusicBeatSubstate){
 		paused = true;
+		lastOpenTime = MusicBeatState.curTime();
 		FlxG.sound.music.pause();
 		vocals.pause();
 

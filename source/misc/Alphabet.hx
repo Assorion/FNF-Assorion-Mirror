@@ -33,8 +33,6 @@ class Alphabet extends FlxSpriteGroup
 		if (!AlphaCharacter.completeList.contains(character)) 
 			continue;
 
-		// # add text
-
 		var letter:AlphaCharacter = new AlphaCharacter(fWidth, 0, character, isBold);
 
 		isBold ? letter.createBold() : letter.createLetter();
@@ -102,7 +100,7 @@ class AlphaCharacter extends FlxSprite
 		50, -5, 0, 0
 	];
 
-	// # Handle symbols.
+	// Handles symbols.
 
 	public function replaceWithSymbol()
 	{
