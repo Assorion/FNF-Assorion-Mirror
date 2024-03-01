@@ -34,8 +34,6 @@ class Alphabet extends FlxSpriteGroup
 			continue;
 
 		var letter:AlphaCharacter = new AlphaCharacter(fWidth, 0, character, isBold);
-
-		isBold ? letter.createBold() : letter.createLetter();
 		add(letter);
 
 		fWidth += letter.width;
