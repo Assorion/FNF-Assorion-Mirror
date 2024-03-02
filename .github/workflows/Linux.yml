@@ -5,7 +5,17 @@ name: Linux
 on:
   workflow_dispatch:
 
+# This is not required in a Workflow and will only be used to relay information- 
+# -back to the main Github Workflow Page for the individual viewing.
 jobs:
+  Linux-Workflow-Information:
+    name: -Summary
+    runs-on: ubuntu-latest
+    steps:
+    - name: Information
+      run: |
+        echo '# Assorion Engine Test'
+  
   Linux-Build:
     runs-on: ubuntu-latest
     steps:
