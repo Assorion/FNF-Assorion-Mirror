@@ -124,7 +124,7 @@ class DialogueSubstate extends MusicBeatSubstate {
             slides.push(tmp);
         }
 
-        postEvent(1.8, function(){ textSlide(); });
+        postEvent(2.8, function(){ textSlide(); });
     }
 
     private var leaving:Bool = false;
