@@ -57,7 +57,7 @@ class Song
 	{
 		songStr = songStr.toLowerCase();
 		
-		var tmpCast:SongData = cast Json.parse(Paths.lText('$songStr/$songStr${CoolUtil.diffString(diff, 0)}.json')).song;
+		var tmpCast:SongData = cast Json.parse(Paths.lText('$songStr/${CoolUtil.diffString(diff, 0)}.json')).song;
 
 		if (cast(tmpCast.playLength, Int) <= 0) 
 			tmpCast.playLength = 2;

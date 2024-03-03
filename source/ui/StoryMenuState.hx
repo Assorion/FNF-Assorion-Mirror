@@ -34,7 +34,7 @@ class StoryMenuState extends MenuTemplate
 			// btw the 'week' var is used for loading the selected image.
 			// It doesn't have to be a number or even in order.
 			week: '1',
-			songs: ['tutorial', 'fresh', 'test'],
+			songs: ['tutorial', 'demo'],
 			topText: 'THIS IS A TEST'
 		}
 	];

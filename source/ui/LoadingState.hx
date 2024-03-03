@@ -24,7 +24,6 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
 
     private var loadingBarBG:FlxSprite;
     private var loadingBarPC:FlxSprite;
-    //private var loadingLogoS:StaticSprite;
     private var assetText:FlxText;
     private var keepGraphic:BitmapData;
 
@@ -49,12 +48,8 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
             findItems(keepDirectories[i]);
     }
 
-    var prevFramerate:Int;
     public override function create(){
-        prevFramerate = Settings.pr.framerate;
-
         FlxG.mouse.visible = persistentUpdate = false;
-        Settings.pr.framerate = 999;
 
         findItems('assets/');
 
@@ -73,12 +68,6 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
         loadingBarPC.antialiasing = Settings.pr.antialiasing;
         loadingBarPC.screenCenter();
 
-        /*loadingLogoS = new StaticSprite(0,0).loadGraphic('assets/images/assorionLogoNoText.png');
-        loadingLogoS.antialiasing = true;
-        loadingLogoS.screenCenter();
-        loadingLogoS.scale.set(0.4, 0.4);
-        loadingLogoS.y += 217.5;
-        add(loadingLogoS);*/
         add(loadingBarBG);
         add(loadingBarPC);
 
@@ -130,9 +119,6 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
             objects = null;
             FlxG.switchState(new TitleState());
 
-            Settings.pr.framerate = prevFramerate;
-            Settings.apply();
-
             return;
         }
         
@@ -160,7 +146,6 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
 
         keepGraphic.fillRect(new Rectangle(0,0,   Math.round(percent * inBarWidth), inBarTopLn), selColour);
         FlxG.camera.bgColor = FlxColor.fromRGB(0, Math.round(percent * 120), Math.round(percent * 103));
-        //loadingLogoS.angle = percent * 360;
     }
 }
 #end

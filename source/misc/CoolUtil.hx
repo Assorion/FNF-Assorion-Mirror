@@ -21,9 +21,9 @@ class CoolUtil
 	public static inline var diffNumb:Int = 3;
 	public static var diffArr:Array<String> = [
 		// file names
-		'-easy',
-		'',
-		'-hard',
+		'easy',
+		'normal',
+		'hard',
 		// formatted names.
 		'Easy',
 		'Normal',

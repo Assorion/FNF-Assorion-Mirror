@@ -37,7 +37,7 @@ class Paths {
     }
     public static inline function playableSong(path:String, retVoices:Bool = false):String
     {
-        var endingStr:String = retVoices ? 'Voices.$sndExt' : 'Inst.$sndExt';
+        var endingStr:String = retVoices ? 'voices.$sndExt' : 'inst.$sndExt';
         return 'assets/songs-data/${path.toLowerCase()}/$endingStr';
     }
 
@@ -67,7 +67,17 @@ class Paths {
         lLines   = ncLL;
     }
 
-    //////////////////////////
+    // To prevent blank spaces from messing up dialogue, freeplay list, stage list, etc.
+
+    private static inline function removeBlackSpace(input:Array<String>):Array<String> {
+        var i:Int = 0;
+
+        while(i < input.length)
+            if (input[i++] == '')
+                input.splice(--i, 1);
+
+        return input;
+    }
 
     private static function cLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
     {
@@ -102,7 +112,7 @@ class Paths {
         if(tmp != null) 
             return tmp;
 
-        tmp = Paths.lText('$path.$ext').replace('\r', '').split('\n');
+        tmp = removeBlackSpace(Paths.lText('$path.$ext').replace('\r', '').split('\n'));
         cachedLines.set(path, tmp);
 
         return tmp;
@@ -111,7 +121,7 @@ class Paths {
     ///////////////////////
 
     private static function ncLL(path:String, ?ext:String = 'txt'):Array<String>
-        return Paths.lText('$path.$ext').replace('\r', '').split('\n');
+        return removeBlackSpace(Paths.lText('$path.$ext').replace('\r', '').split('\n'));
 
     private static function ncLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
         return FlxAtlasFrames.fromSparrow('$prePath$path.png', '$prePath$path.xml');
