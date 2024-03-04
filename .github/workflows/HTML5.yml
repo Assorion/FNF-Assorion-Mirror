@@ -19,11 +19,8 @@ jobs:
     steps:
     - name: description
       run: |
-        SUMMARY=$'#HTML5 (Website) Builds!
-        The HTML5 (Website) Builds have not been thuroughly tested, and will probably contain bugs within this build.
-        ###If any bugs are found please make an issue report.'
+        SUMMARY=$'#HTML5 (Website) Builds! \n The HTML5 (Website) Builds have not been thuroughly tested, and will probably contain bugs within this build. n/ ###If any bugs are found please make an issue report.'
         echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
-
 
   HTML5-Build:
     runs-on: ubuntu-latest
