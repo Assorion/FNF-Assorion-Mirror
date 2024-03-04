@@ -8,6 +8,18 @@ on:
   workflow_dispatch:
 
 jobs:
+
+# This is not required in a workflow file.
+# Only used to provide descriptions after the workflow is completed.
+  MacOS-Info:
+    runs-on: ubuntu-latest
+    steps:
+    - name: description
+      run: |
+        SUMMARY=$'# MacOS Builds\n## MacOS Builds have never been tested due to lack of owning a MacOS Machine, Use at own risk as there will inevitably exist countless issues and bugs probably.\n \n# Report Bugs through github issues'
+        echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
+
+
   MacOS-Build:
     runs-on: macOS-latest
     steps:
