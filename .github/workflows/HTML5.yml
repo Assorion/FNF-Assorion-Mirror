@@ -14,7 +14,7 @@ on:
 # This is not required in a workflow file.
 # Only used to provide descriptions after the workflow is completed.
 jobs:
-  HTML5-Build:
+  HTML5-INFO:
     runs-on: ubuntu-latest
     steps:
     - name: description
