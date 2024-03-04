@@ -14,12 +14,12 @@ on:
 # This is not required in a workflow file.
 # Only used to provide descriptions after the workflow is completed.
 jobs:
-  HTML5-:
+  HTML5-Build:
     runs-on: ubuntu-latest
     steps:
     - name: description
       run: |
-        SUMMARY=$'# HTML5 (Website) Builds\n The HTML5 (Website) Builds have not been thoroughly tested and will probably contain issues/bugs\n###If any bugs are found, Make an issue report in github'
+        SUMMARY=$'# HTML5 (Website) Builds\n The HTML5 (Website) Builds have not been thoroughly tested and will probably contain issues/bugs\n \n###If any bugs are found, Make an issue report in github\n'
         echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
 
   HTML5-Build:
