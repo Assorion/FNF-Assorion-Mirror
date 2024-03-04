@@ -17,7 +17,7 @@ class StaticSprite extends FlxSprite {
         active = false;
         antialiasing = Settings.pr.antialiasing;
     }
-    override public function update(elasped:Float){
+    override public function update(elasped){
 
     }
     override public function loadGraphic(graphic:FlxGraphicAsset, animated = false, frameWidth = 0, frameHeight = 0, unique = false, ?key:String):StaticSprite
