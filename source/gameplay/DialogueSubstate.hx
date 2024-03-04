@@ -62,7 +62,6 @@ class DialogueSubstate extends MusicBeatSubstate {
         CoolUtil.newCanvas();
 
         var gspr:StaticSprite = new StaticSprite(0,0).loadGraphic(CoolUtil.canvas);
-        gspr.antialiasing = Settings.pr.antialiasing;
         gspr.screenCenter();
         gspr.scrollFactor.set();
         gspr.scale.set(1 / FlxG.camera.zoom, 1 / FlxG.camera.zoom);
@@ -78,7 +77,6 @@ class DialogueSubstate extends MusicBeatSubstate {
         char2 = new FlxSprite(-50,-50);
         char2.centerOffsets();
         char2.centerOrigin ();
-        char1.antialiasing = char2.antialiasing = Settings.pr.antialiasing;
 
         boxSpr = new StaticSprite(0,0).loadGraphic(Paths.lImage('gameplay/dialoguebox'));
         boxSpr.setGraphicSize(Std.int(boxSpr.width * 4), Std.int(boxSpr.height * 1.75));

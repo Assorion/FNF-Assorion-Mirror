@@ -75,19 +75,16 @@ class StoryMenuState extends MenuTemplate
 
 		// bruh
 		arrowSpr1 = new StaticSprite(640 - 50, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
-		arrowSpr1.antialiasing = Settings.pr.antialiasing;
 		arrowSpr1.updateHitbox();
 		arrowSpr1.centerOrigin();
 		arrowSpr1.scale.set(0.7,0.7);
 		arrowSpr2 = new StaticSprite(640 - 330, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
-		arrowSpr2.antialiasing = Settings.pr.antialiasing;
 		arrowSpr2.flipX = true;
 		arrowSpr2.updateHitbox();
 		arrowSpr2.centerOrigin();
 		arrowSpr2.scale.set(0.7, 0.7);
 
 		diffImage = new StaticSprite(640, 45);
-		diffImage.antialiasing = Settings.pr.antialiasing;
 		diffImage.scale.set(0.7, 0.7);
 
 		trackList = new FlxText(0, 110, 0, "Tracks", 32);

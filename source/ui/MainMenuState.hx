@@ -38,7 +38,6 @@ class MainMenuState extends MusicBeatState
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.antialiasing = Settings.pr.antialiasing;
 		bg.color  = FlxColor.fromRGB(255, 232, 110);
 		menuItems = new FlxTypedGroup<FlxSprite>();
 

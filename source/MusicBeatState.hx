@@ -96,14 +96,8 @@ class MusicBeatState extends FlxUIState
 	// This does the equivilant of (curStep % 4 == 0), but faster using bitwise shifts.
 	public function beatHit():Void {}
 	public function stepHit():Void
-	{
-		var tBeat:Int = curStep >> 2;
-
-		if (curStep == tBeat << 2){
-			curBeat =  tBeat;
-			beatHit();
-		}
-	}
+	if(curStep == (curBeat = curStep >> 2) << 2)
+		beatHit();
 
 	private inline function execEvents()
 	for(i in 0...events.length)

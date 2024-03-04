@@ -13,9 +13,11 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 class StaticSprite extends FlxSprite {
     public function new(?x:Float = 0, ?y:Float = 0 ){
         super(x,y,null);
+
         active = false;
+        antialiasing = Settings.pr.antialiasing;
     }
-    override public function update(elasped){
+    override public function update(elasped:Float){
 
     }
     override public function loadGraphic(graphic:FlxGraphicAsset, animated = false, frameWidth = 0, frameHeight = 0, unique = false, ?key:String):StaticSprite

@@ -56,7 +56,6 @@ class PauseSubState extends MusicBeatSubstate
 
 		gameSpr = new StaticSprite(0,0).loadGraphic(CoolUtil.canvas);
 		gameSpr.scrollFactor.set();
-		gameSpr.antialiasing = Settings.pr.antialiasing;
 		add(gameSpr);
 
 		for (i in 0...optionList.length)

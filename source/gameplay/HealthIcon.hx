@@ -22,7 +22,6 @@ class HealthIcon extends StaticSprite
 		if(Assets.exists(path))
 			loadGraphic(path, true, 150, 150);
 
-		antialiasing = Settings.pr.antialiasing;
 		animation.add('neutral', [0], 0, false, isPlayer);
 		animation.add('losing',  [1], 0, false, isPlayer);
 		animation.play('neutral');

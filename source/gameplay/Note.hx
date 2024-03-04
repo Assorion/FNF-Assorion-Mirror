@@ -58,7 +58,6 @@ class Note extends StaticSprite
 		} 
 
 		setGraphicSize(Std.int(width * 0.7));
-		antialiasing = Settings.pr.antialiasing;
 		
 		animation.play('scroll');
 		centerOffsets();

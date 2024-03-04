@@ -39,7 +39,6 @@ class MenuTemplate extends MusicBeatState {
 
     private inline function addBG(bgColour:Int, ?sprite:String = "ui/menuDesat"){
         var background = new StaticSprite(0,0).loadGraphic(Paths.lImage('ui/menuDesat'));
-		background.antialiasing = Settings.pr.antialiasing;
         background.scale.set(1.1, 1.1);
         background.screenCenter();
         background.scrollFactor.set(0, 0.5);

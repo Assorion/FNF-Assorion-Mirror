@@ -26,7 +26,6 @@ class OffsetWizard extends MusicBeatState {
 		bg.scrollFactor.set(0,0);
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.antialiasing = Settings.pr.antialiasing;
 		bg.color = FlxColor.fromRGB(110, 120, 255);
 
         add(bg);

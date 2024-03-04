@@ -76,7 +76,7 @@ class PlayState extends MusicBeatState
 	private static var songTime:Float;
 	public static var seenCutscene:Bool = false;
 
-	public static function setData(songs:Array<String>, difficulty:Int = 1, week:Int = -1){
+	public static function setData(songs:Array<String>, difficulty:Int = 1, week:Int = -1) {
 		storyPlaylist = songs;
 		curDifficulty = difficulty;
 		storyWeek     = week;
@@ -85,8 +85,7 @@ class PlayState extends MusicBeatState
 		SONG = misc.Song.loadFromJson(storyPlaylist[0], curDifficulty);
 	}
 
-	override public function create()
-	{
+	override public function create() {
 		// # Camera Setup
 		camGame = new FlxCamera();
 		camHUD  = new FlxCamera();
@@ -135,7 +134,6 @@ class PlayState extends MusicBeatState
 		ratingSpr.screenCenter();
 		ratingSpr.scale.set(0.7, 0.7);
 		ratingSpr.alpha = 0;
-		ratingSpr.antialiasing = Settings.pr.antialiasing;
 		add(ratingSpr);
 
 		for(i in 0...3){
@@ -150,7 +148,6 @@ class PlayState extends MusicBeatState
 			sRef.y += 120;
 			sRef.x += (i - 1) * 60;
 			sRef.scale.set(0.6, 0.6);
-			sRef.antialiasing = Settings.pr.antialiasing;
 			sRef.alpha = 0;
 			add(sRef);
 		}
@@ -161,7 +158,6 @@ class PlayState extends MusicBeatState
 		healthBarBG = new StaticSprite(0, baseY).loadGraphic(Paths.lImage('gameplay/healthBar'));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
-		healthBarBG.antialiasing = Settings.pr.antialiasing;
 
 		var healthColours:Array<Int> = [0xFFFF0000, 0xFF66FF33];
 		healthBar = new HealthBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8));
@@ -213,7 +209,7 @@ class PlayState extends MusicBeatState
 		});
 	}
 
-	public inline function addCharacters(){
+	public inline function addCharacters() {
 		for(i in 0...SONG.characters.length)
 			allCharacters.push(new Character(characterPositions[i * 2], characterPositions[(i * 2) + 1], SONG.characters[i], i == 1));
 		
@@ -224,7 +220,7 @@ class PlayState extends MusicBeatState
 	}
 
 	// put things like gf and bf positions here.
-	public inline function handleStage(){
+	public inline function handleStage() {
 		switch(SONG.stage){
 			case 'stage', '':
 				if(SONG.song == 'tutorial')
@@ -235,7 +231,6 @@ class PlayState extends MusicBeatState
 				FlxG.camera.zoom = 0.9;
 
 				var bg:StaticSprite = new StaticSprite(-600, -200).loadGraphic(Paths.lImage('stages/stageback'));
-					bg.antialiasing = Settings.pr.antialiasing;
 					bg.setGraphicSize(Std.int(bg.width * 2));
 					bg.updateHitbox();
 					bg.scrollFactor.set(0.9, 0.9);
@@ -243,19 +238,16 @@ class PlayState extends MusicBeatState
 				var stageFront:StaticSprite = new StaticSprite(-650, 600).loadGraphic(Paths.lImage('stages/stagefront'));
 					stageFront.setGraphicSize(Std.int(stageFront.width * 2.2));
 					stageFront.updateHitbox();
-					stageFront.antialiasing = Settings.pr.antialiasing;
 					stageFront.scrollFactor.set(0.9, 0.9);
 				add(stageFront);
 				var curtainLeft:StaticSprite = new StaticSprite(-500, -165).loadGraphic(Paths.lImage('stages/curtainLeft'));
 					curtainLeft.setGraphicSize(Std.int(curtainLeft.width * 1.8));
 					curtainLeft.updateHitbox();
-					curtainLeft.antialiasing = Settings.pr.antialiasing;
 					curtainLeft.scrollFactor.set(1.3, 1.3);
 				add(curtainLeft);
 				var curtainRight:StaticSprite = new StaticSprite(1406, -165).loadGraphic(Paths.lImage('stages/curtainRight'));
 					curtainRight.setGraphicSize(Std.int(curtainRight.width * 1.8));
 					curtainRight.updateHitbox();
-					curtainRight.antialiasing = Settings.pr.antialiasing;
 					curtainRight.scrollFactor.set(1.3, 1.3);
 				add(curtainRight);
 
@@ -263,29 +255,28 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	private inline function generateChart():Void
-	{
+	private inline function generateChart():Void {
 		for(section in SONG.notes)
-		for(fNote in section.sectionNotes){
-			var time:Float = fNote[0];
-			var noteData :Int = Std.int(fNote[1]);
-			var susLength:Int = Std.int(fNote[2]);
-			var player   :Int = CoolUtil.intBoundTo(Std.int(fNote[3]), 0, SONG.playLength - 1);
-			var ntype    :Int = Std.int(fNote[4]);
+			for(fNote in section.sectionNotes){
+				var time:Float = fNote[0];
+				var noteData :Int = Std.int(fNote[1]);
+				var susLength:Int = Std.int(fNote[2]);
+				var player   :Int = CoolUtil.intBoundTo(Std.int(fNote[3]), 0, SONG.playLength - 1);
+				var ntype    :Int = Std.int(fNote[4]);
 
-			var newNote = new Note(time, noteData, ntype, false, false);
-			newNote.scrollFactor.set();
-			newNote.player = player;
-			unspawnNotes.push(newNote);
+				var newNote = new Note(time, noteData, ntype, false, false);
+				newNote.scrollFactor.set();
+				newNote.player = player;
+				unspawnNotes.push(newNote);
 
-			if(susLength > 1)
-				for(i in 0...susLength+1){
-					var susNote = new Note(time + i + 0.5, noteData, ntype, true, i == susLength);
-					susNote.scrollFactor.set();
-					susNote.player = player;
-					unspawnNotes.push(susNote);
-				}
-		}
+				if(susLength > 1)
+					for(i in 0...susLength+1){
+						var susNote = new Note(time + i + 0.5, noteData, ntype, true, i == susLength);
+						susNote.scrollFactor.set();
+						susNote.player = player;
+						unspawnNotes.push(susNote);
+					}
+			}
 		unspawnNotes.sort((A,B) -> Std.int(A.strumTime - B.strumTime));
 	}
 
@@ -299,8 +290,7 @@ class PlayState extends MusicBeatState
 		if(playable) playerStrums.add(babyArrow);
 	}
 
-	function startCountdown():Void
-	{
+	function startCountdown():Void {
 		for(i in 0...strumLineNotes.length)
 			FlxTween.tween(strumLineNotes.members[i], {alpha: 1, y: strumLineNotes.members[i].y + 10}, 0.5, {startDelay: ((i % Note.keyCount) + 1) * 0.2});
 
@@ -320,7 +310,6 @@ class PlayState extends MusicBeatState
 			var spr:StaticSprite = new StaticSprite().loadGraphic(Paths.lImage('gameplay/${ introAssets[i] }'));
 				spr.scrollFactor.set();
 				spr.screenCenter();
-				spr.antialiasing = Settings.pr.antialiasing;
 				spr.alpha = 0;
 				spr.active = false;
 			add(spr);
@@ -354,11 +343,11 @@ class PlayState extends MusicBeatState
 			postEvent(((Song.Crochet * (i + 1)) - Settings.pr.audio_offset) * 0.001, countTickFunc);
 	}
 
-	override function closeSubState()
-	if(seenCutscene) { // To stop transistions from messing up cutscenes
+	override function closeSubState() if(seenCutscene) { // To stop transistions from messing up cutscenes
 		super.closeSubState();
 
-		if(!paused) return;
+		if(!paused) 
+			return;
 
 		paused = false;
 
@@ -366,7 +355,8 @@ class PlayState extends MusicBeatState
 			events[i].endTime += MusicBeatState.curTime() - lastOpenTime;
 		lastOpenTime = 0;
 
-		if(FlxG.sound.music.time == 0) return;
+		if(FlxG.sound.music.time == 0) 
+			return;
 
 		FlxG.sound.music.play();
 		vocals.play();
@@ -374,8 +364,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var noteCount:Int = 0;
-	override public function update(elapsed:Float)
-	if(!paused) {
+	override public function update(elapsed:Float) if(!paused) {
 		var scaleVal = CoolUtil.boundTo(iconP1.scale.x - (elapsed * 2), 1, 1.2);
 		iconP1.scale.set(scaleVal, scaleVal);
 		iconP2.scale.set(scaleVal, scaleVal);
@@ -391,8 +380,7 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	override function beatHit()
-	{
+	override function beatHit() {
 		super.beatHit();
 
 		iconP1.scale.set(1.2,1.2);
@@ -416,7 +404,7 @@ class PlayState extends MusicBeatState
 			for(pc in allCharacters)
 				pc.dance();
 	}
-	override function stepHit(){
+	override function stepHit() {
 		super.stepHit();
 
 		if(FlxG.sound.music.playing)
@@ -426,7 +414,7 @@ class PlayState extends MusicBeatState
 	// THIS IS WHAT UPDATES YOUR SCORE AND HEALTH AND STUFF!
 
 	private static inline var iconSpacing:Int = 52;
-	public function updateHealth(change:Int){
+	public function updateHealth(change:Int) {
 		var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC', 'SDCB', 'Clear'][fcValue];
 		var accuracyCount:Float = CoolUtil.boundTo(Math.floor((songScore * 100) / ((hitCount + missCount) * 3.5)) * 0.01, 0, 100);
 
@@ -449,8 +437,7 @@ class PlayState extends MusicBeatState
 		pauseAndOpenState(new GameOverSubstate(allCharacters[playerPos], camHUD, this));
 	}
 
-	function hitNote(note:Note):Void
-	{
+	function hitNote(note:Note):Void {
 		destroyNote(note, 0);
 
 		if(!note.curType.mustHit){
@@ -470,8 +457,7 @@ class PlayState extends MusicBeatState
 		updateHealth(5);
 	}
 
-	function missNote(direction:Int = 1):Void
-	{
+	function missNote(direction:Int = 1):Void {
 		if (combo > 20)
 			for(i in 0...allCharacters.length)
 				allCharacters[i].playAnim('sad');
@@ -494,9 +480,7 @@ class PlayState extends MusicBeatState
 	public var hittableNotes:Array<Note> = [null, null, null, null];
 	public var keysPressed:Array<Bool>   = [false, false, false, false];
 	public var keysArray:Array<Array<Int>> = [Binds.NOTE_LEFT, Binds.NOTE_DOWN, Binds.NOTE_UP, Binds.NOTE_RIGHT];
-	override function keyHit(ev:KeyboardEvent){
-		if(paused) return;
-
+	override function keyHit(ev:KeyboardEvent) if(!paused) {
 		var k = ev.keyCode.deepCheck([Binds.UI_ACCEPT, Binds.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12] ]);
 		switch(k){
 			case 0, 1:
@@ -529,7 +513,7 @@ class PlayState extends MusicBeatState
 				missNote(nkey);
 		}
 	}
-	override public function keyRel(ev:KeyboardEvent){
+	override public function keyRel(ev:KeyboardEvent) {
 		var nkey = ev.keyCode.deepCheck(keysArray);
 		if (nkey == -1) return;
 
@@ -537,7 +521,7 @@ class PlayState extends MusicBeatState
 		playerStrums.members[nkey].playAnim();
 	}
 
-	private inline function scrollNotes(daNote:Note){
+	private inline function scrollNotes(daNote:Note) {
 		var nDiff:Float = songTime - daNote.strumTime;
 		daNote.y = (Settings.pr.downscroll ? 45 : -45) * nDiff * SONG.speed;
 		daNote.y += strumLineY + daNote.offsetY;
@@ -615,8 +599,7 @@ class PlayState extends MusicBeatState
 	private var prevString:String = 'sick';
 	private var comboSprs:Array<StaticSprite> = [];
 	private var scoreTweens:Array<FlxTween> = [];
-	private inline function popUpScore(strumtime:Float):Void
-	{
+	private inline function popUpScore(strumtime:Float):Void {
 		var noteDiff:Float = Math.abs(strumtime - (songTime - (Settings.pr.input_offset * Song.Division)));
 		combo++;
 
@@ -661,8 +644,7 @@ class PlayState extends MusicBeatState
 		scoreTweens[0] = introSpriteTween(ratingSpr, 3,  Song.StepCrochet * 0.5, false);
 	}
 
-	function endSong():Void
-	{
+	function endSong():Void {
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
 		paused = true;
@@ -690,7 +672,7 @@ class PlayState extends MusicBeatState
 	}
 
 	// Smaller helper functions
-	function syncEverything(forceTime:Float){
+	function syncEverything(forceTime:Float) {
 		var roundedTime:Float = (forceTime == -1 ? Song.Position + Settings.pr.audio_offset : forceTime);
 
 		FlxG.sound.music.time  = roundedTime;
@@ -700,7 +682,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var lastOpenTime:Float;
-	function pauseAndOpenState(state:MusicBeatSubstate){
+	function pauseAndOpenState(state:MusicBeatSubstate) {
 		paused = true;
 		lastOpenTime = MusicBeatState.curTime();
 		FlxG.sound.music.pause();
@@ -709,7 +691,7 @@ class PlayState extends MusicBeatState
 		openSubState(state);
 	}
 
-	inline function destroyNote(note:Note, act:Int){
+	inline function destroyNote(note:Note, act:Int) {
 		note.typeAction(act);
 		notes.remove(note, true);
 		note.destroy();
@@ -718,8 +700,7 @@ class PlayState extends MusicBeatState
 			hittableNotes[note.noteData] = null;
 	}
 
-	private inline function introSpriteTween(spr:StaticSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween
-	{
+	private inline function introSpriteTween(spr:StaticSprite, steps:Int, delay:Float = 0, destroy:Bool):FlxTween {
 		spr.alpha = 1;
 		return FlxTween.tween(spr, {y: spr.y + 10, alpha: 0}, (steps * Song.StepCrochet) / 1000, { ease: FlxEase.cubeInOut, startDelay: delay * 0.001,
 			onComplete: function(twn:FlxTween)
@@ -730,11 +711,11 @@ class PlayState extends MusicBeatState
 		});
 	}
 
-	override function onFocusLost(){
+	override function onFocusLost() {
 		super.onFocusLost();
-		if(paused || !seenCutscene) return;
-		
-		pauseAndOpenState(new PauseSubState(camHUD, this));
+
+		if(!paused && seenCutscene)
+			pauseAndOpenState(new PauseSubState(camHUD, this));
 	}
 }
 
