@@ -46,14 +46,6 @@ Assorion is a very simple engine and thus, it may not receive many feature updat
 
 # 🗒️ | Important Notes/RoadMap
 
-### **Note for Developers**
-> [!NOTE] 
-> Please use the <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><ins>**latest release**</ins></a> source code, not the cloned or downloaded source code at the top. Mainly because of working on a lot of things throughout the source code during the weeks; Which will necessitate numerous commits.
->
-> Thus inevitably exists the potential that something may be broken if you use the most recent **source** code, as opposed to the most recent <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><ins>**release**</ins></a> code.
-
-#
-  **Other Notes**   
 -	There has been a complete overhaul of Chartingstate. Therefore, it will probably have new bugs and will be partially confusing at first glance
 -	The characters in the song are entirely un-hardcoded. Thus you can define 2 or 4 characters instead of 3. Notes have a `player` value that makes this work
 -	Charts are handled differently to the base game. Absolute positions are used instead of millisecond values. In addition, notes have player values in the chart
@@ -97,9 +89,30 @@ Take a look at <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/mai
 
 # 🛠 | Compiling
 
-#### **Libraries:**  
-Read ahead to your OS and read those instructions. Then come back here.
+> [!NOTE]
+> Please do **not** clone, or download the source from the top download button. The **NEWEST** source code is often broken due to testing.
+> Use the <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code as it is stable, and less-likely to be broken.
 
+#### **For Windows:**
+- Install <a href="https://haxe.org/">`Haxe`</a>
+- Run `haxelib setup` in CMD. Using the defaults is fine
+- Install [libraries](#libraries) below
+- Run `haxelib run lime setup` in CMD
+- Download and extract the <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code
+- Setup <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/.github/MinGW-Setup.md">MinGW-w64</a> and make sure the PATH is set correctly
+- Test to make sure both the `gcc` and `g++` commands work in CMD
+- Run `lime test windows -D HXCPP_MINGW` in CMD. Make sure it's in the project root folder, not the source folder
+
+#### **For Linux:**
+- Install Haxe using your package manager
+- Run `haxelib setup` in your terminal
+- Install [libraries](#libraries) below
+- Run `haxelib run lime setup`
+- Download and extract the <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code
+- Make sure both `gcc` and `g++` commands work. If not, install GCC using your package manager
+- Run `lime test linux` in your terminal. Make sure it's in the project root folder, not the source folder
+
+#### **Libraries:**  
 Run `haxelib install <library name>` replacing `<library name>` with these libraries below:
 - `hxcpp`
 - `lime`
@@ -108,25 +121,8 @@ Run `haxelib install <library name>` replacing `<library name>` with these libra
 - `flixel-addons`
 - `flixel-ui`
 
-#### **For Windows:**
-- Install <a href="https://haxe.org/">`Haxe`</a>
-- Run `haxelib setup` in CMD. Using the defaults is fine
-- Install [libraries](#libraries) above
-- Run `haxelib run lime setup`. It will install extra stuff, but you should be fine
-- Setup <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/.github/MinGW-Setup.md">MinGW-w64</a> and make sure the PATH is set correctly
-- Test to make sure both the `gcc` and `g++` commands work in CMD
-- Run `lime test windows -D HXCPP_MINGW` in CMD. Make sure it's in the project root folder, not the source folder
-
-#### **For Linux:**
-- Install Haxe using your package manager
-- Run `haxelib setup` in your terminal
-- Install [libraries](#libraries) above
-- Run `haxelib run lime setup`.
-- Test to make sure both `gcc` and `g++` commands work. They should already be installed in your distro
-- Run `lime test linux` in your terminal. Make sure it's in the project root folder, not the source folder.
-
 #### **If you're confused:**  
-Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/.github/MinGW-Setup.md">**`MinGW-w64`**</a>.  
+Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use <a href="https://github.com/Assorion/FNF-Assorion-Engine/blob/main/.github/MinGW-Setup.md">**`MinGW-w64`**</a> unless the compiler errors out.  
 Remember to install the [library versions](#libraries) listed above.
 
 ## 💻 | Minimum Requirements
