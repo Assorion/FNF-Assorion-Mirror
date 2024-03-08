@@ -35,14 +35,14 @@ class PlayState extends MusicBeatState
 	public static var curDifficulty:Int = 1;
 	public static var totalScore:Int = 0;
 
+	public var strumLineY:Int;
 	public var vocals:FlxSound;
-	public var notes:FlxTypedGroup<Note>;
+	public var followPos:FlxObject;
 	public var unspawnNotes:Array<Note> = [];
 
-	public var strumLineY:Int;
-	public var followPos:FlxObject;
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
+	public var notes:FlxTypedGroup<Note>;
 
 	// health now goes from 0 - 100, instead of 0 - 2
 	public var health   :Int = 50;
@@ -53,12 +53,12 @@ class PlayState extends MusicBeatState
 
 	public var healthBarBG:StaticSprite;
 	public var healthBar:HealthBar;
-	public var paused:Bool = false;
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 
+	var paused:Bool = false;
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
 
@@ -73,7 +73,7 @@ class PlayState extends MusicBeatState
 	private var playerPos:Int = 1;
 	private var allCharacters:Array<Character> = [];
 
-	private static var songTime:Float;
+	private static var stepTime:Float;
 	public static var seenCutscene:Bool = false;
 
 	public static function setData(songs:Array<String>, difficulty:Int = 1, week:Int = -1) {
@@ -191,7 +191,7 @@ class PlayState extends MusicBeatState
 			scoreTxt.cameras       = [camHUD];
 		}
 
-		songTime = -16 - (Settings.pr.audio_offset * Song.Division);
+		stepTime = -16 - (Settings.pr.audio_offset * Song.Division);
 		updateHealth(0);
 
 		super.create();
@@ -322,16 +322,17 @@ class PlayState extends MusicBeatState
 			if(swagCounter >= 4){
 				FlxG.sound.music.play();
 				FlxG.sound.music.volume = 1;
-				vocals.play();
+				FlxG.sound.music.time = vocals.time = 0;
+				Song.Position = -Settings.pr.audio_offset;
 
-				syncEverything(0);
+				vocals.play();
 				return;
 			}
 			for(pc in allCharacters)
 				pc.dance();
 
-			songTime = (swagCounter - 4) * 4;
-			songTime -= Settings.pr.audio_offset * Song.Division;
+			stepTime = (swagCounter - 4) * 4;
+			stepTime -= Settings.pr.audio_offset * Song.Division;
 
 			introSounds[swagCounter].play();
 			if(introSprites[swagCounter] != null)
@@ -358,9 +359,9 @@ class PlayState extends MusicBeatState
 		if(FlxG.sound.music.time == 0) 
 			return;
 
+		FlxG.sound.music.time = vocals.time = Song.Position + Settings.pr.audio_offset;
 		FlxG.sound.music.play();
 		vocals.play();
-		syncEverything(-1);
 	}
 
 	var noteCount:Int = 0;
@@ -370,9 +371,9 @@ class PlayState extends MusicBeatState
 		iconP2.scale.set(scaleVal, scaleVal);
 
 		if(seenCutscene)
-			songTime += (elapsed * 1000) * Song.Division;
+			stepTime += (elapsed * 1000) * Song.Division;
 
-		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - songTime < 32)
+		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - stepTime < 32)
 			notes.add(unspawnNotes[noteCount++]);
 
 		notes.forEachAlive(scrollNotes);
@@ -408,7 +409,7 @@ class PlayState extends MusicBeatState
 		super.stepHit();
 
 		if(FlxG.sound.music.playing)
-			songTime = ((Song.Position * 3 * Song.Division) + songTime) * 0.25;
+			stepTime = ((Song.Position * 3 * Song.Division) + stepTime) * 0.25;
 	}
 
 	// THIS IS WHAT UPDATES YOUR SCORE AND HEALTH AND STUFF!
@@ -482,6 +483,7 @@ class PlayState extends MusicBeatState
 	public var keysArray:Array<Array<Int>> = [Binds.NOTE_LEFT, Binds.NOTE_DOWN, Binds.NOTE_UP, Binds.NOTE_RIGHT];
 	override function keyHit(ev:KeyboardEvent) if(!paused) {
 		var k = ev.keyCode.deepCheck([Binds.UI_ACCEPT, Binds.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12] ]);
+
 		switch(k){
 			case 0, 1:
 				if(seenCutscene)	
@@ -501,9 +503,9 @@ class PlayState extends MusicBeatState
 		if(nkey == -1 || keysPressed[nkey] || Settings.pr.botplay) return;
 
 		keysPressed[nkey] = true;
-
 		var strumRef = playerStrums.members[nkey];
 		var noteRef  = hittableNotes[nkey];
+		
 		if(noteRef != null){
 			hitNote(noteRef);
 			strumRef.pressTime = Song.StepCrochet * 0.00075;
@@ -522,7 +524,7 @@ class PlayState extends MusicBeatState
 	}
 
 	private inline function scrollNotes(daNote:Note) {
-		var nDiff:Float = songTime - daNote.strumTime;
+		var nDiff:Float = stepTime - daNote.strumTime;
 		daNote.y = (Settings.pr.downscroll ? 45 : -45) * nDiff * SONG.speed;
 		daNote.y += strumLineY + daNote.offsetY;
 
@@ -530,7 +532,7 @@ class PlayState extends MusicBeatState
 		if(!daNote.visible) return;
 		
 		var strumRef = strumLineNotes.members[daNote.noteData + (Note.keyCount * daNote.player)];
-		if((daNote.player != playerPos || Settings.pr.botplay) && daNote.curType.mustHit && songTime >= daNote.strumTime){
+		if((daNote.player != playerPos || Settings.pr.botplay) && daNote.curType.mustHit && stepTime >= daNote.strumTime){
 			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData]);
 			strumRef.playAnim(2);
 			strumRef.pressTime = Song.StepCrochet * 0.001;
@@ -600,7 +602,7 @@ class PlayState extends MusicBeatState
 	private var comboSprs:Array<StaticSprite> = [];
 	private var scoreTweens:Array<FlxTween> = [];
 	private inline function popUpScore(strumtime:Float):Void {
-		var noteDiff:Float = Math.abs(strumtime - (songTime - (Settings.pr.input_offset * Song.Division)));
+		var noteDiff:Float = Math.abs(strumtime - (stepTime - (Settings.pr.input_offset * Song.Division)));
 		combo++;
 
 		var pscore:RatingData = null;
@@ -669,16 +671,6 @@ class PlayState extends MusicBeatState
 		SONG = misc.Song.loadFromJson(storyPlaylist[0], curDifficulty);
 		FlxG.sound.music.stop();
 		FlxG.resetState();
-	}
-
-	// Smaller helper functions
-	function syncEverything(forceTime:Float) {
-		var roundedTime:Float = (forceTime == -1 ? Song.Position + Settings.pr.audio_offset : forceTime);
-
-		FlxG.sound.music.time  = roundedTime;
-		vocals.time            = roundedTime;
-		Song.Position          = roundedTime - Settings.pr.audio_offset;
-		songTime = Song.Position * Song.Division;
 	}
 
 	var lastOpenTime:Float;
