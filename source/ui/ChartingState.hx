@@ -325,7 +325,7 @@ class ChartingState extends MusicBeatState {
                     postWarning('Warning: More playing characters, than total characters in song. ${song.playLength} > ${song.characters.length}', 0xFFFF00);
                     return;
                 }
-                if(song.characters.length <= 0 || song.activePlayer > song.characters.length){ // This would probably cause the game to crash.
+                if(song.characters.length <= 0 || song.activePlayer > song.playLength){ // This would probably cause the game to crash.
                     postWarning('Error: Attempting to play as a character that doesn\'t exist. ${song.activePlayer} > ${song.characters.length}', 0xFF0000);
                     return;
                 }
