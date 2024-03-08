@@ -18,7 +18,7 @@ using StringTools;
 
 typedef StoryData = {
 	var graphic:String;
-	var week:String;
+	var weekAsset:String;
 	var songs:Array<String>;
 	var topText:String;
 }
@@ -31,9 +31,7 @@ class StoryMenuState extends MenuTemplate
 	static var weekData:Array<StoryData> = [
 		{
 			graphic: 'storymenu/storyportrait',
-			// btw the 'week' var is used for loading the selected image.
-			// It doesn't have to be a number or even in order.
-			week: '1',
+			weekAsset: '1', // This will translate to 'week-1'
 			songs: ['tutorial', 'demo'],
 			topText: 'THIS IS A TEST'
 		}
@@ -55,7 +53,7 @@ class StoryMenuState extends MenuTemplate
 		menuMusicCheck();
 
 		for(i in 0...weekData.length){
-			var weekGraphic:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('storymenu/week-' + weekData[i].week));
+			var weekGraphic:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('storymenu/week-' + weekData[i].weekAsset));
 			weekGraphic.updateHitbox();
 			weekGraphic.centerOrigin();
 			weekGraphic.scale.set(0.7, 0.7);

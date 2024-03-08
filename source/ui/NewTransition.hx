@@ -55,6 +55,7 @@ class NewTransition extends FlxSubState {
 
     public inline function transInComplete(){
         close();
+        
         activeTransition = null;
         FlxG.switchState(pState);
     }

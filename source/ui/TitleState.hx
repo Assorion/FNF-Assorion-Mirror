@@ -25,9 +25,7 @@ using StringTools;
 class TitleState extends MusicBeatState
 {
 	public static var initialized:Bool = false;
-
-	// The game engine will handle this for you.
-	public static var textSequence:Array<Array<String>> = [
+	public static var textSequence:Array<Array<String>> = [ // It is actually possible to have multiple random text's
 		['hi', 'hello'],
 		['Original game by','ninjamuffin'],
 		['assorion engine by', 'candice joe'],
@@ -38,8 +36,6 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		// # Set the random text
-
 		for(i in 0...textSequence.length) 
 			if(textSequence[i][0] == '%') 
 				textSequence[i] = getIntroText();
@@ -48,8 +44,6 @@ class TitleState extends MusicBeatState
 		menuMusicCheck();
 		startIntro();
 	}
-
-	// # Pick random intro text
 
 	public inline function getIntroText():Array<String>
 	{
@@ -66,7 +60,6 @@ class TitleState extends MusicBeatState
 
 	var textGroup:FlxGroup;
 	var afterFlash:FlxTypedGroup<FlxSprite>;
-
 	var sndTween:FlxTween;
 
 	inline function startIntro()
@@ -77,8 +70,6 @@ class TitleState extends MusicBeatState
 			FlxG.sound.music.volume = 0;
 			sndTween = FlxTween.tween(FlxG.sound.music, {volume: 1}, 3);
 		}
-
-		// # create logo
 
 		logoBl = new FlxSprite(-150, -100);
 		logoBl.frames = Paths.lSparrow('ui/logoBumpin');
@@ -105,8 +96,6 @@ class TitleState extends MusicBeatState
 		afterFlash.add(logoBl);
 		afterFlash.add(gfDance);
 		afterFlash.add(titleText);
-
-		// # alphabet text.
 
 		textGroup = new FlxGroup();
 		add(textGroup);
@@ -197,10 +186,7 @@ class TitleState extends MusicBeatState
 			createCoolText(tsubStep, textSequence[textStep].length, textSequence[textStep][tsubStep++]);
 	}
 
-	// # show enter screen code.
-
 	var skippedIntro:Bool = false;
-
 	function skipIntro():Void
 	{
 		if(skippedIntro) return;

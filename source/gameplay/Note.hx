@@ -10,9 +10,14 @@ typedef NoteType = {
 	var onMiss:Void->Void;
 }
 
+// If your notes have animations, you may want to change this from 'StaticSprite' to 'FlxSprite'
+
 #if !debug @:noDebug #end
 class Note extends StaticSprite
 {
+	public static inline var swagWidth:Float = 160 * 0.7;
+	public static inline var keyCount:Int = 4;
+	
 	public static var colArr:Array<String> = ['purple', 'blue', 'green', 'red'];
 	public static var possibleTypes:Array<NoteType> = [
 		{
@@ -23,10 +28,6 @@ class Note extends StaticSprite
 			onMiss: null
 		}
 	];
-
-	// this is inlined, you can't change this variable later.
-	public static inline var swagWidth:Float = 160 * 0.7;
-	public static inline var keyCount:Int = 4;
 
 	public var curType:NoteType;
 	public var curColor:String = 'purple';
@@ -41,6 +42,9 @@ class Note extends StaticSprite
 	public function new(strumTime:Float, data:Int, type:Int, ?sustainNote:Bool = false, ?isEnd:Bool = false)
 	{
 		super(0,-100);
+
+		// Uncomment if this is an FlxSprite
+		// antialiasing = true;
 
 		isSustainNote  = sustainNote;
 		this.strumTime = strumTime;
@@ -63,7 +67,8 @@ class Note extends StaticSprite
 		centerOffsets();
 		updateHitbox ();
 
-		if (!isSustainNote) return;
+		if (!isSustainNote) 
+			return;
 
 		alpha = 0.6;
 		flipY = Settings.pr.downscroll;
@@ -83,7 +88,8 @@ class Note extends StaticSprite
 		offsetX -= width / 2;
 		offsetY += defaultOffset;
 
-		if (isEnd) return;
+		if (isEnd) 
+			return;
 
 		animation.play('hold');
 		animation.remove('holdend');
@@ -92,7 +98,6 @@ class Note extends StaticSprite
 		updateHitbox();
 	}
 
-	// helper function
 	public inline function typeAction(action:Int){
 		var curAct:Void->Void = [curType.onHit, curType.onMiss][action];
 		if(curAct != null) curAct();

@@ -128,7 +128,6 @@ class PauseSubState extends MusicBeatSubstate
 
 	private var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
-		// ui movements.
 		var t:Int = ev.keyCode.deepCheck([Binds.UI_U, Binds.UI_D]);
 		if (t != -1){
 			changeSelection((t * 2) - 1);

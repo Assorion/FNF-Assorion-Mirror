@@ -3,12 +3,7 @@ package;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
-/*
-    Honestly the performance impact is minimal.
-    But I want the engine's logic to be compact.
-
-    And most sprites don't need updates.
-*/
+// No this probably doesn't help with performance much, but it is still helpful as Antialiasing is set properly.
 
 class StaticSprite extends FlxSprite {
     public function new(?x:Float = 0, ?y:Float = 0 ){
