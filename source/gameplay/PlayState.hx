@@ -223,11 +223,6 @@ class PlayState extends MusicBeatState
 	public inline function handleStage() {
 		switch(SONG.stage){
 			case 'stage', '':
-				if(SONG.song == 'tutorial')
-					characterPositions = [
-						70, 130,
-						780, 450
-					];
 				FlxG.camera.zoom = 0.9;
 
 				var bg:StaticSprite = new StaticSprite(-600, -200).loadGraphic(Paths.lImage('stages/stageback'));

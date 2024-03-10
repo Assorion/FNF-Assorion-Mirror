@@ -785,13 +785,13 @@ class ChartingState extends MusicBeatState {
             reloadNotes();
         }, 'Clear Song');
         var saveSong:ChartUI_Button = new ChartUI_Button(260, 550, 130, 30, function(){
-            var path = 'assets/songs-data/${PlayState.songName}/${PlayState.songName}-edited.json';
+            var path = 'assets/songs-data/${PlayState.songName}/edited.json';
             var saveString:String = 'You cannot save charts in web build.';
 
             #if desktop
             saveString = 'Saved song to "$path"';
 
-            var stringedSong:String = haxe.Json.stringify({"song": song.song}, '\t');
+            var stringedSong:String = haxe.Json.stringify({"song": song}, '\t');
             File.saveContent(path,stringedSong);
             #end
 
