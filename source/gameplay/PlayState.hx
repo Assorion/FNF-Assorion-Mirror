@@ -58,9 +58,9 @@ class PlayState extends MusicBeatState
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 
-	var paused:Bool = false;
-	var songScore:Int = 0;
-	var scoreTxt:FlxText;
+	public var paused:Bool = false;
+	public var songScore:Int = 0;
+	public var scoreTxt:FlxText;
 
 	private var characterPositions:Array<Int> = [
 		// dad
