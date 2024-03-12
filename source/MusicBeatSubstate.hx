@@ -42,15 +42,13 @@ class MusicBeatSubstate extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
-		var cTime = MusicBeatState.curTime();
 		var i = -1;
+		var cTime = MusicBeatState.curTime();
 		while(++i < events.length){
-			var e = events[i];
-
-			if(cTime < e.endTime)
+			if(cTime < events[i].endTime)
 				continue;
 
-			e.exeFunc();
+			events[i].exeFunc();
 			events.splice(i--, 1);
 		}
 

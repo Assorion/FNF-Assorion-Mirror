@@ -387,7 +387,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		var sec:SectionData = SONG.notes[curBeat >> 2]; // "curBeat >> 2" is the same as "Math.floor(curBeat / 4)", but faster
-		if(curBeat == ((curBeat >> 2) << 2) && FlxG.sound.music.playing){
+		if(curBeat & 3 == 0 && FlxG.sound.music.playing){
 			// prevent the Int from being null, if it is it will just be 0.
 			var tFace:Int = sec != null ? cast(sec.cameraFacing, Int) : 0;
 
@@ -404,7 +404,7 @@ class PlayState extends MusicBeatState
 		super.stepHit();
 
 		if(FlxG.sound.music.playing)
-			stepTime = ((Song.Position * 3 * Song.Division) + stepTime) * 0.25;
+			stepTime = ((Song.Position * Song.Division) + stepTime) * 0.5;
 	}
 
 	// THIS IS WHAT UPDATES YOUR SCORE AND HEALTH AND STUFF!
