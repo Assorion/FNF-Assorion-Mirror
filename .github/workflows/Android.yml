@@ -8,15 +8,7 @@ name: Android
 on:
   workflow_dispatch:
 
-jobs:
-  Android-Info:
-    runs-on: ubuntu-latest
-    steps:
-    - name: description
-      run: |
-        SUMMARY=$'# 🖥️ > Android Builds were never designed for Assorion Engine. This is completely a test workflow and wasnt designed for actual usage and just for the funnys.'
-        echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
-        
+jobs:      
   Android-Build:
     runs-on: ubuntu-latest
     strategy:
