@@ -1,0 +1,83 @@
+# This is not a serious workflow and was only made to see if Assorion could compile to android (also for the funnys)
+name: Android
+
+# You can setup workflows to run automatically on specific branches.
+# Read the HTML workflow to understand that.
+on:
+  workflow_dispatch:
+
+jobs:
+  Android-Info:
+    runs-on: ubuntu-latest
+    steps:
+    - name: description
+      run: |
+        SUMMARY=$'# 🖥️ > Android Builds were never designed for Assorion Engine. This is completely a test workflow and wasnt designed for actual usage and just for the funnys.'
+        echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
+        
+  Android:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        storage-type: [EXTERNAL, OBB, DATA, MEDIA]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+        
+    # Setup for Android SDK
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@main
+        id: setup-ndk
+        with:
+          ndk-version: r21e
+          
+    # Java JDK Setup
+      - name: Setup Java JDK
+        uses: actions/setup-java@main
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+        
+    # Installing Haxe.
+      - name: Setup Haxe
+      - uses: actions/checkout@main
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.3.2
+
+    # Obtaining Haxe Libraries for compilation.
+    # This uses a custom version of HXCPP with some optimizations.
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
+          haxelib install lime 7.9.0
+          haxelib install openfl 9.2.1
+          haxelib install flixel 5.2.2 
+          haxelib install flixel-ui 2.5.0
+          haxelib install flixel-addons 3.0.2
+      
+    # Random Github BS  
+      - name: Version Tag
+        run: echo "${{github.run_id}}" > VERSION
+
+    # Android Configurer
+      - name: Android Configuration
+        run: | 
+          haxelib run lime config ANDROID_SDK $ANDROID_HOME
+          haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_HOME
+          haxelib run lime config JAVA_HOME $JAVA_HOME
+          haxelib run lime config ANDROID_SETUP true
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          
+    # Android Compiler      
+      - name: Compile
+        run: haxelib run lime build android -D ${{ matrix.storage-type }} -release --app-version="4.0.0-${{ github.run_id}}
+          
+    # Publishing the Files compiled
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: android-${{ matrix.storage-type }}
+          path: export/release/android/bin/app/build/outputs/apk/release/*.apk
