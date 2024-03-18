@@ -1,5 +1,7 @@
-# This is not a serious workflow and was only made to see if Assorion could compile to android (also for the funnys)
 name: Android
+
+
+# This is not a serious workflow and was only made to see if Assorion could compile to android (also for the funnys)
 
 # You can setup workflows to run automatically on specific branches.
 # Read the HTML workflow to understand that.
@@ -15,7 +17,7 @@ jobs:
         SUMMARY=$'# 🖥️ > Android Builds were never designed for Assorion Engine. This is completely a test workflow and wasnt designed for actual usage and just for the funnys.'
         echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
         
-  Android:
+  Android-Build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
