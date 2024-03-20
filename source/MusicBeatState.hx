@@ -72,6 +72,7 @@ class MusicBeatState extends FlxUIState
 
 		// # Check if event needs to be executed.
 
+
 		var i = -1;
 		var cTime = curTime();
 		while(++i < events.length){
