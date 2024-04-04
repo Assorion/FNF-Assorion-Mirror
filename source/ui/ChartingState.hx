@@ -31,7 +31,7 @@ class ChartingState extends MusicBeatState {
         [200, 120, 210], // light
         [240, 150, 250], // 3d light
         [170, 170, 200], // note select colour
-        [0,   40,  8  ], // swamp green background colour
+        [20,  45,  55 ], // swamp green background colour
     ];
     public static var gridColours:Array<Array<Array<Int>>> = [
         [[255, 200, 200], [255, 215, 215]], // Red
