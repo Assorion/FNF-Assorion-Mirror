@@ -1,23 +1,24 @@
 # Options
 
-![image](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/de22f452-debd-4d24-9d8f-c5f47ebb3d7e)
-![image](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/7e3ecc97-85be-4f6c-bf35-02c80820930a)
-![image](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/db8f4a36-bf4b-41a0-9fef-9b01c1498d61)
+![image](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/ce3f1ba7-e4b8-4a41-8ff8-acc7ac687eb7)
 
 # Main Menu
 
-![image](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/bc2fcdb5-d093-4dc9-b795-f94ef19ee040)
+![image](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/a5bb0b3d-7414-4e71-a557-0ca910f4c3b4)
 
 # Gameplay
 
-![image](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/526743d7-ac62-4f8d-b406-f747f2989ccd)
-![image](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/2f1cbbf2-fc41-45ab-9f55-ead32ce7de42)
+![image](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/1d1f7dc4-94a2-4e98-a6e9-36499d8bdbd0)
+![image](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/0f32c3b3-6005-4ae4-82ba-4c3488fc698e)
 
 # Story Menu
 
-![image](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/d5a99f00-ad33-438c-aa95-2621feddb1ae)
+![image](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/6743fee8-9bb5-44df-9b1f-6a4e5b21d859)
 
 # Freeplay
 
-![image](https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/assets/105545224/d5858a74-00a3-493e-b804-9ab8e0d32776)
+![image](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/d657d404-b3e4-4371-8e90-3e5945ba680a)
 
+# Chart Editor
+
+![image](https://github.com/Assorion/FNF-Assorion-Engine/assets/105545224/74a7be19-80bd-47fc-8271-0819dbf34e17)
