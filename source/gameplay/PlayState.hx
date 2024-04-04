@@ -512,7 +512,8 @@ class PlayState extends MusicBeatState
 	}
 	override public function keyRel(ev:KeyboardEvent) {
 		var nkey = ev.keyCode.deepCheck(keysArray);
-		if (nkey == -1) return;
+		if (nkey == -1) 
+			return;
 
 		keysPressed[nkey] = false;
 		playerStrums.members[nkey].playAnim();

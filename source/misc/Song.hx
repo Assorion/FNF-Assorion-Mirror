@@ -19,7 +19,6 @@ typedef SongData =
 {
 	var song:String;
 	var notes:Array<SectionData>;
-	var events:Array<Float>;
 	var bpm:Float;
 	var needsVoices:Bool;
 	var speed:Float;
