@@ -66,25 +66,20 @@ class MusicBeatState extends FlxUIState
 	{
 		Song.Position = FlxG.sound.music.time - Settings.pr.audio_offset;
 
-		var oldStep = curStep;
-		curStep = Math.floor(Song.Position * Song.Division);
-		
-		if (oldStep != curStep && curStep >= -1){
-			oldStep = curStep;
+		var newStep = Math.floor(Song.Position * Song.Division);
+		if (curStep != newStep && (curStep = newStep) >= -1)
 			stepHit();
-		}
 
 		// # Check if event needs to be executed.
 
-		var cTime = curTime();
-		var i = -1;
-		while(++i < events.length){
-			var e = events[i];
 
-			if(cTime < e.endTime) 
+		var i = -1;
+		var cTime = curTime();
+		while(++i < events.length){
+			if(cTime < events[i].endTime)
 				continue;
 
-			e.exeFunc();
+			events[i].exeFunc();
 			events.splice(i--, 1);
 		}
 
@@ -93,11 +88,13 @@ class MusicBeatState extends FlxUIState
 		super.update(elapsed);
 	}
 
-	// This does the equivilant of (curStep % 4 == 0), but faster using bitwise shifts.
 	public function beatHit():Void {}
-	public function stepHit():Void
-	if(curStep == (curBeat = curStep >> 2) << 2)
-		beatHit();
+	public function stepHit():Void {
+		curBeat = curStep >> 2;
+
+		if(curStep & 3 == 0) // After taking a look at compiler explorer, this is actually the fastest.
+			beatHit();
+	}
 
 	private inline function execEvents()
 	for(i in 0...events.length)

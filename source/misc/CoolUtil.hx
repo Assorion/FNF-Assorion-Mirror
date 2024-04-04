@@ -36,12 +36,8 @@ class CoolUtil
 
 	// Clamps a value to be between to other values.
 	public static function boundTo(val:Float, min:Float, max:Float):Float
-	{
-		if(val < min) return min;
-		if(val > max) return max;
+		return Math.min(Math.max(val, min), max);
 
-		return val;
-	}
 	public static inline function intBoundTo(val:Float, min:Float, max:Float):Int
 		return Math.round(boundTo(val, min, max));
 
