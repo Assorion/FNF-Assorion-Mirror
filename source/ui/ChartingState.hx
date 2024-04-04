@@ -841,7 +841,6 @@ class ChartingState extends MusicBeatState {
             song.characters.splice(song.characters.length - 1, 1);
             var nLen = uiElements.length - 1;
 
-            //uiElements.members[nLen].forceExit();
             uiElements.remove(uiElements.members[nLen],     true);
             uiElements.remove(uiElements.members[nLen - 1], true);
 
@@ -860,7 +859,7 @@ class ChartingState extends MusicBeatState {
             makeGrid();
         });
         var playerBox:ChartUI_InputBox = new ChartUI_InputBox(0, 510, 90, 30, Std.string(song.activePlayer), function(ch:String){
-            song.activePlayer = CoolUtil.intBoundTo(Std.parseInt(ch), 0, song.characters.length - 1);
+            song.activePlayer = CoolUtil.intBoundTo(Std.parseInt(ch), 0, song.playLength - 1);
         });
         var backwardsBox:ChartUI_CheckBox = new ChartUI_CheckBox(0, 470, 30, 30, song.renderBackwards, function(ch:Bool){
             song.renderBackwards = !song.renderBackwards;
