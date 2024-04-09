@@ -477,37 +477,37 @@ class PlayState extends MusicBeatState
 	public var keysPressed:Array<Bool>   = [false, false, false, false];
 	public var keysArray:Array<Array<Int>> = [Binds.NOTE_LEFT, Binds.NOTE_DOWN, Binds.NOTE_UP, Binds.NOTE_RIGHT];
 	override function keyHit(ev:KeyboardEvent) if(!paused) {
-		var k = ev.keyCode.deepCheck([Binds.UI_ACCEPT, Binds.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12] ]);
+		// Assorions "Fast" input system
+		var nkey = ev.keyCode.deepCheck(keysArray);
+		if(nkey >= 0 && !keysPressed[nkey] && !Settings.pr.botplay){
+			keysPressed[nkey] = true;
+			
+			var strumRef = playerStrums.members[nkey];
+			var noteRef  = hittableNotes[nkey];
+			
+			if(noteRef != null){
+				hitNote(noteRef);
+				strumRef.pressTime = Song.StepCrochet * 0.00075;
+			} else if(strumRef.pressTime <= 0){
+				strumRef.playAnim(1);
+				if(!Settings.pr.ghost_tapping)
+					missNote(nkey);
+			}
 
+			return;
+		}
+
+		var k = ev.keyCode.deepCheck([Binds.UI_ACCEPT, Binds.UI_BACK, [FlxKey.SEVEN], [FlxKey.F12] ]);
+		
 		switch(k){
 			case 0, 1:
 				if(seenCutscene)	
 					pauseAndOpenState(new PauseSubState(camHUD, this));
-				return;
 			case 2:
 				MusicBeatState.changeState(new ChartingState());
 				seenCutscene = false;
-				return;
 			case 3:
 				misc.Screenshot.takeScreenshot();
-				return;
-		}
-
-		// Assorions "Fast" input system
-		var nkey = ev.keyCode.deepCheck(keysArray);
-		if(nkey == -1 || keysPressed[nkey] || Settings.pr.botplay) return;
-
-		keysPressed[nkey] = true;
-		var strumRef = playerStrums.members[nkey];
-		var noteRef  = hittableNotes[nkey];
-		
-		if(noteRef != null){
-			hitNote(noteRef);
-			strumRef.pressTime = Song.StepCrochet * 0.00075;
-		} else if(strumRef.pressTime <= 0){
-			strumRef.playAnim(1);
-			if(!Settings.pr.ghost_tapping)
-				missNote(nkey);
 		}
 	}
 	override public function keyRel(ev:KeyboardEvent) {
