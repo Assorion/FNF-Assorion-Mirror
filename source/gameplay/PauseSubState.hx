@@ -152,6 +152,7 @@ class PauseSubState extends MusicBeatSubstate
 				pauseText.alpha = 0;
 				activeTweens.push(FlxTween.tween(pauseText, {alpha: 1}, 0.3));
 
+				pState.updateHealth(0);
 			case 3:
 				pState.persistentDraw = true;
 				CoolUtil.exitPlaystate();

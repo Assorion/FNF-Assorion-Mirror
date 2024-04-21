@@ -99,7 +99,7 @@ class Character extends FlxSprite
 		offset.set(curOffset[0], curOffset[1]);
 	}
 
-	public function addOffset(name:String, x:Int = 0, y:Int = 0)
+	public inline function addOffset(name:String, x:Int = 0, y:Int = 0)
 	{
 		animOffsets.set(name, [x, y]);
 	}

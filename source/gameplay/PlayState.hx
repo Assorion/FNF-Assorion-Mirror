@@ -164,7 +164,7 @@ class PlayState extends MusicBeatState
 		healthBar.scrollFactor.set();
 		healthBar.createFilledBar(healthColours[0], healthColours[1]);
 
-		scoreTxt = new FlxText(0, baseY + 40, 0, "", 20);
+		scoreTxt = new FlxText(0, baseY + 40, 0, '', 20);
 		scoreTxt.setFormat("assets/fonts/vcr.ttf", 16, 0xFFFFFFFF, CENTER, OUTLINE, 0xFF000000);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
@@ -282,7 +282,8 @@ class PlayState extends MusicBeatState
 		babyArrow.alpha = 0;
 
 		strumLineNotes.add(babyArrow);
-		if(playable) playerStrums.add(babyArrow);
+		if(playable) 
+			playerStrums.add(babyArrow);
 	}
 
 	function startCountdown():Void {
@@ -342,8 +343,7 @@ class PlayState extends MusicBeatState
 	override function closeSubState() if(seenCutscene) { // To stop transistions from messing up cutscenes
 		super.closeSubState();
 
-		if(!paused) 
-			return;
+		if(!paused) return;
 
 		paused = false;
 
@@ -411,23 +411,27 @@ class PlayState extends MusicBeatState
 
 	private static inline var iconSpacing:Int = 52;
 	public function updateHealth(change:Int) {
-		var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC', 'SDCB', 'Clear'][fcValue];
-		var accuracyCount:Float = CoolUtil.boundTo(Math.floor((songScore * 100) / ((hitCount + missCount) * 3.5)) * 0.01, 0, 100);
+		if(Settings.pr.botplay)
+			scoreTxt.text = 'Botplay';
+		else {
+			var fcText:String = ['?', 'SFC', 'GFC', 'FC', '(Bad) FC', 'SDCB', 'Clear'][fcValue];
+			var accuracyCount:Float = CoolUtil.boundTo(Math.floor((songScore * 100) / ((hitCount + missCount) * 3.5)) * 0.01, 0, 100);
 
-		scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Accuracy: $accuracyCount% - $fcText | Score: $songScore';
+			scoreTxt.text = 'Notes Hit: $hitCount | Notes Missed: $missCount | Accuracy: $accuracyCount% - $fcText | Score: $songScore';
+		} 
 		scoreTxt.screenCenter(X);
 
 		health = CoolUtil.intBoundTo(health + change, 0, 100);
 		healthBar.percent = health;
-
+		
 		var calc = (0 - ((health - 50) * 0.01)) * healthBar.width;
 		iconP1.x = 565 + (calc + iconSpacing); 
 		iconP2.x = 565 + (calc - iconSpacing);
 		iconP1.changeState(health < 20);
 		iconP2.changeState(health > 80);
 
-		if(health > 0) 
-			return; 
+		if(health != 0)
+			return;
 
 		remove(allCharacters[playerPos]);
 		pauseAndOpenState(new GameOverSubstate(allCharacters[playerPos], camHUD, this));
@@ -480,13 +484,11 @@ class PlayState extends MusicBeatState
 		// Assorions "Fast" input system
 		var nkey = ev.keyCode.deepCheck(keysArray);
 		if(nkey >= 0 && !keysPressed[nkey] && !Settings.pr.botplay){
+			var strumRef = playerStrums.members[nkey];
 			keysPressed[nkey] = true;
 			
-			var strumRef = playerStrums.members[nkey];
-			var noteRef  = hittableNotes[nkey];
-			
-			if(noteRef != null){
-				hitNote(noteRef);
+			if(hittableNotes[nkey] != null){
+				hitNote(hittableNotes[nkey]);
 				strumRef.pressTime = Song.StepCrochet * 0.00075;
 			} else if(strumRef.pressTime <= 0){
 				strumRef.playAnim(1);
@@ -525,10 +527,11 @@ class PlayState extends MusicBeatState
 		daNote.y += strumLineY + daNote.offsetY;
 
 		daNote.visible = Settings.pr.downscroll ? (daNote.y >= -daNote.height * daNote.scale.y) : (daNote.y <= FlxG.height);
-		if(!daNote.visible) return;
+		if(!daNote.visible) 
+			return;
 		
 		var strumRef = strumLineNotes.members[daNote.noteData + (Note.keyCount * daNote.player)];
-		if((daNote.player != playerPos || Settings.pr.botplay) && daNote.curType.mustHit && stepTime >= daNote.strumTime){
+		if((daNote.player != playerPos || Settings.pr.botplay) && stepTime >= daNote.strumTime && daNote.curType.mustHit){
 			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData]);
 			strumRef.playAnim(2);
 			strumRef.pressTime = Song.StepCrochet * 0.001;
@@ -556,15 +559,13 @@ class PlayState extends MusicBeatState
 		}
 
 		// Input stuff
-		if (!daNote.isSustainNote && hittableNotes[daNote.noteData] == null && Math.abs(nDiff) <= inputRange * daNote.curType.rangeMul){
+		if (hittableNotes[daNote.noteData] == null && !daNote.isSustainNote && Math.abs(nDiff) <= inputRange * daNote.curType.rangeMul){
 			hittableNotes[daNote.noteData] = daNote;
 			return;
 		}
 
-		if(!daNote.isSustainNote || Math.abs(nDiff) >= 0.8 || !keysPressed[daNote.noteData]) 
-			return;
-
-		hitNote(daNote);
+		if(daNote.isSustainNote && Math.abs(nDiff) < 0.8 && keysPressed[daNote.noteData])
+			hitNote(daNote);
 	}
 
 	public static var possibleScores:Array<RatingData> = [
@@ -628,7 +629,6 @@ class PlayState extends MusicBeatState
 		ratingSpr.screenCenter();
 
 		var comsplit:Array<String> = Std.string(combo).split('');
-
 		for(i in 0...3){
 			var char = '0';
 			if(3 - comsplit.length <= i) char = comsplit[i + (comsplit.length - 3)];
@@ -639,6 +639,7 @@ class PlayState extends MusicBeatState
 			sRef.y += 120;
 			scoreTweens[i+1] = introSpriteTween(sRef, 3, Song.StepCrochet * 0.5, false);
 		}
+
 		scoreTweens[0] = introSpriteTween(ratingSpr, 3,  Song.StepCrochet * 0.5, false);
 	}
 
