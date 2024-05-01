@@ -53,7 +53,8 @@ Assorion is a very simple engine and thus, it may not receive many feature updat
 -	Assorion Engine based off <a href="https://github.com/FunkinCrew/Funkin/releases/tag/v0.2.6">`0.2.6`</a> version of the base game, though has been radically altered
 -	The Songs and Data folder have been merged into the `songs-data` folder
 - Pressing the F12 key juring gameplay uses an experimental screenshot feature. When pressed, a folder and file will be created
-- Web build compiles, but is full of bugs still. These will be fixed later.
+- The rating system, health loss, health gain, and menus are inaccurate to the base game or other engines
+- Ratings, input, and chart speed change depending on BPM
   
  **RoadMap**
 * [x]	Offset wizard
@@ -61,7 +62,6 @@ Assorion is a very simple engine and thus, it may not receive many feature updat
 * [X]	Improvements to the chart editor
 * [X]	Fixes for newer Flixel
 * [ ]	Events System
-* [ ]	~~Portuguese translation~~
  
 #### **Branches**
 
