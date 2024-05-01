@@ -318,10 +318,10 @@ class PlayState extends MusicBeatState
 			if(swagCounter >= 4){
 				FlxG.sound.music.play();
 				FlxG.sound.music.volume = 1;
-				FlxG.sound.music.time = vocals.time = 0;
 				Song.Position = -Settings.pr.audio_offset;
 
 				vocals.play();
+				vocals.time = FlxG.sound.music.time = 0;
 				return;
 			}
 			for(pc in allCharacters)
@@ -354,9 +354,9 @@ class PlayState extends MusicBeatState
 		if(FlxG.sound.music.time == 0) 
 			return;
 
-		FlxG.sound.music.time = vocals.time = Song.Position + Settings.pr.audio_offset;
-		FlxG.sound.music.play();
 		vocals.play();
+		FlxG.sound.music.play();
+		FlxG.sound.music.time = vocals.time = Song.Position + Settings.pr.audio_offset;
 	}
 
 	var noteCount:Int = 0;

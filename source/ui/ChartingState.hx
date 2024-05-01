@@ -1,5 +1,6 @@
 package ui;
 
+import haxe.Json;
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup;
@@ -791,7 +792,7 @@ class ChartingState extends MusicBeatState {
             #if desktop
             saveString = 'Saved song to "$path"';
 
-            var stringedSong:String = haxe.Json.stringify({"song": song}, '\t');
+            var stringedSong:String = Json.stringify({"song": song}, '\t');
             File.saveContent(path,stringedSong);
             #end
 
@@ -816,9 +817,10 @@ class ChartingState extends MusicBeatState {
         genText(voicesCheck, 'Use Voices');
     }
 
+    private var characterNames:Array<String>;
     private inline function charUIGenPlayerDrop(ind:Int)
     {
-        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 35, 160, 30, Paths.lLines('characterList'), song.characters[ind], function(index:Int, item:String){
+        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 35, 160, 30, characterNames, song.characters[ind], function(index:Int, item:String){
             song.characters[ind] = item; makeGrid(); }, uiElements);
 
         uiElements.add(tmpDrop);
@@ -826,6 +828,14 @@ class ChartingState extends MusicBeatState {
     }
     public function createCharUI(){
         uiStart();
+
+        // Get a list of characters from the characterLoader JSON file
+        characterNames = [];
+        var charData:Array<gameplay.Character.CharacterData> = Json.parse(Paths.lText('characterLoader.json')).characters;
+
+        for(char in charData)
+            characterNames.push(char.name.trim());
+        ///////////////////////////////////////////
 
         var addButton:ChartUI_Button = new ChartUI_Button(360, 0, 30, 30, function(){
             if(song.characters.length >= 13) 

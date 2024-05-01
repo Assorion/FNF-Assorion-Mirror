@@ -1,8 +1,26 @@
 package gameplay;
 
 import flixel.FlxSprite;
+import haxe.Json;
 
 using StringTools;
+
+typedef AnimationData = {
+	var animationName:String;
+	var xmlName:String;
+	var framerate:Int;
+	var loop:Bool;
+	var offsetX:Int;
+	var offsetY:Int;
+}
+typedef CharacterData = {
+	var name:String;
+	var leftRightIdle:Bool;
+	var flipX:Bool;
+	var cameraOffsetX:Int;
+	var cameraOffsetY:Int;
+	var animations:Array<AnimationData>;
+}
 
 #if !debug @:noDebug #end
 class Character extends FlxSprite
@@ -18,53 +36,39 @@ class Character extends FlxSprite
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
-		animOffsets = new Map<String, Array<Int>>();
 		super(x, y);
 
+		antialiasing  = Settings.pr.antialiasing;
+		animOffsets   = new Map<String, Array<Int>>();
 		curCharacter  = character;
 		this.isPlayer = isPlayer;
 
-		/*
-			LOOK AT CHARACTER LOADER TXT PLEASE!!!
-		*/
-
 		frames = Paths.lSparrow('characters/$character');
-		addAnimationTextFile();
-
-		antialiasing = Settings.pr.antialiasing;
-
-		playAnim('idle');
-		if(isPlayer) flipX = !flipX;
+		addAnimationJSONFile();
+		
+		playAnim(leftRightIdle ? 'danceLeft' : 'idle');
+		if(isPlayer) 
+			flipX = !flipX;
 	}
 
-	public function addAnimationTextFile(){
-		var lines:Array<String> = Paths.lLines('characterLoader');
+	// You will have to write the JSON by hand, if this change is not well recieved (make an issue about it or smth) then I will undo the change.
 
-		for(i in 0...lines.length){
-			if(lines[i].trim().startsWith('#')) continue;
+	public function addAnimationJSONFile(){
+		var charArray:Array<CharacterData> = cast Json.parse(Paths.lText('characterLoader.json')).characters;
 
-			var splitLn:Array<String> = lines[i].split(':');
-			// this allows spacing within the file.
-			for(i in 0...splitLn.length) splitLn[i] = splitLn[i].trim();
-			if(splitLn[0] != curCharacter) continue;
+		for(charData in charArray){
+			if(charData.name.trim() != curCharacter) 
+				continue;
 
-			animation.addByPrefix(
-				splitLn[1], 
-				splitLn[2], 
-				Std.parseInt(splitLn[3]), 
-				splitLn[4] == 't'
-			);
-			addOffset(splitLn[1], Std.parseInt(splitLn[5]), Std.parseInt(splitLn[6]));
-			// hopefully caches
-			animation.play(splitLn[1]);
+			leftRightIdle = charData.leftRightIdle;
+			flipX         = charData.flipX;
+			camOffset     = [charData.cameraOffsetX, charData.cameraOffsetY ];
 
-			// haxe will automatically add this element to the array if it doesn't exist.
-			leftRightIdle = (splitLn[7] == 't');
-			flipX         = (splitLn[8] == 't');
+			for(anim in charData.animations){
+				animation.addByPrefix(anim.animationName.trim(), anim.xmlName.trim(), anim.framerate, anim.loop);
+				animation.play(anim.animationName.trim());
 
-			if(splitLn[10] != ''){
-				camOffset[0]  = Std.parseInt(splitLn[9]);
-				camOffset[1]  = Std.parseInt(splitLn[10]);
+				addOffset(anim.animationName.trim(), anim.offsetX, anim.offsetY);
 			}
 		}
 	}
@@ -76,24 +80,24 @@ class Character extends FlxSprite
 			idleNextBeat = true;
 			return;
 		}
-		if(leftRightIdle){
-			danced = !danced;
-
-			playAnim('dance' + (danced ? 'Right' : 'Left'), true);
+		if(!leftRightIdle){
+			playAnim('idle', true);
 			return;
 		}
 
-		playAnim('idle', true);
+		danced = !danced;
+		playAnim('dance' + (danced ? 'Right' : 'Left'), true);
 	}
 
-	public function playAnim(AnimName:String, INB:Bool = false):Void
+	public function playAnim(AnimName:String, ?INB:Bool = false):Void
 	{
 		idleNextBeat = INB;
 		
 		// this is so the game hopefully doesn't crash if an animation
 		// isn't added. By checking if the offset exists.
 		var curOffset:Array<Int> = animOffsets.get(AnimName);
-		if (curOffset == null || curOffset.length != 2) return;
+		if (curOffset == null || curOffset.length != 2) 
+			return;
 
 		animation.play(AnimName, true);
 		offset.set(curOffset[0], curOffset[1]);

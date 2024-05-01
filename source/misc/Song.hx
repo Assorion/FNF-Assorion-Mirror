@@ -41,7 +41,7 @@ class Song
 	public static var Position   :Float;
 	public static var Division   :Float;
 
-	public static function musicSet(tempo:Float)
+	public static inline function musicSet(tempo:Float)
 	{
 		var newCrochet = (60 / tempo) * 250;
 
