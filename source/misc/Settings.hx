@@ -90,9 +90,9 @@ class Settings {
         gSave.flush();
     }
 
-    // To prevent Barzil from soft-locking the game at -10 fps.
+    // Though we clamp it as 340, the game will still update up to 500 FPS anyway.
     public static inline function framerateClamp(ch:Int):Int
-        return CoolUtil.intBoundTo(ch, 10, 500);
+        return CoolUtil.intBoundTo(ch, 10, 340);
 }
 
 // Maps a key code to a string. Includes shifting.
