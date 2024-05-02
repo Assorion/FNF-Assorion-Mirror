@@ -55,9 +55,9 @@ class OptionsState extends MenuTemplate
 			'Let the game press notes for you (does not count scores or health)'
 		],
 		[
-			'Makes the graphics look smoother, but can impact performance a little.',
+			'Makes the graphics look smoother, but can impact performance a little',
 			#if desktop
-			'Changes how fast the game CAN run. I recommend setting it to 340, not the max',
+			'Changes how fast the game can run',
 			#end
 			'Shows your health, stats, etc in gameplay',
 			'Shows FPS and memory counter'
