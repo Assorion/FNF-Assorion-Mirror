@@ -179,7 +179,7 @@ class ChartingState extends MusicBeatState {
         expandCheck();
         reloadNotes();
 
-        if(inSecUI)
+        if(currentTab == 2)
             createSecUI();
     }
 
@@ -656,7 +656,7 @@ class ChartingState extends MusicBeatState {
 
     // # UI Tabs.
 
-    private var inSecUI:Bool = false;
+    private var currentTab:Int = 0;
     private var tabButtons:Array<ChartUI_Button> = [];
     private inline function genText(ref:ChartUI_Generic, txt:String):ChartUI_Text
     {
@@ -668,22 +668,21 @@ class ChartingState extends MusicBeatState {
 
         return tmpText;
     }
-    private inline function uiStart(){
-        var buttonHold = currentElement;
-        overlappingElement = currentElement = null;
-        inSecUI = false;
+    
+    private inline function uiStart(?tab:Int = 0){
+        currentTab = tab;
+        if(currentElement != tabButtons[tab])
+            overlappingElement = currentElement = null;
 
         for(i in 0...tabButtons.length)
             uiElements.remove(tabButtons[i]);
 
         uiElements.clear();
-
         for(i in 0...tabButtons.length)
             uiElements.add(tabButtons[i]);
-
-        currentElement = buttonHold;
     }
 
+    // Info UI stuff
     private static var infoText:String = '
     About / Info / How to use:\n
     Left Click - Add note
@@ -702,15 +701,16 @@ class ChartingState extends MusicBeatState {
     ';
     public function createInfoUI():Void
     {
-        uiStart();
+        uiStart(3);
 
         var aboutText:ChartUI_Text = new ChartUI_Text(-20, -30, infoText);
         uiElements.add(aboutText);
+        mouseMoveEvent(null);
     }
 
     public function createSongUI():Void
     {
-        uiStart();
+        uiStart(0);
 
         // Top stuff
 
@@ -815,8 +815,10 @@ class ChartingState extends MusicBeatState {
         genText(delayBox,  'Seconds Before Song Starts');
         genText(speedBox,  'Scroll Speed');
         genText(voicesCheck, 'Use Voices');
+        mouseMoveEvent(null);
     }
 
+    // Character UI stuff
     private var characterNames:Array<String>;
     private inline function charUIGenPlayerDrop(ind:Int)
     {
@@ -827,7 +829,7 @@ class ChartingState extends MusicBeatState {
         genText(tmpDrop, 'Player ${ind + 1}');
     }
     public function createCharUI(){
-        uiStart();
+        uiStart(1);
 
         // Get a list of characters from the characterLoader JSON file
         characterNames = [];
@@ -884,17 +886,17 @@ class ChartingState extends MusicBeatState {
         genText(playLenBox,   'Character Chart List');
         genText(playerBox,    'Main Player');
         genText(backwardsBox, 'Render characters backwards');
-
         for(i in 0...CoolUtil.intBoundTo(song.characters.length, 1, 13))
             charUIGenPlayerDrop(i);
 
+        mouseMoveEvent(null);
     }
 
+    // Section UI stuff
     private var copyLastInt:Int = 2;
     public function createSecUI():Void
     {
-        uiStart();
-        inSecUI = true;
+        uiStart(2);
 
         var cameraBox:ChartUI_InputBox = new ChartUI_InputBox(0, 0, 120, 30, Std.string(song.notes[curSec].cameraFacing), function(ch:String){
             song.notes[curSec].cameraFacing = CoolUtil.intBoundTo(Std.parseInt(ch), 0, song.characters.length - 1);
@@ -947,5 +949,6 @@ class ChartingState extends MusicBeatState {
 
         genText(cameraBox, 'Camera Facing');
         genText(clBox,     'Copy Last Sections Back');
+        mouseMoveEvent(null);
     }
 }
