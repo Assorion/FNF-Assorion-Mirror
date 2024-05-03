@@ -9,16 +9,7 @@ jobs:
   Windows-Build:
     runs-on: windows-latest
     steps:
-    # Use the workflow in-built MinGW version.
-      - name: Setup MinGW
-        run: |
-          cd /d C:\
-          md MinGW
-          copy mingw64 MinGW
-        shell: cmd
-
     # Install Haxe. 
-    # Uses 4.1.5 since 4.3.2 breaks MinGW
       - uses: actions/checkout@main
       - uses: krdlab/setup-haxe@master
         with:
@@ -29,9 +20,7 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup C:/haxelib
-          haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
-          haxelib install hxcpp 4.3.2
-          haxelib set hxcpp git
+          haxelib install hxcpp
           haxelib install lime 7.9.0
           haxelib install openfl 9.2.2
           haxelib install flixel 4.9.0 
@@ -43,9 +32,9 @@ jobs:
       - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
         
-    # Compilation of the source code with HXCPP & MinGW.
+    # Compilation of the source code.
       - name: Compile 64-Bit Version
-        run: haxelib run lime build windows -D HXCPP_MINGW -release --app-version="4.0.0-${{ github.run_id}}"
+        run: haxelib run lime build windows -release --app-version="4.0.0-${{ github.run_id}}"
 
     # Provides the 64-Bit file for download.
       - name: Publish x64 Artifact
@@ -54,7 +43,7 @@ jobs:
           name: Windows-x64
           path: export/release/windows/bin
       
-    # Compilation of the game using Clang for 32-bit version. (MinGW doesn't seem to work.)
+    # Compilation of the game using 32-bit.
       - name: Compile 32-Bit Version
         run: |
           haxelib set hxcpp 4.3.2
