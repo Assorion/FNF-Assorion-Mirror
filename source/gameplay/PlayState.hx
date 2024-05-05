@@ -9,6 +9,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
+import flixel.graphics.FlxGraphic;
 import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import lime.utils.Assets;
@@ -20,6 +21,13 @@ import misc.Song.SongData;
 import misc.Song.SectionData;
 
 using StringTools;
+
+typedef RatingData = {
+	var score:Int;
+	var threshold:Float;
+	var name:String;
+	var value:Int;
+}
 
 #if !debug @:noDebug #end
 class PlayState extends MusicBeatState
@@ -126,12 +134,11 @@ class PlayState extends MusicBeatState
 		for(i in 0...SONG.playLength)
 			generateStrumArrows(i, SONG.activePlayer == i);
 
-		///////////////////////////////////////////////
-		ratingSpr = new StaticSprite(0,0).loadGraphic(Paths.lImage('gameplay/sick'));
-		ratingSpr.graphic.persist = true;
-		ratingSpr.updateHitbox();
-		ratingSpr.centerOrigin();
-		ratingSpr.screenCenter();
+		// # Score setup
+		for(i in 0...possibleScores.length)
+			FlxGraphic.fromAssetKey(Paths.lImage('gameplay/${possibleScores[i].name}'), false, null, true).persist = true;
+
+		ratingSpr = new StaticSprite(0,0);
 		ratingSpr.scale.set(0.7, 0.7);
 		ratingSpr.alpha = 0;
 		add(ratingSpr);
@@ -142,7 +149,6 @@ class PlayState extends MusicBeatState
 			for(i in 0...10) 
 				sRef.animation.addByPrefix('$i', '${i}num', 1, false);
 			sRef.animation.play('0');
-			sRef.updateHitbox();
 			sRef.centerOrigin();
 			sRef.screenCenter();
 			sRef.y += 120;
@@ -151,8 +157,8 @@ class PlayState extends MusicBeatState
 			sRef.alpha = 0;
 			add(sRef);
 		}
-		///////////////////////////////////////////////
 
+		// # UI Setup
 		var baseY:Int = Settings.pr.downscroll ? 80 : 650;
 
 		healthBarBG = new StaticSprite(0, baseY).loadGraphic(Paths.lImage('gameplay/healthBar'));
@@ -184,11 +190,11 @@ class PlayState extends MusicBeatState
 			add(iconP1);
 			add(iconP2);
 
-			healthBar.cameras      = [camHUD];
-			healthBarBG.cameras    = [camHUD];
-			iconP1.cameras         = [camHUD];
-			iconP2.cameras         = [camHUD];
-			scoreTxt.cameras       = [camHUD];
+			healthBar.cameras =
+			healthBarBG.cameras =
+			iconP1.cameras =
+			iconP2.cameras = 
+			scoreTxt.cameras = [camHUD];
 		}
 
 		stepTime = -16 - (((SONG.beginTime * 1000) + Settings.pr.audio_offset) * Song.Division);
@@ -200,9 +206,10 @@ class PlayState extends MusicBeatState
 		var seenCut:Bool = DialogueSubstate.crDialogue(camHUD, startCountdown, '$songName/dialogue.txt', this, stateHolder);
 
 		postEvent(SONG.beginTime + 0.1, startCountdown);
+		if(seenCut) 
+			return;
 
-		if(seenCut) return;
-		events.splice(events.length - 1, 1);
+		events.pop();
 
 		postEvent(0.8, function(){
 			pauseAndOpenState(stateHolder[0]);
@@ -458,10 +465,6 @@ class PlayState extends MusicBeatState
 	}
 
 	function missNote(direction:Int = 1):Void {
-		if (combo > 20)
-			for(i in 0...allCharacters.length)
-				allCharacters[i].playAnim('sad');
-
 		combo = 0;
 		songScore -= 50;
 		missCount++;
@@ -535,11 +538,10 @@ class PlayState extends MusicBeatState
 			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData]);
 			strumRef.playAnim(2);
 			strumRef.pressTime = Song.StepCrochet * 0.001;
+			vocals.volume = 1;
 
 			notes.remove(daNote, true);
 			daNote.destroy();
-			
-			vocals.volume = 1;
 
 			return;
 		}
@@ -595,51 +597,44 @@ class PlayState extends MusicBeatState
 		}
 	];
 	private var ratingSpr:StaticSprite;
-	private var prevString:String = 'sick';
+	private var previousValue:Int;
 	private var comboSprs:Array<StaticSprite> = [];
 	private var scoreTweens:Array<FlxTween> = [];
 	private inline function popUpScore(strumtime:Float):Void {
 		var noteDiff:Float = Math.abs(strumtime - (stepTime - (Settings.pr.input_offset * Song.Division)));
-		combo++;
-
 		var pscore:RatingData = null;
+
 		for(i in 0...possibleScores.length)
 			if(noteDiff >= possibleScores[i].threshold){
 				pscore   = possibleScores[i];
 			} else break;
 
 		songScore += pscore.score;
-
-		if(pscore.value > fcValue) 
+		combo = pscore.score > 50 && combo < 1000 ? combo + 1 : 0;
+		if(pscore.value > fcValue)
 			fcValue = pscore.value;
 
-		if(pscore.score < 50 || combo > 999)
-			combo = 0;
+		// Everything below here is to handle graphics.
 
-		//////////////////////////
 		if(scoreTweens[0] != null)
 			for(i in 0...4) scoreTweens[i].cancel();
 
-		if(prevString != pscore.name){
+		if(previousValue != pscore.value){
 			ratingSpr.loadGraphic(Paths.lImage('gameplay/' + pscore.name));
-			ratingSpr.graphic.persist = true;
-			prevString = pscore.name;
+			ratingSpr.centerOrigin();
+			previousValue = pscore.value;
 		}
-		ratingSpr.centerOrigin();
 		ratingSpr.screenCenter();
 
 		var comsplit:Array<String> = Std.string(combo).split('');
 		for(i in 0...3){
-			var char = '0';
-			if(3 - comsplit.length <= i) char = comsplit[i + (comsplit.length - 3)];
-
 			var sRef = comboSprs[i];
-			sRef.animation.play(char);
+			sRef.animation.play((3 - comsplit.length <= i) ? comsplit[i + (comsplit.length - 3)] : '0');
 			sRef.screenCenter(Y);
 			sRef.y += 120;
+
 			scoreTweens[i+1] = introSpriteTween(sRef, 3, Song.StepCrochet * 0.5, false);
 		}
-
 		scoreTweens[0] = introSpriteTween(ratingSpr, 3,  Song.StepCrochet * 0.5, false);
 	}
 
@@ -656,7 +651,7 @@ class PlayState extends MusicBeatState
 		}
 		
 		totalScore += songScore;
-		storyPlaylist.splice(0,1);
+		storyPlaylist.shift();
 
 		if (storyPlaylist.length <= 0){
 			Highscore.saveScore('week-$storyWeek', totalScore, curDifficulty);
@@ -706,11 +701,4 @@ class PlayState extends MusicBeatState
 		if(!paused && seenCutscene)
 			pauseAndOpenState(new PauseSubState(camHUD, this));
 	}
-}
-
-typedef RatingData = {
-	var score:Int;
-	var threshold:Float;
-	var name:String;
-	var value:Int;
 }
