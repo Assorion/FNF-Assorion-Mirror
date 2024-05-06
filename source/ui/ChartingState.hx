@@ -761,7 +761,7 @@ class ChartingState extends MusicBeatState {
             vocals.loadEmbedded(Paths.playableSong(song.song, true));
 
             FlxG.sound.list.add(vocals);
-        }, 'Apply Song');
+        }, 'Update Song');
         var selectButton:ChartUI_Button = new ChartUI_Button(260, 470, 130, 30, function(){
             selectedNotes = [];
 
