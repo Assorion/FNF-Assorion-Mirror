@@ -1,23 +1,22 @@
 package ui;
 
-import haxe.display.Display.Keyword;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
-import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
-import ui.ChartingState;
-import misc.Highscore;
-import misc.Alphabet;
+import flixel.tweens.FlxTween;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import misc.Song;
+import misc.Highscore;
+import ui.ChartingState;
+import misc.MenuTemplate;
 import gameplay.PlayState;
 
 using StringTools;
 
 typedef StoryData = {
-	var graphic:String;
+	var portrait:String;
 	var weekAsset:String;
 	var songs:Array<String>;
 	var topText:String;
@@ -30,9 +29,9 @@ class StoryMenuState extends MenuTemplate
 
 	static var weekData:Array<StoryData> = [
 		{
-			graphic: 'storymenu/storyportrait',
-			weekAsset: '1', // This will translate to 'week-1'
-			songs: ['tutorial', 'demo'],
+			portrait: 'storyportrait',   // Picture shown on the right
+			weekAsset: '1',              // Graphic used for selecting (doesn't have to be a number)
+			songs: ['tutorial', 'demo'], 
 			topText: 'THIS IS A TEST'
 		}
 	];
@@ -117,7 +116,7 @@ class StoryMenuState extends MenuTemplate
 		for(s in weekData[curSel].songs)
 			nSongs.push(s);
 
-		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
+		FlxG.sound.play(Paths.lSound('ui/confirmMenu'));
 		PlayState.setData(nSongs, curDif, curSel);
 
 		for(i in 0...8)
@@ -175,7 +174,7 @@ class StoryMenuState extends MenuTemplate
 		// handle fades
 
 		var oldRef:FlxSprite = weekBG;
-		weekBG = new FlxSprite(640, 0).loadGraphic(Paths.lImage(weekData[curSel].graphic));
+		weekBG = new FlxSprite(640, 0).loadGraphic(Paths.lImage('storymenu/' + weekData[curSel].portrait));
 		weekBG.antialiasing = Settings.pr.antialiasing;
 		sAdd(weekBG);
 

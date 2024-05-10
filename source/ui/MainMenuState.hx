@@ -113,7 +113,7 @@ class MainMenuState extends MusicBeatState
 					return;
 				}
 
-				FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
+				FlxG.sound.play(Paths.lSound('ui/cancelMenu'));
 				MusicBeatState.changeState(new TitleState());
 				leaving = true;
 		}
@@ -126,7 +126,7 @@ class MainMenuState extends MusicBeatState
 			return;
 		}
 		
-		FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
+		FlxG.sound.play(Paths.lSound('ui/confirmMenu'));
 		selectedSomethin = true;
 
 		for(i in 0...optionList.length)
@@ -160,7 +160,7 @@ class MainMenuState extends MusicBeatState
 	{
 		if(selectedSomethin) return;
 
-		FlxG.sound.play(Paths.lSound('menu/scrollMenu'));
+		FlxG.sound.play(Paths.lSound('ui/scrollMenu'));
 
 		var oldSel = curSelected;
 		curSelected += to;

@@ -9,12 +9,12 @@ import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.FlxCamera;
-import misc.Alphabet;
+import ui.Alphabet;
 import misc.CoolUtil;
 import openfl.display.BitmapData;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
-import ui.MenuTemplate;
+import misc.MenuTemplate;
 
 #if !debug @:noDebug #end
 class PauseSubState extends MusicBeatSubstate
@@ -113,10 +113,10 @@ class PauseSubState extends MusicBeatSubstate
 
 		pState.persistentDraw = true;
 
-		FlxTween.tween(pauseText,  { alpha:  0 }, 0.1);
-		FlxTween.tween(bottomBlack,{ alpha:  0 }, 0.1);
-		FlxTween.tween(pauseMusic, { volume: 0 }, 0.1);
-		FlxTween.tween(gameSpr,    { alpha:  0 }, 0.1, {onComplete: 
+		FlxTween.tween(pauseText,  { alpha:  0 }, 0.3);
+		FlxTween.tween(bottomBlack,{ alpha:  0 }, 0.3);
+		FlxTween.tween(pauseMusic, { volume: 0 }, 0.3);
+		FlxTween.tween(gameSpr,    { alpha:  0 }, 0.3, {onComplete: 
 
 		// Closing
 		function(t:FlxTween){
@@ -185,7 +185,7 @@ class PauseSubState extends MusicBeatSubstate
 		if(leaving)
 			return;
 
-		FlxG.sound.play(Paths.lSound('menu/scrollMenu'), 0.4);
+		FlxG.sound.play(Paths.lSound('ui/scrollMenu'), 0.4);
 		curSelected = (curSelected + change + optionList.length) % optionList.length;
 
 		for(i in 0...alphaTexts.length){

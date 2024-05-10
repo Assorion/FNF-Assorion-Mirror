@@ -1,17 +1,17 @@
 package ui;
 
 import flixel.FlxG;
-import flixel.group.FlxGroup.FlxTypedGroup;
+import lime.utils.Assets;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
-import lime.utils.Assets;
-import flixel.input.keyboard.FlxKey;
-import openfl.events.KeyboardEvent;
 import flixel.system.FlxSound;
-import misc.Alphabet;
-import misc.Highscore;
+import openfl.events.KeyboardEvent;
+import flixel.input.keyboard.FlxKey;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import misc.Song;
+import misc.Highscore;
+import misc.MenuTemplate;
 import gameplay.PlayState;
 
 using StringTools;

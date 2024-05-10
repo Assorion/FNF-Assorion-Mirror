@@ -1,4 +1,4 @@
-package misc;
+package ui;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -54,8 +54,8 @@ class Alphabet extends FlxSpriteGroup
 class AlphaCharacter extends FlxSprite
 {
 	public static inline var numbers:String = "1234567890";
-	public static inline var symbols:String = "|~#$%()*+-:;<=>@[]^_.,'!?";
-	public static inline var completeList:String = "abcdefghijklmnopqrstuvwxyz1234567890|~#$%()*+-:;<=>@[]^.,'!?";
+	public static inline var symbols:String = "|~#$%()*+-<=>@[]^_.,'!?";
+	public static inline var completeList:String = "abcdefghijklmnopqrstuvwxyz1234567890|~#$%()*+-<=>@[]^.,'!?";
 	public var letter:String;
 
 	public function new(x:Float, y:Float, char:String, bolded:Bool)

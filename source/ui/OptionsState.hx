@@ -1,14 +1,13 @@
 package ui;
 
-import haxe.Serializer;
 import flixel.FlxG;
-import flixel.util.FlxColor;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.tweens.FlxTween;
-import misc.Alphabet;
-import gameplay.HealthIcon;
-import flixel.text.FlxText;
 import flixel.FlxObject;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxTween;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import misc.MenuTemplate;
+import gameplay.HealthIcon;
 
 /*
 	To add an option.

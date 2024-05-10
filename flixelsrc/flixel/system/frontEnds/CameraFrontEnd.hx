@@ -145,8 +145,8 @@ class CameraFrontEnd
 		camera.screen.dirty = true;
 
 		#else
+		
 		// Tile rendering
-
 		camera.clearDrawStack();
 		camera.canvas.graphics.clear();
 		if(camera.bgColor.alpha > 0)

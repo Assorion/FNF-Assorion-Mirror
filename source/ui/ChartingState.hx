@@ -40,7 +40,8 @@ class ChartingState extends MusicBeatState {
         [[240, 240, 200], [240, 240, 215]], // Yellow / White
         [[200, 255, 200], [215, 255, 215]], // Green
     ];
-    public static inline var gridSize:Int = 40;
+    public static inline var defaultGridSize:Int = 40;
+    public var gridSize:Int;
 
     public static var zooms:Array<Float> = [0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8];
     public var curZoom:Int = 2;
@@ -101,6 +102,7 @@ class ChartingState extends MusicBeatState {
 
         // # create grid
 
+        gridSizeCalc();
         gridLayer = new FlxTypedGroup<StaticSprite>();
         noteHighlight = new StaticSprite(0,0).makeGraphic(gridSize, gridSize, 0xFFFFFFFF);
         add(gridLayer);
@@ -170,6 +172,9 @@ class ChartingState extends MusicBeatState {
         add(warningTxt);
     }
 
+    public inline function gridSizeCalc() 
+        gridSize = song.playLength < 5 ? defaultGridSize : Math.floor(defaultGridSize * (4 / song.playLength));
+
     public inline function pauseSong(){
         FlxG.sound.music.pause();
         vocals.pause();
@@ -183,7 +188,7 @@ class ChartingState extends MusicBeatState {
             createSecUI();
     }
 
-    // for changing zoom level
+    // for changing zoom level and/or changing amount of singing characters
     public function makeGrid(){
         var gridSprite:StaticSprite = new ChartUI_Grid(gridSize, gridSize, Note.keyCount * (song.playLength), Math.floor(16 * zooms[curZoom]), (curZoom + 1) % 2 + 3);
 
@@ -207,6 +212,8 @@ class ChartingState extends MusicBeatState {
 
         uiBG.x = camGR.width + camGR.x + 25;
         uiElements.x = uiBG.x + 10;
+        noteHighlight.setGraphicSize(gridSize);
+        noteHighlight.updateHitbox();
     }
 
     // # Keyboard input
@@ -625,7 +632,7 @@ class ChartingState extends MusicBeatState {
 
         var calcY:Float = secRef - curSec;
             camGR.y = calcY * zooms[curZoom] * 2 * -250;
-            camGR.y += 75;
+            camGR.y += 125;
         musicLine.y = calcY * gridLayer.members[0].height;
 
         super.update(elapsed);
@@ -863,10 +870,11 @@ class ChartingState extends MusicBeatState {
             makeGrid();
         }, '-');
         var playLenBox:ChartUI_InputBox = new ChartUI_InputBox(0, 550, 90, 30, Std.string(song.playLength), function(ch:String){
-            var val = CoolUtil.intBoundTo(Std.parseInt(ch), 1, CoolUtil.intBoundTo(song.characters.length, 1, 6));
+            var val = CoolUtil.intBoundTo(Std.parseInt(ch), 1, Math.max(song.characters.length, 1));
 
             song.playLength = val;
             
+            gridSizeCalc();
             changeSec(curSec);
             makeGrid();
         });

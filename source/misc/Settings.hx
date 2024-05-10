@@ -251,7 +251,7 @@ class InputString {
             case 187:
                 if(shifted){
                     if(literal) return '+';
-                    return 'EQUALS';
+                    return 'PLUS';
                 }
                 if(literal)
                     return '=';
@@ -261,27 +261,29 @@ class InputString {
             case 219:
                 if(shifted){
                     if(literal) return '{';
-                    return 'OPEN CURLY BRACKET';
+                    return 'OPEN BRACE';
                 }
                 if(literal)
                     return '[';
-                return 'OPEN SQUARE BRACKET';
+                return 'OPEN BRACE';
             case 221:
                 if(shifted){
                     if(literal) return '}';
-                    return 'CLOSED CURLY BRACKET';
+                    return 'CLOSED BRACE';
                 }
                 if(literal)
                     return ']';
-                return 'CLOSED SQUARE BRACKET';
-            case 186:
-                return ';';
+                return 'CLOSED BRACE';
             case 220:
                 return '\\';
             case 222:
-                if(shifted)
-                    return '"';
-                return "'";
+                if(shifted){
+                    if(literal) return '"';
+                    return "QUOTE";
+                }
+                if(literal)
+                    return "'";
+                return "APOSTROPHE";
             case 188:
                 if(shifted)
                     return '<';
@@ -312,6 +314,14 @@ class InputString {
                 return 'UP';
             case 39:
                 return 'RIGHT';
+            case 186:
+                if(shifted){
+                    if(literal) return ':';
+                    return 'COLON';
+                }
+                if(literal)
+                    return ';';
+                return 'SEMICOLON';
         }
 
         trace('Couldn\'t find the character');

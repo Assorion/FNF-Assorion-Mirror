@@ -1,12 +1,14 @@
-package ui;
+package misc;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.FlxG;
+import flixel.FlxBasic;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
-import flixel.FlxBasic;
-import flixel.FlxG;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import ui.NewTransition;
+import ui.MainMenuState;
 import gameplay.HealthIcon;
-import flixel.FlxObject;
 
 /*
     A helper class that others can inherit from.
@@ -100,7 +102,7 @@ class MenuTemplate extends MusicBeatState {
     }
 
     public function changeSelection(to:Int = 0){
-        FlxG.sound.play(Paths.lSound('menu/scrollMenu'));
+        FlxG.sound.play(Paths.lSound('ui/scrollMenu'));
 
         var loopNum = Math.floor(arrGroup.length / columns);
         curSel += to + loopNum;
@@ -140,7 +142,7 @@ class MenuTemplate extends MusicBeatState {
             return;
 
         MusicBeatState.changeState(new MainMenuState());
-        FlxG.sound.play(Paths.lSound('menu/cancelMenu'));
+        FlxG.sound.play(Paths.lSound('ui/cancelMenu'));
     }
 
     public function altChange(change:Int = 0){

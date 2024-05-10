@@ -6,7 +6,7 @@ import flixel.text.FlxText;
 import flixel.FlxG;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
-import misc.Alphabet;
+import misc.MenuTemplate;
 import gameplay.PauseSubState;
 
 using StringTools;

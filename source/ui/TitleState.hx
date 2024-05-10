@@ -1,23 +1,22 @@
 package ui;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup;
+import flixel.FlxSprite;
+import lime.utils.Assets;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxSound;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;
+import flixel.group.FlxGroup;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.system.FlxSound;
+import flixel.graphics.FlxGraphic;
 import openfl.events.KeyboardEvent;
-import lime.utils.Assets;
-import misc.Alphabet;
+import flixel.graphics.frames.FlxAtlasFrames;
 
 using StringTools;
 
@@ -127,7 +126,7 @@ class TitleState extends MusicBeatState
 		if(skippedIntro){
 			titleText.animation.play('press');
 			leaving = true;
-			FlxG.sound.play(Paths.lSound('menu/confirmMenu'));
+			FlxG.sound.play(Paths.lSound('ui/confirmMenu'));
 			postEvent(1, function() { 
 				MusicBeatState.changeState(new MainMenuState()); 
 			});

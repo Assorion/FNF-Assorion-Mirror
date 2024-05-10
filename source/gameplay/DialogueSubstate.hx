@@ -172,7 +172,7 @@ class DialogueSubstate extends MusicBeatSubstate {
 
             postEvent(prevTime, function(){
                 voicesText.text += chars[i];
-                FlxG.sound.play(Paths.lSound('menu/pixelText'));
+                FlxG.sound.play(Paths.lSound('ui/pixelText'));
             });
         }
     }
@@ -203,7 +203,7 @@ class DialogueSubstate extends MusicBeatSubstate {
 
         if(ev.keyCode.hardCheck(Binds.UI_ACCEPT) && boxSpr.alpha == 1){
             textSlide();
-            FlxG.sound.play(Paths.lSound('menu/clickText'));
+            FlxG.sound.play(Paths.lSound('ui/clickText'));
             return;
         }
 

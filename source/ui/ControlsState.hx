@@ -2,9 +2,9 @@ package ui;
 
 import flixel.FlxG;
 import flixel.util.FlxColor;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxTween;
-import misc.Alphabet;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import misc.MenuTemplate;
 
 /*
     Just a modified -
@@ -43,7 +43,7 @@ class ControlsState extends MenuTemplate {
 		clearEverything();
 
 		for(i in 0...controlList.length){
-			pushObject(new Alphabet(0, (60 * i) + 30, controlList[i], true));
+			pushObject(new Alphabet(0, MenuTemplate.yOffset+20, controlList[i], true));
 
             var str:String = '';
             var s2r:String = '';
@@ -54,8 +54,8 @@ class ControlsState extends MenuTemplate {
                 s2r = misc.InputString.getKeyNameFromString(val[1], false, false);
             }
 
-			pushObject(new Alphabet(0, (60 * i) + 30, str, true));
-			pushObject(new Alphabet(0, (60 * i) + 30, s2r, true));
+			pushObject(new Alphabet(0, MenuTemplate.yOffset+20, str, true));
+			pushObject(new Alphabet(0, MenuTemplate.yOffset+20, s2r, true));
 		}
 
 		changeSelection();
@@ -64,7 +64,9 @@ class ControlsState extends MenuTemplate {
     override function update(elasped:Float){
         super.update(elasped);
 
-        if(!rebinding || !FlxG.keys.justPressed.ANY) return;
+        if(!rebinding || !FlxG.keys.justPressed.ANY) 
+            return;
+
         if(dontCancel){
             dontCancel = false;
             return;
