@@ -122,7 +122,14 @@ class PauseSubState extends MusicBeatSubstate
 		function(t:FlxTween){
 			pauseMusic.stop();
 			pauseMusic.destroy();
+			pState.paused = false;
 			close();
+
+			if(FlxG.sound.music.time > 0){
+				pState.vocals.play();
+				FlxG.sound.music.play();
+				FlxG.sound.music.time = pState.vocals.time = Song.Position + Settings.pr.audio_offset;
+			}
 		}});
 	}
 

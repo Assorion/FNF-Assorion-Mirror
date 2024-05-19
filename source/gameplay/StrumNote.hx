@@ -37,17 +37,15 @@ class StrumNote extends FlxSprite {
     override function update(elapsed:Float){
         super.update(elapsed);
 
-        if(pressTime > 0){
-            pressTime -= elapsed;
+        if(curState == 0) 
             return;
-        }
-        if(pressTime == 0) return;
 
-        pressTime = 0;
-        if(!isPlayer || Settings.pr.botplay)
+        pressTime -= elapsed;
+        if(pressTime <= 0 && (!isPlayer || Settings.pr.botplay))
             playAnim();
     }
 
+    // This 'state' variable is used simply cause string checks are more expensive than integer checks.
     public function playAnim(state:Int = 0){
         var str = ['static', 'pressed', 'confirm'][state];
 

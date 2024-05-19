@@ -49,7 +49,7 @@ class PlayState extends MusicBeatState
 	public var unspawnNotes:Array<Note> = [];
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
-	public var playerStrums:FlxTypedGroup<StrumNote>;
+	public var playerStrums:Array<StrumNote> = [];
 	public var notes:FlxTypedGroup<Note>;
 
 	// health now goes from 0 - 100, instead of 0 - 2
@@ -121,12 +121,12 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.stop();
 
 		// # BG & UI setup
+		playerPos = SONG.activePlayer;
 		handleStage();
 
 		strumLineY = Settings.pr.downscroll ? FlxG.height - 150 : 50;
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
-		playerStrums   = new FlxTypedGroup<StrumNote>();
-		notes          = new FlxTypedGroup<Note>();
+		notes = new FlxTypedGroup<Note>();
 		add(strumLineNotes);
 		add(notes);
 
@@ -222,8 +222,6 @@ class PlayState extends MusicBeatState
 		
 		for(i in 0...SONG.characters.length)
 			add(allCharacters[SONG.renderBackwards ? i : (SONG.characters.length - 1) - i]);
-
-		playerPos = SONG.activePlayer;
 	}
 
 	// put things like gf and bf positions here.
@@ -279,6 +277,7 @@ class PlayState extends MusicBeatState
 						unspawnNotes.push(susNote);
 					}
 			}
+
 		unspawnNotes.sort((A,B) -> Std.int(A.strumTime - B.strumTime));
 	}
 
@@ -290,7 +289,7 @@ class PlayState extends MusicBeatState
 
 		strumLineNotes.add(babyArrow);
 		if(playable) 
-			playerStrums.add(babyArrow);
+			playerStrums.push(babyArrow);
 	}
 
 	function startCountdown():Void {
@@ -345,25 +344,6 @@ class PlayState extends MusicBeatState
 		}
 		for(i in 0...5)
 			postEvent(((Song.Crochet * (i + 1)) - Settings.pr.audio_offset) * 0.001, countTickFunc);
-	}
-
-	override function closeSubState() if(seenCutscene) { // To stop transistions from messing up cutscenes
-		super.closeSubState();
-
-		if(!paused) return;
-
-		paused = false;
-
-		for(i in 0...events.length)
-			events[i].endTime += MusicBeatState.curTime() - lastOpenTime;
-		lastOpenTime = 0;
-
-		if(FlxG.sound.music.time == 0) 
-			return;
-
-		vocals.play();
-		FlxG.sound.music.play();
-		FlxG.sound.music.time = vocals.time = Song.Position + Settings.pr.audio_offset;
 	}
 
 	var noteCount:Int = 0;
@@ -452,7 +432,7 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		playerStrums.members[note.noteData].playAnim(2);
+		playerStrums[note.noteData].playAnim(2);
 		allCharacters[playerPos].playAnim('sing' + sDir[note.noteData]);
 		vocals.volume = 1;
 
@@ -487,7 +467,7 @@ class PlayState extends MusicBeatState
 		// Assorions "Fast" input system
 		var nkey = ev.keyCode.deepCheck(keysArray);
 		if(nkey >= 0 && !keysPressed[nkey] && !Settings.pr.botplay){
-			var strumRef = playerStrums.members[nkey];
+			var strumRef = playerStrums[nkey];
 			keysPressed[nkey] = true;
 			
 			if(hittableNotes[nkey] != null){
@@ -517,11 +497,11 @@ class PlayState extends MusicBeatState
 	}
 	override public function keyRel(ev:KeyboardEvent) {
 		var nkey = ev.keyCode.deepCheck(keysArray);
-		if (nkey == -1) 
+		if (nkey == -1 || paused) 
 			return;
 
 		keysPressed[nkey] = false;
-		playerStrums.members[nkey].playAnim();
+		playerStrums[nkey].playAnim();
 	}
 
 	private inline function scrollNotes(daNote:Note) {
