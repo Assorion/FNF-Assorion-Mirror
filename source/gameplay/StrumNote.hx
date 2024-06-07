@@ -37,7 +37,7 @@ class StrumNote extends FlxSprite {
     override function update(elapsed:Float){
         super.update(elapsed);
 
-        if(curState == 0) 
+        if(pressTime < 0) 
             return;
 
         pressTime -= elapsed;

@@ -343,7 +343,7 @@ class PlayState extends MusicBeatState
 			swagCounter++;
 		}
 		for(i in 0...5)
-			postEvent(((Song.Crochet * (i + 1)) - Settings.pr.audio_offset) * 0.001, countTickFunc);
+			postEvent(((Song.Crochet * (i + 1)) + Settings.pr.audio_offset) * 0.001, countTickFunc);
 	}
 
 	var noteCount:Int = 0;

@@ -71,7 +71,7 @@ class OffsetWizard extends MusicBeatState {
         if(curBeat & 0x01 == 0)
             songTime = curStep;
 
-        rootBeat = Math.round(curBeat / 2);
+        rootBeat = Math.round(curBeat * 0.5);
     }
 
     override public function keyHit(ev:KeyboardEvent){
@@ -80,7 +80,8 @@ class OffsetWizard extends MusicBeatState {
             MusicBeatState.changeState(new OptionsState());
 
             Settings.pr.audio_offset = prevOffset;
-            if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) return;
+            if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) 
+                return;
 
             Settings.pr.audio_offset = Math.round(curOffset);
             Settings.flush();
