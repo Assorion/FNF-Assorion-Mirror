@@ -355,7 +355,7 @@ class PlayState extends MusicBeatState
 		if(seenCutscene)
 			stepTime += (elapsed * 1000) * Song.Division;
 
-		if (unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - stepTime < 32)
+		if(unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - stepTime < 32)
 			notes.add(unspawnNotes[noteCount++]);
 
 		notes.forEachAlive(scrollNotes);
