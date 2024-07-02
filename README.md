@@ -4,9 +4,9 @@
 
 -------------------------------------------------------------
  <div align="center">
- <a href="#"><img src="https://img.shields.io/github/repo-size/Assorion/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/></a>
- <a href="https://github.com/Assorion/FNF-Assorion-Engine/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/m/Assorion/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/</a> 
- <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/github/v/release/Assorion/FNF-Assorion-Engine?style=for-the-badge&color=06b59c"/></a>
+ <a href="#"><img src="https://img.shields.io/gitea/stars/Assorion/FNF-Assorion-Engine?gitea_url=https%3A%2F%2Fcodeberg.org&style=for-the-badge&logoSize=4&color=06b59c"/></a>
+ <img src="https://img.shields.io/gitea/last-commit/Assorion/FNF-Assorion-Engine?gitea_url=https%3A%2F%2Fcodeberg.org&style=for-the-badge&color=06b59c"/</a> 
+ <img src="https://img.shields.io/gitea/v/release/Assorion/FNF-Assorion-Engine?gitea_url=https%3A%2F%2Fcodeberg.org&style=for-the-badge&color=06b59c"/></a>
  </div>
  <div align="center">
  <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
