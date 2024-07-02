@@ -54,7 +54,6 @@
 	<haxedef name="no-debug" unless="debug"/>
 
 	<!-- Have to admit, took this from psych engine. I didn't really know how to get icons working on linux -->
-	<assets path="art/icon.png" rename="assets/images/icon.png" if="linux"/>
-	
+	<assets path="art/icon.png" rename="assets/images/icon.png" if="linux"/>	
 	<icon path="art/icon.png" />
 </project>
