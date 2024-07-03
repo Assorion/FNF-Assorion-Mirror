@@ -1,9 +1,6 @@
-name: Linux 
-
 # You can setup workflows to run automatically on specific branches.
 # Read the HTML workflow to understand that.
 on:
-  workflow_dispatch:
 
 jobs:
   Linux-Build:
