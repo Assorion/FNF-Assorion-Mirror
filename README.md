@@ -1,6 +1,6 @@
 # Friday Night Funkin' Assorion Engine!
 
-![LOGO](assorion.png)
+<img src="https://codeberg.org/Assorion/FNF-Assorion-Engine/raw/branch/main/art/assorion-engine.png"/>
 
 -------------------------------------------------------------
  <div align="center">
