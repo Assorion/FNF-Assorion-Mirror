@@ -1,0 +1,56 @@
+# STILL UNTESTED, THE MAC BUILD WILL HAVE PROBLEMS! 
+
+name: MacOS 
+
+# You can setup workflows to run automatically on specific branches.
+# Read the HTML workflow to understand that.
+on:
+  workflow_dispatch:
+
+jobs:
+
+# This is not required in a workflow file.
+# Only used to provide descriptions after the workflow is completed.
+  MacOS-Info:
+    runs-on: ubuntu-latest
+    steps:
+    - name: description
+      run: |
+        SUMMARY=$'## 🖥️  | MacOS Builds \nMacOS Builds have never been tested due to lack of owning a MacOS Machine. Use at your own risk as there will inevitably exist incompatibilities due to MacOS changing all the time. \nPlease do **NOT** report bugs on MacOS builds, since it will be impossible for us to fix them. \n\nIf there\'s a problem and someone owns a MacOS device to fix it, please make a Pull Request.'
+        echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
+
+
+  MacOS-Build:
+    runs-on: macOS-latest
+    steps:
+    # Installing Haxe.
+      - uses: actions/checkout@main
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.3.2
+      
+    # Obtaining Haxe Libraries for compilation.       
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib git hxcpp https://github.com/Assorion/HXCPP_O3
+          haxelib install lime 7.9.0
+          haxelib install openfl 9.2.1
+          haxelib install flixel 5.2.2 
+          haxelib install flixel-ui 2.5.0
+          haxelib install flixel-addons 3.0.2
+
+     # Random Github BS as always, just keep this here.
+      - name: Version Tag
+        run: echo "${{github.run_id}}" > VERSION
+
+     # Compilation of the source code.
+      - name: Compilation
+        run:  haxelib run lime build mac -release --app-version="4.0.0-${{ github.run_id}}"
+
+     # Provide the Build file for download.
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: MacOS-Build
+          path: 'export/release/macos/bin'

@@ -1,0 +1,59 @@
+# THE HTML5 BUILD IS CURRENTLY UNDERGOING TESTING. IMPROVEMENT WILL BE MADE.
+
+name: HTML5 (Web Builds) 
+
+# Allows a workflow to be triggered when a commit is made. 
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  
+  workflow_dispatch:
+
+
+jobs:
+
+# This is not required in a workflow file.
+# Only used to provide descriptions after the workflow is completed.
+  HTML5-INFO:
+    runs-on: ubuntu-latest
+    steps:
+    - name: description
+      run: |
+        SUMMARY=$'# HTML5 (Website) Builds\n The HTML5 (Website) Builds have not been thoroughly tested and will probably contain issues/bugs\n \n### If any bugs are found, Make an issue report in github\n'
+        echo "$SUMMARY" >> $GITHUB_STEP_SUMMARY
+
+  HTML5-Build:
+    runs-on: ubuntu-latest
+    steps:
+    # Installing Haxe.
+      - uses: actions/checkout@main
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.3.2
+      
+    # Obtaining Haxe Libraries for compilation.      
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install lime 8.1.0
+          haxelib install openfl 9.2.1
+          haxelib install flixel 5.2.2 
+          haxelib install flixel-ui 2.5.0
+          haxelib install flixel-addons 3.0.2
+
+    # Random Github BS as always, just keep this here.
+      - name: Version Tag
+        run: echo "${{github.run_id}}" > VERSION
+
+    # Compilation of the source code.
+      - name: Compilation
+        run: haxelib run lime build html5 -release
+
+    # Provide the Build file for download.
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: HTML5-Build
+          path: 'export/release/html5/bin'
