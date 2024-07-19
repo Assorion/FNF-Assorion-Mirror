@@ -21,7 +21,7 @@
 </div>
 <div align="center">
  
-┃ [**`• What is Assorion?`**](#--what-is-assorion-engine) ┃ [**`• Important Notes`**](#%EF%B8%8F--important-notesroadmap) ┃ [**`• Compiling`**](#--compiling) ┃ [**`• Min Reqs`**](#--minimum-requirements) ┃ <a href="https://assorion.github.io/wiki/">**`• Wiki (WIP)`**</a> ┃ <a href="https://discord.gg/nbhWWxKxTe">**`• Discord`**</a> ┃
+┃ [**`• What is Assorion?`**](#what-is-assorion-engine) ┃ [**`• Important Notes`**](#%EF%B8%8Fimportant-notesroadmap) ┃ [**`• Compiling`**](#compiling) ┃ [**`• Min Reqs`**](#minimum-requirements) ┃ <a href="https://assorion.github.io/wiki/">**`• Wiki (WIP)`**</a> ┃ <a href="https://discord.gg/nbhWWxKxTe">**`• Discord`**</a> ┃
 
 </div>
 
@@ -86,7 +86,7 @@ Until the **primary Assorion Engine repository** is finalized, the following bra
 
 ## 🖼️ | Screenshots
 
-Take a look at <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/.github/Screenshots.md">`art/screenshots.md`</a>. 
+Take a look at <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/.github/Screenshots.md">`art/screenshots.md`</a>. 
 
 # 🛠 | Compiling
 
@@ -100,7 +100,7 @@ Take a look at <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/.githu
 - Install [libraries](#libraries) below
 - Run `haxelib run lime setup` in CMD
 - Download and extract the <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code
-- Setup <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/.github/MinGW-Setup.md">MinGW-w64</a> and make sure the PATH is set correctly
+- Setup <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/.github/MinGW-Setup.md">MinGW-w64</a> and make sure the PATH is set correctly
 - Test to make sure both the `gcc` and `g++` commands work in CMD
 - Run `lime test windows -D HXCPP_MINGW` in CMD. Make sure it's in the project root folder, not the source folder
 
@@ -123,7 +123,7 @@ Run `haxelib install <library name>` replacing `<library name>` with these libra
 - `flixel-ui`
 
 #### **If you're confused:**  
-Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/.github/MinGW-Setup.md">**`MinGW-w64`**</a> unless the compiler errors out.  
+Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. Do **NOT** use **`Visual Studio's Clang-Compiler`**, please use <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/.github/MinGW-Setup.md">**`MinGW-w64`**</a> unless the compiler errors out.  
 Remember to install the [library versions](#libraries) listed above.
 
 ## 💻 | Minimum Requirements
@@ -151,6 +151,6 @@ These should be the lowest minimum requirements to run the engine:
 # ⚠️ | License
 **<a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/LICENSE">GPL-3.0 Public License</a>, Version 3, 29 June 2007**
 
-Under the terms of the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/LICENSE">GPL-3.0 Public License</a>, Assorion Engine will be free and open source and anyone using this project thereafter acknowledges being bound under the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/LICENSE">GPL-3.0 Public License's</a> conditions, and making their variant of the project open source.
+Under the terms of the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/LICENSE">GPL-3.0 Public License</a>, Assorion Engine will be free and open source and anyone using this project thereafter acknowledges being bound under the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/LICENSE">GPL-3.0 Public License's</a> conditions, and making their variant of the project open source.
 
 Project authored and maintained by <a href="https://codeberg.org/Legendary-Candice-Joe">***Legendary Candice Joe***</a>.
