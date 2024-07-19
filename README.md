@@ -21,7 +21,7 @@
 </div>
 <div align="center">
  
-┃ [**`• What is Assorion?`**](#what-is-assorion-engine) ┃ [**`• Important Notes`**](#%EF%B8%8Fimportant-notesroadmap) ┃ [**`• Compiling`**](#compiling) ┃ [**`• Min Reqs`**](#minimum-requirements) ┃ <a href="https://assorion.github.io/wiki/">**`• Wiki (WIP)`**</a> ┃ <a href="https://discord.gg/nbhWWxKxTe">**`• Discord`**</a> ┃
+┃ [**`• What is Assorion?`**](#what-is-assorion-engine) ┃ [**`• Important Notes`**](#important-notes-roadmap) ┃ [**`• Compiling`**](#compiling) ┃ [**`• Min Reqs`**](#minimum-requirements) ┃ <a href="https://assorion.github.io/wiki/">**`• Wiki (WIP)`**</a> ┃ <a href="https://discord.gg/nbhWWxKxTe">**`• Discord`**</a> ┃
 
 </div>
 
@@ -149,7 +149,7 @@ These should be the lowest minimum requirements to run the engine:
 
 
 # ⚠️ | License
-**<a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/LICENSE">GPL-3.0 Public License</a>, Version 3, 29 June 2007**
+**<a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/LICENSE">GPL-3.0 Public License</a>, Version 3, 29 June 2007**
 
 Under the terms of the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/LICENSE">GPL-3.0 Public License</a>, Assorion Engine will be free and open source and anyone using this project thereafter acknowledges being bound under the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/LICENSE">GPL-3.0 Public License's</a> conditions, and making their variant of the project open source.
 
