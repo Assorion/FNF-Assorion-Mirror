@@ -1,4 +1,4 @@
-package misc;
+package backend;
 
 using StringTools;
 
@@ -8,7 +8,7 @@ class Highscore
 	private static var songScores:Map<String, Int>;
 
 	public static inline function loadScores()
-		songScores = Settings.gSave.data.songScores != null ? Settings.gSave.data.songScores : new Map<String, Int>();
+		songScores = SettingsManager.gSave.data.songScores != null ? SettingsManager.gSave.data.songScores : new Map<String, Int>();
 
 	// just to make this look cleaner.
 	public static inline function scoreExists(s:String):Int
@@ -24,8 +24,8 @@ class Highscore
 			return;
 
 		songScores.set(songNaem, score);
-		Settings.gSave.data.songScores = songScores;
-		Settings.flush();
+		SettingsManager.gSave.data.songScores = songScores;
+		SettingsManager.flush();
 	}
 
 	public static function getScore(song:String, diff:Int):Int

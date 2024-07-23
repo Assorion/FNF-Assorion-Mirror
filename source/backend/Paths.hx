@@ -1,4 +1,4 @@
-package misc;
+package backend;
 
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFramesCollection;
@@ -19,9 +19,9 @@ class Paths {
 
     // btw the 'l' in every single function was meant to stand for "load".
     
-    public static var lSparrow:String->?String->FlxFramesCollection = ncLS;
-    public static var lText   :String->?String->String              = ncLT;
-    public static var lLines  :String->?String->Array<String>       = ncLL;
+    public static var lSparrow:String->?String->FlxFramesCollection = nonCachedLSparrow;
+    public static var lText   :String->?String->String              = nonCachedLText;
+    public static var lLines  :String->?String->Array<String>       = nonCachedLLines;
 
     public static inline function lImage(path:String):String
     {
@@ -46,7 +46,7 @@ class Paths {
     */
 
     public static inline function clearCache(){
-        if(Settings.pr.default_persist || Settings.pr.launch_sprites) 
+        if(Settings.default_persist || Settings.pre_caching) 
             return;
 
 		Assets.cache.clear();
@@ -56,15 +56,15 @@ class Paths {
     }
 
     public static function switchCacheOptions(on:Bool){
-        lSparrow = cLS;
-        lText    = cLT;
-        lLines   = cLL;
+        lSparrow = cachedLSparrow;
+        lText    = cachedLText;
+        lLines   = cachedLLines;
         if(on)
             return;
 
-        lSparrow = ncLS;
-        lText    = ncLT;
-        lLines   = ncLL;
+        lSparrow = nonCachedLSparrow;
+        lText    = nonCachedLText;
+        lLines   = nonCachedLLines;
     }
 
     // To prevent blank spaces from messing up dialogue, freeplay list, stage list, etc.
@@ -79,7 +79,9 @@ class Paths {
         return input;
     }
 
-    private static function cLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
+    // These functions should NOT be called directly. Everything below here is not supposed to be called by a reference at the top.
+
+    private static function cachedLSparrow(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
     {
         var tmp:FlxFramesCollection = cachedFrames.get(path);
 
@@ -93,7 +95,7 @@ class Paths {
 
         return tmp;
     }
-    private static function cLT(path:String, ?prePath:String = 'assets/songs-data/'):String
+    private static function cachedLText(path:String, ?prePath:String = 'assets/songs-data/'):String
     {
         var tmp:Array<String> = cachedLines.get(path);
 
@@ -105,7 +107,7 @@ class Paths {
 
         return tmp[0];
     }
-    private static function cLL(path:String, ?ext:String = 'txt'):Array<String>
+    private static function cachedLLines(path:String, ?ext:String = 'txt'):Array<String>
     {
         var tmp:Array<String> = cachedLines.get(path);
 
@@ -118,14 +120,14 @@ class Paths {
         return tmp;
     }
 
-    ///////////////////////
-
-    private static function ncLL(path:String, ?ext:String = 'txt'):Array<String>
+    private static function nonCachedLLines(path:String, ?ext:String = 'txt'):Array<String>
         return removeBlackSpace(Paths.lText('$path.$ext').replace('\r', '').split('\n'));
 
-    private static function ncLS(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
+    private static function nonCachedLSparrow(path:String, ?prePath:String = 'assets/images/'):FlxFramesCollection
         return FlxAtlasFrames.fromSparrow('$prePath$path.png', '$prePath$path.xml');
 
-    private static function ncLT(path:String, ?prePath:String = 'assets/songs-data/'):String
+    private static function nonCachedLText(path:String, ?prePath:String = 'assets/songs-data/'):String
         return Assets.getText(prePath + path).replace('\r', '');
+
+    /////////////////////////////////////////////////////////////
 }

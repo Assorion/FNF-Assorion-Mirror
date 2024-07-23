@@ -1,4 +1,4 @@
-package ui;
+package frontend;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -65,7 +65,7 @@ class AlphaCharacter extends FlxSprite
 		frames = tex;
 		letter = char;
 
-		antialiasing = Settings.pr.antialiasing;
+		antialiasing = Settings.antialiasing;
 		bolded ? createBold() : createLetter();
 	}
 

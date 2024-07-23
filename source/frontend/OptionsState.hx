@@ -1,4 +1,4 @@
-package ui;
+package frontend;
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -6,13 +6,14 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import misc.MenuTemplate;
+import backend.MenuTemplate;
+import backend.NewTransition;
 import gameplay.HealthIcon;
 
 /*
 	To add an option.
 
-	1. Add it to misc.Settings, and add a default to the default_settings.json file
+	1. Add it to backend.Settings, and add a default to the default_settings.json file
 	2. Add the option name to the optionSub (each line representing a category in options)
 	3. Add the description for your option
 	4. If the option is an integer, add it to altChange function
@@ -24,7 +25,7 @@ class OptionsState extends MenuTemplate
 {
 	static var optionSub:Array<Array<String>> = [
 		['basic', 'gameplay', 'visuals', 'controls', 'changelog'],
-		['start_fullscreen', 'start_volume', 'skip_logo', 'default_persist', #if desktop 'launch_sprites' #end ],
+		['start_fullscreen', 'start_volume', 'skip_splash', 'default_persist', #if desktop 'pre_caching' #end ],
 		['audio_offset', 'input_offset', 'downscroll', 'ghost_tapping', 'botplay'],
 		['antialiasing', #if desktop 'framerate', #end 'show_hud', 'useful_info']
 	];
@@ -71,8 +72,12 @@ class OptionsState extends MenuTemplate
 	{
 		columns = 1;
 		addBG(0xFFea71fd);
-		menuMusicCheck();
 		super.create();
+
+		if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
+            Song.musicSet(Paths.menuTempo);
+            FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
+        }
 
 		bottomBlack = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
 		bottomBlack.alpha = 0.6;
@@ -106,7 +111,7 @@ class OptionsState extends MenuTemplate
 
 			// reflection. it's slow and not good. But I need it to get a variable from a string name.
 			var optionStr:String = '';
-			var val:Dynamic = Reflect.field(Settings.pr, optionSub[curSub][i]);
+			var val:Dynamic = Reflect.field(Settings, optionSub[curSub][i]);
 
 			optionStr = Std.string(val);
 			if(Std.is(val, Bool))
@@ -127,7 +132,7 @@ class OptionsState extends MenuTemplate
 			return;
 		}
 
-		Settings.flush();
+		SettingsManager.flush();
 		super.exitFunc();
 	}
 
@@ -141,22 +146,22 @@ class OptionsState extends MenuTemplate
 		var atg:Alphabet = cast arrGroup[(curSel * 2) + 1].obj;
 		switch(optionSub[curSub][curSel]){
 			case 'start_volume':
-				Settings.pr.start_volume = CoolUtil.intBoundTo(Settings.pr.start_volume + (ch * 10), 0, 100);
-				atg.text = Std.string(Settings.pr.start_volume);
+				Settings.start_volume = CoolUtil.intBoundTo(Settings.start_volume + (ch * 10), 0, 100);
+				atg.text = Std.string(Settings.start_volume);
 
 			// gameplay.
 			case 'audio_offset':
-				Settings.pr.audio_offset = CoolUtil.intBoundTo(Settings.pr.audio_offset + ch, 0, 300);
-				atg.text = Std.string(Settings.pr.audio_offset);
+				Settings.audio_offset = CoolUtil.intBoundTo(Settings.audio_offset + ch, 0, 300);
+				atg.text = Std.string(Settings.audio_offset);
 			case 'input_offset':
-				Settings.pr.input_offset = CoolUtil.intBoundTo(Settings.pr.input_offset + ch, 0, 300);
-				atg.text = Std.string(Settings.pr.input_offset);
+				Settings.input_offset = CoolUtil.intBoundTo(Settings.input_offset + ch, 0, 300);
+				atg.text = Std.string(Settings.input_offset);
 
 			// visuals
 			case 'framerate':
-				Settings.pr.framerate = Settings.framerateClamp(Settings.pr.framerate + (ch * 10));
-				atg.text = Std.string(Settings.pr.framerate);
-				Settings.apply();
+				Settings.framerate = SettingsManager.framerateClamp(Settings.framerate + (ch * 10));
+				atg.text = Std.string(Settings.framerate);
+				SettingsManager.apply();
 		}
 		changeSelection(0);
 	}
@@ -189,38 +194,37 @@ class OptionsState extends MenuTemplate
 
 			// basic
 			case 'start_fullscreen':
-				Settings.pr.start_fullscreen = !Settings.pr.start_fullscreen;
-			case 'skip_logo':
-				Settings.pr.skip_logo = !Settings.pr.skip_logo;
+				Settings.start_fullscreen = !Settings.start_fullscreen;
+			case 'skip_splash':
+				Settings.skip_splash = !Settings.skip_splash;
 			case 'default_persist':
-				Settings.pr.default_persist = !Settings.pr.default_persist;
-				if(Settings.pr.default_persist) 
-					CoolUtil.newCanvas(true);
-
-				Settings.apply();
-			case 'launch_sprites':
-				Settings.pr.launch_sprites = !Settings.pr.launch_sprites;
+				Settings.default_persist = !Settings.default_persist;
+				SettingsManager.apply();
+			case 'pre_caching':
+				Settings.pre_caching = !Settings.pre_caching;
 
 			// gameplay
 			case 'audio_offset':
-				if(NewTransition.skip()) return;
+				if(NewTransition.skip()) 
+					return;
+
 				MusicBeatState.changeState(new OffsetWizard());
 				return;
 			case 'downscroll':
-				Settings.pr.downscroll = !Settings.pr.downscroll;
+				Settings.downscroll = !Settings.downscroll;
 			case 'botplay':
-				Settings.pr.botplay = !Settings.pr.botplay;
+				Settings.botplay = !Settings.botplay;
 			case 'ghost_tapping':
-				Settings.pr.ghost_tapping = !Settings.pr.ghost_tapping;
+				Settings.ghost_tapping = !Settings.ghost_tapping;
 
 			// visuals
 			case 'useful_info':
-				Settings.pr.useful_info = !Settings.pr.useful_info;
-				Settings.apply();
+				Settings.useful_info = !Settings.useful_info;
+				SettingsManager.apply();
 			case 'antialiasing':
-				Settings.pr.antialiasing = !Settings.pr.antialiasing;
+				Settings.antialiasing = !Settings.antialiasing;
 			case 'show_hud':
-				Settings.pr.show_hud = !Settings.pr.show_hud;
+				Settings.show_hud = !Settings.show_hud;
 		}
 		createNewList(true);
 	}

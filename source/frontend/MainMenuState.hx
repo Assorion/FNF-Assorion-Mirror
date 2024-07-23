@@ -1,4 +1,4 @@
-package ui;
+package frontend;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -11,6 +11,7 @@ import flixel.util.FlxColor;
 import lime.app.Application;
 import openfl.events.KeyboardEvent;
 import flixel.input.keyboard.FlxKey;
+import backend.NewTransition;
 
 using StringTools;
 
@@ -58,7 +59,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.screenCenter();
 			menuItem.scrollFactor.set();
 			menuItem.y += (i - Math.floor(optionList.length / 2) + (optionList.length & 0x01 == 0 ? 0.5 : 0)) * 160;
-			menuItem.antialiasing = Settings.pr.antialiasing;
+			menuItem.antialiasing = Settings.antialiasing;
 
 			menuItems.add(menuItem);
 		}
@@ -80,16 +81,16 @@ class MainMenuState extends MusicBeatState
 	// Camera fix across framerates (Not needed for newer flixel versions!)
 
 	#if (flixel < "5.4.0")
-	override public function stepHit(){
-		super.stepHit();
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * Main.framerateDivision;
+	override function update(elapsed:Float){
+		super.update(elapsed);
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, elapsed * 2)) * (60 / Settings.framerate);
 	}
 	#end
 
 	var twns:Array<FlxTween> = [];
 	var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
-		var k = ev.keyCode.deepCheck([Binds.UI_U, Binds.UI_D, Binds.UI_ACCEPT, Binds.UI_BACK ]);
+		var k = ev.keyCode.deepCheck([Binds.UI_UP, Binds.UI_DOWN, Binds.UI_ACCEPT, Binds.UI_BACK ]);
 
 		switch(k){
 			case 0, 1:

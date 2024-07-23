@@ -1,4 +1,4 @@
-package ui;
+package frontend;
 
 import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxSpriteGroup;
@@ -6,7 +6,7 @@ import flixel.FlxSprite;
 import flixel.FlxG;
 import openfl.display.BitmapData;
 import flixel.util.FlxColor;
-import ui.ChartingState;
+import frontend.ChartingState;
 import openfl.geom.Rectangle;
 import flixel.text.FlxText;
 import gameplay.Note;
@@ -243,7 +243,7 @@ class ChartUI_InputBox extends ChartUI_Generic {
             return;
         }
 
-        var tmpChar:String = misc.InputString.getKeyNameFromString( char, true, true ).toLowerCase();
+        var tmpChar:String = CoolUtil.getKeyNameFromString( char, true, true ).toLowerCase();
         if(!allowedCharacters.contains(tmpChar)) return;
 
         uneditedText += tmpChar;

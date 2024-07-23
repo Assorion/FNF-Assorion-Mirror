@@ -1,4 +1,4 @@
-package misc;
+package backend;
 
 import flixel.FlxG;
 import flixel.FlxBasic;
@@ -6,8 +6,8 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import ui.NewTransition;
-import ui.MainMenuState;
+import backend.NewTransition;
+import frontend.MainMenuState;
 import gameplay.HealthIcon;
 
 /*
@@ -57,9 +57,10 @@ class MenuTemplate extends MusicBeatState {
 
         super.create();
 
-        postEvent(0, function(){
-            changeSelection(0);
-        });
+        if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
+            Song.musicSet(Paths.menuTempo);
+            FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
+        }
     }
 
     public inline function pushObject(spr:FlxBasic){
@@ -81,15 +82,6 @@ class MenuTemplate extends MusicBeatState {
         arrIcons.add(icn);
         icn.scale.set(0.85, 0.85);
     }
-
-    // Camera fix
-
-    #if (flixel < "5.4.0")
-    public override function stepHit(){
-        super.stepHit();
-        FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * Main.framerateDivision;
-    }
-    #end
 
     // Modified add function
 
@@ -157,7 +149,7 @@ class MenuTemplate extends MusicBeatState {
     // # Input code
 
     override function keyHit(ev:KeyboardEvent){
-        var button = ev.keyCode.deepCheck([Binds.UI_U, Binds.UI_D, Binds.UI_L, Binds.UI_R, Binds.UI_BACK]);
+        var button = ev.keyCode.deepCheck([Binds.UI_UP, Binds.UI_DOWN, Binds.UI_LEFT, Binds.UI_RIGHT, Binds.UI_BACK]);
 
         if(button == -1) 
             return;
@@ -173,6 +165,12 @@ class MenuTemplate extends MusicBeatState {
     }
 
     override function update(elapsed:Float){
+        // Camera fix for older Flixel
+
+        #if (flixel < "5.4.0")
+        FlxG.camera.followLerp = (1 - Math.pow(0.5, elapsed * 2)) * (60 / Settings.framerate);
+        #end
+
         var lerpVal = Math.pow(0.5, elapsed * 15);
 
         for(i in 0...Math.floor(arrGroup.length / columns)){

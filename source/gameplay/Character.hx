@@ -38,7 +38,9 @@ class Character extends FlxSprite
 	{
 		super(x, y);
 
-		antialiasing  = Settings.pr.antialiasing;
+		Song.beatHooks.push(dance);
+
+		antialiasing  = Settings.antialiasing;
 		animOffsets   = new Map<String, Array<Int>>();
 		curCharacter  = character;
 		this.isPlayer = isPlayer;
@@ -76,10 +78,14 @@ class Character extends FlxSprite
 	private var danced:Bool = false;
 	public function dance()
 	{
+		if(Song.currentBeat % (Math.floor(Song.BPM / PlayState.beatHalfingTime) + 1) != 0)
+			return;
+
 		if(!idleNextBeat) {
 			idleNextBeat = true;
 			return;
 		}
+
 		if(!leftRightIdle){
 			playAnim('idle', true);
 			return;

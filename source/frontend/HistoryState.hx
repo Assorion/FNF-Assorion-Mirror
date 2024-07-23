@@ -1,4 +1,4 @@
-package ui;
+package frontend;
 
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
@@ -6,7 +6,8 @@ import flixel.text.FlxText;
 import flixel.FlxG;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
-import misc.MenuTemplate;
+import backend.MenuTemplate;
+import backend.NewTransition;
 import gameplay.PauseSubState;
 
 using StringTools;
@@ -46,7 +47,7 @@ class HistoryState extends MenuTemplate {
 
         // literally stolen from freeplay.
         var bottomBlack:StaticSprite = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, 0xFF000000);
-        var str='Press ${misc.InputString.getKeyNameFromString(Binds.UI_ACCEPT[0], true, false)} to see the entry. / ${misc.InputString.getKeyNameFromString(Binds.UI_BACK[0], true, false)} to go back.';
+        var str='Press ${CoolUtil.getKeyNameFromString(Binds.UI_ACCEPT[0], true, false)} to see the entry. / ${CoolUtil.getKeyNameFromString(Binds.UI_BACK[0], true, false)} to go back.';
 		var descText = new FlxText(5, FlxG.height - 25, 0, str, 20);
 
 		descText.setFormat('assets/fonts/vcr.ttf', 20, 0xFFFFFF, LEFT);
@@ -54,6 +55,8 @@ class HistoryState extends MenuTemplate {
 
         sAdd(bottomBlack);
 		sAdd(descText);
+
+        changeSelection(0);
     }
     override function keyHit(ev:KeyboardEvent){
         if(dontUpdate) 

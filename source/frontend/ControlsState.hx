@@ -1,10 +1,11 @@
-package ui;
+package frontend;
 
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import misc.MenuTemplate;
+import backend.MenuTemplate;
+import backend.NewTransition;
 
 /*
     Just a modified -
@@ -14,21 +15,20 @@ import misc.MenuTemplate;
 #if !debug @:noDebug #end
 class ControlsState extends MenuTemplate {
 	var controlList:Array<String> = [
-        'note_left',
-        'note_down',
-        'note_up',
-        'note_right',
+        'NOTE_LEFT',
+        'NOTE_DOWN',
+        'NOTE_UP',
+        'NOTE_RIGHT',
         '',
-        'ui_left',
-        'ui_down',
-        'ui_up',
-        'ui_right',
+        'UI_LEFT',
+        'UI_DOWN',
+        'UI_UP',
+        'UI_RIGHT',
         '',
-        'ui_accept',
-        'ui_back'
+        'UI_ACCEPT',
+        'UI_BACK'
     ];
     var rebinding:Bool = false;
-    var dontCancel:Bool = false;
 
 	override function create()
 	{
@@ -49,9 +49,9 @@ class ControlsState extends MenuTemplate {
             var s2r:String = '';
 
             if(controlList[i] != ''){
-                var val:Dynamic = Reflect.field(Settings.pr, controlList[i]);
-                str = misc.InputString.getKeyNameFromString(val[0], false, false);
-                s2r = misc.InputString.getKeyNameFromString(val[1], false, false);
+                var val:Dynamic = Reflect.field(Binds, controlList[i]);
+                str = CoolUtil.getKeyNameFromString(val[0], false, false);
+                s2r = CoolUtil.getKeyNameFromString(val[1], false, false);
             }
 
 			pushObject(new Alphabet(0, MenuTemplate.yOffset+20, str, true));
@@ -60,28 +60,6 @@ class ControlsState extends MenuTemplate {
 
 		changeSelection();
 	}
-
-    override function update(elasped:Float){
-        super.update(elasped);
-
-        if(!rebinding || !FlxG.keys.justPressed.ANY) 
-            return;
-
-        if(dontCancel){
-            dontCancel = false;
-            return;
-        }
-
-        var k:Int = FlxG.keys.firstJustPressed();
-        var original:Dynamic = Reflect.field(Settings.pr, controlList[curSel]);
-            original[curAlt] = k;
-        Reflect.setField(Settings.pr, '${controlList[curSel]}', original);
-
-        rebinding = false;
-        createNewList();
-
-        trace(k);
-    }
 
 	override public function exitFunc(){
 		if(NewTransition.skip())
@@ -99,20 +77,24 @@ class ControlsState extends MenuTemplate {
 	}
 
 	override public function keyHit(ev:KeyboardEvent){
-		if(rebinding) 
+		if(rebinding){ 
+            var original:Dynamic = Reflect.field(Binds, controlList[curSel]);
+                original[curAlt] = ev.keyCode;
+            Reflect.setField(Binds, '${controlList[curSel]}', original);
+
+            rebinding = false;
+            createNewList();
             return;
+        }
 
         super.keyHit(ev);
 
-		if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT) || controlList[curSel] == '') 
-            return;
+		if(ev.keyCode.hardCheck(Binds.UI_ACCEPT) && controlList[curSel] != ''){
+            for(i in 0...arrGroup.length)
+                if(Math.floor(i / columns) != curSel)
+                    arrGroup[i].targetA = 0;
 
-		for(i in 0...arrGroup.length)
-			if(Math.floor(i / columns) != curSel)
-				arrGroup[i].targetA = 0;
-
-		dontCancel = true;
-		rebinding = true;
-		return;
+            rebinding = true;
+        }
 	}
 }

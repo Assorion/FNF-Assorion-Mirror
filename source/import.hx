@@ -1,8 +1,8 @@
-import misc.Song;
-import misc.Paths;
-import misc.Binds;
-import misc.Settings;
-import misc.CoolUtil;
+import backend.Song;
+import backend.Paths;
+import backend.Binds;
+import backend.Settings;
+import backend.CoolUtil;
 import openfl.events.KeyboardEvent;
 
-using misc.Binds;
+using backend.Binds;

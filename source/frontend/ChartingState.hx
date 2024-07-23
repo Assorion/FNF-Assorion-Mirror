@@ -1,4 +1,4 @@
-package ui;
+package  frontend;
 
 import haxe.Json;
 import flixel.FlxG;
@@ -15,13 +15,14 @@ import flixel.util.FlxColor;
 import flixel.text.FlxText;
 import gameplay.Note;
 import gameplay.PlayState;
-import misc.Song;
-import ui.CustomChartUI;
+import backend.Song;
+import frontend.CustomChartUI;
 #if desktop
 import sys.io.File;
 #end
 import gameplay.HealthIcon;
 import flixel.tweens.FlxTween;
+import flixel.FlxSprite;
 
 using StringTools;
 
@@ -49,7 +50,7 @@ class ChartingState extends MusicBeatState {
     public var selectedNotes:Array<Array<Dynamic>> = [];
     public static var curNoteType:Int = 0;
 
-    var gridLayer:FlxTypedGroup<StaticSprite>;
+    var gridLayer:FlxTypedGroup<FlxSprite>;
     var noteHighlight:StaticSprite;
     var blueSelectBox:StaticSprite;
 
@@ -103,7 +104,7 @@ class ChartingState extends MusicBeatState {
         // # create grid
 
         gridSizeCalc();
-        gridLayer = new FlxTypedGroup<StaticSprite>();
+        gridLayer = new FlxTypedGroup<FlxSprite>();
         noteHighlight = new StaticSprite(0,0).makeGraphic(gridSize, gridSize, 0xFFFFFFFF);
         add(gridLayer);
         add(noteHighlight);
@@ -305,8 +306,8 @@ class ChartingState extends MusicBeatState {
             Binds.UI_BACK, 
             [FlxKey.ESCAPE, FlxKey.ENTER], 
             [FlxKey.SPACE],
-            Binds.UI_L, 
-            Binds.UI_R, 
+            Binds.UI_LEFT, 
+            Binds.UI_RIGHT, 
             [FlxKey.B],
             [FlxKey.N], 
             [FlxKey.Q],
@@ -358,22 +359,22 @@ class ChartingState extends MusicBeatState {
                     vocals.play();
                     vocals.time = FlxG.sound.music.time;
 
-                    Song.Position = FlxG.sound.music.time - Settings.pr.audio_offset;
+                    Song.millisecond = FlxG.sound.music.time - Settings.audio_offset;
                 }
                 return;
             case 3, 4:
                 pauseSong();
                 changeSec(curSec + (((T - 3) * 2) - 1));
 
-                var offTime = curSec * Song.Crochet * 4;
-                    offTime += Settings.pr.audio_offset;
+                var offTime = curSec * Song.crochet * 4;
+                    offTime += Settings.audio_offset;
 
                 // this is to make sure there are no trashy rounding errors.
-                while(Math.floor((offTime + Settings.pr.audio_offset) / (Song.Crochet * 4)) < curSec)
+                while(Math.floor((offTime + Settings.audio_offset) / (Song.crochet * 4)) < curSec)
                     offTime += 0.011;
 
-                Song.Position = vocals.time = FlxG.sound.music.time = offTime;
-                Song.Position -= Settings.pr.audio_offset;
+                Song.millisecond = vocals.time = FlxG.sound.music.time = offTime;
+                Song.millisecond -= Settings.audio_offset;
 
                 expandCheck();
                 reloadNotes();
@@ -436,7 +437,7 @@ class ChartingState extends MusicBeatState {
 
             for(i in 1...Math.floor((newnote[2] * zooms[curZoom]) + 1)){
                 var susNote = new Note(newnote[0] + (i / zooms[curZoom]), newnote[1], newnote[4], true, i == Math.floor(newnote[2]*zooms[curZoom]));
-                if(Settings.pr.downscroll)
+                if(Settings.downscroll)
                     susNote.flipY = false;
 
                 susNote.setGraphicSize(Std.int(gridSize / 2.5), gridSize);
@@ -602,7 +603,8 @@ class ChartingState extends MusicBeatState {
     /////////////////////////////////////////////////
 
     override public function update(elapsed:Float){
-        var secRef:Float = CoolUtil.boundTo(Song.Position / (Song.Crochet * 4), 0, FlxG.sound.music.length);
+        Song.update(FlxG.sound.music.time);
+        var secRef:Float = CoolUtil.boundTo(Song.millisecond / (Song.crochet * 4), 0, FlxG.sound.music.length);
 
         // # Right click
 

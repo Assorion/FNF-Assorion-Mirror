@@ -10,11 +10,10 @@ class StaticSprite extends FlxSprite {
         super(x,y,null);
 
         active = false;
-        antialiasing = Settings.pr.antialiasing;
+        antialiasing = Settings.antialiasing;
     }
-    override public function update(elasped){
-
-    }
+    override public function update(elasped:Float){}
+    
     override public function loadGraphic(graphic:FlxGraphicAsset, animated = false, frameWidth = 0, frameHeight = 0, unique = false, ?key:String):StaticSprite
     {
         super.loadGraphic(graphic, animated, frameWidth, frameHeight, unique, key);

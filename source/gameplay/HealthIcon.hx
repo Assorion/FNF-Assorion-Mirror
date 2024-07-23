@@ -1,17 +1,23 @@
 package gameplay;
 
 import lime.utils.Assets;
-import ui.Alphabet;
+import flixel.FlxSprite;
 
 #if !debug @:noDebug #end
-class HealthIcon extends StaticSprite
+class HealthIcon extends FlxSprite
 {
 	public var curChar:String = '';
+	public var originalScale:Float = 1;
 
-	public function new(char:String = 'bf', isPlayer:Bool = false)
+	public function new(char:String = 'bf', isPlayer:Bool = false, ?bopOnBeat:Bool = false)
 	{
 		super();
 
+		if(bopOnBeat)
+			Song.beatHooks.push(iconBop);
+
+		active = bopOnBeat;
+		antialiasing = Settings.antialiasing;
 		changeIcon(char, isPlayer);
 	}
 	
@@ -35,6 +41,12 @@ class HealthIcon extends StaticSprite
 		curChar = char;
 	}
 
-	public inline function changeState(losing:Bool)
-		animation.play(losing ? 'losing' : 'neutral');
+	public function iconBop():Void
+		scale.x = scale.y += 0.2;
+
+	override function update(elapsed:Float)
+		scale.x = scale.y = Math.max(scale.y - (elapsed * 2), originalScale);
+
+	public inline function changeState(state:Int)
+		animation.play(['losing', 'neutral'][state]);
 }

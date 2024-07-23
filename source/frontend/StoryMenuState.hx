@@ -1,4 +1,4 @@
-package ui;
+package frontend;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -7,10 +7,11 @@ import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import misc.Song;
-import misc.Highscore;
-import ui.ChartingState;
-import misc.MenuTemplate;
+import backend.Song;
+import backend.Highscore;
+import frontend.ChartingState;
+import backend.MenuTemplate;
+import backend.NewTransition;
 import gameplay.PlayState;
 
 using StringTools;
@@ -49,14 +50,18 @@ class StoryMenuState extends MenuTemplate
 
 	override function create(){
 		super.create();
-		menuMusicCheck();
+		
+		if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
+            Song.musicSet(Paths.menuTempo);
+            FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
+        }
 
 		for(i in 0...weekData.length){
 			var weekGraphic:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('storymenu/week-' + weekData[i].weekAsset));
 			weekGraphic.updateHitbox();
 			weekGraphic.centerOrigin();
 			weekGraphic.scale.set(0.7, 0.7);
-			weekGraphic.antialiasing = Settings.pr.antialiasing;
+			weekGraphic.antialiasing = Settings.antialiasing;
 			weekGraphic.offset.x += 75;
 
 			pushObject(weekGraphic);
@@ -93,6 +98,8 @@ class StoryMenuState extends MenuTemplate
 		sAdd(arrowSpr2);
 		sAdd(diffImage);
 		sAdd(trackList);
+
+		changeSelection(0);
 	}
 
 	var leaving:Bool = false;
@@ -117,7 +124,11 @@ class StoryMenuState extends MenuTemplate
 			nSongs.push(s);
 
 		FlxG.sound.play(Paths.lSound('ui/confirmMenu'));
-		PlayState.setData(nSongs, curDif, curSel);
+		PlayState.storyPlaylist = nSongs;
+		PlayState.curDifficulty = curDif;
+		PlayState.storyWeek     = curSel;
+		PlayState.totalScore    = 0;
+		PlayState.SONG          = Song.loadFromJson(nSongs[0], curDif);
 
 		for(i in 0...8)
 			postEvent(i / 8, function(){
@@ -156,6 +167,7 @@ class StoryMenuState extends MenuTemplate
 			arrow.scale.set(0.7, 0.7);
 		});
 	}
+	
 	override function changeSelection(to:Int = 0){
 		arrGroup[curSel].obj.color = whiteColour;
 
@@ -175,7 +187,7 @@ class StoryMenuState extends MenuTemplate
 
 		var oldRef:FlxSprite = weekBG;
 		weekBG = new FlxSprite(640, 0).loadGraphic(Paths.lImage('storymenu/' + weekData[curSel].portrait));
-		weekBG.antialiasing = Settings.pr.antialiasing;
+		weekBG.antialiasing = Settings.antialiasing;
 		sAdd(weekBG);
 
 		if(oldRef == null) return;
@@ -190,6 +202,7 @@ class StoryMenuState extends MenuTemplate
 			remove(oldRef);
 		});
 	}
+
 	override function altChange(to:Int = 0)
 		changeDiff(to, true);
 }

@@ -1,4 +1,4 @@
-package ui;
+package frontend;
 
 import flixel.FlxG;
 import flixel.util.FlxColor;
@@ -16,11 +16,14 @@ class OffsetWizard extends MusicBeatState {
     var rootBeat:Int = 0;
 
     override public function create(){
-        prevOffset = Settings.pr.audio_offset;
-        Settings.pr.audio_offset = 0;
+        super.create();
+
+        prevOffset = Settings.audio_offset;
+        Settings.audio_offset = 0;
 
         FlxG.sound.playMusic('assets/sounds/offset.${Paths.sndExt}');
         Song.musicSet(100);
+        Song.beatHooks.push(beatHit);
 
         var bg:StaticSprite = new StaticSprite(0,0).loadGraphic('assets/images/ui/menuDesat.png');
 		bg.scrollFactor.set(0,0);
@@ -48,30 +51,31 @@ class OffsetWizard extends MusicBeatState {
 		beatText.screenCenter();
         beatText.alpha = 0;
         add(beatText);
-
-        super.create();
     }
 
     public static var fakeBeat:Int = 0;
     override public function update(elapsed:Float){
+        Song.update(FlxG.sound.music.time);
+
         if(beatText.alpha > 0)
             beatText.alpha -= elapsed * 2;
 
-        songTime += elapsed * 1000 * Song.Division;
+        songTime += elapsed * 1000 * Song.division;
 
         var pfb:Int = fakeBeat;
-        fakeBeat = Math.floor((FlxG.sound.music.time - curOffset - 10) / Song.Crochet);
+        fakeBeat = Math.floor((FlxG.sound.music.time - curOffset - 10) / Song.crochet);
 
         if(fakeBeat > pfb && fakeBeat & 0x01 == 0)
             beatText.alpha = 1;
 
         super.update(elapsed);
     }
-    override public function beatHit(){
-        if(curBeat & 0x01 == 0)
-            songTime = curStep;
 
-        rootBeat = Math.round(curBeat * 0.5);
+    public function beatHit(){
+        if(Song.currentBeat & 0x01 == 0)
+            songTime = Song.currentStep;
+
+        rootBeat = Math.round(Song.currentBeat * 0.5);
     }
 
     override public function keyHit(ev:KeyboardEvent){
@@ -79,17 +83,16 @@ class OffsetWizard extends MusicBeatState {
             FlxG.sound.music.stop();
             MusicBeatState.changeState(new OptionsState());
 
-            Settings.pr.audio_offset = prevOffset;
+            Settings.audio_offset = prevOffset;
             if(!ev.keyCode.hardCheck(Binds.UI_ACCEPT)) 
                 return;
 
-            Settings.pr.audio_offset = Math.round(curOffset);
-            Settings.flush();
-
+            Settings.audio_offset = Math.round(curOffset);
+            SettingsManager.flush();
             return;
         }
 
-        offsetsArray.push(((songTime / 8) - rootBeat) * Song.Crochet * 2);
+        offsetsArray.push(((songTime / 8) - rootBeat) * Song.crochet * 2);
         curOffset = 0;
         for(i in 0...offsetsArray.length)
             curOffset += offsetsArray[i];

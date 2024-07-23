@@ -1,4 +1,4 @@
-package misc;
+package frontend;
 
 import flixel.FlxG;
 import openfl.events.Event;

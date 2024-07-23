@@ -1,4 +1,4 @@
-package ui;
+package frontend;
 
 import flixel.FlxG;
 import flixel.system.FlxSound;
@@ -61,11 +61,11 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
         keepGraphic.fillRect(new Rectangle(0,0,inBarWidth,inBarTopLn), 0);
 
         loadingBarBG = new FlxSprite(0,0).loadGraphic(lbBG);
-        loadingBarBG.antialiasing = Settings.pr.antialiasing;
+        loadingBarBG.antialiasing = Settings.antialiasing;
         loadingBarBG.screenCenter();
 
         loadingBarPC = new FlxSprite(0,0).loadGraphic(keepGraphic);
-        loadingBarPC.antialiasing = Settings.pr.antialiasing;
+        loadingBarPC.antialiasing = Settings.antialiasing;
         loadingBarPC.screenCenter();
 
         add(loadingBarBG);
@@ -117,7 +117,7 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
     override function update(elapsed:Float){
         if(index == objects.length - 1){
             objects = null;
-            FlxG.switchState(new TitleState());
+            FlxG.switchState(cast Type.createInstance(Main.initState, []));
 
             return;
         }

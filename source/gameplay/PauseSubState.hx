@@ -1,7 +1,6 @@
 package gameplay;
 
 import flixel.FlxG;
-import ui.NewTransition;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
@@ -9,12 +8,13 @@ import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.FlxCamera;
-import ui.Alphabet;
-import misc.CoolUtil;
+import frontend.Alphabet;
+import backend.CoolUtil;
 import openfl.display.BitmapData;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
-import misc.MenuTemplate;
+import backend.MenuTemplate;
+import backend.NewTransition;
 
 #if !debug @:noDebug #end
 class PauseSubState extends MusicBeatSubstate
@@ -26,37 +26,25 @@ class PauseSubState extends MusicBeatSubstate
 	public var alphaTexts:Array<MenuObject> = [];
 	public var bottomBlack:StaticSprite;
 
-	var gameSpr:StaticSprite;
+	var playState:PlayState;
+	var blackSpr:StaticSprite;
 	var pauseMusic:FlxSound;
-	var pState:PlayState;
-
 	public var activeTweens:Array<FlxTween> = [];
 
 	public function new(camera:FlxCamera, ps:PlayState)
 	{
 		super();
 
-		pState = ps;
-		pState.persistentDraw = false;
+		playState = ps;
 
 		pauseMusic = new FlxSound().loadEmbedded(Paths.lMusic('breakfast'), true, true);
 		pauseMusic.volume = 0;
 		pauseMusic.play();
 		FlxG.sound.list.add(pauseMusic);
 
-		/*  instead of rendering the playstate every frame.
-			we create a fake sprite, effectively a screenshot of playstate.
-			and we work with that instead.
-		*/
-
-		CoolUtil.newCanvas();
-		
-		for(gcam in FlxG.cameras.list)
-			CoolUtil.copyCameraToData(CoolUtil.canvas, gcam);
-
-		gameSpr = new StaticSprite(0,0).loadGraphic(CoolUtil.canvas);
-		gameSpr.scrollFactor.set();
-		add(gameSpr);
+		blackSpr = new StaticSprite(0,0).makeGraphic(camera.width, camera.height, FlxColor.BLACK);
+		blackSpr.alpha = 0;
+		add(blackSpr);
 
 		for (i in 0...optionList.length)
 		{
@@ -88,16 +76,16 @@ class PauseSubState extends MusicBeatSubstate
 
 		/////////////////////
 
-		activeTweens.push(FlxTween.tween( bottomBlack, {alpha: 0.6  }, 0.2 ));
-		activeTweens.push(FlxTween.tween( pauseText  , {alpha: 1    }, 0.2 ));
+		activeTweens.push(FlxTween.tween( bottomBlack, {alpha:  0.6 }, 0.2 ));
+		activeTweens.push(FlxTween.tween( pauseText  , {alpha:  1   }, 0.2 ));
 		activeTweens.push(FlxTween.tween( pauseMusic , {volume: 0.5 },  4  ));
-		activeTweens.push(FlxTween.tween( this       , {colour: 120 }, 0.45));
+		activeTweens.push(FlxTween.tween( blackSpr   , {alpha:  0.7 }, 0.45));
 	}
 	private inline function updatePauseText(){
 		var coolString:String = 
 		'SONG: ${PlayState.songName.toUpperCase()}' +
 		' | WEEK: ${PlayState.storyWeek >= 0 ? Std.string(PlayState.storyWeek + 1) : "FREEPLAY"}' +
-		' | BOTPLAY: ${Settings.pr.botplay ? "YES" : "NO"}' +
+		' | BOTPLAY: ${Settings.botplay ? "YES" : "NO"}' +
 		' | DIFFICULTY: ${CoolUtil.diffString(PlayState.curDifficulty, 1).toUpperCase()}' +
 		' | ';
 		pauseText.text = '$coolString$coolString$coolString';
@@ -111,31 +99,29 @@ class PauseSubState extends MusicBeatSubstate
 		for(i in 0...alphaTexts.length)
 			alphaTexts[i].targetA = 0;
 
-		pState.persistentDraw = true;
-
 		FlxTween.tween(pauseText,  { alpha:  0 }, 0.3);
 		FlxTween.tween(bottomBlack,{ alpha:  0 }, 0.3);
 		FlxTween.tween(pauseMusic, { volume: 0 }, 0.3);
-		FlxTween.tween(gameSpr,    { alpha:  0 }, 0.3, {onComplete: 
+		FlxTween.tween(blackSpr,   { alpha:  0 }, 0.3, {onComplete: 
 
 		// Closing
 		function(t:FlxTween){
 			pauseMusic.stop();
 			pauseMusic.destroy();
-			pState.paused = false;
+			playState.paused = false;
 			close();
 
 			if(FlxG.sound.music.time > 0){
-				pState.vocals.play();
+				playState.vocals.play();
 				FlxG.sound.music.play();
-				FlxG.sound.music.time = pState.vocals.time = Song.Position + Settings.pr.audio_offset;
+				FlxG.sound.music.time = playState.vocals.time = Song.millisecond + Settings.audio_offset;
 			}
 		}});
 	}
 
 	private var leaving:Bool = false;
 	override public function keyHit(ev:KeyboardEvent){
-		var t:Int = ev.keyCode.deepCheck([Binds.UI_U, Binds.UI_D]);
+		var t:Int = ev.keyCode.deepCheck([Binds.UI_UP, Binds.UI_DOWN]);
 		if (t != -1){
 			changeSelection((t * 2) - 1);
 			return;
@@ -152,21 +138,19 @@ class PauseSubState extends MusicBeatSubstate
 				NewTransition.skippedLast = true;
 				FlxG.resetState();
 			case 2:
-				Settings.pr.botplay = !Settings.pr.botplay;
+				Settings.botplay = !Settings.botplay;
 				alphaTexts[curSelected].obj.alpha = 0;
 				updatePauseText();
 
 				pauseText.alpha = 0;
 				activeTweens.push(FlxTween.tween(pauseText, {alpha: 1}, 0.3));
-
-				pState.updateHealth(0);
+				playState.scoreTxt.text = 'BOTPLAY';
+				playState.updateHealth(0);
 			case 3:
-				pState.persistentDraw = true;
 				CoolUtil.exitPlaystate();
 		}
 	}
 
-	var colour:Float = 255;
 	override function update(elapsed:Float){
 		super.update(elapsed);
 
@@ -181,10 +165,6 @@ class PauseSubState extends MusicBeatSubstate
 		pauseText.x += elapsed * 70;
 		if (pauseText.x >= 5) 
 			pauseText.x = pauseText.x - (pauseText.width / 3);
-
-		// Handle background dimming
-		var tCol:Int = CoolUtil.intBoundTo(colour, 120, 255);
-		gameSpr.color = FlxColor.fromRGB(tCol, tCol, tCol);
 	}
 
 	function changeSelection(change:Int = 0)

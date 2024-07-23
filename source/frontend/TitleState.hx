@@ -1,4 +1,4 @@
-package ui;
+package frontend;
 
 import flixel.FlxG;
 import flixel.FlxState;
@@ -17,6 +17,7 @@ import flixel.system.FlxSound;
 import flixel.graphics.FlxGraphic;
 import openfl.events.KeyboardEvent;
 import flixel.graphics.frames.FlxAtlasFrames;
+import backend.NewTransition;
 
 using StringTools;
 
@@ -40,7 +41,6 @@ class TitleState extends MusicBeatState
 				textSequence[i] = getIntroText();
 
 		super.create();
-		menuMusicCheck();
 		startIntro();
 	}
 
@@ -61,18 +61,23 @@ class TitleState extends MusicBeatState
 	var afterFlash:FlxTypedGroup<FlxSprite>;
 	var sndTween:FlxTween;
 
-	inline function startIntro()
+	function startIntro()
 	{
 		if (!initialized)
 		{
-			FlxG.sound.volume = Settings.pr.start_volume / 100;
+			if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
+				Song.musicSet(Paths.menuTempo);
+				FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
+			}
+
+			FlxG.sound.volume = Settings.start_volume / 100;
 			FlxG.sound.music.volume = 0;
 			sndTween = FlxTween.tween(FlxG.sound.music, {volume: 1}, 3);
 		}
 
 		logoBl = new FlxSprite(-150, -100);
 		logoBl.frames = Paths.lSparrow('ui/logoBumpin');
-		logoBl.antialiasing = Settings.pr.antialiasing;
+		logoBl.antialiasing = Settings.antialiasing;
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
 		logoBl.updateHitbox();
 
@@ -80,14 +85,16 @@ class TitleState extends MusicBeatState
 		gfDance.frames = Paths.lSparrow('ui/gfDanceTitle');
 		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-		gfDance.antialiasing = Settings.pr.antialiasing;
+		gfDance.antialiasing = Settings.antialiasing;
 
 		titleText = new FlxSprite(100, FlxG.height * 0.8);
 		titleText.frames = Paths.lSparrow('ui/titleEnter');
 		titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
 		titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
-		titleText.antialiasing = Settings.pr.antialiasing;
+		titleText.antialiasing = Settings.antialiasing;
 		titleText.updateHitbox();
+
+		Song.beatHooks.push(beatHit);
 
 		// # for the ending card
 
@@ -136,6 +143,8 @@ class TitleState extends MusicBeatState
 
 	override function update(elapsed:Float){
 		FlxG.camera.zoom = CoolUtil.boundTo(FlxG.camera.zoom - (elapsed * 0.75), 1, 2);
+		Song.update(FlxG.sound.music.time);
+
 		super.update(elapsed);
 	}
 
@@ -150,10 +159,8 @@ class TitleState extends MusicBeatState
 		textGroup.add(txt);
 	}
 
-	override function beatHit()
+	public function beatHit()
 	{
-		super.beatHit();
-
 		logoBl.animation.play('bump');
 
 		danceLeft = !danceLeft;
@@ -161,7 +168,7 @@ class TitleState extends MusicBeatState
 
 		/////////////////////////////////////////
 
-		if(curBeat <= 0 || skippedIntro) return;
+		if(Song.currentBeat <= 0 || skippedIntro) return;
 
 		FlxG.camera.zoom = 1.1;
 		
@@ -181,7 +188,7 @@ class TitleState extends MusicBeatState
 			return;
 		}
 
-		if(curBeat & 0x01 == 0)
+		if(Song.currentBeat & 0x01 == 0)
 			createCoolText(tsubStep, textSequence[textStep].length, textSequence[textStep][tsubStep++]);
 	}
 

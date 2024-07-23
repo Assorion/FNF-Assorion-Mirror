@@ -2,9 +2,10 @@ package gameplay;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxCamera;
 import flixel.FlxSubState;
 import flixel.util.FlxColor;
-import flixel.FlxCamera;
+import flixel.tweens.FlxTween;
 import openfl.display.BitmapData;
 
 #if !debug @:noDebug #end
@@ -14,10 +15,13 @@ class GameOverSubstate extends MusicBeatSubstate
 	var charRef:Character;
 	var blackFadeIn:StaticSprite;
 	var fadeCam:FlxCamera;
+	var playstateRef:PlayState;
 
 	public function new(deadChar:Character, fadeOutCam:FlxCamera, pState:PlayState)
 	{
 		super();
+
+		playstateRef = pState;
 
 		var z:Float = 1 / FlxG.camera.zoom;
 		blackFadeIn = new StaticSprite(0,0).makeGraphic(Math.round(FlxG.width * z), Math.round(FlxG.height * z), FlxColor.BLACK);
@@ -26,6 +30,13 @@ class GameOverSubstate extends MusicBeatSubstate
 		blackFadeIn.alpha = 0;
 		add(blackFadeIn);
 
+		/*
+			The game over state doesn't create a new character, instead it pulls the
+			current playing character out of PlayState and tells it to play the death animation.
+
+			If instead your character uses a different sprite for it's death animations, you'll
+			need to write some extra logic here to accommodate for that.
+		*/
 		deadChar.playAnim('firstDeath');
 		charRef = deadChar;
 		camFollow = new FlxObject(deadChar.getGraphicMidpoint().x, deadChar.getGraphicMidpoint().y, 1, 1);
@@ -38,28 +49,32 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		Song.musicSet(100);
 
+		FlxTween.tween(fadeCam,     {alpha: 0}, 3);
+		FlxTween.tween(blackFadeIn, {alpha: 1}, 3, {onComplete: function(t:FlxTween){
+			playstateRef.persistentDraw = false;
+
+			remove(blackFadeIn);
+			blackFadeIn.destroy();
+			blackFadeIn = null;
+		}});
+
 		postEvent(2.5, function() {
 			if(!leaving)
 				FlxG.sound.playMusic(Paths.lMusic('gameOver'));
 		});
 	}
 
-	// in case you're using a character which doesn't have the animation set.
 	private var notLoop:Bool = true;
 	override function update(elapsed:Float)
 	{
+		// in case you're using a character which doesn't have the animation set.
 		if(notLoop && charRef.animation.curAnim.finished){
 			charRef.animation.play('deathLoop');
 			notLoop = false;
 		}
 
-		if(blackFadeIn.alpha < 1){
-			blackFadeIn.alpha += elapsed * 0.5;
-			fadeCam.alpha     -= elapsed * 0.5;
-		}
-
 		#if (flixel < "5.4.0")
-		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * Main.framerateDivision;
+		FlxG.camera.followLerp = (1 - Math.pow(0.5, FlxG.elapsed * 2)) * (60 / Settings.framerate);
 		#end
 
 		super.update(elapsed);

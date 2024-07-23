@@ -1,4 +1,4 @@
-package ui;
+package frontend;
 
 import flixel.FlxG;
 import lime.utils.Assets;
@@ -9,9 +9,10 @@ import flixel.system.FlxSound;
 import openfl.events.KeyboardEvent;
 import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import misc.Song;
-import misc.Highscore;
-import misc.MenuTemplate;
+import backend.Song;
+import backend.Highscore;
+import backend.MenuTemplate;
+import backend.NewTransition;
 import gameplay.PlayState;
 
 using StringTools;
@@ -31,8 +32,12 @@ class FreeplayState extends MenuTemplate
 	override function create()
 	{
 		addBG(FlxColor.fromRGB(145, 113, 255));
-		menuMusicCheck();
 		super.create();
+
+		if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
+            Song.musicSet(Paths.menuTempo);
+            FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
+        }
 		
 		/// Parsing
 
@@ -100,7 +105,11 @@ class FreeplayState extends MenuTemplate
 				if(NewTransition.skip()) 
 					return;
 
-				PlayState.setData([songs[curSel]], curDifficulty, -1);
+				PlayState.storyPlaylist = [];
+				PlayState.curDifficulty = curDifficulty;
+				PlayState.storyWeek     = -1;
+				PlayState.totalScore    = 0;
+				PlayState.SONG          = Song.loadFromJson(songs[curSel], curDifficulty);
 				MusicBeatState.changeState(new PlayState());
 				FlxG.sound.music.stop();
 
