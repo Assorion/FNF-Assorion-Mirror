@@ -32,7 +32,7 @@ class Main extends Sprite
 
 		// # add the game
 
-		var ldState:Class<FlxState> = Settings.pre_caching #if (!desktop) && false #end ? frontend.LoadingState : initState;
+		var ldState:Class<FlxState> = #if (desktop) Settings.pre_caching ? frontend.LoadingState : #end initState;
 
 		addChild(new FlxGame(
 			gameWidth, 
