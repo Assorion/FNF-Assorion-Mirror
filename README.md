@@ -47,21 +47,21 @@ Assorion is a very simple engine and thus, it may not receive many feature updat
 
 # 🗒️ | Important Notes/RoadMap
 
--	There has been a complete overhaul of Chartingstate. Therefore, it will probably have new bugs and will be partially confusing at first glance
--	The characters in the song are entirely un-hardcoded. Thus you can define 2 or 4 characters instead of 3. Notes have a `player` value that makes this work
--	Charts are handled differently to the base game. Absolute positions are used instead of millisecond values. In addition, notes have player values in the chart
--	Assorion Engine based off <a href="https://github.com/FunkinCrew/Funkin/releases/tag/v0.2.6">`0.2.6`</a> version of the base game, though has been radically altered
--	The Songs and Data folder have been merged into the `songs-data` folder
-- Pressing the F12 key juring gameplay uses an experimental screenshot feature. When pressed, a folder and file will be created
-- The rating system, health loss, health gain, and menus are inaccurate to the base game or other engines
-- Ratings, input, and chart speed change depending on BPM
+- Assorion Engine is based off <a href="https://github.com/FunkinCrew/Funkin/releases/tag/v0.2.6">`0.2.6`</a> version of the base game, though has been radically altered
+- Assorion's chart editor has been completely overhauled
+- Assorion allows skipping most transitions by hitting enter twice
+- Botplay does not count scoring or health. This is intentional to stop cheating
+- Chart speed changes depending on BPM; This is a known early bug that will never be fixed
+- Ratings (E:G Sick or Bad), losing and gaining health, and menu positions are inaccurate to the base game
+- Porting other mods is very hard. Charts, characters, and weeks are handled much differently
+- The song can have as many characters as it needs, instead of the usual 3 (opponent, GF, BF)
+- Songs folder has been merged with the Data folder for convenience
   
  **RoadMap**
-* [x]	Offset wizard
-* [X]	Web build
-* [X]	Improvements to the chart editor
-* [X]	Fixes for newer Flixel
-* [ ]	Events System
+* [X] Move away from Github
+* [ ] Fix minor annoyances/bugs
+* [ ] Re-work Dialogue
+* [ ] Improve Wiki/Documentation
  
 #### **Branches**
 
@@ -74,8 +74,6 @@ Assorion is a very simple engine and thus, it may not receive many feature updat
 >   | `Assorion Branch's`                                | `Windows` | `Linux` | `HTML5 (WEB)`     |
 >   |--------------------------------------------------|---------|-------|-----------------|
 >   | <a href="#">Assorion-Main</a>                                    | ✓       | ✓     | ⍻              |
->   | <a href="#">Assorion-Plus</a>                                    | ☓       | ☓     | ☓              |
->   | <a href="#">Assorion-Minimun</a>                                 | ☓       | ☓     | ☓              |
 >   | <a href="#">Assorion-Base</a>                                    | ☓       | ☓     | ☓              |
 >   | <a href="#">Assorion-3D</a>                                      | ☓       | ☓     | ☓              |
 ></td>
