@@ -167,6 +167,7 @@ class ChartingState extends MusicBeatState {
         FlxG.stage.addEventListener(MouseEvent.MOUSE_UP  , mouseUpEvent);
 
         super.create();
+        Song.stepHooks.push(syncSmoothedMusic);
 
         warningTxt = new FlxText(uiBG.x, uiBG.y - 30, 0, '', 12);
         warningTxt.alpha = 0;
@@ -226,11 +227,6 @@ class ChartingState extends MusicBeatState {
 
         if (currentElement != null){
             key == FlxKey.ENTER ? currentElement.forceExit() : currentElement.keyInsert(key);
-            return;
-        }
-
-        if(key == FlxKey.SHIFT){
-            holdingShift = true;
             return;
         }
 
@@ -315,6 +311,8 @@ class ChartingState extends MusicBeatState {
             [FlxKey.X],
             [FlxKey.Z],
             [FlxKey.CONTROL],
+            [FlxKey.SHIFT],
+            [FlxKey.R],
             // Numbers 1 - 4
             [FlxKey.ONE], 
             [FlxKey.TWO], 
@@ -355,13 +353,11 @@ class ChartingState extends MusicBeatState {
                     pauseSong();
                 else {
                     FlxG.sound.music.play();
-
                     vocals.play();
-                    vocals.time = FlxG.sound.music.time;
 
+                    vocals.time = FlxG.sound.music.time;
                     Song.millisecond = FlxG.sound.music.time - Settings.audio_offset;
                 }
-                return;
             case 3, 4:
                 pauseSong();
                 changeSec(curSec + (((T - 3) * 2) - 1));
@@ -370,15 +366,14 @@ class ChartingState extends MusicBeatState {
                     offTime += Settings.audio_offset;
 
                 // this is to make sure there are no trashy rounding errors.
-                while(Math.floor((offTime + Settings.audio_offset) / (Song.crochet * 4)) < curSec)
+                while(Math.floor(offTime / (Song.crochet * 4)) < curSec)
                     offTime += 0.011;
 
-                Song.millisecond = vocals.time = FlxG.sound.music.time = offTime;
-                Song.millisecond -= Settings.audio_offset;
+                vocals.time = FlxG.sound.music.time = offTime;
+                Song.millisecond = offTime - Settings.audio_offset;
 
                 expandCheck();
                 reloadNotes();
-                return;
             case 5, 6:
                 curNoteType += ((T - 5) * 2) - 1;
                 curNoteType = CoolUtil.intBoundTo(curNoteType, 0, Note.possibleTypes.length - 1);
@@ -387,26 +382,34 @@ class ChartingState extends MusicBeatState {
                     nt[4] = curNoteType;
 
                 reloadNotes();
-                return;
             case 7, 8:
                 for(nt in selectedNotes)
                     nt[2] = CoolUtil.intBoundTo(nt[2] + ((T - 7) * 2 - 1), 0, 1000);
     
                 reloadNotes();
-                return;
             case 9, 10:
                 curZoom += ((T - 9) * 2) - 1;
                 curZoom = CoolUtil.intBoundTo(curZoom, 0, 8);
 
                 makeGrid();
                 reloadNotes();
-
-                return;
             case 11:
                 holdingControl = true;
+            case 12:
+                holdingShift = true;
 
-            case 12, 13, 14, 15:
-                [createSongUI, createCharUI, createSecUI, createInfoUI][T - 12]();
+            case 13:
+                if(!holdingShift)
+                    return;
+
+                pauseSong();
+                changeSec(0);
+                reloadNotes();
+
+                FlxG.sound.music.time = vocals.time = 0;
+
+            case 14, 15, 16, 17:
+                [createSongUI, createCharUI, createSecUI, createInfoUI][T - 14]();
         }
     }
     override public function keyRel(ev:KeyboardEvent){
@@ -593,18 +596,16 @@ class ChartingState extends MusicBeatState {
             return;
         }
 
-        ///////////
-
         blueSelectBox.x = blueSelectBox.y = 
         mouseHookX = mouseHookY = -1;
         blueSelectBox.scale.set(0.1,0.1);
     }
-    
-    /////////////////////////////////////////////////
 
+    public var smoothedMusicTime:Float;
     override public function update(elapsed:Float){
         Song.update(FlxG.sound.music.time);
-        var secRef:Float = CoolUtil.boundTo(Song.millisecond / (Song.crochet * 4), 0, FlxG.sound.music.length);
+        smoothedMusicTime = FlxG.sound.music.playing ? smoothedMusicTime + (elapsed * 1000) : FlxG.sound.music.time;
+        var secRef:Float = CoolUtil.boundTo(smoothedMusicTime / (Song.crochet * 4), 0, FlxG.sound.music.length);
 
         // # Right click
 
@@ -632,13 +633,16 @@ class ChartingState extends MusicBeatState {
         if(secRef >= curSec + 1 || secRef < curSec)
             changeSec(Math.floor(secRef));
 
-        var calcY:Float = secRef - curSec;
+        var calcY:Float = (secRef - (Settings.audio_offset / (Song.crochet * 4))) - curSec;
             camGR.y = calcY * zooms[curZoom] * 2 * -250;
             camGR.y += 125;
         musicLine.y = calcY * gridLayer.members[0].height;
 
         super.update(elapsed);
     }
+
+    public function syncSmoothedMusic():Void
+        smoothedMusicTime = (FlxG.sound.music.time * 0.25) + (smoothedMusicTime * 0.75);
 
     private inline function expandCheck()
         if(curSec >= song.notes.length){

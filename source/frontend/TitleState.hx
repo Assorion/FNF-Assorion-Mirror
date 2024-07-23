@@ -29,9 +29,9 @@ class TitleState extends MusicBeatState
 		['hi', 'hello'],
 		['Original game by','ninjamuffin'],
 		['assorion engine by', 'candice joe'],
-		['High Action', 'High Octane', 'Great Gameplay'],
+		['do you know', 'the one tap super combo?'],
 		['%'],
-		['Read the instructions', 'on the back of the product']
+		['only for', 'epic gamers']
 	];
 
 	override public function create():Void
