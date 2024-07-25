@@ -456,7 +456,7 @@ class PlayState extends MusicBeatState
 		
 		switch(k){
 			case 0, 1:
-				pauseAndOpenState(new PauseSubState(camHUD, this));
+				pauseAndOpenState(new PauseSubstate(camHUD, this));
 			case 2:
 				MusicBeatState.changeState(new ChartingState());
 		}
@@ -645,6 +645,6 @@ class PlayState extends MusicBeatState
 		super.onFocusLost();
 
 		if(!paused)
-			pauseAndOpenState(new PauseSubState(camHUD, this));
+			pauseAndOpenState(new PauseSubstate(camHUD, this));
 	}
 }

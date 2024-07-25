@@ -8,7 +8,6 @@ import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
 import backend.MenuTemplate;
 import backend.NewTransition;
-import gameplay.PauseSubState;
 
 using StringTools;
 
