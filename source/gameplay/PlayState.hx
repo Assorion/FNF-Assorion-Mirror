@@ -46,7 +46,7 @@ class PlayState extends MusicBeatState
 	public var strumLineY:Int;
 	public var vocals:FlxSound;
 	public var followPos:FlxObject;
-	public var unspawnNotes:Array<Note> = [];
+	public var backwardsChartNotes:Array<Note> = [];
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var playerStrums:Array<StrumNote> = [];
@@ -249,18 +249,20 @@ class PlayState extends MusicBeatState
 				var newNote = new Note(time, noteData, ntype, false, false);
 				newNote.scrollFactor.set();
 				newNote.player = player;
-				unspawnNotes.push(newNote);
+				backwardsChartNotes.insert(0, newNote);
 
 				if(susLength > 1)
 					for(i in 0...susLength+1){
 						var susNote = new Note(time + i + 0.5, noteData, ntype, true, i == susLength);
 						susNote.scrollFactor.set();
 						susNote.player = player;
-						unspawnNotes.push(susNote);
+						backwardsChartNotes.insert(0, susNote);
 					}
 			}
 
-		unspawnNotes.sort((A,B) -> Std.int(A.strumTime - B.strumTime));
+		// Sort the array backwards, and then pop it and insert that into the first index.
+		backwardsChartNotes.sort((A,B) -> Std.int(B.strumTime - A.strumTime));
+		backwardsChartNotes.insert(0, backwardsChartNotes.pop());
 	}
 
 	private function generateStrumArrows(player:Int):Void
@@ -327,13 +329,16 @@ class PlayState extends MusicBeatState
 			});
 	}
 
-	var noteCount:Int = 0;
 	override public function update(elapsed:Float) if(!paused) {
 		Song.update(FlxG.sound.music.time);
 		stepTime += (elapsed * 1000) * Song.division;
 
-		if(unspawnNotes[noteCount] != null && unspawnNotes[noteCount].strumTime - stepTime < 32)
-			notes.add(unspawnNotes[noteCount++]);
+		if(backwardsChartNotes.length > 1 && backwardsChartNotes[0].strumTime - stepTime < 32){
+			// To be clear, the notes appear backwards (so earlier notes in the chart are furthest in the array). But the first index of the
+			// array is always equal to the last note that was popped. If you don't know what pop means, it removes the last element and returns it
+			notes.add(backwardsChartNotes[0]);
+			backwardsChartNotes[0] = backwardsChartNotes.pop();	
+		}
 
 		notes.forEachAlive(scrollNotes);
 

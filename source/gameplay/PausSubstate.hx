@@ -17,7 +17,7 @@ import backend.MenuTemplate;
 import backend.NewTransition;
 
 #if !debug @:noDebug #end
-class PauseSubState extends MusicBeatSubstate
+class PauseSubstate extends MusicBeatSubstate
 {
 	public static var optionList:Array<String> = ['Resume Game', 'Restart Song', 'Toggle Botplay', 'Exit To Menu'];
 	
