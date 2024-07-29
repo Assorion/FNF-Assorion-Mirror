@@ -145,7 +145,7 @@ class MainMenuState extends MusicBeatState
 				case 1:
 					MusicBeatState.changeState(new FreeplayState());
 				case 2:
-					var site = 'https://github.com/Legendary-Candice-Joe/FNF-Assorion-Engine/';
+					var site = 'https://codeberg.org/Assorion/FNF-Assorion-Engine';
 
 					#if linux Sys.command('/usr/bin/xdg-open', [site]);
 					#else FlxG.openURL(site); #end

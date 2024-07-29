@@ -1,7 +1,0 @@
-0:HEY THIS IS A TEST:    gf_portrait:,
-1:This is not part of the game: bf_portrait:,
-0:If this is left in by a mod you're playing
-Then please tell the creator to remove the base
-Assorion assets please: gf_portrait:,
-1:If you are playing the base Assorion engine
-then sit back.` relax.` And have some fun!:bf_portrait:

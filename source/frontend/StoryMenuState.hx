@@ -124,6 +124,7 @@ class StoryMenuState extends MenuTemplate
 			nSongs.push(s);
 
 		FlxG.sound.play(Paths.lSound('ui/confirmMenu'));
+		PlayState.lastSeenCutscene = 0;	
 		PlayState.storyPlaylist = nSongs;
 		PlayState.curDifficulty = curDif;
 		PlayState.storyWeek     = curSel;

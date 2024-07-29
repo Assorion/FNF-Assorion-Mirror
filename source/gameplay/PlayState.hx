@@ -42,6 +42,7 @@ class PlayState extends MusicBeatState
 	public static var storyPlaylist:Array<String> = [];
 	public static var curDifficulty:Int = 1;
 	public static var totalScore:Int = 0;
+	public static var lastSeenCutscene:Int;
 
 	public var strumLineY:Int;
 	public var vocals:FlxSound;
@@ -195,6 +196,18 @@ class PlayState extends MusicBeatState
 		Song.beatHooks.push(beatHit);
 		Song.stepHooks.push(stepHit);
 
+		// If storyWeek is equal to -1 then it means that it's Freeplay. So if it's higher that means we're in story mode.
+		if(storyWeek >= 0 && lastSeenCutscene != storyPlaylist.length){
+			var dialoguePath:String = 'assets/songs-data/${songName}/dialogue.json';			
+			var potentialJson:Null<String> = Assets.exists(dialoguePath) ? Assets.getText(dialoguePath) : null;
+
+			if(potentialJson != null)
+				pauseAndOpenState(new DialogueSubstate(this, camHUD, potentialJson));			
+			
+			lastSeenCutscene = storyPlaylist.length;
+			return;
+		}
+
 		postEvent(SONG.beginTime + 0.1, startCountdown);
 	}
 
@@ -276,7 +289,7 @@ class PlayState extends MusicBeatState
 			playerStrums[i] = babyArrow;
 	}
 
-	function startCountdown():Void {
+	public function startCountdown():Void {
 		for(i in 0...strumLineNotes.length)
 			FlxTween.tween(strumLineNotes.members[i], {alpha: 1, y: strumLineNotes.members[i].y + 10}, 0.5, {startDelay: ((i % Note.keyCount) + 1) * 0.2});
 
@@ -456,7 +469,8 @@ class PlayState extends MusicBeatState
 		
 		switch(k){
 			case 0, 1:
-				pauseAndOpenState(new PauseSubstate(camHUD, this));
+				if(FlxG.sound.music.playing)
+					pauseAndOpenState(new PauseSubstate(camHUD, this));
 			case 2:
 				MusicBeatState.changeState(new ChartingState());
 		}
@@ -644,7 +658,7 @@ class PlayState extends MusicBeatState
 	override function onFocusLost() {
 		super.onFocusLost();
 
-		if(!paused)
+		if(!paused && FlxG.sound.music.playing)
 			pauseAndOpenState(new PauseSubstate(camHUD, this));
 	}
 }
