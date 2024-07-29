@@ -101,4 +101,4 @@ Chart editor fix (again).
 17. Added code consistency principles.
 18. Fixed -10 FPS issue.
 19. Added option to disable transitions all-together.
-20. Removed Conductor.hx, now merged into MusicBeatState.
+20. Removed Conductor.hx, now merged into MusicBeatState. 
