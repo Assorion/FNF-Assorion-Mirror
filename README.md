@@ -59,8 +59,8 @@ Assorion is a very simple engine and thus, it may not receive many feature updat
   
  **RoadMap**
 * [X] Move away from Github
+* [X] Re-work Dialogue
 * [ ] Fix minor annoyances/bugs
-* [ ] Re-work Dialogue
 * [ ] Improve Wiki/Documentation
  
 #### **Branches**
