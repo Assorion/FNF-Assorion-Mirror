@@ -75,9 +75,9 @@ class MusicBeatState extends FlxUIState
 			events[i].exeFunc();
 
 	public static function changeState(target:FlxState){
-        NewTransition.activeTransition = new NewTransition(target, true);
+        	NewTransition.activeTransition = new NewTransition(target, true);
 
-        FlxG.state.openSubState(NewTransition.activeTransition);
-        FlxG.state.persistentUpdate = false;
-    }
+        	FlxG.state.openSubState(NewTransition.activeTransition);
+        	FlxG.state.persistentUpdate = false;
+    	}
 }

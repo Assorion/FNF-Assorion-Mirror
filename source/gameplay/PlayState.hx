@@ -33,7 +33,7 @@ typedef RatingData = {
 class PlayState extends MusicBeatState
 {
 	public static inline var beatHalfingTime:Int = 190;
-	public static inline var inputRange:Float = 1.25; // 1 and a quarter steps of input range.	
+	public static inline var inputRange:Float = 1.25; // The input range is measured in steps. By default it is 1 and a quarter steps of input range. 
 	public static var sDir:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 
 	public static var songName:String = '';
@@ -53,7 +53,7 @@ class PlayState extends MusicBeatState
 	public var playerStrums:Array<StrumNote> = [];
 	public var notes:FlxTypedGroup<Note>;
 
-	// health now goes from 0 - 100, instead of 0 - 2
+	// health now goes from 0 - 100, unlike the base game
 	public var health   :Int = 50;
 	public var combo    :Int = 0;
 	public var hitCount :Int = 0;
@@ -71,22 +71,18 @@ class PlayState extends MusicBeatState
 	public var songScore:Int = 0;
 	public var scoreTxt:FlxText;
 
+	// TODO: Un-hardcode this. I admit this is terrible!
 	private var characterPositions:Array<Int> = [
-		// dad
-		100, 100,
-		//bf
-		770, 450,
-		// gf
-		400, 130
+		100, 100, // Dad
+		770, 450, // BF 
+		400, 130  // GF
 	];
 	private var playerPos:Int = 1;
 	private var allCharacters:Array<Character> = [];
 
-	private static var stepTime:Float;
+	private static var stepTime:Float = 0;
 
 	override public function create() {
-		super.create();
-
 		// # Camera Setup
 		camGame = new FlxCamera();
 		camHUD  = new FlxCamera();
@@ -99,7 +95,9 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camHUD);
 		FlxCamera.defaultCameras = [camGame];
 		FlxG.camera.follow(followPos, LOCKON, 0.067);
-
+		
+		super.create();
+		
 		// # Song Setup
 		songName = SONG.song.toLowerCase();
 		Song.musicSet(SONG.bpm);
@@ -163,7 +161,7 @@ class PlayState extends MusicBeatState
 		healthBar.scrollFactor.set();
 		healthBar.createFilledBar(healthColours[0], healthColours[1]);
 
-		scoreTxt = new FlxText(0, baseY + 40, 0, '', 20);
+		scoreTxt = new FlxText(0, baseY + 40, 0, PauseSubstate.botplayText, 20);
 		scoreTxt.setFormat("assets/fonts/vcr.ttf", 16, 0xFFFFFFFF, CENTER, OUTLINE, 0xFF000000);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
@@ -197,15 +195,18 @@ class PlayState extends MusicBeatState
 		Song.stepHooks.push(stepHit);
 
 		// If storyWeek is equal to -1 then it means that it's Freeplay. So if it's higher that means we're in story mode.
-		if(storyWeek >= 0 && lastSeenCutscene != storyPlaylist.length){
+		if(storyWeek >= 0 && lastSeenCutscene != storyPlaylist.length){	
+			lastSeenCutscene = storyPlaylist.length;
+
 			var dialoguePath:String = 'assets/songs-data/${songName}/dialogue.json';			
 			var potentialJson:Null<String> = Assets.exists(dialoguePath) ? Assets.getText(dialoguePath) : null;
 
-			if(potentialJson != null)
-				pauseAndOpenState(new DialogueSubstate(this, camHUD, potentialJson));			
+			if(potentialJson != null) {
+				// The delay is purely for the transitions. If your transitions are longer or shorter then change the event delay.	
+				postEvent(0.5, function(){ pauseAndOpenState(new DialogueSubstate(this, camHUD, potentialJson)); });
+				return;
+			}
 			
-			lastSeenCutscene = storyPlaylist.length;
-			return;
 		}
 
 		postEvent(SONG.beginTime + 0.1, startCountdown);
@@ -219,7 +220,7 @@ class PlayState extends MusicBeatState
 			add(allCharacters[SONG.renderBackwards ? i : (SONG.characters.length - 1) - i]);
 	}
 
-	// put things like gf and bf positions here.
+	// If you need, you can edit the 'characterPositions' variable in here.
 	public inline function handleStage() {
 		switch(SONG.stage){
 			case 'stage', '':
@@ -288,7 +289,7 @@ class PlayState extends MusicBeatState
 		if(SONG.activePlayer == player) 
 			playerStrums[i] = babyArrow;
 	}
-
+	
 	public function startCountdown():Void {
 		for(i in 0...strumLineNotes.length)
 			FlxTween.tween(strumLineNotes.members[i], {alpha: 1, y: strumLineNotes.members[i].y + 10}, 0.5, {startDelay: ((i % Note.keyCount) + 1) * 0.2});
@@ -298,7 +299,8 @@ class PlayState extends MusicBeatState
 		var introAssets :Array<String>    = [
 			'ready', 'set', 'go', '',
 			'intro3', 'intro2', 'intro1', 'introGo'
-		]; 
+		];
+ 
 		for(i in 0...4){
 			var snd:FlxSound = new FlxSound().loadEmbedded(Paths.lSound('gameplay/' + introAssets[i + Std.int(introAssets.length * 0.5)]));
 				snd.volume = 0.6;
@@ -344,7 +346,7 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float) if(!paused) {
 		Song.update(FlxG.sound.music.time);
-		stepTime += (elapsed * 1000) * Song.division;
+		stepTime += elapsed * 1000 * Song.division;
 
 		if(backwardsChartNotes.length > 1 && backwardsChartNotes[0].strumTime - stepTime < 32){
 			// To be clear, the notes appear backwards (so earlier notes in the chart are furthest in the array). But the first index of the
@@ -375,9 +377,7 @@ class PlayState extends MusicBeatState
 	}
 	public function stepHit() 
 		if(FlxG.sound.music.playing)
-			stepTime = ((Song.millisecond * Song.division) + stepTime) * 0.5;
-
-	// THIS IS WHAT UPDATES YOUR SCORE AND HEALTH AND STUFF!
+			stepTime = (Song.millisecond * Song.division * 0.25) + (stepTime * 0.75);
 
 	private static inline var iconSpacing:Int = 52;
 	public function updateHealth(change:Int) {
@@ -429,7 +429,7 @@ class PlayState extends MusicBeatState
 		combo = 0;
 		songScore -= 50;
 		missCount++;
-		vocals.volume = 0.5; // Halving the Vocals, instead of completely muting them.
+		vocals.volume = 0.5;
 
 		FlxG.sound.play(Paths.lSound('gameplay/missnote' + (Math.round(Math.random() * 2) + 1)), 0.2);
 
@@ -439,7 +439,7 @@ class PlayState extends MusicBeatState
 		updateHealth(-10);
 	}
 
-	// For anything that would require keyboard input, please put it here, not update.
+	// For anything that would require keyboard input, please put it here, not in update.
 
 	public var hittableNotes:Array<Note> = [null, null, null, null];
 	public var keysPressed:Array<Bool>   = [false, false, false, false];
@@ -522,7 +522,7 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		// Input stuff
+		// Input range checks
 		if (hittableNotes[daNote.noteData] == null && !daNote.isSustainNote && Math.abs(nDiff) <= inputRange * daNote.curType.rangeMul){
 			hittableNotes[daNote.noteData] = daNote;
 			return;
@@ -624,7 +624,7 @@ class PlayState extends MusicBeatState
 
 		SONG = Song.loadFromJson(storyPlaylist[0], curDifficulty);
 		FlxG.sound.music.stop();
-		FlxG.resetState();
+		MusicBeatState.changeState(new PlayState());
 	}
 
 	function pauseAndOpenState(state:MusicBeatSubstate) {

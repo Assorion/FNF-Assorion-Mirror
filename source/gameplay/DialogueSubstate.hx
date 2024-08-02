@@ -55,7 +55,7 @@ class DialogueSubstate extends MusicBeatSubstate {
 		add(dialogueBGSprite);
 		
 		dialogueText = new FlxText(dialogueBGSprite.x + 10, dialogueBGSprite.y + 10, 900, '', 20);
-		dialogueText.setFormat("assets/fonts/vcr.ttf", 30, 0xFF000000, LEFT);
+		dialogueText.setFormat("assets/fonts/vcr.ttf", 35, 0xFF000000, LEFT);
 		add(dialogueText);
 
 		FlxTween.tween( graySprite, {alpha: 0.7}, 2);

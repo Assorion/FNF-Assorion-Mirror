@@ -99,24 +99,9 @@ class FreeplayState extends MenuTemplate
 	override public function keyHit(ev:KeyboardEvent){
 		super.keyHit(ev);
 
-		var k = ev.keyCode.deepCheck([Binds.UI_ACCEPT, [FlxKey.SPACE]]);
-		switch(k){
-			case 0: // Enter
-				if(NewTransition.skip()) 
-					return;
-
-				PlayState.storyPlaylist = [];
-				PlayState.curDifficulty = curDifficulty;
-				PlayState.storyWeek     = -1;
-				PlayState.totalScore    = 0;
-				PlayState.SONG          = Song.loadFromJson(songs[curSel], curDifficulty);
-				MusicBeatState.changeState(new PlayState());
-				FlxG.sound.music.stop();
-
-				if (vocals.playing)
-					vocals.stop();
-				
-			case 1: // SpaceUK
+		var k = ev.keyCode.deepCheck([[FlxKey.SPACE], Binds.UI_ACCEPT]);
+		switch(k){	
+			case 0: // SpaceUK
 				playing = !playing;
 
 				if(playing){
@@ -138,7 +123,21 @@ class FreeplayState extends MenuTemplate
 				vocals.loadEmbedded (Paths.playableSong(songs[curSel], true));
 				FlxG.sound.playMusic(Paths.playableSong(songs[curSel]));
 				vocals.play();
-				FlxG.sound.list.add(vocals);
+				FlxG.sound.list.add(vocals);	
+			case 1: // Enter
+				if(NewTransition.skip()) 
+					return;
+
+				PlayState.storyPlaylist = [];
+				PlayState.curDifficulty = curDifficulty;
+				PlayState.storyWeek     = -1;
+				PlayState.totalScore    = 0;
+				PlayState.SONG          = Song.loadFromJson(songs[curSel], curDifficulty);
+				MusicBeatState.changeState(new PlayState());
+				FlxG.sound.music.stop();
+
+				if (vocals.playing)
+					vocals.stop();
 		}
 	}
 }

@@ -19,6 +19,7 @@ import backend.NewTransition;
 #if !debug @:noDebug #end
 class PauseSubstate extends MusicBeatSubstate
 {
+	public static inline var botplayText:String = 'BOTPLAY'; // Text that shows in PlayState when Botplay is turned on
 	public static var optionList:Array<String> = ['Resume Game', 'Restart Song', 'Toggle Botplay', 'Exit To Menu'];
 	
 	public var curSelected:Int = 0;
@@ -144,7 +145,7 @@ class PauseSubstate extends MusicBeatSubstate
 
 				pauseText.alpha = 0;
 				activeTweens.push(FlxTween.tween(pauseText, {alpha: 1}, 0.3));
-				playState.scoreTxt.text = 'BOTPLAY';
+				playState.scoreTxt.text = botplayText;
 				playState.updateHealth(0);
 			case 3:
 				CoolUtil.exitPlaystate();
