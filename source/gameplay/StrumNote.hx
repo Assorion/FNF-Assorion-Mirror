@@ -16,7 +16,6 @@ class StrumNote extends FlxSprite {
         setGraphicSize(Math.round(width * 0.7));
         updateHitbox();
 
-        antialiasing = Settings.antialiasing;
         animation.addByPrefix('static', 'arrow' + PlayState.sDir[data]);
         animation.addByPrefix('pressed', Note.colArr[data] + ' press'  , 24, false);
         animation.addByPrefix('confirm', Note.colArr[data] + ' confirm', 24, false);

@@ -17,7 +17,6 @@ class HealthIcon extends FlxSprite
 			Song.beatHooks.push(iconBop);
 
 		active = bopOnBeat;
-		antialiasing = Settings.antialiasing;
 		changeIcon(char, isPlayer);
 	}
 	

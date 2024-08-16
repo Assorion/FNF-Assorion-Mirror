@@ -40,7 +40,6 @@ class Character extends FlxSprite
 
 		Song.beatHooks.push(dance);
 
-		antialiasing  = Settings.antialiasing;
 		animOffsets   = new Map<String, Array<Int>>();
 		curCharacter  = character;
 		this.isPlayer = isPlayer;

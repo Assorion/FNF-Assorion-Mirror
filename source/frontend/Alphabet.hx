@@ -65,7 +65,6 @@ class AlphaCharacter extends FlxSprite
 		frames = tex;
 		letter = char;
 
-		antialiasing = Settings.antialiasing;
 		bolded ? createBold() : createLetter();
 	}
 

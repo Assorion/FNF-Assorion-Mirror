@@ -61,11 +61,9 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
         keepGraphic.fillRect(new Rectangle(0,0,inBarWidth,inBarTopLn), 0);
 
         loadingBarBG = new FlxSprite(0,0).loadGraphic(lbBG);
-        loadingBarBG.antialiasing = Settings.antialiasing;
         loadingBarBG.screenCenter();
 
         loadingBarPC = new FlxSprite(0,0).loadGraphic(keepGraphic);
-        loadingBarPC.antialiasing = Settings.antialiasing;
         loadingBarPC.screenCenter();
 
         add(loadingBarBG);

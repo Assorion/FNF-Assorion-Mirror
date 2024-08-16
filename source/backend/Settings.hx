@@ -1,6 +1,7 @@
 package backend;
 
 import flixel.graphics.FlxGraphic;
+import flixel.FlxSprite;
 import flixel.FlxG;
 import backend.Highscore;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -48,6 +49,7 @@ class SettingsManager {
     
     public static function apply(){
         FlxGraphic.defaultPersist = Settings.default_persist;
+	FlxSprite.defaultAntialiasing = Settings.antialiasing;
         FlxG.updateFramerate = FlxG.drawFramerate = framerateClamp(Settings.framerate);
 
         Main.changeUsefulInfo(Settings.useful_info);

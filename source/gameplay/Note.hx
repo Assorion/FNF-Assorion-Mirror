@@ -43,9 +43,6 @@ class Note extends StaticSprite
 	{
 		super(0,-100);
 
-		// Uncomment if this is an FlxSprite
-		// antialiasing = true;
-
 		isSustainNote  = sustainNote;
 		this.strumTime = strumTime;
 		this.noteData  = data % keyCount;

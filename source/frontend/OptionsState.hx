@@ -223,6 +223,7 @@ class OptionsState extends MenuTemplate
 				SettingsManager.apply();
 			case 'antialiasing':
 				Settings.antialiasing = !Settings.antialiasing;
+				SettingsManager.apply();
 			case 'show_hud':
 				Settings.show_hud = !Settings.show_hud;
 		}

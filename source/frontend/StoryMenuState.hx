@@ -61,7 +61,6 @@ class StoryMenuState extends MenuTemplate
 			weekGraphic.updateHitbox();
 			weekGraphic.centerOrigin();
 			weekGraphic.scale.set(0.7, 0.7);
-			weekGraphic.antialiasing = Settings.antialiasing;
 			weekGraphic.offset.x += 75;
 
 			pushObject(weekGraphic);
@@ -188,7 +187,6 @@ class StoryMenuState extends MenuTemplate
 
 		var oldRef:FlxSprite = weekBG;
 		weekBG = new FlxSprite(640, 0).loadGraphic(Paths.lImage('storymenu/' + weekData[curSel].portrait));
-		weekBG.antialiasing = Settings.antialiasing;
 		sAdd(weekBG);
 
 		if(oldRef == null) return;
