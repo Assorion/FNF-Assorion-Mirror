@@ -190,11 +190,12 @@ class StoryMenuState extends MenuTemplate
 		weekBG.alpha = 0;
 		FlxTween.tween(weekBG, {alpha: 1}, 0.2);
 		postEvent(0.21, function(){
-			if(oldRef == null) return;
+			if(oldRef == null)
+				return;
 
+			remove(oldRef);
 			oldRef.destroy();
 			oldRef = null;
-			remove(oldRef);
 		});
 	}
 
