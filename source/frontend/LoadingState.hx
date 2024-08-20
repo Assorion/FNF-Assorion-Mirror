@@ -68,7 +68,7 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
         add(loadingBarBG);
         add(loadingBarPC);
 
-        var ldText = new FormattedText(0, 0, 0, "Loading:", null, 20, 0xFFFFFFFF, CENTER);
+        var ldText = new FormattedText(0, 0, 0, "Loading:", null, 50, 0xFFFFFFFF, CENTER);
 	ldText.screenCenter();
         ldText.y -= ldText.height * 4;
 
