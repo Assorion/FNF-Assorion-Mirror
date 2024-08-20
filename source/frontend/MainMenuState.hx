@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -65,9 +64,8 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.023);
 
-		var versionNumber:FlxText = new FlxText(5, FlxG.height - 18, 0, "Assorion Engine v" + Application.current.meta.get('version'), 12);
-			versionNumber.scrollFactor.set();
-			versionNumber.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		var versionNumber = new FormattedText(5, FlxG.height - 18, 0, "Assorion Engine v" + Application.current.meta.get('version'), null, 16, FlxColor.WHITE, LEFT, flixel.text.FlxText.FlxTextBorderStyle.OUTLINE);
+		versionNumber.scrollFactor.set();
 		add(versionNumber);
 
 		var o:Int = curSelected;

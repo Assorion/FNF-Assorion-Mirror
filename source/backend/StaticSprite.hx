@@ -1,9 +1,9 @@
-package;
+package backend;
 
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
-// No this probably doesn't help with performance much, but it is still helpful as Antialiasing is set properly.
+// A compact sprite class that always has no update. Do not use these for animations.
 
 class StaticSprite extends FlxSprite {
     public function new(?x:Float = 0, ?y:Float = 0 ){

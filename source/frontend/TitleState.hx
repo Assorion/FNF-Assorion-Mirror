@@ -6,7 +6,6 @@ import flixel.FlxSprite;
 import lime.utils.Assets;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;

@@ -12,7 +12,6 @@ import frontend.Alphabet;
 import backend.CoolUtil;
 import openfl.display.BitmapData;
 import flixel.math.FlxMath;
-import flixel.text.FlxText;
 import backend.MenuTemplate;
 import backend.NewTransition;
 
@@ -23,7 +22,7 @@ class PauseSubstate extends MusicBeatSubstate
 	public static var optionList:Array<String> = ['Resume Game', 'Restart Song', 'Toggle Botplay', 'Exit To Menu'];
 	
 	public var curSelected:Int = 0;
-	public var pauseText:FlxText;
+	public var pauseText:FormattedText;
 	public var alphaTexts:Array<MenuObject> = [];
 	public var bottomBlack:StaticSprite;
 
@@ -64,8 +63,7 @@ class PauseSubstate extends MusicBeatSubstate
 		bottomBlack = new StaticSprite(0, camera.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
 		bottomBlack.alpha = 0;
 
-		pauseText = new FlxText(5, camera.height - 25, 0, '', 20);
-		pauseText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
+		pauseText = new FormattedText(5, camera.height - 25, 0, '', null, 20);
 		pauseText.alpha = 0;
 
 		add(bottomBlack);

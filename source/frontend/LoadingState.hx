@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
-import flixel.text.FlxText;
 import openfl.utils.Assets;
 import openfl.geom.Rectangle;
 import openfl.display.BitmapData;
@@ -24,7 +23,7 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
 
     private var loadingBarBG:FlxSprite;
     private var loadingBarPC:FlxSprite;
-    private var assetText:FlxText;
+    private var assetText:FormattedText;
     private var keepGraphic:BitmapData;
 
     public var objects:Array<String> = [];
@@ -69,14 +68,12 @@ class LoadingState extends flixel.addons.ui.FlxUIState {
         add(loadingBarBG);
         add(loadingBarPC);
 
-        var ldText = new FlxText(0, 0, 0, "Loading:", 20);
-		ldText.setFormat("assets/fonts/vcr.ttf", 50, 0xFFFFFFFF, CENTER);
-		ldText.screenCenter();
+        var ldText = new FormattedText(0, 0, 0, "Loading:", null, 20, 0xFFFFFFFF, CENTER);
+	ldText.screenCenter();
         ldText.y -= ldText.height * 4;
 
-        assetText = new FlxText(0, 0, 0, "", 20);
-		assetText.setFormat("assets/fonts/vcr.ttf", 40, 0xFFFFFFFF, CENTER);
-		assetText.screenCenter();
+        assetText = new FormattedText(0, 0, 0, "", null, 40, 0xFFFFFFFF, CENTER);
+	assetText.screenCenter();
         assetText.y -= assetText.height * 3.3;
 
         add(ldText);

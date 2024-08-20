@@ -1,7 +1,6 @@
 package gameplay;
 
 import flixel.FlxG;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.FlxCamera;
 import flixel.tweens.FlxTween;
@@ -32,7 +31,7 @@ class DialogueSubstate extends MusicBeatSubstate {
 	public var graySprite:StaticSprite; 
 	public var dialogueBGSprite:StaticSprite;
 	public var characterSpriteGroup:FlxTypedGroup<StaticSprite>;
-	public var dialogueText:FlxText;
+	public var dialogueText:FormattedText;
 
 	public function new(pState:PlayState, camera:FlxCamera, dialogueJson:String){
 		super();
@@ -54,8 +53,7 @@ class DialogueSubstate extends MusicBeatSubstate {
 		dialogueBGSprite.alpha = 0;
 		add(dialogueBGSprite);
 		
-		dialogueText = new FlxText(dialogueBGSprite.x + 10, dialogueBGSprite.y + 10, 900, '', 20);
-		dialogueText.setFormat("assets/fonts/vcr.ttf", 35, 0xFF000000, LEFT);
+		dialogueText = new FormattedText(dialogueBGSprite.x + 10, dialogueBGSprite.y + 10, 900, '', null, 35, 0xFF000000);
 		add(dialogueText);
 
 		FlxTween.tween( graySprite, {alpha: 0.7}, 2);

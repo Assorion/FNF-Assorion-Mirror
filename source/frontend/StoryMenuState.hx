@@ -2,7 +2,6 @@ package frontend;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.text.FlxText;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
@@ -38,8 +37,8 @@ class StoryMenuState extends MenuTemplate
 	];
 
 	public var weekBG:FlxSprite;
-	public var topText:FlxText;
-	public var trackList:FlxText;
+	public var topText:FormattedText;
+	public var trackList:FormattedText;
 
 	var arrowSpr1:StaticSprite;
 	var arrowSpr2:StaticSprite;
@@ -67,8 +66,7 @@ class StoryMenuState extends MenuTemplate
 		}
 
 		var topBlack:StaticSprite = new StaticSprite(0,0).makeGraphic(640, 20, FlxColor.fromRGB(25,25,25));
-		topText = new FlxText(0, 2, 0, "1234567890ABCDEFG", 18);
-		topText.setFormat('assets/fonts/vcr.ttf', 18, FlxColor.GRAY, CENTER);
+		topText = new FormattedText(0, 2, 0, "1234567890ABCDEFG", null, 18, FlxColor.GRAY, CENTER);
 		topText.screenCenter(X);
 		topText.x -= 320;
 		sAdd(topBlack);
@@ -88,9 +86,7 @@ class StoryMenuState extends MenuTemplate
 		diffImage = new StaticSprite(640, 45);
 		diffImage.scale.set(0.7, 0.7);
 
-		trackList = new FlxText(0, 110, 0, "Tracks", 32);
-		trackList.setFormat('assets/fonts/vcr.ttf', 32, CENTER);
-		trackList.color = 0xFFE55777;
+		trackList = new FormattedText(0, 110, 0, "Tracks", null, 32, 0xFFE55777, CENTER);
 		trackList.screenCenter(X);
 		trackList.x -= 167.5;
 		sAdd(arrowSpr1);

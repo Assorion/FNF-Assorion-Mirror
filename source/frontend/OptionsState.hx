@@ -2,7 +2,6 @@ package frontend;
 
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -65,7 +64,7 @@ class OptionsState extends MenuTemplate
 	];
 
 	public var curSub:Int = 0;
-	public var descText:FlxText;
+	public var descText:FormattedText;
 	var bottomBlack:StaticSprite;
 
 	override function create()
@@ -75,15 +74,14 @@ class OptionsState extends MenuTemplate
 		super.create();
 
 		if(FlxG.sound.music == null || !FlxG.sound.music.playing) {
-            Song.musicSet(Paths.menuTempo);
-            FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
-        }
+            		Song.musicSet(Paths.menuTempo);
+            		FlxG.sound.playMusic(Paths.lMusic(Paths.menuMusic));
+        	}
 
 		bottomBlack = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
 		bottomBlack.alpha = 0.6;
 
-		descText = new FlxText(5, FlxG.height - 25, 0, "", 20);
-		descText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
+		descText = new FormattedText(5, FlxG.height - 25, 0, "", null, 20);
 		
 		sAdd(bottomBlack);
 		sAdd(descText);

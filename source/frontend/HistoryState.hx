@@ -2,7 +2,6 @@ package frontend;
 
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
-import flixel.text.FlxText;
 import flixel.FlxG;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
@@ -47,9 +46,7 @@ class HistoryState extends MenuTemplate {
         // literally stolen from freeplay.
         var bottomBlack:StaticSprite = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, 0xFF000000);
         var str='Press ${CoolUtil.getKeyNameFromString(Binds.UI_ACCEPT[0], true, false)} to see the entry. / ${CoolUtil.getKeyNameFromString(Binds.UI_BACK[0], true, false)} to go back.';
-		var descText = new FlxText(5, FlxG.height - 25, 0, str, 20);
-
-		descText.setFormat('assets/fonts/vcr.ttf', 20, 0xFFFFFF, LEFT);
+		var descText = new FormattedText(5, FlxG.height - 25, 0, str, null, 20);
 		bottomBlack.alpha = 0.6;
 
         sAdd(bottomBlack);
@@ -77,7 +74,7 @@ class HistoryState extends MenuTemplate {
 }
 class HistorySubstate extends MusicBeatSubstate {
     private var bgSpr:FlxSprite;
-    private var awesomeText:FlxText;
+    private var awesomeText:FormattedText;
     private var parent:HistoryState;
 
     public function new(text:String, parent:HistoryState){
@@ -94,8 +91,7 @@ class HistorySubstate extends MusicBeatSubstate {
         bgSpr.scrollFactor.set(0,0);
 
         // without the substring, it will always start with 'null', so I just skip the first 4 characters.
-        awesomeText = new FlxText(0, 0, 0, text.substring(4, text.length), 22);
-		awesomeText.setFormat('assets/fonts/vcr.ttf', 22, 0xFFFFFF, LEFT);
+        awesomeText = new FormattedText(0, 0, 0, text.substring(4, text.length), null, 22);
         awesomeText.scrollFactor.set(0,0);
         awesomeText.alpha = 0;
         awesomeText.screenCenter();

@@ -2,7 +2,6 @@ package frontend;
 
 import flixel.FlxG;
 import lime.utils.Assets;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
@@ -23,8 +22,8 @@ class FreeplayState extends MenuTemplate
 	private static var curDifficulty:Int = 1;
 	public var songs:Array<String> = [];
 
-	private var scoreText:FlxText;
-	private var diffText:FlxText;
+	private var scoreText:FormattedText;
+	private var diffText:FormattedText;
 	private var intendedScore:Int = 0;
 
 	private var vocals:FlxSound;
@@ -56,15 +55,11 @@ class FreeplayState extends MenuTemplate
 		var scoreBG:StaticSprite = new StaticSprite((FlxG.width * 0.7) - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
 
-		scoreText = new FlxText(scoreBG.x + 6, 5, 0, "", 32);
-		scoreText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, RIGHT);
-
-		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "< NORMAL >", 24);
-		diffText.font = scoreText.font;
+		scoreText = new FormattedText(scoreBG.x + 6, 5, 0, null, null, 32, FlxColor.WHITE, LEFT);
+		diffText = new FormattedText(scoreText.x, scoreText.y + 36, 0, "< NORMAL >", null, 24);
 
 		var bottomBlack:StaticSprite = new StaticSprite(0, FlxG.height - 30).makeGraphic(1280, 30, FlxColor.BLACK);
-		var descText = new FlxText(5, FlxG.height - 25, 0, "Press Space to preview song / stop song. Left or Right to change the difficulty.", 20);
-		descText.setFormat('assets/fonts/vcr.ttf', 20, FlxColor.WHITE, LEFT);
+		var descText = new FormattedText(5, FlxG.height - 25, 0, "Press Space to preview song / stop song. Left or Right to change the difficulty.", null, 20);
 		bottomBlack.alpha = 0.6;
 
 		sAdd(scoreBG);

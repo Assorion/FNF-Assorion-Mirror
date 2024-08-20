@@ -5,7 +5,6 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.math.FlxMath;
-import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
@@ -69,7 +68,7 @@ class PlayState extends MusicBeatState
 
 	public var paused:Bool = false;
 	public var songScore:Int = 0;
-	public var scoreTxt:FlxText;
+	public var scoreTxt:FormattedText;
 
 	// TODO: Un-hardcode this. I admit this is terrible!
 	private var characterPositions:Array<Int> = [
@@ -161,8 +160,7 @@ class PlayState extends MusicBeatState
 		healthBar.scrollFactor.set();
 		healthBar.createFilledBar(healthColours[0], healthColours[1]);
 
-		scoreTxt = new FlxText(0, baseY + 40, 0, PauseSubstate.botplayText, 20);
-		scoreTxt.setFormat("assets/fonts/vcr.ttf", 16, 0xFFFFFFFF, CENTER, OUTLINE, 0xFF000000);
+		scoreTxt = new FormattedText(0, baseY + 40, 0, PauseSubstate.botplayText, null, 16, 0xFFFFFFFF, CENTER, OUTLINE);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
 

@@ -2,15 +2,14 @@ package frontend;
 
 import flixel.FlxG;
 import flixel.util.FlxColor;
-import flixel.text.FlxText;
 
 class OffsetWizard extends MusicBeatState {
     public var curOffset:Float = 0;
     public var prevOffset:Int = 0;
     public var offsetsArray:Array<Float> = [];
 
-    var beatText:FlxText;
-    var offsetText:FlxText;
+    var beatText:FormattedText;
+    var offsetText:FormattedText;
 
     var songTime:Float = 0;
     var rootBeat:Int = 0;
@@ -33,22 +32,19 @@ class OffsetWizard extends MusicBeatState {
 
         add(bg);
 
-        var infoText:FlxText = new FlxText(0, 0, 0, 'Tap any key to the AUDIO beat.\nNOT the visual beat!\nAny key will work.', 30);
-		infoText.setFormat("assets/fonts/vcr.ttf", 30, 0xFFFFFFFF, CENTER, OUTLINE, 0xFF000000);
-		infoText.screenCenter(X);
+        var infoText:FormattedText  = new FormattedText(0, 0, 0, 'Tap any key to the AUDIO beat.\nNOT the visual beat!\nAny key will work.', null, 30, 0xFFFFFFFF, CENTER, OUTLINE);
+	infoText.screenCenter(X);
         infoText.y = (720 / 4) - (infoText.height / 2);
         add(infoText);
 
-        offsetText = new FlxText(0, 0, 0, 'Current Offset: 0 Milliseconds', 30);
-		offsetText.setFormat("assets/fonts/vcr.ttf", 30, 0xFFFFFFFF, CENTER, OUTLINE, 0xFF000000);
-		offsetText.screenCenter(X);
+        offsetText = new FormattedText(0, 0, 0, 'Current Offset: 0 Milliseconds', null, 30, 0xFFFFFFFF, CENTER, OUTLINE);
+	offsetText.screenCenter(X);
         offsetText.y = 540 - (offsetText.height / 2);
         add(offsetText);
 
-        beatText = new FlxText(0, 0, 0, 'BEAT HIT!', 80);
-		beatText.setFormat("assets/fonts/vcr.ttf", 80, 0xFFFFFFFF, CENTER, OUTLINE, 0xFF000000);
+        beatText = new FormattedText(0, 0, 0, 'BEAT HIT!', null, 80, 0xFFFFFFFF, CENTER, OUTLINE);
         beatText.borderSize = 4;
-		beatText.screenCenter();
+	beatText.screenCenter();
         beatText.alpha = 0;
         add(beatText);
     }
