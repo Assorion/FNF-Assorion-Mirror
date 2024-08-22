@@ -186,7 +186,8 @@ class PlayState extends MusicBeatState
 			scoreTxt.cameras = [camHUD];
 		}
 
-		stepTime = -16 - (((SONG.beginTime * 1000) + Settings.audio_offset) * Song.division);
+		// THIS IS BROKEN! I WILL FIX THIS TOMORROW!
+		stepTime = -20 - (((SONG.beginTime * 1000) + Settings.audio_offset) * Song.division);
 		updateHealth(0);
 
 		Song.beatHooks.push(beatHit);
@@ -345,10 +346,11 @@ class PlayState extends MusicBeatState
 		Song.update(FlxG.sound.music.time);
 		stepTime += elapsed * 1000 * Song.division;
 
-		if(backwardsChartNotes.length > 1 && backwardsChartNotes[0].strumTime - stepTime < 32){
+		if(backwardsChartNotes[0] != null && backwardsChartNotes[0].strumTime - stepTime < 32){
 			// To be clear, the notes appear backwards (so earlier notes in the chart are furthest in the array). But the first index of the
 			// array is always equal to the last note that was popped.
 			notes.add(backwardsChartNotes[0]);
+			backwardsChartNotes[0] = null;
 			backwardsChartNotes[0] = backwardsChartNotes.pop();	
 		}
 
