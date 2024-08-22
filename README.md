@@ -9,8 +9,8 @@
  <img src="https://img.shields.io/gitea/v/release/Assorion/FNF-Assorion-Engine?gitea_url=https%3A%2F%2Fcodeberg.org&style=for-the-badge&color=06b59c"/></a>
  </div>
  <div align="center">
- <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
- <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/badge/Linux_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
+ <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/badge/Windows_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
+ <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/releases"><img src="https://img.shields.io/badge/Linux_Build-Released-blue?style=for-the-badge&color=e1b100"/></a>
  <a href="https://github.com/Assorion/FNF-Assorion-Engine/actions/workflows/HTML5.yml"><img src="https://img.shields.io/badge/Web_Build-Testing-blue?style=for-the-badge&color=e1b100"/></a>  
  </div>
 
@@ -62,13 +62,13 @@ any demo assets that aren't used in your mod!
  **RoadMap**
 * [X] Move away from Github
 * [X] Re-work Dialogue
-* [ ] Fix minor annoyances/bugs
+* [X] Fix minor annoyances/bugs
 * [ ] Improve Wiki/Documentation
  
 #### **Branches**
 
 > <details>
-> <summary>Deprecated List</summary>
+> <summary>Branch ideas list</summary>
 > <table>
 > <tr>
 > <td>
@@ -82,7 +82,7 @@ any demo assets that aren't used in your mod!
 ></tr>
 ></table>
 ></details>
-Until the **primary Assorion Engine repository** is finalized, the following branches listed above will be **deprecated**.
+Until the **primary Assorion Engine repository** is finalized, the following branches listed above will **not** be worked on.
 
 ## 🖼️ | Screenshots
 
@@ -92,14 +92,14 @@ Take a look at <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/br
 
 > [!NOTE]
 > Please do **not** clone, or download the source from the top download button. The **NEWEST** source code is often broken due to testing.
-> Use the <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code as it is stable, and less-likely to be broken.
+> Use the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code as it is stable, and less-likely to be broken.
 
 #### **For Windows:**
 - Install <a href="https://haxe.org/">`Haxe`</a>
 - Run `haxelib setup` in CMD. Using the defaults is fine
 - Install [libraries](#libraries) below
 - Run `haxelib run lime setup` in CMD
-- Download and extract the <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code
+- Download and extract the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code
 - Setup <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/.github/MinGW-Setup.md">MinGW-w64</a> and make sure the PATH is set correctly
 - Test to make sure both the `gcc` and `g++` commands work in CMD
 - Run `lime test windows -D HXCPP_MINGW` in CMD. Make sure it's in the project root folder, not the source folder
@@ -109,7 +109,7 @@ Take a look at <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/br
 - Run `haxelib setup` in your terminal
 - Install [libraries](#libraries) below
 - Run `haxelib run lime setup`
-- Download and extract the <a href="https://github.com/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code
+- Download and extract the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code
 - Make sure both `gcc` and `g++` commands work. If not, install GCC using your package manager
 - Run `lime test linux` in your terminal. Make sure it's in the project root folder, not the source folder
 
