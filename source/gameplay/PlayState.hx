@@ -204,7 +204,6 @@ class PlayState extends MusicBeatState
 				postEvent(0.5, function(){ pauseAndOpenState(new DialogueSubstate(this, camHUD, potentialJson)); });
 				return;
 			}
-			
 		}
 
 		postEvent(SONG.beginTime + 0.1, startCountdown);
@@ -348,7 +347,7 @@ class PlayState extends MusicBeatState
 
 		if(backwardsChartNotes.length > 1 && backwardsChartNotes[0].strumTime - stepTime < 32){
 			// To be clear, the notes appear backwards (so earlier notes in the chart are furthest in the array). But the first index of the
-			// array is always equal to the last note that was popped. If you don't know what pop means, it removes the last element and returns it
+			// array is always equal to the last note that was popped.
 			notes.add(backwardsChartNotes[0]);
 			backwardsChartNotes[0] = backwardsChartNotes.pop();	
 		}
@@ -373,6 +372,7 @@ class PlayState extends MusicBeatState
 			followPos.y = char.getMidpoint().y + char.camOffset[1];
 		}
 	}
+
 	public function stepHit() 
 		if(FlxG.sound.music.playing)
 			stepTime = (Song.millisecond * Song.division * 0.25) + (stepTime * 0.75);
@@ -497,37 +497,36 @@ class PlayState extends MusicBeatState
 		daNote.angle = strumRef.angle;
 		
 		// # NPC Note Logic
-		if((daNote.player != playerPos || Settings.botplay) && stepTime >= daNote.strumTime && daNote.curType.mustHit){
-			allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData]);
-			strumRef.playAnim(2);
-			strumRef.pressTime = Song.stepCrochet * 0.001;
-			vocals.volume = 1;
+		if(daNote.player != playerPos || Settings.botplay){
+			if(stepTime >= daNote.strumTime && daNote.curType.mustHit){
+				allCharacters[daNote.player].playAnim('sing' + sDir[daNote.noteData]);
+				strumRef.pressTime = Song.stepCrochet * 0.001;
+				strumRef.playAnim(2);
+				vocals.volume = 1;
 
-			notes.remove(daNote, true);
-			daNote.destroy();
+				notes.remove(daNote, true);
+				daNote.destroy();
+			}
+
 			return;
 		}
 
 		// # Player Note Logic
-		if(daNote.player != playerPos || Settings.botplay) 
-			return;
-
 		if(nDiff > inputRange){
+			destroyNote(daNote, 1);
 			if(daNote.curType.mustHit)
 				missNote(daNote.noteData);
 			
-			destroyNote(daNote, 1);
 			return;
 		}
 
 		// Input range checks
-		if (hittableNotes[daNote.noteData] == null && !daNote.isSustainNote && Math.abs(nDiff) <= inputRange * daNote.curType.rangeMul){
-			hittableNotes[daNote.noteData] = daNote;
-			return;
-		}
-
-		if(daNote.isSustainNote && Math.abs(nDiff) < 0.8 && keysPressed[daNote.noteData])
-			hitNote(daNote);
+		if(daNote.isSustainNote) {
+			if(Math.abs(nDiff) < 0.8 && keysPressed[daNote.noteData])
+				hitNote(daNote);
+		} else 
+			if (hittableNotes[daNote.noteData] == null && Math.abs(nDiff) <= inputRange * daNote.curType.rangeMul)
+				hittableNotes[daNote.noteData] = daNote;
 	}
 
 	public static var possibleScores:Array<RatingData> = [

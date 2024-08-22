@@ -240,7 +240,7 @@
                     "offsetY": -19
                 },
                 {
-                    "animationName": "songUPmiss",
+                    "animationName": "singUPmiss",
                     "xmlName": "BF NOTE UP MISS",
                     "framerate": 24,
                     "loop": false,

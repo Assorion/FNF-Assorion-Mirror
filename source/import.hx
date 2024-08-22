@@ -1,3 +1,4 @@
+import backend.NewTransition;
 import backend.Paths;
 import backend.Binds;
 import backend.Settings;
