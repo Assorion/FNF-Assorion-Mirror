@@ -21,6 +21,13 @@ typedef SectionData =
 	var cameraFacing:Int;
 }
 
+typedef CharacterData =
+{
+	var name:String;
+	var x:Float;
+	var y:Float;
+}
+
 typedef SongData =
 {
 	var song:String;
@@ -30,8 +37,8 @@ typedef SongData =
 	var speed:Float;
 
 	var playLength:Int;
-	var characters:Array<String>;
 	var activePlayer:Int;
+	var characters:Array<CharacterData>;
 	var renderBackwards:Bool;
 
 	var stage:String;

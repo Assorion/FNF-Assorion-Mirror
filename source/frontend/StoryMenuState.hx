@@ -16,7 +16,6 @@ import gameplay.PlayState;
 using StringTools;
 
 typedef StoryData = {
-	var portrait:String;
 	var weekAsset:String;
 	var songs:Array<String>;
 	var topText:String;
@@ -29,8 +28,7 @@ class StoryMenuState extends MenuTemplate
 
 	static var weekData:Array<StoryData> = [
 		{
-			portrait: 'storyportrait',   // Picture shown on the right
-			weekAsset: '1',              // Graphic used for selecting (doesn't have to be a number)
+			weekAsset: 'demo', // Graphic used for selecting (doesn't have to be a number)
 			songs: ['tutorial', 'demo'], 
 			topText: 'THIS IS A TEST'
 		}
@@ -56,7 +54,7 @@ class StoryMenuState extends MenuTemplate
         }
 
 		for(i in 0...weekData.length){
-			var weekGraphic:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('storymenu/week-' + weekData[i].weekAsset));
+			var weekGraphic:FlxSprite = new FlxSprite(0,0).loadGraphic(Paths.lImage('ui/storyMenu/week-' + weekData[i].weekAsset));
 			weekGraphic.updateHitbox();
 			weekGraphic.centerOrigin();
 			weekGraphic.scale.set(0.7, 0.7);
@@ -73,11 +71,11 @@ class StoryMenuState extends MenuTemplate
 		sAdd(topText);
 
 		// bruh
-		arrowSpr1 = new StaticSprite(640 - 50, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
+		arrowSpr1 = new StaticSprite(640 - 50, 30).loadGraphic(Paths.lImage('ui/storyArrow'));
 		arrowSpr1.updateHitbox();
 		arrowSpr1.centerOrigin();
 		arrowSpr1.scale.set(0.7,0.7);
-		arrowSpr2 = new StaticSprite(640 - 330, 30).loadGraphic(Paths.lImage('storymenu/arrow'));
+		arrowSpr2 = new StaticSprite(640 - 330, 30).loadGraphic(Paths.lImage('ui/storyArrow'));
 		arrowSpr2.flipX = true;
 		arrowSpr2.updateHitbox();
 		arrowSpr2.centerOrigin();
@@ -143,7 +141,7 @@ class StoryMenuState extends MenuTemplate
 	public function changeDiff(to:Int, showArr:Bool){
 		curDif = ((curDif + to) + CoolUtil.diffNumb) % CoolUtil.diffNumb;
 
-		diffImage.loadGraphic(Paths.lImage('storymenu/' + CoolUtil.diffString(curDif, 1).toLowerCase()));
+		diffImage.loadGraphic(Paths.lImage('ui/' + CoolUtil.diffString(curDif, 1).toLowerCase()));
 		diffImage.centerOrigin();
 		diffImage.updateHitbox();
 		diffImage.screenCenter(X);
@@ -182,7 +180,7 @@ class StoryMenuState extends MenuTemplate
 		// handle fades
 
 		var oldRef:FlxSprite = weekBG;
-		weekBG = new FlxSprite(640, 0).loadGraphic(Paths.lImage('storymenu/' + weekData[curSel].portrait));
+		weekBG = new FlxSprite(640, 0).loadGraphic(Paths.lImage('ui/storyMenu/portrait-' + weekData[curSel].weekAsset));
 		sAdd(weekBG);
 
 		if(oldRef == null) return;

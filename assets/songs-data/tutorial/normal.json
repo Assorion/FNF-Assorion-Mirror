@@ -669,8 +669,16 @@
 		"renderBackwards": true,
 		"playLength": 2,
 		"characters": [
-			"gf",
-			"bf"
+			{
+				"name": "gf",
+				"x": 400,
+				"y": 130
+			},
+			{
+				"name": "bf",
+				"x": 770,
+				"y": 450
+			}
 		],
 		"song": "tutorial",
 		"beginTime": 0.5,

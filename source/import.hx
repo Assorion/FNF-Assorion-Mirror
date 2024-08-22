@@ -1,3 +1,6 @@
+// Everything from the backend should be imported.
+// "import backend.*;" should've worked but for some reason it doesn't
+
 import backend.NewTransition;
 import backend.Paths;
 import backend.Binds;

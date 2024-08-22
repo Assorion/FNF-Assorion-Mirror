@@ -164,8 +164,8 @@ class PlayState extends MusicBeatState
 		scoreTxt.scrollFactor.set();
 		scoreTxt.screenCenter(X);
 
-		iconP1 = new HealthIcon(SONG.characters[1], true, true);
-		iconP2 = new HealthIcon(SONG.characters[0], false, true);
+		iconP1 = new HealthIcon(SONG.characters[1].name, true, true);
+		iconP2 = new HealthIcon(SONG.characters[0].name, false, true);
 		iconP1.y = baseY - (iconP1.height / 2);
 		iconP2.y = baseY - (iconP2.height / 2);
 
@@ -211,7 +211,7 @@ class PlayState extends MusicBeatState
 
 	public inline function addCharacters() {
 		for(i in 0...SONG.characters.length)
-			allCharacters.push(new Character(characterPositions[i * 2], characterPositions[(i * 2) + 1], SONG.characters[i], i == 1));
+			allCharacters.push(new Character(SONG.characters[i].x, SONG.characters[i].y, SONG.characters[i].name, i == 1));
 		
 		for(i in 0...SONG.characters.length)
 			add(allCharacters[SONG.renderBackwards ? i : (SONG.characters.length - 1) - i]);
@@ -223,22 +223,22 @@ class PlayState extends MusicBeatState
 			case 'stage', '':
 				FlxG.camera.zoom = 0.9;
 
-				var bg:StaticSprite = new StaticSprite(-600, -200).loadGraphic(Paths.lImage('stages/stageback'));
+				var bg:StaticSprite = new StaticSprite(-600, -200).loadGraphic(Paths.lImage('stages/demo/stageback'));
 					bg.setGraphicSize(Std.int(bg.width * 2));
 					bg.updateHitbox();
 					bg.scrollFactor.set(0.9, 0.9);
 				add(bg);
-				var stageFront:StaticSprite = new StaticSprite(-650, 600).loadGraphic(Paths.lImage('stages/stagefront'));
+				var stageFront:StaticSprite = new StaticSprite(-650, 600).loadGraphic(Paths.lImage('stages/demo/stagefront'));
 					stageFront.setGraphicSize(Std.int(stageFront.width * 2.2));
 					stageFront.updateHitbox();
 					stageFront.scrollFactor.set(0.9, 0.9);
 				add(stageFront);
-				var curtainLeft:StaticSprite = new StaticSprite(-500, -165).loadGraphic(Paths.lImage('stages/curtainLeft'));
+				var curtainLeft:StaticSprite = new StaticSprite(-500, -165).loadGraphic(Paths.lImage('stages/demo/curtainLeft'));
 					curtainLeft.setGraphicSize(Std.int(curtainLeft.width * 1.8));
 					curtainLeft.updateHitbox();
 					curtainLeft.scrollFactor.set(1.3, 1.3);
 				add(curtainLeft);
-				var curtainRight:StaticSprite = new StaticSprite(1406, -165).loadGraphic(Paths.lImage('stages/curtainRight'));
+				var curtainRight:StaticSprite = new StaticSprite(1406, -165).loadGraphic(Paths.lImage('stages/demo/curtainRight'));
 					curtainRight.setGraphicSize(Std.int(curtainRight.width * 1.8));
 					curtainRight.updateHitbox();
 					curtainRight.scrollFactor.set(1.3, 1.3);

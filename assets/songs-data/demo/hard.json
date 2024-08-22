@@ -3899,9 +3899,22 @@
 			}
 		],
 		"characters": [
-			"dad",
-			"bf",
-			"gf"
+			{
+				"name": "demo",
+				"x": 100,
+				"y": 100
+			},
+			{
+				"name": "bf",
+				"x": 770,
+				"y": 450
+			},
+			{
+
+				"name": "gf",
+				"x": 400,
+				"y": 130
+			}
 		],
 		"playLength": 2,
 		"song": "demo",

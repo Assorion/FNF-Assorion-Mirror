@@ -36,7 +36,9 @@ Assorion Engine doesn't have mods folder capabilities planned nor will it be imp
 In addition, things such as cutscenes, events, discordRPC, etc, will have to be added yourself. 
 Though, Assorion Engine does have several <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine#branches">branches</a> planned with more features soon.
 
-Assorion is a very simple engine and thus, it may not receive many feature updates; Assorion will continue to have bug fixes and optimizations.
+Assorion is a very simple engine and thus, it may not receive many feature updates; Though it will continue to have bug fixes and optimizations. 
+It is worth noting that this is a pure engine. Assorion does not contain the base game but instead contains a short demo. Please remove
+any demo assets that aren't used in your mod!
 
 ## ⚡ | Why choose Assorion Engine?
 

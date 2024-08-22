@@ -97,6 +97,7 @@ class ChartUI_Generic extends FlxSprite {
         canvas = new BitmapData(w, h, true);
         loadGraphic(canvas);
         makeText(w,h,i,t);
+	antialiasing = false;
     }
 }
 

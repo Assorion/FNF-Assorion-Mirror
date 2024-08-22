@@ -200,7 +200,7 @@ class ChartingState extends MusicBeatState {
         for(i in 0...song.playLength){
             if(song.characters.length - 1 < i) break;
 
-            var tmpIcon = new HealthIcon(song.characters[i]);
+            var tmpIcon = new HealthIcon(song.characters[i].name);
             tmpIcon.x = gridSize * i * Note.keyCount + gridSize;
             tmpIcon.y = gridSprite.height + 10;
             tmpIcon.scale.set(0.5, 0.5);
@@ -835,11 +835,29 @@ class ChartingState extends MusicBeatState {
     private var characterNames:Array<String>;
     private inline function charUIGenPlayerDrop(ind:Int)
     {
-        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 35, 160, 30, characterNames, song.characters[ind], function(index:Int, item:String){
-            song.characters[ind] = item; makeGrid(); }, uiElements);
+        var tmpDrop:ChartUI_DropDown = new ChartUI_DropDown(0, ind * 35, 130, 30, characterNames, song.characters[ind].name, function(index:Int, item:String){
+        	song.characters[ind] = {
+			name: item,
+			x: song.characters[ind].x,
+			y: song.characters[ind].y
+		};
+ 
+		makeGrid(); 
+	}, uiElements);
+
+	// Fantastic name for a variable.
+	var XBox:ChartUI_InputBox = new ChartUI_InputBox(170, ind * 35, 60, 30, Std.string(song.characters[ind].x), function(ch:String){
+		song.characters[ind].x = Std.parseFloat(ch);
+	});
+	
+	var YBox:ChartUI_InputBox = new ChartUI_InputBox(240, ind * 35, 60, 30, Std.string(song.characters[ind].y), function(ch:String){
+		song.characters[ind].y = Std.parseFloat(ch);
+	});
 
         uiElements.add(tmpDrop);
-        genText(tmpDrop, 'Player ${ind + 1}');
+	uiElements.add(XBox);
+	uiElements.add(YBox);
+        genText(YBox, '${ind + 1}');
     }
     public function createCharUI(){
         uiStart(1);
@@ -853,21 +871,28 @@ class ChartingState extends MusicBeatState {
         ///////////////////////////////////////////
 
         var addButton:ChartUI_Button = new ChartUI_Button(360, 0, 30, 30, function(){
-            if(song.characters.length >= 13) 
-                return;
+            	if(song.characters.length >= 13) 
+                	return;
 
-            song.characters.push('bf');
-            charUIGenPlayerDrop(song.characters.length - 1);
+            	song.characters.push({
+			name: 'bf',
+			x: 0,
+			y: 0
+		});
+            	charUIGenPlayerDrop(song.characters.length - 1);
         }, '+');
         var remButton:ChartUI_Button = new ChartUI_Button(320, 0, 30, 30, function(){
             if(song.characters.length <= 1) 
                 return;
 
-            song.characters.splice(song.characters.length - 1, 1);
+            //song.characters.splice(song.characters.length - 1, 1);
+	    song.characters.pop();
             var nLen = uiElements.length - 1;
 
             uiElements.remove(uiElements.members[nLen],     true);
             uiElements.remove(uiElements.members[nLen - 1], true);
+            uiElements.remove(uiElements.members[nLen - 2], true);
+            uiElements.remove(uiElements.members[nLen - 3], true);
 
             if(song.characters.length != 1) 
                 return;

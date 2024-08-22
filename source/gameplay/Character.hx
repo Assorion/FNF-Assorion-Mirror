@@ -48,8 +48,11 @@ class Character extends FlxSprite
 		addAnimationJSONFile();
 		
 		playAnim(leftRightIdle ? 'danceLeft' : 'idle');
-		if(isPlayer) 
+	
+		if(isPlayer) { 
 			flipX = !flipX;
+			camOffset[0] = -camOffset[0];
+		}
 	}
 
 	// You will have to write the JSON by hand, if this change is not well recieved (make an issue about it or smth) then I will undo the change.
