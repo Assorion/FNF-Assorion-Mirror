@@ -186,8 +186,7 @@ class PlayState extends MusicBeatState
 			scoreTxt.cameras = [camHUD];
 		}
 
-		// THIS IS BROKEN! I WILL FIX THIS TOMORROW!
-		stepTime = -20 - (((SONG.beginTime * 1000) + Settings.audio_offset) * Song.division);
+		stepTime = -22 - (((SONG.beginTime * 1000) - Settings.audio_offset) * Song.division);
 		updateHealth(0);
 
 		Song.beatHooks.push(beatHit);
