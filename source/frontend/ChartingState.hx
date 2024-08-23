@@ -144,6 +144,7 @@ class ChartingState extends MusicBeatState {
 
         // # Creates vocals.
 
+	FlxG.sound.music.volume = 0.7;
         vocals = new FlxSound();
 		if (song.needsVoices)
 			vocals.loadEmbedded(Paths.playableSong(PlayState.songName, true));
@@ -339,6 +340,7 @@ class ChartingState extends MusicBeatState {
 
                 ///////////////////////////
                 FlxG.mouse.visible = false;
+		FlxG.sound.music.volume = 1;
                 MusicBeatState.changeState(new PlayState());
 
                 FlxG.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveEvent);

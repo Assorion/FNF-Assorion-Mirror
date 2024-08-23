@@ -61,14 +61,14 @@ class SettingsManager {
         var settingsItems:Array<String> = Type.getClassFields(Settings);
         var bindsItems:Array<String>    = Type.getClassFields(Binds);
 
-        for(i in 0...settingsItems.length)
-            settingsMap.set(settingsItems[i], Reflect.field(Settings, settingsItems[i]));
+        for(settingItem in settingsItems)
+            settingsMap.set(settingItem, Reflect.field(Settings, settingItem));
 
-        for(i in 0...bindsItems.length){
-            var item = Reflect.field(Binds, bindsItems[i]);
+        for(bindItem in bindsItems){
+            var item = Reflect.field(Binds, bindItem);
 
             if(Std.is(item, Array))
-                settingsMap.set(bindsItems[i], item);
+                settingsMap.set(bindItem, item);
         }
 
         /////////////////////////////////////
