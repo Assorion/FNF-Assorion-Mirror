@@ -124,7 +124,7 @@ Run `haxelib install <library name>` replacing `<library name>` with these libra
 - `flixel-ui`
 
 #### **If you're confused:**  
-Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin#build-instructions">base game instructions</a> on compiling. It's recommended to use <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/.github/MinGW-Setup.md">**`MinGW-w64`**</a> however the compiler may error out, if that happens then just use **`Visual Studio's Clang Compiler`**.  
+Follow a YouTube guide, or the <a href="https://github.com/FunkinCrew/Funkin/tree/v0.2.7.1#build-instructions">base game instructions</a> on compiling. It's recommended to use <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/.github/MinGW-Setup.md">**`MinGW-w64`**</a> however the compiler may error out, if that happens then just use **`Visual Studio's Clang Compiler`**.  
 
 ## 💻 | Minimum Requirements
 
