@@ -16,16 +16,15 @@ jobs:
           haxe-version: 4.1.5
       
     # Obtaining Haxe Libraries for compilation.
-    # This uses a custom version of HXCPP with some optimizations.
       - name: Install Haxelib
         run: |
-          haxelib setup C:/haxelib
+          haxelib setup C:\haxelib
           haxelib install hxcpp
-          haxelib install lime 7.9.0
-          haxelib install openfl 9.2.2
-          haxelib install flixel 4.9.0 
-          haxelib install flixel-ui 2.5.0
-          haxelib install flixel-addons 2.7.0
+          haxelib install lime
+          haxelib install openfl
+          haxelib install flixel
+          haxelib install flixel-ui 
+          haxelib install flixel-addons 
         shell: cmd
 
     # Random Github BS as always, just keep this here.
