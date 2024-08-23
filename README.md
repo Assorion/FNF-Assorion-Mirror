@@ -37,8 +37,7 @@ In addition, things such as cutscenes, events, discordRPC, etc, will have to be 
 Though, Assorion Engine does have several <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine#branches">branches</a> planned with more features soon.
 
 Assorion is a very simple engine and thus, it may not receive many feature updates; Though it will continue to have bug fixes and optimizations. 
-It is worth noting that this is a pure engine. Assorion does not contain the base game but instead contains a short demo. Please remove
-any demo assets that aren't used in your mod!
+It is worth noting that this is a pure engine. Assorion does not contain the base game but instead contains a short demo. 
 
 ## ⚡ | Why choose Assorion Engine?
 
@@ -84,9 +83,11 @@ any demo assets that aren't used in your mod!
 ></details>
 Until the **primary Assorion Engine repository** is finalized, the following branches listed above will **not** be worked on.
 
-## 🖼️ | Screenshots
+## 🖼️ | Screenshots and Builds
 
 Take a look at <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/.github/Screenshots.md">`art/screenshots.md`</a>. 
+
+If you want to try out the engine you can acquire releases <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/releases">here</a>.
 
 # 🛠 | Compiling
 
