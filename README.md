@@ -91,10 +91,6 @@ If you want to try out the engine you can acquire releases <a href="https://code
 
 # 🛠 | Compiling
 
-> [!NOTE]
-> Please do **not** clone, or download the source from the top download button. The **NEWEST** source code is often broken due to testing.
-> Use the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/releases">latest release's</a> source code as it is stable, and less-likely to be broken.
-
 #### **For Windows:**
 - Install <a href="https://haxe.org/">`Haxe`</a>
 - Run `haxelib setup` in CMD. Using the defaults is fine
