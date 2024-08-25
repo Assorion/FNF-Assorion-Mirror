@@ -70,12 +70,6 @@ class PlayState extends MusicBeatState
 	public var songScore:Int = 0;
 	public var scoreTxt:FormattedText;
 
-	// TODO: Un-hardcode this. I admit this is terrible!
-	private var characterPositions:Array<Int> = [
-		100, 100, // Dad
-		770, 450, // BF 
-		400, 130  // GF
-	];
 	private var playerPos:Int = 1;
 	private var allCharacters:Array<Character> = [];
 
@@ -217,7 +211,6 @@ class PlayState extends MusicBeatState
 			add(allCharacters[SONG.renderBackwards ? i : (SONG.characters.length - 1) - i]);
 	}
 
-	// If you need, you can edit the 'characterPositions' variable in here.
 	public inline function handleStage() {
 		switch(SONG.stage){
 			case 'stage', '':
