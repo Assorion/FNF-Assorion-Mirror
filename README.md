@@ -21,7 +21,7 @@
 </div>
 <div align="center">
  
-┃ [**`• What is Assorion?`**](#what-is-assorion-engine) ┃ [**`• Important Notes`**](#important-notes) ┃ [**`• Compiling`**](#compiling) ┃ <a href="https://assorion.github.io/wiki/">**`• Wiki (WIP)`**</a> ┃ <a href="https://discord.gg/nbhWWxKxTe">**`• Discord`**</a> ┃
+┃ [**`• What is Assorion?`**](#what-is-assorion-engine) ┃ [**`• Important Notes`**](#important-notes) ┃ [**`• Compiling`**](#compiling) ┃ <a href="https://discord.gg/nbhWWxKxTe">**`• Discord`**</a> ┃
 
 </div>
 
@@ -72,23 +72,21 @@ If you want to try out the engine you can acquire releases <a href="https://code
 
 #### **For Windows:**
 - Install <a href="https://haxe.org/">`Haxe`</a>
-- Run `haxelib setup` in CMD. Using the defaults is fine
+- Run `haxelib setup` in a command-prompt window (CMD). Using the default path is fine
 - Install [libraries](#libraries) below
-- Run `haxelib run lime setup` in CMD
-- Clone (or download) the source code
-- Install Visual Studio (tested on 2017) with the Windows SDK and MSVC
+- Clone/Download the source code
+- Install a C++ compiler. In most situations that would be the MSVC compiler (with the Windows SDK included in Visual Studio)
 - Open CMD within the project root folder
-- Run `lime test windows` in CMD
+- Run `haxelib run lime test windows` in CMD
 
 #### **For Linux:**
 - Install Haxe using your package manager
 - Run `haxelib setup` in your terminal
 - Install [libraries](#libraries) below
-- Run `haxelib run lime setup`
-- Clone (or download) the source code
-- Make sure both `gcc` and `g++` commands work. If not, install GCC using your package manager
+- Clone/Download the source code
+- Make sure `g++` command work. If not, install GCC using your package manager
 - Open your preferred terminal within the project root folder
-- Run `lime test linux` in your terminal
+- Run `haxelib run lime test linux` in your terminal
 
 #### **Libraries:**  
 Run `haxelib install <library name>` replacing `<library name>` with these libraries below:
@@ -96,13 +94,11 @@ Run `haxelib install <library name>` replacing `<library name>` with these libra
 - `lime`
 - `openfl`
 - `flixel`
-- `flixel-addons`
-- `flixel-ui`
 
 #### **If you're confused:**  
 The <a href="https://github.com/FunkinCrew/Funkin/tree/v0.2.7.1#build-instructions">original game's compiling instructions</a> should be attiquete. There are also a few helpful resources on YouTube and other places if needed.
 
-# ⚠️ | License
+# ⚖ | License
 **<a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/LICENSE">GPL-3.0 Public License</a>, Version 3, 29 June 2007**
 
 Under the terms of the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/LICENSE">GPL-3.0 Public License</a>, Assorion Engine will be free and open source and anyone using this project thereafter acknowledges being bound under the <a href="https://codeberg.org/Assorion/FNF-Assorion-Engine/src/branch/main/LICENSE">GPL-3.0 Public License's</a> conditions, and making their variant of the project open source.
