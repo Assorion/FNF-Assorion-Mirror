@@ -9,7 +9,7 @@
         {
             "animationName": "idle",
             "xmlName": "Dad idle dance",
-            "framerate": 24,
+            "framerate": 12,
             "loop": false,
             "offsetX": 0,
             "offsetY": 0
@@ -17,7 +17,7 @@
         {
             "animationName": "singLEFT",
             "xmlName": "Dad Sing Note LEFT",
-            "framerate": 24,
+            "framerate": 12,
             "loop": true,
             "offsetX": -10,
             "offsetY": 10
@@ -25,7 +25,7 @@
         {
             "animationName": "singDOWN",
             "xmlName": "Dad Sing Note DOWN",
-            "framerate": 24,
+            "framerate": 12,
             "loop": true,
             "offsetX": 0,
             "offsetY": -30
@@ -33,7 +33,7 @@
         {
             "animationName": "singUP",
             "xmlName": "Dad Sing Note UP",
-            "framerate": 24,
+            "framerate": 12,
             "loop": true,
             "offsetX": -6,
             "offsetY": 50
@@ -41,7 +41,7 @@
         {
             "animationName": "singRIGHT",
             "xmlName": "Dad Sing Note RIGHT",
-            "framerate": 24,
+            "framerate": 12,
             "loop": true,
             "offsetX": 0,
             "offsetY": 24

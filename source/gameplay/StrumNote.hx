@@ -21,13 +21,14 @@ class StrumNote extends FlxSprite {
 		frames = Paths.sparrow('gameplay/noteAssets');
 
 		animation.addByPrefix('static', 'arrow' + directions[data]);
-		animation.addByPrefix('press', Note.NOTE_COLOURS[data] + ' press'  , 24, false);
+		animation.addByPrefix('press', Note.NOTE_COLOURS[data] + ' press'  , 12, false);
 		animation.addByPrefix('glow',  Note.NOTE_COLOURS[data] + ' confirm', 24, false);
 		playAnim('glow');
 		playAnim('press');
 		playAnim('static');
 
-		setGraphicSize(Math.round(width * 0.7));
+		origin.set(0, 0);
+		scale.set(Note.NOTE_SCALE, Note.NOTE_SCALE);
 		updateHitbox();
 
 		x += NOTE_SPACING * data;

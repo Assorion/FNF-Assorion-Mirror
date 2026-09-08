@@ -445,6 +445,10 @@ class PlayState extends EventState {
 	}
 
 	function missNote(direction:Int = 1) {
+		if (combo > 5)
+			for(i in 0...allCharacters.length)
+				allCharacters[i].playAnim('sad');
+
 		vocals.volume = 0.5;
 		combo = 0;
 		songScore -= 50;
@@ -508,6 +512,4 @@ class PlayState extends EventState {
 
 		super.onFocusLost();
 	}
-
-	override function onFocus() {}
 }

@@ -11,6 +11,7 @@ typedef NoteType = {
 }
 
 class Note extends StaticSprite { // If animated notes are desired, this will have to be changed from a StaticSprite to FlxSprite.
+	public static final NOTE_SCALE:Float = 0.7;
 	public static final NOTE_COLOURS:Array<String> = ['purple', 'blue', 'green', 'red'];
 	public static final NOTE_TYPES:Array<NoteType> = [{
 			assets: 'noteAssets',
@@ -42,7 +43,8 @@ class Note extends StaticSprite { // If animated notes are desired, this will ha
 		animation.addByPrefix('scroll' , colour + '0');
 		animation.play('scroll');
 
-		setGraphicSize(Std.int(width * 0.7));
+		origin.set(0, 0);
+		scale.set(NOTE_SCALE, NOTE_SCALE);
 		centerOffsets();
 		updateHitbox ();
 

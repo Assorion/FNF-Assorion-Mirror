@@ -64,7 +64,7 @@ class AlphaCharacter extends FlxSprite {
 	}
 
 	public function createBold() {
-		animation.addByPrefix(letter, letter.toUpperCase() + " bold", 24);
+		animation.addByPrefix(letter, letter.toUpperCase() + " bold", 12);
 		animation.play(letter);
 		updateHitbox();
 	}
@@ -81,7 +81,7 @@ class AlphaCharacter extends FlxSprite {
 			suffix = '';
 		}
 
-		animation.addByPrefix(letter, '$lower$suffix', 24);
+		animation.addByPrefix(letter, '$lower$suffix', 12);
 		animation.play(letter);
 		updateHitbox();
 
